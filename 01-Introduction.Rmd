@@ -1,0 +1,31 @@
+# Introduction
+
+Charles @darwin1909origin in The Origin of Species declared: _“[The] preservation of favourable
+individual differences and variations, and the destruction of those which are injurious, I have called
+Natural Selection or Survival of the Fittest. Variations neither useful or injurious would not be
+affected by natural selection, and would be left either a fluctuating element, as perhaps we see in
+certain polymorphic species, or would ultimately become fixed, owing to the nature of the organism
+and the nature of the conditions.”_ This theory set the scene for research in population biology.
+Selection acts upon the phenotype and this pressure then transfers through to act upon the genetic
+make-up of that phenotype. Most important to this review is that Darwin’s Theory also created
+models for what natural selection should look like and the methods for being able to detect selective
+events on the genetics of organisms. A focus on selection in humans has added insight into past
+events since migration out of Africa [@Soares2012] and yielded possibilities of the influences
+on human disease.
+
+
+## Neutrality and Genetic Drift
+
+The random sampling of alleles can cause an increase or decrease in allele frequency of a population
+leads to genetic drift. @Wright1931 proposed genetic drift as an evolutionary model. He put forward
+that by chance, in a finite population without selection acting, an allele could increase in frequency
+over generations and time, change significantly from the original frequency values. Fisher believed
+that “Natural Selection depends on the succession of favourable chances”, and thought that genetic
+drift was insignificant compared to selection [@Fisher1930]. In Fisher's model, genetic variation
+would disappear at an extremely slow rate in a population without selection, and a moderate rate of
+new mutations would be enough to maintain the population variability [@Fisher1922]. @Feller1951
+unified the population models from both Wright and Fisher into what is now known as the Wright-
+Fisher model. The Wright-Fisher model in its simplest form treats a diploid population of size N as a
+haploid population of 2N. In unifying the population models Feller noted that the assumption of
+constant population size contributes a lot more than was previously thought, and this had been crucial
+in Wright’s model for gene frequency to satisfy a diffusion equation.

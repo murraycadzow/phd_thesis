@@ -1,0 +1,11 @@
+bookdown::pdf_book:
+  includes:
+   in_hedaer: preamble.tex
+  citation_packge: natbib
+  keep_text: yes
+bookdown::epub_book: default
+bookdown::gitbook:
+  config:
+    toc:
+      before: |
+        <li><a href="./Selection and Metabolic Disease in the Pacific"</a></li>
