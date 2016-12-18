@@ -5,12 +5,16 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
  bookdown::gitbook: default
+ bookdown::pdf_book: default
 documentclass: book
 bibliography: [references.bib]
 biblio-style: apalike
 link-citations: true
 description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 ---
-# Preface {-}
 
-## Abstract
+# Preface {-}
+```{r, echo = FALSE}
+knitr::include_graphics('images/OUNZ_logo.png')
+```
+## Abstract {-}
