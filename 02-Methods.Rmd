@@ -1,2 +1,207 @@
-# Methods
+# Methods/Data
 
+## Methods
+
+### Phasing
+
+
+### SelectionTools
+```{bash, eval=FALSE}
+
+```
+
+Selection statistics that are generated:
+
+Window based
+- Tajima's D (vcftools) [@Tajima1989]
+- Fay and Wu's H [@fay2000hitchhiking] (variscan)
+- Fu and Li's D [@Fu1993] (variscan)
+- Fu and Li's F [@Fu1993] (variscan)
+- Eta (variscan) total (minimum number) number of mutations (η) 
+- Eta E (variscan) number of external mutations ie number of derived singletons
+- Pi (variscan) nucleotide diversity (\pi)
+- S (variscan) number of segregating sites
+- mean F~ST~ (vcftools)
+
+Haplotype based
+- sL0
+- sL1
+- unstandardised nSL
+- standardised nSL
+- ihh0
+- ihh1
+- unstandardised iHS
+- standardised iHS
+- iHH population 1
+- iHH population 2
+- unstandardised XP-EHH
+- standardised XP-EHH
+
+Frequency
+- Minor allele frequency
+- Derived allele frequency
+
+Gene
+- Ka/Ks
+
+
+### GWAS
+
+####
+
+#### Heritability Analysis
+
+10000 controls were randomly selected. The same 10000 samples were then combined with each different gout criteria and heritiability estimates were obtained by first creating the genetic relationship matrix and then the variance of gout 
+```{r, engine='bash', eval=FALSE}
+# load fam into R
+# sample(10000, fam[AFF == controls]) -> controls.txt
+# awk '{if($6 == 2){print $1"\t"$2}}' < condition.fam | cat - controls.txt > ids_keep.txt
+
+# Subset samples
+for i in $(seq 1 22)
+do 
+  plink2 --bed /Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/chr${i}impv1.bed \
+            --bim /Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/chr${i}impv1.bim_1kg_marker \
+            --fam /Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/chrallimpv1.fam_allgout_allcontrols \
+            --hwe 0.000001 \
+            --maf 0.01 \
+            --keep ult_ids_keep.txt \
+            --make-bed \
+            --out gout_chr${i} \
+done
+```
+
+Calculate the genetic relationship matrix
+```{r, engine = 'bash', eval = FALSE}
+for i in $(seq 1 22)
+do 
+  gcta1.26.0 \
+    --bfile gout_chr${i} \
+    --chr ${i} \
+    --make-grm-bin \
+    --out ukbio_10ksample_grm_chr${i} \
+    --thread-num 16 > grm_${i}.log  \
+done
+```
+
+Calculate the genetic variance explained using a general population gout prevalence of 2%
+```{r, engine = 'bash',eval = FALSE}
+for i in $(seq 1 22) 
+do 
+  gcta1.26.0 \
+    --grm ukbio_10ksample_grm_chr${i} \
+    --pheno phenos.txt  \
+    --prevalence 0.02 \
+    --out var_chr${i} \
+    --reml \
+    --chr ${i} \
+    --thread-num 16 \
+done
+
+```
+
+### Variant Annotation
+snpEff
+
+
+### Pathway Analysis
+
+
+## Datasets
+
+### 1000 Genomes Project Phase 3
+
+
+@misc{1kgp_ftp,
+keywords = {1KGP},
+mendeley-groups = {PPARGC1Apaper,Datasets},
+mendeley-tags = {1KGP},
+title = {{1000 Genomes Project FTP}},
+url = {ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/},
+urldate = {2015-08-18}
+}
+
+
+### Axiom
+
+- about
+- population
+
+| | obs missing (n) | Māori AXIOM
+---|---|---
+Number | - | 71 
+Sex (% male) | - | 64.7
+Gout cases (%) | - | 49.3
+Mean BMI (range) | 1 | 34.5 (22.1 to 56.1)
+Diabetes (%) | 3 | 21.1
+Mean grandparent ancestry (range) | - | 0.916 (0.625 to 1.00)
+
+Mean grandparent ancestry is the proportion of grandparents self-reported as belonging to the ethnicity group BMI body mass index
+
+
+- markers
+- density
+
+
+### Omni
+
+
+| | obs missing (n) | Samoan OMNIexpress
+---|---|---
+Number | - | 96
+Sex (% male) | - | 74
+Gout cases (%) | - | 50.0
+Mean BMI (range) | - | 36.1 (20.5 to 93.4)
+Diabetes (%) | - | 12.5
+Mean grandparent ancestry (range) | - | 0.997 (0.875 to 1.00)
+
+Mean grandparent ancestry is the proportion of grandparents self-reported as belonging to the ethnicity group BMI body mass index
+
+
+- about
+- population
+- markers
+- density
+
+### CoreExome
+
+The Infinium CoreExome-24 Beadchip is a SNP geneotyping platform available from Illumina and comprises a core set of 551,839 markers with an additional 100,000 custom markers able to be added. The markers are on average 5.26 kb apart.
+
+Marker Categories | Number of Markers
+---|---
+In RefSeq Genes | 374,258 (399,009 within 10 kb)
+In RefSeq Exons | 269,186
+In RefSeq Promoter Regions | 13,990
+In ADME Genes | 11,276 (12,455 within 10 kb)
+In ADME Exons | 9,314
+MHC (Extended MHC) | 3,940 (5,628)
+Overlap with Genes in COSMIC | 365,135
+Overlap with Genes in Gene Ontology | 96,331
+Nonsense Markers | 14,994
+Missense Markers | 219,162
+Synonymous Markers | 14,747
+Silent Markers | 8,850
+Mitochondrial Markers |351
+Indels | 12,436
+
+mean call rate
+mean missing
+number of snps passing qc
+number of snps used for selection
+
+
+(http://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_human_core_exome_beadchip.pdf, accessed 16 Jan 2017)
+
+
+Clincal Information
+
+
+- about
+- population
+- markers
+- density
+
+### Polynesian Sequences
+
+n | ~90
+mean coverage |  Y x
