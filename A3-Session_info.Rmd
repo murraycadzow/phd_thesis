@@ -2,6 +2,6 @@
 
 ## Session info
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, results='markup'}
 devtools::session_info()
 ```

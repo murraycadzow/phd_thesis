@@ -67,7 +67,18 @@ once the intersection of the marker lists were made the markers were pull out of
 ```{bash, eval = FALSE}
 # on biocvisg
 #wd = /Volumes/BiocArchive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/
-parallel 'bcftools view --force-samples -s $(grep {1} integrated_call_samples_v3.20130502.ALL.panel | cut -f1 |tr "\n" ",") -R /Volumes/BiocArchive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/coreExome_1kgp_markers.txt -O z -m 2 -M 2 -v snps -o ~/Murray/Bioinformatics/working_dir/coreExome_selection/NZ/Unimputed_1kg_marker_matched/{1}.chr{2}_biallelic_coreExome_markers.vcf.gz ALL.chr{2}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz ' ::: $(cat integrated_call_samples_v3.20130502.ALL.panel | cut -f2 | grep -v 'pop' | sort |uniq) ::: $(seq 1 22)
+parallel 
+  'bcftools 
+    view 
+      --force-samples 
+      -s $(grep {1} integrated_call_samples_v3.20130502.ALL.panel | cut -f1 |tr "\n" ",") 
+      -R /Volumes/BiocArchive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/coreExome_1kgp_markers.txt 
+      -O z 
+      -m 2 
+      -M 2 
+      -v snps 
+      -o ~/Murray/Bioinformatics/working_dir/coreExome_selection/NZ/Unimputed_1kg_marker_matched/{1}.chr{2}_biallelic_coreExome_markers.vcf.gz
+      ALL.chr{2}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz ' ::: $(cat integrated_call_samples_v3.20130502.ALL.panel | cut -f2 | grep -v 'pop' | sort |uniq) ::: $(seq 1 22)
 
 #wd = ~/Murray/Bioinformatics/working_dir/coreExome_selection/NZ
 nzcau,nzm,cim,ton,sam

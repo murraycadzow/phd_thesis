@@ -4,11 +4,13 @@
 
 ### Phasing
 
+-axiom
+-omni
+-coreExome
 
 ### SelectionTools
-```{bash, eval=FALSE}
 
-```
+
 
 Selection statistics that are generated:
 
@@ -43,6 +45,11 @@ Frequency
 
 Gene
 - Ka/Ks
+
+
+
+
+#### Selection database creation
 
 
 ### GWAS
