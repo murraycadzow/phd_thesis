@@ -2,14 +2,37 @@
 
 ## Introduction
 
+literature
+Cadzow2014
+Cadzow2016
+Pybus2014
+
 ### objectives
+Establish the influence of key parameters in selectionTools pipeline
+
+
 
 ## Comparison of selectionTools Parameters
+
+### Window size
+Tajima's _D_, Fay and Wu's _H_, and F~ST~ calculation window size was tested.
+
+- TD = 1,5, and 30 kbp windows
+- FWH = 1,5, and 30 kbp windows
+- FST = 1 bp and 1 Mbp
+
+iHS and nSL
+tested gap width to try and bring in SLC2A9 for coreExome data
+
+### Slide
+
 
 ## Comparison of Imputation Thresholds
 
 ## Simulations
 
 ## Results
+
+
 
 ## Chapter Discussion
