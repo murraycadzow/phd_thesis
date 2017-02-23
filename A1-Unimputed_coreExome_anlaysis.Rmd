@@ -1,0 +1,156 @@
+# (APPENDIX) Appendix {-}
+
+# Appendix A
+Unimputed CoreExome analysis
+
+## QC of genotypes
+
+
+
+## Phasing
+
+The 
+
+### SelectionTools Pipeline
+The subject lists were created using selectionAnalysis/coreExome_subject_selection.Rmd
+once the subject lists were created they were extracted from 
+
+```{r, eval=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), engine='bash'}
+# on biocvisg
+$DIR =~/Murray/Bioinformatics/working_dir/StrandFixed/CoreExome/QC_Batch2_NZ/vcf/Phased/
+parallel 'bcftools view \
+-r {2} -S coreExome_{1}_selection.txt \
+-o {1}_chr{2}_coreExome.vcf.gz \
+-O z {3}/all_chr_phased_strandaligned.filt_refallele_maf0.01_hwe_checked_ExRef.vcf.gz \
+' ::: nzcau nzm cim ton sam ::: $(seq 1 22) ::: $DIR
+```
+
+To match with the markers from 1000 Genomes Phase 3
+```{bash, eval = FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+# on biocvisg
+bcftools view \
+-O v \
+-m 2 \
+-M 2 \
+-H \
+-v snps all_chr_phased_strandaligned.filt_refallele_maf0.01_hwe_checked_ExRef.vcf.gz \
+-o - | cut -f1,2 | grep -v "#" > coreExome_markers.txt 
+
+#1kg marker lists
+cd ~/Murray/Bioinformatics/Reference_Files/VCF/1000Genomes_vcf_files/Phase3_Sept2014
+parallel 'bcftools view \
+-O v \
+-m 2 \
+-M 2 \
+-H \
+-v snps ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz -o - \
+| cut -f1,2 | grep -v "#" > chr{}_markers.txt ' ::: $(seq 1 22)
+```
+
+the marker list was then read into R and merged with the the marker lists made for each chromosome from the Phase3 VCFs
+```{r, eval = FALSE}
+# on biocmerrimanlab
+ce_markers <- read.table('/media/xsan/scratch/merrimanlab/murray/working_dir/StrandFixed/CoreExome/QC_Batch2_NZ/vcf/Phased/coreExome_markers.txt', header=FALSE)
+
+kg_markers <- data.frame()
+for(i in 1:22){
+  tmp <- read.table(file= paste0('/media/xsan/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/chr',i,'_markers.txt'), header=FALSE)
+  tmp <-  tmp[ tmp[,2] %in% ce_markers[,2],]
+  kg_markers <- rbind(kg_markers, tmp)
+  print(i)
+}
+ce <- merge(ce_markers, kg_markers, by = c("V1","V2"), all = FALSE)
+write.table(ce, file = '/media/xsan/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/coreExome_1kgp_markers.txt', quote=FALSE, col.names=FALSE, row.names = FALSE, sep = "\t")
+```
+
+once the intersection of the marker lists were made the markers were pull out of both the core Exome vcf and the 1000 Genomes Project vcf
+```{bash, eval = FALSE}
+# on biocvisg
+#wd = /Volumes/BiocArchive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/
+parallel 'bcftools view --force-samples -s $(grep {1} integrated_call_samples_v3.20130502.ALL.panel | cut -f1 |tr "\n" ",") -R /Volumes/BiocArchive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/coreExome_1kgp_markers.txt -O z -m 2 -M 2 -v snps -o ~/Murray/Bioinformatics/working_dir/coreExome_selection/NZ/Unimputed_1kg_marker_matched/{1}.chr{2}_biallelic_coreExome_markers.vcf.gz ALL.chr{2}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz ' ::: $(cat integrated_call_samples_v3.20130502.ALL.panel | cut -f2 | grep -v 'pop' | sort |uniq) ::: $(seq 1 22)
+
+#wd = ~/Murray/Bioinformatics/working_dir/coreExome_selection/NZ
+nzcau,nzm,cim,ton,sam
+parallel 'bcftools view -R /Volumes/BiocArchive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_Sept2014/coreExome_1kgp_markers.txt -O z -m 2 -M 2 -v snps -o Unimputed_1kg_marker_matched/{1}.chr{2}_biallelic_coreExome_markers.vcf.gz {1}_chr{2}_coreExome.vcf.gz ' ::: nzcau nzm cim ton sam ::: $(seq 1 22)
+
+```
+
+Once each population vcf file was created they were transferred to the NeSI PAN cluster where the selectionTools1.1 pipeline was run
+```{bash selectionToolsScript, eval = FALSE}
+#!/bin/bash
+#SBATCH -J selection
+#SBATCH -A uoo00008         # Project Account
+#SBATCH --time=06:00:00     # Walltime
+#SBATCH --mem-per-cpu=30240  # memory/cpu (in MB)
+#SBATCH --cpus-per-task=1   # 12 OpenMP Threads
+#SBATCH --array=1-22
+#SBATCH --mail-user=murray.cadzow@otago.ac.nz
+#SBATCH --mail-type=ALL
+
+POP=$1
+i=$SLURM_ARRAY_TASK_ID
+DIR=$SLURM_SUBMIT_DIR
+module load Python/3.5.0-intel-2015a
+module load R/3.2.1-intel-2015a
+
+srun tar -C $TMP_DIR -xzf $DIR/1kg_nz_coreExome.tar.gz ${POP}.chr${i}_biallelic_coreExome_markers.vcf.gz
+cd $TMP_DIR/
+srun gzip -dc ${POP}.chr${i}_biallelic_coreExome_markers.vcf.gz |grep -v 'contig' > ${POP}.chr${i}_biallelic_coreExome_markers_nocontig.vcf
+
+srun python ~/.local/bin/selection_pipeline \
+-i ${POP}.chr${i}_biallelic_coreExome_markers_nocontig.vcf \
+--phased-vcf \
+-c $i \
+--config-file $DIR/unimputed_defaults_nesi_18-3-16.cfg \
+--maf 0.01 \
+--hwe 0.001 \
+--TajimaD 30 \
+--fay-Window-Width 30 \
+--fay-Window-Jump 30 \
+--ehh-window-size 10 \
+--ehh-overlap 2 \
+--big-gap 200 \
+--small-gap 20 \
+--small-gap-penalty 20 \
+--population $POP \
+--cores 1 \
+--no-clean-up \
+--no-ihs
+
+module unload Python/3.5.0-intel-2015a 
+module load Python/2.7.9-intel-2015a
+
+srun python /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline/haps_interpolate.py \
+--haps results/${POP}_aachanged.haps --output ${POP}_genetic_dist.haps --genetic-map \
+/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles/genetic_maps/genetic_map_chr${i}_combined_b37.txt \
+--physical-position-output ${POP}_genetic_dist.pos
+
+srun  python /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline/haps_to_selscan.py \
+--haps ${POP}_genetic_dist.haps \
+--pos ${POP}_genetic_dist.pos \
+--output ${POP}_${axom}_${i}_selscan \
+--chr ${i}
+
+srun rm $TMP_DIR/${POP}_chr${i}.vcf
+srun gzip $TMP_DIR/results/*vcforig
+cd $TMP_DIR
+srun tar -czf ${POP}_chr${i}.tar.gz *
+mkdir $DIR/${POP}
+srun cp $TMP_DIR/*.tar.gz $DIR/${POP}
+
+cd $DIR/${POP}
+sleep 10
+sbatch --array=${i} ../run_selscan.sl ${POP} 
+sbatch --array=${i} ../run_nsl_selscan.sl ${POP} 
+```
+
+```{bash run_selscan.sl, eval=FALSE}
+
+```
+
+```{bash run_nsl_selscan.sl, eval=FALSE}
+
+```
+### Results directory setup
+
+### Database creation and loading

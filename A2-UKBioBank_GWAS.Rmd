@@ -1,0 +1,234 @@
+# Appendix B
+
+## UKBioBank Gout GWAS
+
+```{r load data,echo = FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(pander)
+# read in fam file for sample filtered plink files
+data_dir <- "/media/xsan/staff_groups/merrimanlab/Merriman_Documents/Murray/ukbiobank_util/data/"
+scratch_dir <- "/media/xsan/scratch/merrimanlab/murray/working_dir/UkBio/"
+control_cond <- 'controls' 
+
+load(paste0(data_dir,"ukbiobank_genotyped2016-04-26.RData"))
+genotyped$waist_height_ratio <- genotyped$f.48.0.0 / genotyped$f.50.0.0
+
+source("~/Git_repos/UkBioBank/Gout_GWAS/create_kottgen_table1.R")
+source('~/Git_repos/UkBioBank/Gout_GWAS/read_fams.R')
+
+gout_cond <- 'all'
+all_fam <- read.table(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond), header=FALSE)
+colnames(all_fam) <- c("FID","IID","PID","MID", "SEX","AFF")
+genotyped$fam_all <- NA
+genotyped[genotyped$f.eid %in% all_fam$IID & 
+            genotyped$f.eid %in% all_fam[which(all_fam$AFF==1 | all_fam$AFF == 2),"IID"], "fam_all"] <-1
+
+genotyped$fam <- NA
+genotyped[genotyped$f.eid %in% all_fam$IID,"fam"] <- 1
+
+gout_cond <- 'self'
+self_fam  <- read.table(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond), header=FALSE)
+colnames(self_fam) <- c("FID","IID","PID","MID", "SEX","AFF")
+genotyped$fam_self <- NA
+genotyped[genotyped$f.eid %in% self_fam$IID & 
+            genotyped$f.eid %in% self_fam[which(self_fam$AFF==1 | self_fam$AFF == 2),"IID"], "fam_self"] <-1
+
+gout_cond <- 'self_ult'
+self_ult_fam <- read.table(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond), header=FALSE)
+colnames(self_ult_fam) <- c("FID","IID","PID","MID", "SEX","AFF")
+genotyped$fam_self_ult <- NA
+genotyped[genotyped$f.eid %in% self_ult_fam$IID & 
+            genotyped$f.eid %in% self_ult_fam[which(self_ult_fam$AFF==1 | self_ult_fam$AFF == 2),"IID"], "fam_self_ult"] <-1
+
+gout_cond <- 'ult'
+ult_fam <- read.table(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond), header=FALSE)
+colnames(ult_fam) <- c("FID","IID","PID","MID", "SEX","AFF")
+genotyped$fam_ult <- NA
+genotyped[genotyped$f.eid %in% ult_fam$IID & 
+            genotyped$f.eid %in% ult_fam[which(ult_fam$AFF==1 | ult_fam$AFF == 2),"IID"], "fam_ult"] <-1
+
+gout_cond <- 'winnard'
+winnard_fam <- read.table(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond), header=FALSE)
+colnames(winnard_fam) <- c("FID","IID","PID","MID", "SEX","AFF")
+genotyped$fam_winnard <- NA
+genotyped[genotyped$f.eid %in% winnard_fam$IID & 
+            genotyped$f.eid %in% winnard_fam[which(winnard_fam$AFF==1 | winnard_fam$AFF == 2),"IID"], "fam_winnard"] <-1
+
+gout_cond <- 'hosp'
+hosp_fam  <- read.table(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond), header=FALSE)
+colnames(hosp_fam)  <- c("FID","IID","PID","MID", "SEX","AFF")
+genotyped$fam_hosp <- NA
+genotyped[genotyped$f.eid %in% hosp_fam$IID & 
+            genotyped$f.eid %in% hosp_fam[which(hosp_fam$AFF==1 | hosp_fam$AFF == 2),"IID"], "fam_hosp"] <-1
+```
+
+
+
+Data from the initial release of 150,000 genotyped individuals as part of the UKBioBank project were used to conduct a GWAS for gout. Individuals that had gout were indentified using the following criteria: self-reported, or either a primary or secondary hospitalisation ICD-10 code of M10 (including sub codes), or a drug based criteia. The drug based criteria consisted of 
+self-reported usage of urate lowering therapy (allopurinol, febuxostat, or sulphinpyrazone) or colchicine and did not have lymphoma or leukemia as reported by primary or secondary hospitalisation ICD-10 codes C81 to C96. The control group was created by exlcuding any individual that had been identified as having gout; taking gout medication, or NSAIDS, or coritico steriodal prednisone. 
+Exclusion criteria for either group was failure of the UKBioBank genotyping QC, a mismatch between reported sex and genetic sex, or were identified as having renal disease. Renal Disease was defined using ICD-10 codes: I12-13,N00-05, N07, N11, N14, N17-19, Q61, N25.0, Z49, Z94.0 and Z99.2 which were based on [\@Quan2014] and [doi:10.1186/1471-2288-11-83]. Controls related to other controls or gout patients were also excluded. Indivuals not self reporting as "White British", "White Irish", or "White Other" were also excluded.
+
+Genetic markers were filtered to remove minor allele frequency < 0.01 and Hardy-Weinberg equillibrium exact test P < 0.000001. The association analysis was adjusted for sex and age. 
+
+
+Genotyped - Controls unfiltered diuretics
+
+There are a total of ```r as.character(genotyped %>% select(fam)  %>% filter(fam == 1) %>% tally())``` people with genotypes
+
+The GWAS were limited to only British, Irish, and "any other white background" ethnicities because there were only ```r as.data.frame(genotyped  %>% filter(!is.na(goutaff) & !(f.21000.0.0 %in% c(1001,1002,1003)) & f.eid %in% all_fam$IID)  %>%  select(f.21000.0.0, goutaff)  %>% group_by(goutaff, f.21000.0.0)  %>%  tally()  %>% summarise(sum(n)))[2,2]``` gout cases from all other ethnicities with genotypes
+
+
+
+
+## All
+
+
+```{r all_gwas_stats, echo=FALSE}
+gout_cond <- 'all'
+all <-  read_fams(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond))
+all_drug_tally <- all[[2]]
+all_summary_table <-  all[[1]]
+
+```
+For the GWAS based on all gout criteria there were ```r all_summary_table['n',"Gout"]``` cases and ```r all_summary_table['n',"Control"]``` controls
+
+There were:
+  
+- ```r as.character(all_drug_tally$diuretics_cases)``` cases on diuretics, ```r all_drug_tally$diuretics_controls``` were controls
+
+- ```r all_drug_tally$allopurinol_cases``` cases taking allopurinol, ```r all_drug_tally$allopurinol_controls``` were controls
+
+- ```r all_drug_tally$febuxostat_cases``` cases taking febuxostat, ```r all_drug_tally$febuxostat_controls``` were controls
+
+- ```r all_drug_tally$sulphinpyrazone_cases``` cases taking sulphinpyrazone, ```r all_drug_tally$sulphinpyrazone_controls``` were controls
+
+- ```r all_drug_tally$colchicine_cases``` people taking cochicine, ```r all_drug_tally$colchicine_controls``` were controls
+
+Age summary
+
+```{r all_age_summary, echo = FALSE}
+as.data.frame(genotyped  %>% 
+                select(fam_all, goutaff, f.21003.0.0 , f.31.0.0) %>% 
+                filter(fam_all == 1, !is.na(goutaff), !is.na(f.21003.0.0)) %>% 
+                mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+                group_by(cc) %>% 
+                summarise(mean = mean(f.21003.0.0), sd = sd(f.21003.0.0), min = min(f.21003.0.0),median = median(f.21003.0.0), max = max(f.21003.0.0) ), row.names = NULL)
+```
+all combined age
+```{r all_age_summary1, echo = FALSE}
+as.data.frame(genotyped  %>% 
+                select(fam_all, goutaff, f.21003.0.0 , f.31.0.0) %>% 
+                filter(fam_all == 1, !is.na(goutaff), !is.na(f.21003.0.0)) %>% 
+                mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+                summarise(mean = mean(f.21003.0.0), sd = sd(f.21003.0.0), min = min(f.21003.0.0),median = median(f.21003.0.0), max = max(f.21003.0.0) ), row.names = NULL)
+```
+
+Sex summary
+
+```{r all_gwas_sex_plot, echo = FALSE, eval=TRUE}
+genotyped  %>% 
+  select(goutaff, f.31.0.0, fam_all) %>% 
+  filter(!is.na(goutaff), fam_all == 1 ) %>% 
+  mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)) , cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+  group_by(cc, sex)  %>% tally()  %>% 
+  ggplot(., aes(x = sex, y = n)) + 
+  geom_bar(aes(fill =sex), stat = 'identity') +
+  geom_text(aes(label=n), vjust=-0.3, color="black",
+            position = position_dodge(0.9), size=3.5)+
+  facet_wrap(~cc) +
+  theme_bw() + 
+  theme(legend.position = "none") + 
+  ggtitle("All Sex Distribution")
+```
+
+```{r all_gwas_bmi_plot, echo=FALSE, message=FALSE, warning=FALSE, eval=TRUE}
+genotyped  %>% 
+  select(fam_all, goutaff, f.21001.0.0 , f.31.0.0) %>% 
+  filter(fam_all == 1, !is.na(goutaff), !is.na(f.21001.0.0)) %>% 
+  mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+  summarise(mean(f.21001.0.0), sd(f.21001.0.0))  %>% as.data.frame()
+  # ggplot(., aes(x = cc, y = f.21001.0.0)) + 
+  # geom_boxplot() + xlab("Gout Affection") + 
+  # ylab("BMI") + 
+  # theme_bw() + 
+  # facet_wrap(~sex) +
+  # ggtitle("All Gout Criteria")
+```
+
+all combined bmi
+```{r all_bmi_summary1, echo = FALSE}
+as.data.frame(genotyped  %>% 
+                select(fam_all, goutaff, f.21001.0.0 , f.31.0.0) %>% 
+                filter(fam_all == 1, !is.na(goutaff), !is.na(f.21001.0.0)) %>% 
+                mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+                summarise(mean = mean(f.21001.0.0), sd = sd(f.21001.0.0), min = min(f.21001.0.0),median = median(f.21001.0.0), max = max(f.21001.0.0) ), row.names = NULL)
+```
+
+```{r all_gwas_wh_plot, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+genotyped  %>% 
+  select(fam_all, goutaff, waist_height_ratio , f.31.0.0) %>% 
+  filter(fam_all == 1, !is.na(goutaff), !is.na(waist_height_ratio)) %>% 
+  mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+  summarise(mean(waist_height_ratio), sd(waist_height_ratio)) %>% as.data.frame
+  # ggplot(., aes(x = cc, y = waist_height_ratio)) + 
+  # geom_boxplot() + xlab("Gout Affection") + 
+  # ylab("Waist to Height Ratio") + 
+  # theme_bw() + 
+  # facet_wrap(~sex) +
+  # ggtitle("All Gout Criteria")
+```
+
+all combined waist to height
+```{r all_waist_summary1, echo = FALSE}
+as.data.frame(genotyped  %>% 
+                select(fam_all, goutaff, waist_height_ratio , f.31.0.0) %>% 
+                filter(fam_all == 1, !is.na(goutaff), !is.na(waist_height_ratio)) %>% 
+                mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+                summarise(mean = mean(waist_height_ratio), sd = sd(waist_height_ratio), min = min(waist_height_ratio),median = median(waist_height_ratio), max = max(waist_height_ratio) ), row.names = NULL)
+```
+
+BMI Summary:
+  
+```{r, echo = FALSE, eval = FALSE}
+as.data.frame(genotyped  %>% 
+                select(fam_all, goutaff, f.21001.0.0 , f.31.0.0) %>% 
+                filter(fam_all == 1, !is.na(goutaff), !is.na(f.21001.0.0)) %>% 
+                mutate(sex = ifelse(f.31.0.0 == 0, "Female", ifelse(f.31.0.0 == 1, "Male",NA)), cc = ifelse(goutaff == 1, "Case", "Control")) %>% 
+                group_by(cc) %>% 
+                summarise(mean = mean(f.21001.0.0), sd = sd(f.21001.0.0), min = min(f.21001.0.0),median = median(f.21001.0.0), max = max(f.21001.0.0) ), row.names = NULL)
+```
+
+
+### All summary table
+
+
+
+```{r all_summary_table, echo = FALSE, results= 'asis'}
+pandoc.table(all_summary_table, caption = 'Summary Table - All')
+```
+
+Sex as % male  
+Age and BMI given as mean +/- sd  
+Ethnicity in order British, Irish, and Any other white background
+
+### Kottgen table 1 SNPs - unadjusted
+
+```{r, echo = FALSE, results='asis'}
+gout_cond <- 'all'
+all_kot <- create_kottgen_table1(kottgen_loci =paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/unadjusted/kottgen_results.txt'))
+row.names(all_kot[['sum_table']]) <- NULL
+pandoc.table(as.data.frame(all_kot[['sum_table']][c('SNP','CHR','BP', "grail_gene","OR","lower95","upper95","P")], row.names = NULL), caption = 'Kottgen table 1 SNPs - All')
+
+```
+
+
+### Kottgen table 1 SNPs - age sex waist and waist to height ratio adjusted
+
+```{r, echo = FALSE, results='asis'}
+gout_cond <- 'all'
+all_kot <- create_kottgen_table1(kottgen_loci =paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/adjusted/kottgen_results.txt'))
+row.names(all_kot[['sum_table']]) <- NULL
+pandoc.table(as.data.frame(all_kot[['sum_table']][c('SNP','CHR','BP', "grail_gene","OR","lower95","upper95","P")], row.names = NULL), caption = 'Kottgen table 1 SNPs - All')
+
+```
