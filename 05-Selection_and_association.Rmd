@@ -1,1 +1,52 @@
-# Selection, vGwAS, GWAS, and Imputation of Polynesian Populations
+# Selection and Association Studies
+
+objectives:
+The objectives for this chapter are to:
+- Determine the improvement (if any) of genotype imputation in Polynesians from incorporating Polynesian haplotypes into the imputatation reference panel
+- Investigate if there is a correlation between selection statistics and variance GWAS
+- Implement a 'meta-analysis' of selection statistics, GWAS, and vGWAS results
+
+Selection, vGwAS, GWAS, and Imputation of Polynesian Populations
+
+
+
+## European GWAS, vGWAS and Selection
+
+This section describes the gout GWAS and vGWAS performed in the UKBiobank data and the comparision with the results from the selection analysis in the 1000 Genomes Project data.
+
+### European Gout GWAS
+
+- GWAS results
+- Heritability explained
+
+#### GWAS results
+
+The top SNPs from the GWAS were:
+- hosp
+- self
+- self + ULT
+- ULT
+- all
+
+#### Heritability Explained
+
+
+
+### European Gout vGWAS
+- vGWAS results
+
+### European selection 
+- EUR/GBR/CEU selection results
+
+### 
+
+
+## Imputation of Polynesian Populations Genomes
+
+### Creation of a Polynesian imputation reference panel
+
+
+###
+
+## Polynesian GWAS and Selection
+
