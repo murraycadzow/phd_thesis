@@ -22,21 +22,42 @@ This section describes the gout GWAS and vGWAS performed in the UKBiobank data a
 #### GWAS results
 
 The top SNPs from the GWAS were:
+
 - hosp
 - self
 - self + ULT
 - ULT
 - all
 
+```{r manhat_all_age_sex, echo = FALSE, fig.cap='(ref:manhat_all_age_sex)', fig.width=7, fig.asp=1, out.width='50%', fig.align='center'}
+knitr::include_graphics('images/05_selection_and_association/all_age_sex.png')
+```
+
+
+```{r, engine='block', eval = FALSE, echo = FALSE, include=FALSE }
+For this section I want to compare the results for each of the gwases and see if the same 
+snps come out and perhaps in the same order.
+
+Also want to compare the results from the age+sex adjusted versus the results from the age+sex+waist+waist:height
+```
+
+<!---
+ALL GROUP: the most significant snps are from ABCG2. SLC2A9 also features highly. The majority of the significant snps are from these two genes.
+--->
+
 #### Heritability Explained
 
-
+```{r, engine='block', eval = FALSE, echo = FALSE, include=FALSE }
+here I want to include the results from the heritability analysis across the different criteria
+```
 
 ### European Gout vGWAS
 - vGWAS results
 
 ### European selection 
 - EUR/GBR/CEU selection results
+
+
 
 ### 
 
