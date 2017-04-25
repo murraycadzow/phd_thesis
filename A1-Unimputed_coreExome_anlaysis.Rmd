@@ -17,6 +17,8 @@ once the subject lists were created they were extracted from
 
 ```{r, eval=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), engine='bash'}
 # on biocvisg
+
+# this command 
 $DIR =~/Murray/Bioinformatics/working_dir/StrandFixed/CoreExome/QC_Batch2_NZ/vcf/Phased/
 parallel 'bcftools view \
 -r {2} -S coreExome_{1}_selection.txt \

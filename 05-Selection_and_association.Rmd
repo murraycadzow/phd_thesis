@@ -29,6 +29,9 @@ The top SNPs from the GWAS were:
 - ULT
 - all
 
+manhattan plot for the all \@ref(fig:manhat_all_age_sex)
+
+
 ```{r manhat_all_age_sex, echo = FALSE, fig.cap='(ref:manhat_all_age_sex)', fig.width=7, fig.asp=1, out.width='50%', fig.align='center'}
 knitr::include_graphics('images/05_selection_and_association/all_age_sex.png')
 ```
