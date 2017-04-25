@@ -2,6 +2,52 @@
 
 ## UKBioBank Gout GWAS
 
+Gwas setup
+
+create plink files from the gen files
+```
+ for i in $(seq 1 22)
+ do
+  plink --bgen chr${i}impv1.bgen --hard-call-threshold 0.1 --make-bed --out chr${i}impv1 --sample impv1.sample
+done
+```
+
+convert bim file to be 1kgp marker format
+```
+for i in $(seq 1 22)
+do
+  awk '{if($2 == "."){print $1 "\t" $1"_"$4"_"$5"_"$6 "\t" $3 "\t" $4 "\t" $5 "\t" $6  } else {print}}' < chr${i}impv1.bim > chr${i}impv1.bim_1kg_marker
+done
+```
+
+Adjusters were decided upon by performing model analysis of a logistic regression between gout and known the known confounders of age, sex, and obesity. All three confounders had a statistically significant association with gout. Three measures of obesity were examined; BMI, waist circumference, and waist to height ratio. The model that provided the smallest  Akaike information criteria was gout ~ age + sex + waist + waist to height ratio. 
+
+Running the gwas
+
+<!--- probably don't need to mention the splitting of diuretics --->
+```
+# on bioc server
+
+for i in $(seq 1 22)
+do
+  rm /dev/shm/Ukbio_shm/*bed
+  cp chr${i}impv1.bed /dev/shm/Ukbio_shm
+
+  # age, sex, waist, and, waist:height adjusted
+  parallel -j 21 '/Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/bin/plink2 --bed /dev/shm/Ukbio_shm/chr{3}impv1.bed --bim chr{3}impv1.bim_1kg_marker --fam GWAS_all_controls/{1}/{2}/chrallimpv1.fam_{2} --hwe 0.000001 --maf 0.01 --logistic sex --ci 0.95 --covar GWAS_all_controls/chrallimpv1.covar --covar-name Waist WaistHeightRatio AGE --freq case-control --hardy --out GWAS_all_controls/{1}/{2}/adjusted/{1}{2}_chr{3}' ::: controls controls_no_diuretics controls_diuretics ::: all all_male self self_ult hosp hosp_male winnard ult ::: ${i}
+
+  # age, sex, waist, waist:height, and pca adjusted
+  parallel -j 9 '/Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/bin/plink2 --bed /dev/shm/Ukbio_shm/chr{3}impv1.bed --bim chr{3}impv1.bim_1kg_marker --fam GWAS_all_controls/{1}/{2}/chrallimpv1.fam_{2} --hwe 0.000001 --maf 0.01 --logistic sex --ci 0.95 --covar GWAS_all_controls/chrallimpv1.covar --covar-name Waist WaistHeightRatio AGE --freq case-control --hardy --out GWAS_all_controls/{1}/{2}/adjusted/{1}{2}_chr{3}' ::: controls controls_no_diuretics controls_diuretics ::: ult self_ult ::: ${i}
+#parallel -j 21 '/Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/bin/plink2 --bed /dev/shm/Ukbio_shm/chr{3}impv1.bed --bim chr{3}impv1.bim_1kg_marker --fam GWAS_all_controls/{1}/{2}/chrallimpv1.fam_{2} --hwe 0.000001 --maf 0.01 --logistic sex --ci 0.95 --covar GWAS_all_controls/chrallimpv1.covar --covar-name WaistHeightRatio Waist AGE PCA1 PCA2 PCA3 PCA4 PCA5 PCA6 PCA7 PCA8 PCA9 PCA10 PCA11 PCA12 PCA13 PCA14 PCA15  --freq case-control --hardy --out GWAS_all_controls/{1}/{2}/adjusted/adjusted_pca/{1}{2}_chr{3}' ::: controls controls_no_diuretics controls_diuretics ::: all all_male self self_ult hosp hosp_male winnard ::: ${i}
+
+  # unadjusted
+  parallel -j 21 '/Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/bin/plink2 --bed /dev/shm/Ukbio_shm/chr{3}impv1.bed --bim chr{3}impv1.bim_1kg_marker --fam GWAS_all_controls/{1}/{2}/chrallimpv1.fam_{2} --hwe 0.000001 --maf 0.01 --logistic --ci 0.95 --freq case-control --hardy --out GWAS_all_controls/{1}/{2}/unadjusted/{1}{2}_chr{3}' ::: controls controls_no_diuretics controls_diuretics ::: all all_male self self_ult hosp hosp_male winnard ult ::: ${i}
+
+done
+
+```
+
+
 ```{r load data,echo = FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
