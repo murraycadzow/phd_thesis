@@ -54,6 +54,9 @@ Gene
 
 ### GWAS
 
+Uk Biobank GWAS
+
+
 ####
 
 #### Heritability Analysis
@@ -202,6 +205,14 @@ number of snps used for selection
 
 Clincal Information
 
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+knitr::knit('~/Git_repos/R_notebooks/thesis_tables.Rmd', tangle=TRUE)
+```
+
+```{r, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
+source("thesis_tables.R")
+```
+
 
 - about
 - population
@@ -212,3 +223,13 @@ Clincal Information
 
 n | ~90
 mean coverage |  Y x
+
+
+### Reference datasets
+
+name | url | date downloaded 
+===|===|===
+1000 genomes phased haplotypes | |
+hs37d5 | | 
+Ancestral allele | | 
+
