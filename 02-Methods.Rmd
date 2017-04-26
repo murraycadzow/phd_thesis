@@ -1,4 +1,7 @@
 # Methods/Data
+```{r, echo = FALSE}
+source("scripts/methods_tables.R")
+```
 
 ## Methods
 
@@ -19,9 +22,9 @@ Window based
 - Fay and Wu's H [@fay2000hitchhiking] (variscan)
 - Fu and Li's D [@Fu1993] (variscan)
 - Fu and Li's F [@Fu1993] (variscan)
-- Eta (variscan) total (minimum number) number of mutations (η) 
+- Eta (variscan) total (minimum number) number of mutations ($\eta$) 
 - Eta E (variscan) number of external mutations ie number of derived singletons
-- Pi (variscan) nucleotide diversity (\pi)
+- Pi (variscan) nucleotide diversity ($\pi$)
 - S (variscan) number of segregating sites
 - mean F~ST~ (vcftools)
 
@@ -203,14 +206,22 @@ number of snps used for selection
 (http://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_human_core_exome_beadchip.pdf, accessed 16 Jan 2017)
 
 
-Clincal Information
+Clinical Information
 
-```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-knitr::knit('~/Git_repos/R_notebooks/thesis_tables.Rmd', tangle=TRUE)
+
+\newpage
+\blandscape
+```{r, echo = FALSE, results = 'asis', message = FALSE, warning= FALSE}
+ knitr::kable(ce_clinical_table(), longtable = TRUE, format = 'pandoc', booktabs = TRUE , caption = 'Clinical information for each core Exome population')
 ```
 
-```{r, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
-source("thesis_tables.R")
+
+
+\elandscape
+\newpage
+
+```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE}
+knitr::kable(ce_populations_table(), longtable = TRUE, format = 'pandoc', booktabs = TRUE , caption = 'Clinical information for New Zealand Populations in selection analysis')
 ```
 
 
@@ -227,9 +238,14 @@ mean coverage |  Y x
 
 ### Reference datasets
 
-name | url | date downloaded 
-===|===|===
-1000 genomes phased haplotypes | |
-hs37d5 | | 
-Ancestral allele | | 
+\newpage
+\blandscape
 
+name | URL | date downloaded 
+--- | --- | ---
+1000 genomes phased haplotypes | https://mathgen.stats.ox.ac.uk/impute/1000GP_Phase3.html | 
+hs37d5 | ftp://ftp.1000genomes.ebi.ac.uk:21/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz | 5 Aug 2014
+Ancestral allele | ftp://ftp.ensembl.org/pub/release-66/fasta/ancestral_alleles/homo_sapiens_ancestor_GRCh37_e66.tar.bz | 6 Aug 2014 
+
+\elandscape
+\newpage
