@@ -1,5 +1,5 @@
 # Methods/Data
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning= FALSE}
 source("scripts/methods_tables.R")
 ```
 
@@ -178,7 +178,19 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 
 ### CoreExome
 
-The Infinium CoreExome-24 Beadchip is a SNP geneotyping platform available from Illumina and comprises a core set of 551,839 markers with an additional 100,000 custom markers able to be added. The markers are on average 5.26 kb apart.
+The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @guo2014. Illumina’s Genome Studio vXXX genotyping module vXXXwas used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
+
+- removed gender mismatches
+- checked relatedness of samples
+- checked ancestry with PCA
+- HWE by population
+- checked heterozygosity and inbreeding outliers
+- checked genotype consistency
+
+
+Selection of samples to form the populations used in the selection analyses
+Gout affection was determined by...
+A single individual was randomly selected from family groups identified through identity by state analysis. Individuals who had a mismatch between self reported and genetic ancestry were also removed. Principle components 2 and 4 were found to provide the greatest separation between Europeans, East Polynesians, and West Polynesians. Individuals reporting 4 grandparents of Caucasian, NZ Maori, CI Maori, Samoan, and Tongan ancestry were used to define the threshold values. Thresholds were calculated using mean +/- 2 SD for PC2 and PC4 for each population group. Once thresholds were calculated all samples were filtered so that only those that lay within a boundary remained. Remaining samples were then randomly sampled to form groups of 100 individuals, where possible trying to match general population prevalence for gout.
 
 Marker Categories | Number of Markers
 ---|---
@@ -230,6 +242,8 @@ knitr::kable(ce_populations_table(), longtable = TRUE, format = 'pandoc', bookta
 - markers
 - density
 
+
+
 ### Polynesian Sequences
 
 n | ~90
@@ -240,12 +254,13 @@ mean coverage |  Y x
 
 \newpage
 \blandscape
+```{r, echo = FALSE, results = 'asis'}
+tab <- data.frame(Name = c("1000 Genomes Project Phase 3 release 5","1000 Genomes Project Phase 3 release 5","1000 Genomes Phase 3 phased haplotypes", "Human Genome Reference FASTA", "Human Ancestral Allele FASTA"),
+                  URL = c("","http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/","https://mathgen.stats.ox.ac.uk/impute/1000GP_Phase3.html", "ftp://ftp.1000genomes.ebi.ac.uk:21/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz", "ftp://ftp.ensembl.org/pub/release-66/fasta/ancestral_alleles/homo_sapiens_ancestor_GRCh37_e66.tar.bz" ), Date = c("17 Sept 2014","20 Mar 2017","14 Dec 2014", "5 Aug 2014", "6 Aug 2014"))
+knitr::kable(tab, longtable=TRUE, caption = "Reference Datasets")
+```
 
-name | URL | date downloaded 
---- | --- | ---
-1000 genomes phased haplotypes | https://mathgen.stats.ox.ac.uk/impute/1000GP_Phase3.html | 
-hs37d5 | ftp://ftp.1000genomes.ebi.ac.uk:21/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz | 5 Aug 2014
-Ancestral allele | ftp://ftp.ensembl.org/pub/release-66/fasta/ancestral_alleles/homo_sapiens_ancestor_GRCh37_e66.tar.bz | 6 Aug 2014 
+
 
 \elandscape
 \newpage
