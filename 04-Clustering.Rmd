@@ -1,1 +1,40 @@
 # Clustering of Selection Statistics
+
+this is a test for the \gls{nz} acronymn feature to see when \gls{nz} becomes and acronymn \gls{t2d} is here as a test
+
+
+In this chapter I will investigate the idea that populations that share ancestry will display similar signals of selection. To test this Idea I will be clustering the various selection statistics and then comparing the clusters to current population migratory history.
+
+## introduction
+
+<!--
+* introduce the out of africa history
+* cover the pacific migrations
+* Near versus Remote Oceania
+* migration to NZ from pacific islands
+-->
+
+
+## methods
+Selection pipeline:
+Tajimas D window of 30k
+Fay and Wu's H window of 30k, slide of 3k
+iHS/nSL 
+F~ST~
+
+## results
+
+### based on top X results
+1. Tajima's D heatmap
+
+2. Fay and Wu's H heatmap
+
+
+### based on gene lists
+
+#### urate/gout
+
+#### BMI
+
+#### T2D
+
