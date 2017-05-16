@@ -5,13 +5,17 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
  bookdown::gitbook: default
- bookdown::pdf_book: default
+ bookdown::pdf_book:
+  includes:
+   in_header: preamble.tex
 documentclass: book
 bibliography: [references.bib]
 biblio-style: apalike
 link-citations: true
 description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 ---
+
+
 
 # Preface {-}
 
@@ -23,6 +27,17 @@ knitr::include_graphics('images/OUNZ_logo.png')
 
 ## Abbreviations {-}
 
+\addcontentsline{toc}{section}{Glossary}
+
+\printglossary[style=super]
+
+\clearpage
+
+\addcontentsline{toc}{section}{Acronyms}
+
+\printglossary[type=\acronymtype,style=super]
+
+\clearpage
 SNP: Single nucleotide polymorphism
 T2D: Type 2 diabetes
 WGS: Whole genome (re)sequence
