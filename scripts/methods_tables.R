@@ -2,6 +2,24 @@ library(tidyverse)
 library(formattable)
 library(pander)
 
+low_cov_seq <- function(){
+  gout_phenotypes <- read_delim('data/gout_phenotypes.txt', delim='\t')
+  si <- data.frame(SUBJECT= "AT0115")
+  tab <- gout_phenotypes %>% 
+    select(SUBJECT, BMICALC,BMI, GOUT, ACRGOUTAFFSTAT, DIABETES, AGECOL,SEX, HEART,KIDNEY, FATTYLIVER,WEIGHT,HEIGHT,WAIST,SYSTOLIC,DIASTOLIC,ETHCLASS) %>% 
+    inner_join(., si, "SUBJECT") %>% arrange(pop) %>% 
+    group_by(pop) %>% 
+    summarise( n = NROW(pop),
+               Age = paste0(formattable(mean(AGECOL, na.rm=TRUE), digits = 2, format = 'f')," (", formattable(sd(AGECOL, na.rm=TRUE),digits = 2, format = 'f'),")"),
+               `Sex (% Male)` = formattable(sum(SEX == 1, na.rm = TRUE) / sum(SEX %in% c(1,2), na.rm =TRUE) * 100, digits = 2, format = 'f'),
+               BMI = paste0(formattable(mean(BMI, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(BMI, na.rm = TRUE),digits = 2, format = 'f'),")"),
+               Waist = paste0(formattable(mean(WAIST, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(WAIST, na.rm=TRUE),digits = 2, format ='f'), ")"),
+               `Diabetes (%)` = formattable(sum(DIABETES == 2, na.rm=TRUE) / NROW(DIABETES) * 100, digits = 2, format = 'f') ,
+               `Gout (%)` = formattable(sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)  * 100, digits = 2, format = 'f')
+    )
+  return(tab)
+}
+
 ce_clinical_table <- function() {
   gout_phenotypes <- read_delim('data/gout_phenotypes.txt', delim='\t')
   tab <- gout_phenotypes %>% 
@@ -31,7 +49,7 @@ ce_populations_table <- function() {
   # % gout
   # mean BMI (sd)
   # % diabetes
-  load('data/ce_selected_ids_11-4-2017.Rdata')
+  load('data/ce_selected_ids_27-4-2017.Rdata')
   gout_phenotypes <- read_delim('data/gout_phenotypes.txt', delim='\t')
   si <- bind_rows(lapply(names(selected_ids), function(x){selected_ids[[x]]$pop <- x; return(selected_ids[[x]])}))
   tab <- gout_phenotypes %>% 
@@ -39,12 +57,12 @@ ce_populations_table <- function() {
     inner_join(., si, "SUBJECT") %>% arrange(pop) %>% 
     group_by(pop) %>% 
     summarise( n = NROW(pop),
-      Age = paste0(round(mean(AGECOL, na.rm=TRUE),2)," (", round(sd(AGECOL, na.rm=TRUE),2),")"),
-      Sex = round(sum(SEX == 1, na.rm = TRUE) / sum(SEX %in% c(1,2), na.rm =TRUE), 2),
-            BMI = paste0(round(mean(BMI, na.rm=TRUE),2), " (", round(sd(BMI, na.rm = TRUE),2),")"),
-            Waist = paste0(round(mean(WAIST, na.rm=TRUE),2), " (", round(sd(WAIST, na.rm=TRUE),2), ")"),
-            per_diabetes = sum(DIABETES == 2, na.rm=TRUE) / NROW(DIABETES),
-            per_gout= sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)
+      Age = paste0(formattable(mean(AGECOL, na.rm=TRUE), digits = 2, format = 'f')," (", formattable(sd(AGECOL, na.rm=TRUE),digits = 2, format = 'f'),")"),
+      `Sex (% Male)` = formattable(sum(SEX == 1, na.rm = TRUE) / sum(SEX %in% c(1,2), na.rm =TRUE) * 100, digits = 2, format = 'f'),
+            BMI = paste0(formattable(mean(BMI, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(BMI, na.rm = TRUE),digits = 2, format = 'f'),")"),
+            Waist = paste0(formattable(mean(WAIST, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(WAIST, na.rm=TRUE),digits = 2, format ='f'), ")"),
+            `Diabetes (%)` = formattable(sum(DIABETES == 2, na.rm=TRUE) / NROW(DIABETES) * 100, digits = 2, format = 'f') ,
+            `Gout (%)` = formattable(sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)  * 100, digits = 2, format = 'f')
     )
   return(tab)
   
