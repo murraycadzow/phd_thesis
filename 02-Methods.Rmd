@@ -54,6 +54,30 @@ Gene
 
 #### Selection database creation
 
+#### PCA - eigenstrat
+```
+#combine the chromosomes
+bcftools concat -O z -o combined_super_all.vcf.gz --threads 10 $(ls /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz | sort -t r -k12n)
+
+#find the independent markers
+plink2 --vcf combined_super_all.vcf.gz --maf 0.1 --indep-pairwise 50 5 0.2 --out combined_super_all
+touch cases.txt
+plink2 --vcf combined_super_all.vcf.gz --extract combined_super_all.prune.in --recode --out combined_super_all_indep --make-pheno cases.txt '*'
+# create the eigenstrat file
+echo -e "genotype: combined_super_all_indep.ped\nsnpname: combined_super_all_indep.map\nindivname: combined_super_all_indep.ped\noutputformat: EIGENSTRAT\ngenotypeoutputname: combined_super_all_indep.eigenstratgeno\nsnpoutname: combined_super_all_indep.snp\nindivoutname: combined_super_all_indep.ind\nfamilynames: NO" > par.PED.EIGENSTRAT
+
+convertf -p par.PED.EIGENSTRAT > eigen.log
+smartpca.perl -i combined_super_all_indep.eigenstratgeno -a combined_super_all_indep.snp -b combined_super_all_indep.ind  -o combined_super_all_indep_eigen.pca -p smartpca.perl -i combined_super_all_indep.eigenstratgeno -a combined_super_all_indep.snp -b combined_super_all_indep.ind  -o combined_super_all_indep_eigen.pca -p combined_super_all_indep_eigen -e combined_super_all_indep_eigen.eval -l combined_all_indep_eigen.log -m 0
+```
+#### admixture analysis
+```
+bcftools concat -O z -o combined_super_all.vcf.gz --threads 10 $(ls /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz | sort -t r -k12n)
+plink2 --vcf combined_super_all.vcf.gz --indep-pairwise 50 5 0.1 --out combined_super_all_admix
+
+plink2 --vcf combined_super_all.vcf.gz --make-bed --extract combined_super_all_admix.prune.in --out core_exome_admix
+for K in $(seq 1 15) ; do admixture -s 123456 --cv core_exome_admix.bed $K -j20 | tee log${K}.out ; done
+grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
+```
 
 ### GWAS
 
