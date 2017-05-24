@@ -158,8 +158,13 @@ url = {ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/},
 urldate = {2015-08-18}
 }
 
+### Genetics of Gout in Aoteroa
 
-### Axiom
+The genetics of Gout in Aoteroa study is a case-control cohort with recruitment mainly from the Auckland, Wellington, Christchurch and Dunedin regions of New Zealand. Individuals are asked to fill in a questionaire regarding demographics information, clinical information, and food consumption. 
+
+Individuals from this study have been genotyped on at least one of the following platforms: an affymetrix AXIOM SNP chip, an Illumina OMNIexpress SNP chip, an Illumina CoreExome SNP chip, whole genome low-coverage resequenced, or exome resequence data.
+
+#### Axiom
 
 - about
 - population
@@ -180,7 +185,7 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 - density
 
 
-### Omni
+#### Omni
 
 
 | | obs missing (n) | Samoan OMNIexpress
@@ -200,7 +205,7 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 - markers
 - density
 
-### CoreExome
+#### CoreExome
 
 The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @guo2014. Illumina’s Genome Studio vXXX genotyping module vXXXwas used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
 
@@ -268,7 +273,7 @@ knitr::kable(ce_populations_table(), longtable = TRUE, format = 'pandoc', bookta
 
 
 
-### Polynesian Sequences
+#### Polynesian Sequences
 
 n | ~90
 mean coverage |  Y x
