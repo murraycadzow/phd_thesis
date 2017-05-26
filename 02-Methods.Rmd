@@ -160,7 +160,7 @@ urldate = {2015-08-18}
 
 ### Genetics of Gout in Aoteroa
 
-The genetics of Gout in Aoteroa study is a case-control cohort with recruitment mainly from the Auckland, Wellington, Christchurch and Dunedin regions of New Zealand. Individuals are asked to fill in a questionaire regarding demographics information, clinical information, and food consumption. 
+The genetics of Gout in Aoteroa study is a case-control cohort with recruitment mainly from the Auckland, Wellington, Christchurch and Dunedin regions of New Zealand. Individuals were asked to fill in a questionaire regarding demographics information, clinical information, and food consumption at the time of recruitment. 
 
 Individuals from this study have been genotyped on at least one of the following platforms: an affymetrix AXIOM SNP chip, an Illumina OMNIexpress SNP chip, an Illumina CoreExome SNP chip, whole genome low-coverage resequenced, or exome resequence data.
 
@@ -293,3 +293,17 @@ knitr::kable(tab, longtable=TRUE, caption = "Reference Datasets")
 
 \elandscape
 \newpage
+
+## SelectionDW
+
+It was decided that in order to store the results from the seletionTools pipeline in an efficient manner that a database should be used. This involved creating a database schema from scratch. The database schema was co-designed in consultation with Nick Burns and the initial loading scripts were created by Nick for use with MySQL (https://github.com/nickb-/SelectionDW_ETL). These initial scripts were further developmented by myself and reimplemented them for use with Postgresql v9.6 (https://github.com/murraycadzow/SelectionDW_ETL). The functionality to load the inter-population statistics was also added later.
+
+The schema of the database consists of 4 main data tables and 3 supplementary tables. The main data tables are comprised of intra-population selection statistics and inter-population statistics. The 3 supplementary tables provide annotation information to link a posistion id to a genomic position, link a statics id to the statistic name, and finally link a population id to a population name.
+
+Custom Views were created to join the supplemental tables to the main tables.
+
+```
+#selectiondw_ETL
+
+
+```
