@@ -137,6 +137,36 @@ done
 
 ```
 
+
+### Variant calling from sequence data
+
+A pipeline for calling genetic variation from whole genome re-sequence data was implemented based on the best practices for the Genome Analysis ToolKit (GATK) v3.6. [@Depristo;@otherGATKref]
+This entire pipeline was implemented on the NeSI PAN cluster and automated to process each sample. The automation involves a wrapper program that given a list of samples will initiate transfer of the raw sequences to the cluster, then initiate the processing pipeline, and upon completion of the processing pipeline transfer the outputted data back before proceeding to the next sample in the batch. 
+
+#### Alignment of reads
+Paired end Fastq files were split into chunks of smaller files containing no more than 12.5 million reads per chunk. each paired chunk was then aligned to the human reference genome (build GRCh37) containing autosomes, sex chromosomes, MT (NC_XXXX), alternate contigs, as well as decoy sequence. Alignment was performed using the Burrows Wheeler Transform Aligner (BWA, v0.7.12)[@LiDurbin]. 
+
+
+#### Bam Sort and Merge
+
+The unsorted bam files for each chunk outputted from the alignment stage were then individually sorted into chromosome coordinate order using the picardtools (v2.10) [@picardref] sortSam module. Once all chunks were sorted they were merged into a single bam file for the sample using picardtools (v2.1.0) MergeSamFiles module.
+
+#### Mark Duplicates
+
+The bam file for the sample then had PCR duplicates marked using the Mark Duplicates module of the GATK
+
+#### Base Recalibration
+
+
+#### Haplotype caller - GVCF
+
+#### Genotype GVCF
+
+#### Variant Recalibration
+
+#### Genotype Concordence
+
+
 ### Variant Annotation
 snpEff
 
