@@ -2,6 +2,27 @@
 
 ## Introduction
 
+<!--
+motivation: seemed to be little in the way of calculating stats genome wide and wasn't sure how sensitive these stats were to snp density
+
+
+
+This chapter is about trying to first of all establish how sensitive the various statistics were to window/slide variation
+
+from the literature there doesn't seem to be any recommendation as to how to compute these statistics genome wide. Up until recently the various statistics were computed at the 'feature' level, usually the gene.
+
+Fst has a paper in early 2000's from Bruce Weir that touched on what sort of size to use howver it largely just came down to 'this window size seems to have enough of a smoothing effect as well as display some of the variation in the data' type approach and was largely just based on a this looks good enough.
+
+Pybus et al specified their window sizes which was roughly 30 kb window and 3kb slide for most statistics however I don't remember reading how they arrived at these sizes.
+
+In cadzow 2014 I tried had tried a few sizes and it it seemed that there was little difference between them other than the smaller the window the more noisy the data looked.
+
+While I was playing around with this for Tajima's D there does seem to be at least some relation to the density of the snps and the window size, which does intuitively make sense, in that if there are none or only 1 snp per window then the stats are going to be pretty poor.
+
+From the core exome work it looks as though 30 kb was ok and at least when the distribution of TD was binned by number of snps per window it didn't look to bad and the overall total distribution of TD looks not too bad. Increasing from 30 kb didn't really change TD that much. the extremes become more extreme but the means increaseas window size increases.
+-->
+
+
 literature
 Cadzow2014
 Cadzow2016
@@ -9,6 +30,26 @@ Pybus2014
 
 ### objectives
 Establish the influence of key parameters in selectionTools pipeline
+
+## PopGenome
+
+### Comparision of window sizes
+<!--
+
+This is at least covered for TD in the R notebook
+
+window slide was equal to the window size for each size tested.
+
+The rough results are that because of the density of the SNPs on the chip the windows tested 1,5,10,30,50,100 KB for 1,5,10 there is not a great number of SNPs per window. 
+
+The 1 kb window provides a very large number of windows with no snps present and when plotted looks like there is much fewer windows than the 5kb
+
+
+the window size of 30kb starts to offer a 
+
+
+-->
+### Comparision of window slide
 
 
 
