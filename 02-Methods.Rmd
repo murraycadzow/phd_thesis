@@ -538,15 +538,113 @@ parallel '
 
 ### Merge NZ coreExome with 1000 Genomes Project
 
-In order to efficiently merge the data sets, the overlap in the markers from the 1kgp dataset and the coreExome needed to be found. This was done by 
-Lets pull out the markers and alleles from the coreExome data
+In order to efficiently merge the data sets, the overlap in the markers from the 1kgp dataset and the coreExome needed to be found. This was done by extracting the markers and alleles from the coreExome data and then matching these to the markers extracted from the 1000 Genomes Project phase 3. The 1000 Genomes Project phase 3 markers were also filtered to remove non biallelic SNPs.
 
 ```
-parallel 'zgrep -v "^#" QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased.vcf.gz | cut -f1,2,4,5 > coreExome_chr{}_biallelic_markers.txt ' ::: $(seq 1 22)
+# extract markers from core exome
+parallel '
+  zgrep \
+    -v "^#" QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased.vcf.gz |\
+    cut -f1,2,4,5 > coreExome_chr{}_biallelic_markers.txt 
+    ' ::: $(seq 1 22)
+
+# extract 1000 Genomes markers
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Phase3_v5
+parllel '
+  bcftools view \
+    -O v \
+    -m 2 \
+    -M 2 \
+    -v snps \
+    -o - \
+    /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz |\
+  grep -v "^#" |\
+  cut -f 1,2,4,5 > 1kgp_chr{}_biallelic_markers.txt 
+  ' ::: $(seq 1 22)
 ```
 
-And now lets pull out the markers for the 1KGP
+
+An R script was created in order to merge the two marker lists based on chromosome position and the reference and alternate alleles 
+
+```{r, eval=FALSE}
+# on merriserver
+ce_markers <- data.frame()
+tmp_list <- list()
+for(i in 1:22){
+  tmp_list[[i]] <- read.table(file = paste0('/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/NZ_coreExome/coreExome_chr',i,'_biallelic_markers.txt'), header=FALSE)
+}
+ce_markers <- do.call(rbind, tmp_list)
+
+kg_markers <- data.frame()
+tmp_list2 <- list()
+for(i in 1:22){
+  tmp_list2[[i]] <- read.table(file= paste0('/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Phase3_v5/1kgp_chr',i,'_biallelic_markers.txt'), header=FALSE)
+  tmp_list2[[i]] <-  tmp_list2[[i]][ tmp_list2[[i]][,2] %in% tmp_list[[i]][,2],]
+ 
+  print(i)
+}
+kg_markers <- do.call(rbind, tmp_list2)
+ce_kg <- merge(ce_markers, kg_markers, by = c("V1","V2","V3","V4"))
+write.table(file = 'ce_1kg_matched_markers.txt', ce_kg[,c(1,2)], row.names = FALSE, col.names=FALSE, quote=FALSE)
+
+
+```
+
+Once the combined marker list was created, both the core exome and 1000 Genomes Project data sets had have their markers filtered to this consensus set.
 ```
 # working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Phase3_v5
-parllel 'bcftools view -O v -m 2 -M 2 -v snps -o - /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz | grep -v "^#" | cut -f 1,2,4,5 > 1kgp_chr{}_biallelic_markers.txt ' ::: $(seq 1 22)
+# filter 1000 Genomes markers
+parallel '
+  bcftools view 
+    -R ../ce_1kg_matched_markers.txt \
+    -O z \
+    -m 2 \
+    -M 2 \
+    -v snps \
+    -o ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.biallelic_ce_1kg_matched.vcf.gz \
+    /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz 
+  ' ::: $(seq 1 22)
+
+
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/NZ_coreExome/
+# filter coreExome markers
+parallel '
+  bcftools view \
+    -R ../ce_1kg_matched_markers.txt \
+    -O z \
+    -m 2 \
+    -M 2 \
+    -v snps \
+    -o NZ_coreExome.chr{}.norm.phased.biallelic_ce_1kg_matched.vcf.gz \
+    QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased.vcf.gz 
+  ' ::: $(seq 1 22)
+
+# merge 1kgp and nz coreexome
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
+parallel 
+  'bcftools merge \
+    -O z \
+    -o NZ_1KGP.chr{}.phased.vcf.gz \
+    Phase3_v5/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.biallelic_ce_1kg_matched.vcf.gz \
+    NZ_coreExome/NZ_coreExome.chr{}.norm.phased.biallelic_ce_1kg_matched.vcf.gz 
+  ' ::: $(seq 1 22)
 ```
+
+Sample IDs were then updated
+```
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
+for i in $(seq 1 22)
+do 
+  zcat NZ_1KGP.chr$i.phased.vcf.gz |\
+  head -1000 |\
+  grep '^#CHROM' |\
+  cut -f10- |\
+  tr '\t' '\n' |\
+  awk -F "_" '{if(NF ==1 ) {print $1 "\t" $1}else{print $1"_"$2"\t" $2}}' |\
+  bcftools reheader \
+    -s /dev/stdin/ \
+    -o NZ_1KGP.chr$i.phased.sample_updated.vcf.gz \
+    NZ_1KGP.chr$i.phased.vcf.gz
+done
+```
+
