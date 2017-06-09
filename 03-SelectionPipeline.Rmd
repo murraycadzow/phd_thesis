@@ -31,6 +31,137 @@ Pybus2014
 ### objectives
 Establish the influence of key parameters in selectionTools pipeline
 
+## Selection dataset creation
+
+## SelectionTools pipeline
+
+for the selection pipeline we need to split into populations
+
+```
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
+# make a combined panel file
+cut -f1-3 /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/integrated_call_samples_v3.20130502.ALL.panel |\
+cat - NZ_coreExome/*panel > nz_1kgp.panel
+
+mkdir Indiv_pops
+
+parallel '
+  bcftools view \
+    -s $(grep {1} nz_1kgp.panel |\
+      cut -f 1 |\
+      tr "\n" "," |\
+      sed "s/,$//g") \
+    -O z \
+    -o Indiv_pops/{1}.chr{2}.phased.vcf.gz NZ_1KGP.chr{2}.phased.sample_updated.vcf.gz
+  ' ::: $(cut -f 2 nz_1kgp.panel |grep -v "pop" | sort |uniq) ::: $(seq 1 22)
+```
+
+Break into super populations to analyse the Polynesians (NZM,CIM,TON,SAM) - make sure to exclude the NZC from the EUR super pop and also exclude the admixed NZM (NAD), Eastern Polynesians (EPN), and Western Polynesians (WPN).
+
+```
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
+mkdir Super_pops
+
+parallel '
+  bcftools view \
+    -s $(grep {1} nz_1kgp.panel |\
+      grep -v "NAD\|EPN\|NZC\|WPN" |\
+      cut -f 1 |\
+      tr "\n" "," |\
+      sed "s/,$//g") \
+    -O z \
+    -o Super_pops/{1}.chr{2}.phased.vcf.gz NZ_1KGP.chr{2}.phased.sample_updated.vcf.gz
+  ' ::: $(cut -f 3 nz_1kgp.panel |grep -v "pop" | sort |uniq) ::: $(seq 1 22)
+```
+
+Now send to NeSI pan cluster for the selectionTools pipeline to take place
+
+Individual populations are first run through selectionTools with iHS, nSL, and XP-EHH calculated later
+
+```
+# on nesi
+mkdir -p /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/{Indiv_pops,Indiv_pops_results}
+
+# locally
+parallel '
+  scp {} murray.cadzow@login.uoa.nesi.org.nz:~/uoo00008/NZ_1KGP_unimputed/Indiv_pops/ 
+  ' ::: $(ls /media/xsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Indiv_pops/*gz)
+
+# on nesi
+# working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops
+
+# find all the vcfs and use the first prefix to use as the population code
+for p in $(ls * | cut -d'.' -f1 | sort | uniq)
+do 
+  sbatch ../unimputed_selection_pipeline.sl $p ; sleep 2; 
+done
+```
+
+Then run run_selscan.sl and run_nsl_selscan on each population results file
+```
+# on nesi
+# working dir: Indiv_pops_results
+for p in $(find ./[A-Z]* -type d | grep -v xpehh | sed 's/\.\///g')
+do 
+  cd $p 
+  sbatch -J ihs_$p ../../run_selscan.sl $p
+  sbatch -J nsl_$p ../../run_nsl_selscan.sl $p
+  cd ../
+  sleep 5
+done
+```
+
+
+
+```
+# on nesi
+# working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops_results
+# individual pops
+for p1 in CIM NZC NZM SAM TON
+do
+  for p2 in ACB ASW BEB CDX CEU CHB CHS CIM CLM EPN ESN FIN GBR GIH GWD IBS ITU JPT KHV LWK MSL MXL NAD NZC NZM PEL PJL PUR SAM STU TON TSI WPN YRI
+  do
+    if [[ $p1 != $p2 ]]
+    then
+      echo $p1 $p2
+      sbatch ../run_xpehh.sl $p1 $p2
+      sleep 5
+    fi
+  done
+done
+
+
+for p1 in EPN NAD WPN
+do
+  for p2 in ACB ASW BEB CDX CEU CHB CHS CIM CLM EPN ESN FIN GBR GIH GWD IBS ITU JPT KHV LWK MSL MXL NAD NZC NZM PEL PJL PUR SAM STU TON TSI WPN YRI
+  do
+    if [[ $p1 != $p2 ]]
+    then
+      echo $p1 $p2
+      sbatch ../run_xpehh.sl $p1 $p2
+      sleep 5
+    fi
+  done
+done
+
+
+
+
+# super pops
+for p in EUR EAS SAS AMR AFR
+do
+  sbatch ../run_xpehh.sl POL $p
+  sleep 5
+done
+```
+
+Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
+```
+rm -r NAD_{WPN,EPN}
+rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
+
+```
+
 ## PopGenome
 
 ### Comparision of window sizes
