@@ -16,6 +16,9 @@ This section describes the gout GWAS and vGWAS performed in the UKBiobank data a
 
 ### European Gout GWAS
 
+Prior to conducting the GWAS for gout, phenotypic models were assessed. Logisitic regression was and the Akaike information criterion for each model was used for model selection. The covariates used included: age, sex, BMI, waist, waist to height ratio, and waist to hip ratio. Each covariate was significant (P < 0.05) on their own.
+
+
 - GWAS results
 - Heritability explained
 
@@ -69,6 +72,13 @@ here I want to include the results from the heritability analysis across the dif
 ## Imputation of Polynesian Populations Genomes
 
 ### Creation of a Polynesian imputation reference panel
+
+#### Low coverage
+
+
+
+
+##### 
 
 
 ###
