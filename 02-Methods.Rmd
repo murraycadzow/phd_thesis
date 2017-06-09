@@ -1,6 +1,36 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
 # Methods/Data
 ```{r, echo = FALSE, message = FALSE, warning= FALSE}
+library(pander)
 source("scripts/methods_tables.R")
+
+```
+
+```{r, echo = FALSE, inlcude = FALSE}
+library(knitr)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = knitr:::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+```
+
+```{r, linewidth=80, tidy=TRUE, include = FALSE, eval=FALSE}
+# this is an example of how linewidth will cut the output short, however it doesn't wrap the code chunk
+a <- '## "stx2A; shiga-like toxin II A subunit encoded by bacteriophage BP-933W; K11006 shiga toxin subunit A" '
+a
 ```
 
 ## Methods
@@ -54,28 +84,92 @@ Gene
 
 #### Selection database creation
 
+It was decided that in order to store the results from the seletionTools pipeline in an efficient manner that a database should be used. This involved creating a database schema from scratch. The database schema was co-designed in consultation with Nick Burns and the initial loading scripts were created by Nick for use with MySQL (https://github.com/nickb-/SelectionDW_ETL). These initial scripts were further developmented by myself and reimplemented them for use with Postgresql v9.6 (https://github.com/murraycadzow/SelectionDW_ETL). The functionality to load the inter-population statistics was also added later.
+
+The schema of the database consists of 4 main data tables and 3 supplementary tables. The main data tables are comprised of intra-population selection statistics and inter-population statistics. The 3 supplementary tables provide annotation information to link a posistion id to a genomic position, link a statics id to the statistic name, and finally link a population id to a population name.
+
+Custom Views were created to join the supplemental tables to the main tables.
+
+```
+#selectiondw_ETL
+
+
+```
+
+
+
 #### PCA - eigenstrat
 ```
+dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/
 #combine the chromosomes
-bcftools concat -O z -o combined_super_all.vcf.gz --threads 10 $(ls /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz | sort -t r -k12n)
+bcftools concat \
+  -O z \
+  -o combined_super_all.vcf.gz \
+  --threads 10 \
+  $(ls $dir/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz |\
+  sort -t r -k12n)
 
 #find the independent markers
-plink2 --vcf combined_super_all.vcf.gz --maf 0.1 --indep-pairwise 50 5 0.2 --out combined_super_all
+plink2 \
+  --vcf combined_super_all.vcf.gz \
+  --maf 0.1 \
+  --indep-pairwise 50 5 0.2 \
+  --out combined_super_all
+
 touch cases.txt
-plink2 --vcf combined_super_all.vcf.gz --extract combined_super_all.prune.in --recode --out combined_super_all_indep --make-pheno cases.txt '*'
+
+plink2 \
+  --vcf combined_super_all.vcf.gz \
+  --extract combined_super_all.prune.in \
+  --recode \
+  --out combined_super_all_indep \
+  --make-pheno cases.txt '*'
+
 # create the eigenstrat file
-echo -e "genotype: combined_super_all_indep.ped\nsnpname: combined_super_all_indep.map\nindivname: combined_super_all_indep.ped\noutputformat: EIGENSTRAT\ngenotypeoutputname: combined_super_all_indep.eigenstratgeno\nsnpoutname: combined_super_all_indep.snp\nindivoutname: combined_super_all_indep.ind\nfamilynames: NO" > par.PED.EIGENSTRAT
+echo -e "genotype: combined_super_all_indep.ped\nsnpname:\
+combined_super_all_indep.map\nindivname: \
+combined_super_all_indep.ped\noutputformat: \
+EIGENSTRAT\ngenotypeoutputname: \
+combined_super_all_indep.eigenstratgeno\nsnpoutname: \
+combined_super_all_indep.snp\nindivoutname: \
+combined_super_all_indep.ind\nfamilynames: \
+NO" > par.PED.EIGENSTRAT
 
 convertf -p par.PED.EIGENSTRAT > eigen.log
-smartpca.perl -i combined_super_all_indep.eigenstratgeno -a combined_super_all_indep.snp -b combined_super_all_indep.ind  -o combined_super_all_indep_eigen.pca -p smartpca.perl -i combined_super_all_indep.eigenstratgeno -a combined_super_all_indep.snp -b combined_super_all_indep.ind  -o combined_super_all_indep_eigen.pca -p combined_super_all_indep_eigen -e combined_super_all_indep_eigen.eval -l combined_all_indep_eigen.log -m 0
+smartpca.perl \
+  -i combined_super_all_indep.eigenstratgeno \
+  -a combined_super_all_indep.snp \
+  -b combined_super_all_indep.ind  \
+  -o combined_super_all_indep_eigen.pca \
+  -p  combined_super_all_indep_eigen \
+  -e combined_super_all_indep_eigen.eval \
+  -l combined_all_indep_eigen.log \
+  -m 0
 ```
 #### admixture analysis
 ```
-bcftools concat -O z -o combined_super_all.vcf.gz --threads 10 $(ls /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz | sort -t r -k12n)
-plink2 --vcf combined_super_all.vcf.gz --indep-pairwise 50 5 0.1 --out combined_super_all_admix
+dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection
 
-plink2 --vcf combined_super_all.vcf.gz --make-bed --extract combined_super_all_admix.prune.in --out core_exome_admix
-for K in $(seq 1 15) ; do admixture -s 123456 --cv core_exome_admix.bed $K -j20 | tee log${K}.out ; done
+bcftools concat -O z -o combined_super_all.vcf.gz \
+--threads 10 \
+$(ls $dir/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz |\
+sort -t r -k12n)
+
+plink2 \
+  --vcf combined_super_all.vcf.gz \
+  --indep-pairwise 50 5 0.1 \
+  --out combined_super_all_admix
+
+plink2 \
+  --vcf combined_super_all.vcf.gz \
+  --make-bed --extract combined_super_all_admix.prune.in \
+  --out core_exome_admix
+  
+for K in $(seq 1 15)
+do 
+  admixture -s 123456 --cv core_exome_admix.bed $K -j20 | tee log${K}.out
+done
+
 grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 ```
 
@@ -90,16 +184,18 @@ Uk Biobank GWAS
 
 10000 controls were randomly selected. The same 10000 samples were then combined with each different gout criteria and heritiability estimates were obtained by first creating the genetic relationship matrix and then the variance of gout 
 ```{r, engine='bash', eval=FALSE}
+
 # load fam into R
 # sample(10000, fam[AFF == controls]) -> controls.txt
 # awk '{if($6 == 2){print $1"\t"$2}}' < condition.fam | cat - controls.txt > ids_keep.txt
 
+ukbio_path=/Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/
 # Subset samples
 for i in $(seq 1 22)
 do 
-  plink2 --bed /Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/chr${i}impv1.bed \
-            --bim /Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/chr${i}impv1.bim_1kg_marker \
-            --fam /Volumes/BiocArchive/archive/merrimanlab/central_datasets/ukbiobank/plink/chrallimpv1.fam_allgout_allcontrols \
+  plink2 --bed $ukbio_path/chr${i}impv1.bed \
+            --bim $ubkbio_path/chr${i}impv1.bim_1kg_marker \
+            --fam $ukbio_path/chrallimpv1.fam_allgout_allcontrols \
             --hwe 0.000001 \
             --maf 0.01 \
             --keep ult_ids_keep.txt \
@@ -140,25 +236,36 @@ done
 
 ### Variant calling from sequence data
 
-A pipeline for calling genetic variation from whole genome re-sequence data was implemented based on the best practices for the Genome Analysis ToolKit (GATK) v3.6. [@Depristo;@otherGATKref]
+A pipeline for calling genetic variation from whole genome re-sequence data was implemented based on the best practices for the Genome Analysis ToolKit (GATK) v3.6. [@DePristo2011;@mckenna2010genome]
 This entire pipeline was implemented on the NeSI PAN cluster and automated to process each sample. The automation involves a wrapper program that given a list of samples will initiate transfer of the raw sequences to the cluster, then initiate the processing pipeline, and upon completion of the processing pipeline transfer the outputted data back before proceeding to the next sample in the batch. 
 
 #### Alignment of reads
-Paired end Fastq files were split into chunks of smaller files containing no more than 12.5 million reads per chunk. each paired chunk was then aligned to the human reference genome (build GRCh37) containing autosomes, sex chromosomes, MT (NC_XXXX), alternate contigs, as well as decoy sequence. Alignment was performed using the Burrows Wheeler Transform Aligner (BWA, v0.7.12)[@LiDurbin]. 
+Paired end Fastq files were split into chunks of smaller files containing no more than 12.5 million reads per chunk. each paired chunk was then aligned to the human reference genome (build GRCh37) containing autosomes, sex chromosomes, MT (NC_XXXX), alternate contigs, as well as decoy sequence. Alignment was performed using the Burrows Wheeler Transform Aligner (BWA, v0.7.12)[@Li2010]. 
+
+```
+
+```
 
 
 #### Bam Sort and Merge
 
 The unsorted bam files for each chunk outputted from the alignment stage were then individually sorted into chromosome coordinate order using the picardtools (v2.10) [@picardref] sortSam module. Once all chunks were sorted they were merged into a single bam file for the sample using picardtools (v2.1.0) MergeSamFiles module.
 
+
+```
+
+```
+
 #### Mark Duplicates
 
 The bam file for the sample then had PCR duplicates marked using the Mark Duplicates module of the GATK
 
 #### Base Recalibration
-
+The bam files had the base recalibration step applied to account for platform specific base bias
 
 #### Haplotype caller - GVCF
+
+
 
 #### Genotype GVCF
 
@@ -237,7 +344,7 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 
 #### CoreExome
 
-The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @guo2014. Illumina’s Genome Studio vXXX genotyping module vXXXwas used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
+The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @Guo2014. Illumina’s Genome Studio vXXX genotyping module vXXXwas used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
 
 - removed gender mismatches
 - checked relatedness of samples
@@ -280,60 +387,166 @@ number of snps used for selection
 Clinical Information
 
 
+
 \newpage
 \blandscape
-```{r, echo = FALSE, results = 'asis', message = FALSE, warning= FALSE}
- knitr::kable(ce_clinical_table(), longtable = TRUE, format = 'pandoc', booktabs = TRUE , caption = 'Clinical information for each core Exome population')
+
+
+
+```{r clinInfoCE, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE}
+pander::pandoc.table(ce_clinical_table(), caption = ' (\\#tab:clinInfoCE) Clinical information for each core Exome population', split.cells = 10 )
 ```
-
-
 
 \elandscape
 \newpage
 
-```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE}
-knitr::kable(ce_populations_table(), longtable = TRUE, format = 'pandoc', booktabs = TRUE , caption = 'Clinical information for New Zealand Populations in selection analysis')
+The clinical info is contained in table \@ref(tab:clinInfoCE) which is printed somewhere
+
+
+```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE, eval = FALSE}
+#knitr::kable(ce_populations_table(), longtable = TRUE, format = 'pandoc', booktabs = TRUE , caption = 'Clinical information for New Zealand Populations in selection analysis')
 ```
 
+
+Pandoc version
+```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE}
+ce_pop_table <- ce_populations_table()
+names(ce_pop_table) <- c("pop","n","Age","Sex (% Male)","BMI","Waist","Percent Diabetes","Percent Gout")
+pander::pandoc.table(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis', split.tables = 80, style = 'multiline', justify = 'lcrrrrrr')
+```
 
 - about
 - population
 - markers
 - density
 
-
+Table \@ref(tab:cePopTable) shows the break down of 
 
 #### Polynesian Sequences
 
+<!--
 n | ~90
 mean coverage |  Y x
-
+-->
 
 ### Reference datasets
 
+#### Markdown table
+
+Table: (\#tab:refDatasets) _Reference Datasets_
+
+| Name | Date | URL |
+|:-------------------------------|--------------------------|--------------------------------------------------------------|
+|1000 Genomes Project Phase 3 release 5 |17 Sept 2014| |
+|1000 Genomes Project Phase 3 release 5 |20 Mar 2017| http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ |
+|1000 Genomes Phase 3 phased haplotypes |14 Dec 2014| https://mathgen.stats.ox.ac.uk/impute/1000GP_Phase3.html |
+|Human Genome Reference FASTA | 5 Aug 2014 | ftp://ftp.1000genomes.ebi.ac.uk:21/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz |
+|Human Ancestral Allele FASTA | 6 Aug 2014 | ftp://ftp.ensembl.org/pub/release-66/fasta/ancestral_alleles/homo_sapiens_ancestor_GRCh37_e66.tar.bz |
+
+
+This used table \@ref(tab:refDatasets) for the stuff
+
 \newpage
-\blandscape
-```{r, echo = FALSE, results = 'asis'}
-tab <- data.frame(Name = c("1000 Genomes Project Phase 3 release 5","1000 Genomes Project Phase 3 release 5","1000 Genomes Phase 3 phased haplotypes", "Human Genome Reference FASTA", "Human Ancestral Allele FASTA"),
-                  URL = c("","http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/","https://mathgen.stats.ox.ac.uk/impute/1000GP_Phase3.html", "ftp://ftp.1000genomes.ebi.ac.uk:21/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz", "ftp://ftp.ensembl.org/pub/release-66/fasta/ancestral_alleles/homo_sapiens_ancestor_GRCh37_e66.tar.bz" ), Date = c("17 Sept 2014","20 Mar 2017","14 Dec 2014", "5 Aug 2014", "6 Aug 2014"))
-knitr::kable(tab, longtable=TRUE, caption = "Reference Datasets")
+
+
+## Selection dataset
+
+### PCA sample selection
+
+
+### Core Exome - Filter individuals and markers 
+
+To create a data set to calculate selection statistics, a subset of the individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the 1000 Genomes Project phase 3 release. Before the data sets could be combined there were a series of steps that were performed.
+
+The first step was comprised of two parts, firstly was based on samples to remove individuals who had failed the QC, and keep only the individuals who had been selected through PCA and had a genotyping rate across. Secondly, markers were filtered to remove INDELs so that only SNPs remained.
+
+```
+parallel -j 11 '
+  plink2 \
+    --bfile src_data/QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff \
+    --recode vcf \
+    --out QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff.chr{} \
+    --chr {} \
+    --remove src_data/QC1_7-BlanketExclusions.txt \
+    --keep coreExome_selection_keep_ids.txt \
+    --allow-no-sex \
+    --snps-only no-DI \
+    --geno 0.95
+    ' ::: $(seq 1 22)
 ```
 
-
-
-\elandscape
-\newpage
-
-## SelectionDW
-
-It was decided that in order to store the results from the seletionTools pipeline in an efficient manner that a database should be used. This involved creating a database schema from scratch. The database schema was co-designed in consultation with Nick Burns and the initial loading scripts were created by Nick for use with MySQL (https://github.com/nickb-/SelectionDW_ETL). These initial scripts were further developmented by myself and reimplemented them for use with Postgresql v9.6 (https://github.com/murraycadzow/SelectionDW_ETL). The functionality to load the inter-population statistics was also added later.
-
-The schema of the database consists of 4 main data tables and 3 supplementary tables. The main data tables are comprised of intra-population selection statistics and inter-population statistics. The 3 supplementary tables provide annotation information to link a posistion id to a genomic position, link a statics id to the statistic name, and finally link a population id to a population name.
-
-Custom Views were created to join the supplemental tables to the main tables.
+The second step was to ensure that all the core Exome markers were normalised against the hs37d5 human reference. This was to make sure the REF/ALT alleles would match with the 1000 Genomes Project phase 3 for a successful merge after phasing and subject selection. Shapeit2 was then used to find SNP alleles that disagreed with the 1000 Genomes Project haplotype reference and phase the core Exome markers. This step also reduced markers to biallelic positions and removed duplicate positions.
 
 ```
-#selectiondw_ETL
+parallel -j 11 '
+  bcftools norm \
+    -N \
+    --rm-dup any \
+    --check-ref s \
+    -f /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa \
+    -O v QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff.chr{}.vcf | \
+  bcftools view \
+    -m 2 \
+    -M 2  \
+    -O z \
+    -o QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.vcf.gz \
+  ' ::: $(seq 1 22)
 
+haplo_ref=/Volumes/BiocArchive/archive/merrimanlab/reference_files/Impute_ref_files/1000GP_Phase3/
+parallel -j 2 '
+  shapeit2 \
+    -check \
+    -M $haplo_ref/genetic_map_chr{}_combined_b37.txt \
+    --input-vcf QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.vcf.gz \
+    --input-ref $haplo_ref/1000GP_Phase3_chr{}.hap \
+    $haplo_ref/1000GP_Phase3_chr{}.legend \
+    $haplo_ref/1000GP_Phase3.sample \
+    --output-log QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.checked \
+    -T 12 
+  ' ::: $(seq 1 22)
 
+parallel '
+  touch QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.checked.snp.strand.exclude
+  ' ::: $(seq 1 22)
+
+# phase
+parallel -j 6 '
+  shapeit2 \
+    -M $haplo_ref/genetic_map_chr{}_combined_b37.txt \
+    --input-vcf QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.vcf.gz \
+    --input-ref $haplo_ref/1000GP_Phase3_chr{}.hap \
+    $haplo_ref/1000GP_Phase3_chr{}.legend \
+    $haplo_ref/1000GP_Phase3.sample \
+    --output-max QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased \
+    --exclude-snp QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.checked.snp.strand.exclude \
+    -T 8 
+  ' ::: $(seq 1 22)
+
+# convert from haps to vcf
+parallel '
+  shapeit2 \
+    -convert \
+    --input-haps QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased \
+    --output-vcf QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased.vcf 
+  ' ::: $(seq 1 22)
+
+# compress and index vcf
+parallel '
+  bgzip {} ;tabix -p vcf {}.gz 
+  ' ::: $(ls *phased.vcf)
+```
+
+### Merge NZ coreExome with 1000 Genomes Project
+
+In order to efficiently merge the data sets, the overlap in the markers from the 1kgp dataset and the coreExome needed to be found. This was done by 
+Lets pull out the markers and alleles from the coreExome data
+
+```
+parallel 'zgrep -v "^#" QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased.vcf.gz | cut -f1,2,4,5 > coreExome_chr{}_biallelic_markers.txt ' ::: $(seq 1 22)
+```
+
+And now lets pull out the markers for the 1KGP
+```
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Phase3_v5
+parllel 'bcftools view -O v -m 2 -M 2 -v snps -o - /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz | grep -v "^#" | cut -f 1,2,4,5 > 1kgp_chr{}_biallelic_markers.txt ' ::: $(seq 1 22)
 ```
