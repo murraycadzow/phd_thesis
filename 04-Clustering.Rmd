@@ -1,5 +1,11 @@
 # Clustering of Selection Statistics
 
+```{r, include = FALSE, echo = FALSE}
+library(tidyverse)
+library(ggdendro)
+```
+
+
 this is a test for the \gls{nz} acronymn feature to see when \gls{nz} becomes and acronymn \gls{t2d} is here as a test
 
 
@@ -14,6 +20,27 @@ In this chapter I will investigate the idea that populations that share ancestry
 * migration to NZ from pacific islands
 -->
 
+“Signatures of selection” in a population can be identified in regions of the genome that exhibit a reduction in genetic variability [@Smith1974;@Kaplan1989;@McVean2007]. This reduction in genetic variation can arise when the phenotype of a neutral benefit allele experiences a favourable change in environmental conditions or a new allele arises conveying a selective advantage [@Hermisson2005].  This results in an increased frequency of both the allele, and linked sites, within a population [@Smith1974]. Genome-wide scans for signatures of selection have shown geographically similar populations share similar signatures [@Coop2009; @pickrell2009signals]. Geography can inhibit migration leading to local adaptations affecting the allele frequency of local populations, leaving the non-local population allele frequency unaffected [@Coop2009]. New Zealand Polynesians are relatively geographically isolated, with a recent settlement history. 
+<!-- need to update with Lisa's comments which were
+- remote oceania is beyond soloomn islands
+- need a sentence to explain why we have Polynesians living in NZ -> ref the chapter about 1960's pacific immigrants to NZ
+- explain NZ popln of Maori and Polynesian populations
+- mention CIM settlement
+- explain east/west split
+-->
+
+The history starts with migration out of Africa (50-100 kya) [@Nielsen2017], tracking up to the Levant and Arabian peninsula (90-120 kya) <!-- same with this -->and splitting into South Asia, Indonesia, and Australia (50kya) [@Kivisild1999; @Quintana-Murci1999]. Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya) [@Groucutt2015]. The Pacific was settled in two events, the first was the settlement of Near Oceania (3.5 kya) followed by the settlement of Remote Oceania reaching Samoa and Tonga during the Lapita expansion (3 kya, [@Matisoo-Smith2015 ;  @Skoglund2016]) then the extremes of the Polynesian triangle settled (1 – 1.2 kya,[@Wilmshurst2011]). The settlement of New Zealand (NZ) by NZ Maori occurred at 800 ya [@Duggan2014; @Matisoo-Smith2015].
+
+New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013a]. Polynesian populations share a common genetic ancestry with East Asia however there are Polynesian specific variants associated with increased risk to gout and elevated serum urate [@Phipps-Green2010; @Hollis-Moffatt2012]. Serum urate has been associated with metabolic disorders [@Choi2007b] and genes involved with complex diseases such as T2D, gout, and other metabolic related disorders have shown evidence for selection [@Zhang2013a; @pickrell2009signals]. 
+
+It is hypothesised that elevated serum urate may have undergone positive selection in Polynesians due to some of the beneficial properties, such as its role as a powerful anti-oxidant [@Ames1981], or as an adjuvant for the innate immune system [@Opitz2009]. Serum urate has also been suggested to have a protective neurological effect [@Euser2009]. Characterisation of selection within Polynesian populations has been largely limited to population differentiation due to sample sizes [@Kimura2008; @Mallick2016].
+
+Here we investigate genetic selection of serum urate in Polynesian populations and if there is a selection signature shared amongst Polynesian populations.
+
+
+
+
+
 
 ## methods
 Selection pipeline:
@@ -24,13 +51,61 @@ F~ST~
 
 ## results
 
+These results are 
+
+### Frequency Spectrum
+
+Clustering on the full chromosome results for all chromsomes from PopGenome
+
+#### Tajima's D
+
+(ref:chrTDdendro) _Dendrogram for Tajima's D Clustering._ Hierarchical clustering of the populations based Tajima's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
+
+```{r chrTDdendro, fig.cap='(ref:chrTDdendro)'}
+# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
+td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
+td_dendro + ggtitle(label = "Tajima's D Clustering",subtitle = "Euclidean Distance with Complete Linkage")
+rm(td_dendro)
+```
+
+- In Figure \@ref(fig:chrTDdendro) it can be seen there is no clear groupings of the super populations.
+
+#### Fay and Wu's H
+
+(ref:chrFWHdendro) _Fay and Wu's H Clustering._ Hierarchical clustering of the populations based Fay and Wu's H values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
+
+```{r chrFWHdendro, fig.cap='(ref:chrFWHdendro)'}
+# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
+fwh_dendro <- readRDS('images/04_clustering/fwh_dendro.RDS')
+fwh_dendro + ggtitle(label ="Fay and Wu's H Clustering",subtitle = "Euclidean Distance with Complete Linkage")
+rm(fwh_dendro)
+```
+
+- In Figure \@ref(fig:chrFWHdendro) it can be seen that the there are clustering of the super populations although the American super populations are distributed across the other clusters.
+
+#### Fu and Li's D
+
+(ref:chrFLDdendro) _Fu and Li's D Clustering._ Hierarchical clustering of the populations based Fu and Li's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
+
+```{r chrFLDdendro, fig.cap='(ref:chrFLDdendro)'}
+# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
+fld_dendro <- readRDS('images/04_clustering/fld_dendro.RDS')
+fld_dendro + ggtitle(label ="Fu and Li's D Clustering",subtitle = "Euclidean Distance with Complete Linkage")
+rm(fld_dendro)
+```
+
+#### Fu and Li's F
+
+#### Zeng E
+
+
 ### based on top X results
 1. Tajima's D heatmap
 
 2. Fay and Wu's H heatmap
 
 
-### based on gene lists
+### stats based on gene lists
 
 #### urate/gout
 
