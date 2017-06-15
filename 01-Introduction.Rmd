@@ -144,27 +144,55 @@ Table \@ref(tab:selectionMethods).
 
 Table: (\#tab:selectionMethods) _Summary of Selection Methods_
 
-Method | Detects Selection Within/Between Populations | Timeframe | Key Reference
----|---|---|---
-_Macroevolutionary_ |||
-Ka/Ks| Within and Between | Ancient selection | @Hughes1988
-HKA | Within and Between || @Hudson1987
-_Haplotypic_|||
-iHS | Within | < 30,000 years | @voight2006map
-XP-EHH (Rsb) | Between || @tang2007new
-nSL | Within || @Ferrer-Admetlla2014
-_Frequency Spectrum_ |||
-Tajima's _D_ | Within | < 250,000 years | @Tajima1989
-Fay and Wu's _H_ | Within | < 80,000 years | @fay2000hitchhiking
-F~ST~ | Between | < 50-70,000 years | @Weir1984
-$\Delta$DAF | Between || @Grossman2010
-SCCT | Within || @Wang2014
-_Composite_ |||
-CLR | Within || @Kim2002
-XP-CLR | Between || @Chen2010
-CMS | Within and Between || @Grossman2010
-Meta-SS | Within and Between || @Utsunomiya2015
-CSS | Within and Between || @Randhawa2014
+--------------------- ------------------  ------------------ ----------------------
+Method                Detects Selection   Timeframe           Key Reference
+                      Within/Between 
+                      Populations      
+--------------------- ------------------  ------------------ ----------------------
+_Macroevolutionary_  
+
+Ka/Ks                 Within and Between  Ancient selection   @Hughes1988
+
+HKA                   Within and Between                      @Hudson1987
+
+
+_Haplotypic_
+
+iHS                   Within              < 30,000 years      @voight2006map
+
+XP-EHH (Rsb)          Between                                 @tang2007new
+
+nSL                   Within                                  @Ferrer-Admetlla2014
+
+
+_Frequency Spectrum_
+
+Tajima's _D_          Within              < 250,000 years     @Tajima1989
+
+Fay and Wu's _H_      Within              < 80,000 years      @fay2000hitchhiking
+
+F~ST~                 Between             < 50-70,000 years   @Weir1984
+
+$\Delta$DAF           Between                                 @Grossman2010
+
+SCCT                  Within                                  @Wang2014
+
+
+_Composite_
+
+CLR                   Within                                  @Kim2002
+
+XP-CLR                Between                                 @Chen2010
+
+CMS                   Within and Between                      @Grossman2010
+
+Meta-SS               Within and Between                      @Utsunomiya2015
+
+CSS                   Within and Between                      @Randhawa2014
+---------------------------------------------------------------------------
+
+<!-- make sure to update so that it includes the statistics used -->
+
 
 The different methods for detecting selection work best over different time periods. Recent soft sweeps are able 
 to be detected well with LD-based methods but frequency spectrum tests struggle with the opposite being the 
