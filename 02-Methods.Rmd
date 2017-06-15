@@ -41,24 +41,50 @@ a
 -omni
 -coreExome
 
-### SelectionTools
+### Selection Statistics
+
+#### PopGenome
+
+Ancestral allele - The ancestral allele was used as annotated from the 1000 Genomes Phase 3 VCF file where possible. A new sample identified as 'Ancestor' was included into the VCF and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependant on the ancestral allele matching, otherwise the Ancestor genotype was set to missing.
+
+When the VCF files were loaded into the R package PopGenome populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
+
+#### SelectionTools
+
+SelectionTools v1.1 [@Cadzow2014] was used to generate the following statistics as per Table \@ref(tab:seltoolStats)
+Ancestral allele
 
 
+Table: (\#tab:seltoolStats) 
 
-Selection statistics that are generated:
 
-Window based
-- Tajima's D (vcftools) [@Tajima1989]
-- Fay and Wu's H [@fay2000hitchhiking] (variscan)
-- Fu and Li's D [@Fu1993] (variscan)
-- Fu and Li's F [@Fu1993] (variscan)
+| Statistic | Program | Window Size | Reference |
+|:----------------|:------------:|:-------------:|:---------------|
+| _Window based_ | | | |
+| Tajima's D | Vcftools | 30 kb | @Tajima1989|
+| Fay and Wu's H | Variscan | 30 kb | @fay2000hitchhiking|
+| Fu and Li's D | Variscan | 30 kb | @Fu1993|
+| Fu and Li's F | Variscan | 30 kb | @Fu1993|
+| $\eta$ (total number of mutations) |Variscan| 30 kb | |
+| $\eta$~E~ (number of external mutations) |Variscan| 30 kb | |
+| $\pi$ |Variscan| 30 kb | |
+| S |Variscan| 30 kb | |
+| mean F~ST~ | Vcftools| | |
+| _Haplotype Based_ | | | |
+
+<!--
+- Tajima's D (Vcftools) [@Tajima1989]|
+- Fay and Wu's H  (Variscan) [@fay2000hitchhiking]|
+- Fu and Li's D | Variscan  [@Fu1993]|
+- Fu and Li's F | Variscan | 30 kb | [@Fu1993]|
 - Eta (variscan) total (minimum number) number of mutations ($\eta$) 
 - Eta E (variscan) number of external mutations ie number of derived singletons
 - Pi (variscan) nucleotide diversity ($\pi$)
 - S (variscan) number of segregating sites
-- mean F~ST~ (vcftools)
+- mean F~ST~ Vcftools
 
 Haplotype based
+
 - sL0
 - sL1
 - unstandardised nSL
@@ -78,11 +104,11 @@ Frequency
 
 Gene
 - Ka/Ks
+-->
 
 
 
-
-#### Selection database creation
+### Selection database creation
 
 It was decided that in order to store the results from the seletionTools pipeline in an efficient manner that a database should be used. This involved creating a database schema from scratch. The database schema was co-designed in consultation with Nick Burns and the initial loading scripts were created by Nick for use with MySQL (https://github.com/nickb-/SelectionDW_ETL). These initial scripts were further developmented by myself and reimplemented them for use with Postgresql v9.6 (https://github.com/murraycadzow/SelectionDW_ETL). The functionality to load the inter-population statistics was also added later.
 
