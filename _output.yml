@@ -9,6 +9,7 @@ bookdown::pdf_book:
   toc_unnumbered: no
   toc_appendix: yes
   quote_footer: ["\\VA{", "}{}"]
+  #documentclass: report
 bookdown::gitbook:
  split_by: section
  config:
