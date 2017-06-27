@@ -22,6 +22,14 @@ While I was playing around with this for Tajima's D there does seem to be at lea
 From the core exome work it looks as though 30 kb was ok and at least when the distribution of TD was binned by number of snps per window it didn't look to bad and the overall total distribution of TD looks not too bad. Increasing from 30 kb didn't really change TD that much. the extremes become more extreme but the means increaseas window size increases.
 -->
 
+<!-- ascertainment bias will skew selection statistics that are site frequency spectrum dependant in chip data due to the over-representation of intermediate frequency SNPs, these include Tajima's D (upward) and Fay and Wu's H [@Clark2005]
+
+
+Carlson2005 did windows of 100kb, slide 10kb and mean snps were ~50/window. ascertainment bias esp in the +ve end. continous region on >20 windows where 75% were in bottom 1% was defined as contiguous regions of Tajimas D reduction.
+Rafajlović2014 largely followed Carlson2005, they also discarded windows with less than 5 snps.
+
+Bigman2010 has a custom Tajima's D that is created to be similar to iHS in terms of calculation
+-->
 
 literature
 Cadzow2014
@@ -180,6 +188,7 @@ the window size of 30kb starts to offer a
 
 
 -->
+
 ### Comparision of window slide
 
 
@@ -203,8 +212,56 @@ tested gap width to try and bring in SLC2A9 for coreExome data
 
 ## Simulations
 
+### Bottleneck
+
+### Migration
+
+### Expansion
+
+### Positive Selection
+
+### Balancing Selection
+
+### Negative Selection
+
+
 ## Results
+<!--
+Look at what windows/genes for each population are interesting
+Super populations - 1KGP vs POL
+Super Populations - 1KGP vs EPN/WPN
+Individual populations - CIM/NZM/SAM/TON/NZC
+-->
+### Intra
+
+#### Tajima's D
+
+The mean Tajima's D for each chromosome can be seen in Table \@ref(tab:meanTDtable) and is found in the appendix
+
+#### Fay and Wu's H
+
+#### Zeng's E
+
+#### iHS/nSL
+
+### Inter
+
+#### F~ST~
+
+#### $\Delta$ DAF
+
+#### XP-EHH
+
 
 
 
 ## Chapter Discussion
+<!--
+Pipeline discussion - how were the results?
+  - Are the genes that are picked up similar to what has been discovered?
+
+Is there anything special about the population comparisons?
+  - shared genes between similar populations?
+  - East/West split seen?
+  - NZC vs GBR similarity?
+-->
