@@ -5,13 +5,20 @@ library(tidyverse)
 library(ggdendro)
 ```
 
+<!--
+key tasks to complete:
+- update introduction WRT embedded comments
+- df with summary stats about number of windows for each population
+- df with distribution of treecuts proportions
+- genes in the tails
+-->
 
 this is a test for the \gls{nz} acronymn feature to see when \gls{nz} becomes and acronymn \gls{t2d} is here as a test
 
 
 In this chapter I will investigate the idea that populations that share ancestry will display similar signals of selection. To test this Idea I will be clustering the various selection statistics and then comparing the clusters to current population migratory history.
 
-## introduction
+## Introduction
 
 <!--
 * introduce the out of africa history
@@ -49,14 +56,18 @@ Fay and Wu's H window of 30k, slide of 3k
 iHS/nSL 
 F~ST~
 
-## results
+PopGenome was used to calculate Tajima's D, Fay and Wu's H, and Zeng's E using windows of 30 kbp with a slide of 3 kbp.
 
-These results are 
+\gls{ihs} and \gls{nsl} were calculated using selectionTools1.1 as described in Section \@ref(selectionTools)
+
+## Results
+
+
 
 ### Frequency Spectrum
 
 Clustering on the full chromosome results for all chromsomes from PopGenome
-
+<!-- put each of the similar statistics together into a multiplot -->
 #### Tajima's D
 
 (ref:chrTDdendro) _Dendrogram for Tajima's D Clustering._ Hierarchical clustering of the populations based Tajima's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
@@ -96,20 +107,99 @@ rm(fld_dendro)
 
 #### Fu and Li's F
 
+(ref:chrFLFdendro) _Fu and Li's F Clustering._ Hierarchical clustering of the populations based Fu and Li's F values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
+
+```{r chrFLFdendro, fig.cap='(ref:chrFLFdendro)'}
+# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
+flf_dendro <- readRDS('images/04_clustering/flf_dendro.RDS')
+flf_dendro + ggtitle(label ="Fu and Li's F Clustering",subtitle = "Euclidean Distance with Complete Linkage")
+rm(flf_dendro)
+```
+
 #### Zeng E
 
+(ref:chrZEdendro) _Zeng's E Clustering._ Hierarchical clustering of the populations based Zeng's E values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
+
+```{r chrZEdendro, fig.cap='(ref:chrZEdendro)'}
+# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
+ze_dendro <- readRDS('images/04_clustering/ze_dendro.RDS')
+ze_dendro + ggtitle(label ="Zeng's E Clustering",subtitle = "Euclidean Distance with Complete Linkage")
+rm(ze_dendro)
+```
+
+```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=10}
+source('scripts/multiplot.R')
+td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
+p1 <- td_dendro + ggtitle(label = "Tajima's D")
+
+fwh_dendro <- readRDS('images/04_clustering/fwh_dendro.RDS')
+p2 <- fwh_dendro + ggtitle(label ="Fay and Wu's H")
+
+fld_dendro <- readRDS('images/04_clustering/fld_dendro.RDS')
+p3 <- fld_dendro + ggtitle(label ="Fu and Li's D")
+
+flf_dendro <- readRDS('images/04_clustering/flf_dendro.RDS')
+p4 <- flf_dendro + ggtitle(label ="Fu and Li's F")
+
+multiplot(p1, p2, p3, p4, cols = 1)
+```
+
+(ref:multichrplot) _Whole Chromosome Clustering._ Hierarchical clustering of the populations using selection test statistics for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria. Selection test statistic is in the label for each dendrogram.
 
 ### based on top X results
+
+The most extreme 1% from each side of the empirical distribution was selected to use as part of a hierachical clustering to cluster the individual populations from the \gls{1kgp} the Polynesian populations. Euclidean distance was used as the distance measure for clusters and complete linkage was used as the linkage method to between clusters. For each population, windows were ranked in ascending order on test value, with ties being given the same rank, and the top 1000 ranks were selected for either tail. Each tail was then clustered separately.
+
+The mean number of windows per population was XXX with a minimum of XXX and a maximum of XXX. To assess the statistical significance of the proportion of populations being assigned the same cluster, a series of XXX random draws was done to establish a null model for each selection test statistic.
+
 1. Tajima's D heatmap
+<!-- create a 4 panel multiplot with each dendrogram and heat map for both tails on the same panel -->
+The negative Tajima's D 
+
+positive
 
 2. Fay and Wu's H heatmap
 
+negative
+
+positive
+
+3. Zeng's E Heatmap
+
+negative
+
+positive
+
+<!-- create df from the clustering results to be able to pull numbers out of for number of windows per population for each statistic, and for the proportion of pops being clustered -->
+
+
+<!-- 
+comparison about the random draws and the proportion of the same super clusters in each main cluster compared with the actual extremes
+-->
+
+
+### Haplotypic
+
+Markers with a significant \gls{ihs} and \gls{nsl} after normalisation were grouped together by using the DBSCAN algorithm, where nearby \gls{snp} were assigned the same group id <!-- more detail here and include dbscan version -->.
+
+For the haplotypic methods a similarity measure was created by calculating the 
+
+1. iHS
+
+2. nSL
 
 ### stats based on gene lists
-
+<!-- might be a good idea to use a grid to put multiple plots into one -->
 #### urate/gout
 
 #### BMI
 
 #### T2D
+
+## Discussion and Conclusions
+
+- using the chromosome wide results did not always return the super clusters.
+- clustering using the gout/urate/bmi/t2d/metsyn genes...
+
+One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
 
