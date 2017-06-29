@@ -49,7 +49,7 @@ Ancestral allele - The ancestral allele was used as annotated from the 1000 Geno
 
 When the VCF files were loaded into the R package PopGenome populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
 
-#### SelectionTools
+#### SelectionTools {#selectionTools}
 
 SelectionTools v1.1 [@Cadzow2014] was used to generate the following statistics as per Table \@ref(tab:seltoolStats)
 Ancestral allele
