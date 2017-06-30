@@ -29,18 +29,24 @@ In this chapter I will investigate the idea that populations that share ancestry
 
 “Signatures of selection” in a population can be identified in regions of the genome that exhibit a reduction in genetic variability [@Smith1974;@Kaplan1989;@McVean2007]. This reduction in genetic variation can arise when the phenotype of a neutral benefit allele experiences a favourable change in environmental conditions or a new allele arises conveying a selective advantage [@Hermisson2005].  This results in an increased frequency of both the allele, and linked sites, within a population [@Smith1974]. Genome-wide scans for signatures of selection have shown geographically similar populations share similar signatures [@Coop2009; @pickrell2009signals]. Geography can inhibit migration leading to local adaptations affecting the allele frequency of local populations, leaving the non-local population allele frequency unaffected [@Coop2009]. New Zealand Polynesians are relatively geographically isolated, with a recent settlement history. 
 <!-- need to update with Lisa's comments which were
-- remote oceania is beyond soloomn islands
+- remote oceania is beyond solomon islands
 - need a sentence to explain why we have Polynesians living in NZ -> ref the chapter about 1960's pacific immigrants to NZ
 - explain NZ popln of Maori and Polynesian populations
 - mention CIM settlement
 - explain east/west split
 -->
 
-The history starts with migration out of Africa (50-100 kya) [@Nielsen2017], tracking up to the Levant and Arabian peninsula (90-120 kya) <!-- same with this -->and splitting into South Asia, Indonesia, and Australia (50kya) [@Kivisild1999; @Quintana-Murci1999]. Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya) [@Groucutt2015]. The Pacific was settled in two events, the first was the settlement of Near Oceania (3.5 kya) followed by the settlement of Remote Oceania reaching Samoa and Tonga during the Lapita expansion (3 kya, [@Matisoo-Smith2015 ;  @Skoglund2016]) then the extremes of the Polynesian triangle settled (1 – 1.2 kya,[@Wilmshurst2011]). The settlement of New Zealand (NZ) by NZ Maori occurred at 800 ya [@Duggan2014; @Matisoo-Smith2015].
+The history starts with migration out of Africa (50-100 kya) [@Nielsen2017], tracking up to the Levant and Arabian peninsula (? kya) <!-- same with this -->and splitting into South Asia, Indonesia, and Australia (50kya) [@Kivisild1999; @Quintana-Murci1999]. Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya) [@Groucutt2015]. <!--Lisa: The Pacific – or if you really are talking about Remote Oceania, you are talking about Lapita, which first appears in Near Oceania about 3300BP where they interact with the peoples who have been there for at least 40,000 years and then by 3,000 they are the first to establish settlement on the islands of New Caledonia, Vanuatu, Fiji, Samoa and Tonga. THEN around 1-1.2 kya we have the settlement of the rest of the Polynesian triangle, including the Cook Is avout 1,000 BP and New Zealand about 750 - 800 BP. --> The Pacific was settled in two events, the first was the settlement of Near Oceania (50 kya) followed by the settlement of Remote Oceania reaching Samoa and Tonga during the Lapita expansion (3 kya, [@Matisoo-Smith2015 ;  @Skoglund2016]) then the rest of the Polynesian triangle settled (1 – 1.2 kya, [@Wilmshurst2011]). The settlement of \gls{nz} by \gls{nz} Maori occurred 800 ya [@Duggan2014; @Matisoo-Smith2015].
 
-New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013a]. Polynesian populations share a common genetic ancestry with East Asia however there are Polynesian specific variants associated with increased risk to gout and elevated serum urate [@Phipps-Green2010; @Hollis-Moffatt2012]. Serum urate has been associated with metabolic disorders [@Choi2007b] and genes involved with complex diseases such as T2D, gout, and other metabolic related disorders have shown evidence for selection [@Zhang2013a; @pickrell2009signals]. 
+<!--ref for pacific in NZ in 1960's [@MatisooSmith2012highway] 
+The modern population of \gls{nz} Maori 
 
-It is hypothesised that elevated serum urate may have undergone positive selection in Polynesians due to some of the beneficial properties, such as its role as a powerful anti-oxidant [@Ames1981], or as an adjuvant for the innate immune system [@Opitz2009]. Serum urate has also been suggested to have a protective neurological effect [@Euser2009]. Characterisation of selection within Polynesian populations has been largely limited to population differentiation due to sample sizes [@Kimura2008; @Mallick2016].
+For largely ecomomnic reasons, during the 1950's and 60's there was a rural to urban migration of people in the Pacific. As part of this, many settled in New Zealand from Samoan, Tongan and the Cook Islands in search of work and now the populations in New Zealand largely outnumber the populations of their islands origin [@MatisooSmith2012highway]. Within \gls{nz}, the Polynesian populations are mostly focussed within the Auckland region [@Barcham2009]
+-->
+
+New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013a]. Polynesian populations share a common genetic ancestry with East Asia however there are Polynesian specific variants associated with increased risk to gout and elevated serum urate [@Phipps-Green2010; @Hollis-Moffatt2012]. Serum urate has been associated with metabolic disorders [@Choi2007b] and genes involved with complex diseases such as \gls{t2d}, gout, and other metabolic related disorders have shown evidence for selection [@Zhang2013a; @pickrell2009signals]. 
+
+It is hypothesised that elevated serum urate may have undergone positive selection in Polynesians populations due to some of the beneficial properties [@gosling2014], such as its role as a powerful anti-oxidant [@Ames1981], or as an adjuvant for the innate immune system [@Opitz2009]. Serum urate has also been suggested to have a protective neurological effect [@Euser2009]. Characterisation of selection within Polynesian populations has been largely limited to population differentiation due to sample sizes [@Kimura2008; @Mallick2016].
 
 Here we investigate genetic selection of serum urate in Polynesian populations and if there is a selection signature shared amongst Polynesian populations.
 
@@ -50,15 +56,16 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 
 
 ## methods
-Selection pipeline:
-Tajimas D window of 30k
-Fay and Wu's H window of 30k, slide of 3k
-iHS/nSL 
+Selection pipeline for ihs/nsl
+
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, and Zeng's _E_ were all calulated using PopGenome v2.2.3 [@popgenome]. These statistics were calculated using a window size of 30 kb and a slide of 3 kb. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. Hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. The distance measure used was euclidean distance and complete linkage was the linkage criteria.
+
+\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@cadzow2014] pipeline as described in Section \@ref(selectionTools). markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was XXX kb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
+
 F~ST~
 
-PopGenome was used to calculate Tajima's D, Fay and Wu's H, and Zeng's E using windows of 30 kbp with a slide of 3 kbp.
 
-\gls{ihs} and \gls{nsl} were calculated using selectionTools1.1 as described in Section \@ref(selectionTools)
+Disease associated genes were downloaded from the GWAS catalogue (https://www.ebi.ac.uk/gwas/, accessed 19 June 2017) and filtered for P < 5x10^-8^
 
 ## Results
 
@@ -66,8 +73,12 @@ PopGenome was used to calculate Tajima's D, Fay and Wu's H, and Zeng's E using w
 
 ### Frequency Spectrum
 
+
+
+
 Clustering on the full chromosome results for all chromsomes from PopGenome
 <!-- put each of the similar statistics together into a multiplot -->
+
 #### Tajima's D
 
 (ref:chrTDdendro) _Dendrogram for Tajima's D Clustering._ Hierarchical clustering of the populations based Tajima's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
@@ -152,19 +163,56 @@ The most extreme 1% from each side of the empirical distribution was selected to
 
 The mean number of windows per population was XXX with a minimum of XXX and a maximum of XXX. To assess the statistical significance of the proportion of populations being assigned the same cluster, a series of XXX random draws was done to establish a null model for each selection test statistic.
 
-1. Tajima's D heatmap
+Table \@ref(tab:windowTable) shows the distribution of number of windows for each super population used for each selection test statistic. Table \@(tab:totalewindowTable) show the total number of windows used for each.
+
+
+```{r, results = 'asis', echo = FALSE}
+mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_mat_d_list-28-6-2017.RDS')
+pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>% select(-pop) %>% group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% data.frame, caption = '(\\#tab:windowTable) Summary statistics for number of windows used in each custering analysis')
+```
+
+<!-- want to include the min/mean/max number of windows shared-->
+```{r, results = 'asis'}
+pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, mean, max) %>% data.frame(), caption = '(\\#tab:totalwindowTable) Number of windows'  )
+```
+
+
+
+#### Tajima's D 
 <!-- create a 4 panel multiplot with each dendrogram and heat map for both tails on the same panel -->
-The negative Tajima's D 
 
-positive
+```{r tdTop1000, }
 
-2. Fay and Wu's H heatmap
+```
 
-negative
+- neg gave super pop clusters
+- pos gave super pop clusters
+- both split the AMR into 2
+- number of windows shared by POL with others was X
+- number of windows shared EP/WP was X
+- number of unique windows was X for CIM, NZM, SAM, TON
 
-positive
+#### Fay and Wu's H heatmap
 
-3. Zeng's E Heatmap
+```{r fwhTop1000}
+
+```
+
+- Fay and Wu's H put all of the super populations together both neg and pos (split AMR)
+- there looks to be a lot of unique regions within the POL
+
+#### Fu and Li's D
+
+- 10 fold difference in the number of windows
+- pos had ~2900, neg had ~22000
+
+#### Fu and Li's F
+
+- pos clustered super populations together, split AMR
+- pos looks like there is a reasonable number of windows shared between pops (5188)
+- neg looks pretty sparse 17044
+
+#### Zeng's E Heatmap
 
 negative
 
