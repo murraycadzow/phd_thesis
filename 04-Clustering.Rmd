@@ -238,6 +238,7 @@ four_plot("fwh","Fay and Wu's H")
 
 - Fay and Wu's H put all of the super populations together both neg and pos (split AMR)
 - there looks to be a lot of unique regions within the POL
+- both neg and pos have the Pol cluster nearest to the EAS
 
 
 
@@ -247,6 +248,10 @@ four_plot("fld","Fu and Li's D")
 ```
 - 10 fold difference in the number of windows
 - pos had ~2900, neg had ~22000
+- pol is the least similar to the rest of the 1kgp pops in pos
+- sam/nzm and cim/ton split in neg
+- only sas and nearly eur are completely grouped together, looks somewhat random
+
 
 #### Fu and Li's F
 ```{r flfTop1000}
@@ -261,6 +266,9 @@ four_plot("flf","Fu and Li's F")
 ```{r zeTop1000}
 four_plot("ze","Zeng's E")
 ```
+
+- eas and pol for both neg and pos are most similar
+- ep/wp split in both neg and pos
 
 <!-- create df from the clustering results to be able to pull numbers out of for number of windows per population for each statistic, and for the proportion of pops being clustered -->
 
@@ -282,11 +290,24 @@ For the haplotypic methods a similarity measure was created by calculating the
 
 ### stats based on gene lists
 <!-- might be a good idea to use a grid to put multiple plots into one -->
+
+The actual values for the windows that intersected the associated gene windows were used to create the distance matrix
+
+- Tajima's D clustered all super populations together (AMR was slightly ungrouped, often PEL out) and get the EP/WP split for all diseases
+- Fay and Wu's H clustered all super populations together (AMR was slightly ungrouped, often PEL out) and get the EP/WP split for all diseases
+- Fu and Li's D
+
+
 #### urate/gout
 
 #### BMI
 
 #### T2D
+
+
+<!--
+results from other diseases that are late onset and see if they produce the same patterns
+-->
 
 ## Discussion and Conclusions
 
