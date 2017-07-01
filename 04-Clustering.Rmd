@@ -3,6 +3,7 @@
 ```{r, include = FALSE, echo = FALSE}
 library(tidyverse)
 library(ggdendro)
+source('scripts/multiplot.R')
 ```
 
 <!--
@@ -55,7 +56,7 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 
 
 
-## methods
+## Methods
 Selection pipeline for ihs/nsl
 
 Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, and Zeng's _E_ were all calulated using PopGenome v2.2.3 [@popgenome]. These statistics were calculated using a window size of 30 kb and a slide of 3 kb. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. Hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. The distance measure used was euclidean distance and complete linkage was the linkage criteria.
@@ -139,7 +140,6 @@ rm(ze_dendro)
 ```
 
 ```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=10}
-source('scripts/multiplot.R')
 td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
 p1 <- td_dendro + ggtitle(label = "Tajima's D")
 
@@ -176,13 +176,29 @@ pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[
 pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, mean, max) %>% data.frame(), caption = '(\\#tab:totalwindowTable) Number of windows'  )
 ```
 
+```{r}
+theme_heat <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.x = element_blank())
+four_plot <- function(mat_d_name,statname){
+  multiplot(
+    ggdendrogram(hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_neg')]][,-1:-4]), method="euclidean"), method = "complete")) + ggtitle("A.", paste(statname,"lower tail")),
+    
+    mat_d_list[[paste0(mat_d_name,'_neg')]] %>% select(-contains('chrom')) %>% gather("pop", "value",2:NCOL(.))%>%  ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) +scale_fill_gradient2()+ theme_bw() + theme_heat + ggtitle("C."),
+    
+    ggdendrogram(hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_pos')]][,-1:-4]), method="euclidean"), method = "complete")) + ggtitle("B.",paste(statname,"upper tail")),
+    
+    mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>% gather("pop", "value",2:NCOL(.))%>%  ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) +scale_fill_gradient2()+ theme_bw() + theme_heat + ggtitle("D.")
+    , cols = 2) 
+}
+
+
+```
 
 
 #### Tajima's D 
 <!-- create a 4 panel multiplot with each dendrogram and heat map for both tails on the same panel -->
 
 ```{r tdTop1000, }
-
+four_plot("td","Tajima's D")
 ```
 
 - neg gave super pop clusters
@@ -195,28 +211,34 @@ pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[
 #### Fay and Wu's H heatmap
 
 ```{r fwhTop1000}
-
+four_plot("fwh","Fay and Wu's H")
 ```
+
+
 
 - Fay and Wu's H put all of the super populations together both neg and pos (split AMR)
 - there looks to be a lot of unique regions within the POL
 
 #### Fu and Li's D
-
+```{r fldTop1000}
+four_plot("fld","Fu and Li's D")
+```
 - 10 fold difference in the number of windows
 - pos had ~2900, neg had ~22000
 
 #### Fu and Li's F
-
+```{r flfTop1000}
+four_plot("flf","Fu and Li's F")
+```
 - pos clustered super populations together, split AMR
 - pos looks like there is a reasonable number of windows shared between pops (5188)
 - neg looks pretty sparse 17044
 
 #### Zeng's E Heatmap
 
-negative
-
-positive
+```{r zeTop1000}
+four_plot("ze","Zeng's E")
+```
 
 <!-- create df from the clustering results to be able to pull numbers out of for number of windows per population for each statistic, and for the proportion of pops being clustered -->
 
