@@ -61,9 +61,9 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 ## Methods
 Selection pipeline for ihs/nsl
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, and Zeng's _E_ were all calulated using PopGenome v2.2.3 [@popgenome]. These statistics were calculated using a window size of 30 kb and a slide of 3 kb. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. Hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. The distance measure used was euclidean distance and complete linkage was the linkage criteria.
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, and Zeng's _E_ were all calulated using PopGenome v2.2.3 [@popgenome]. These statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Heirarchical clustering using the whole chromosome values used the statitic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings.
 
-\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@cadzow2014] pipeline as described in Section \@ref(selectionTools). markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was XXX kb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
+\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was XXX kb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
 F~ST~
 
@@ -77,11 +77,21 @@ Disease associated genes were downloaded from the GWAS catalogue (https://www.eb
 ### Frequency Spectrum
 
 
+#### Whole Chromosome Clustering
+
+Clustering on the full chromosome results for all chromsomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of Fay and Wu's _H_, which grouped all super populations although split the \gls{amr} into 2 pairs. Tajima's _D_ grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of 2-3 populations. \gls{cim},\gls{nzm}, and \gls{sam} were grouped with 2 \gls{amr} populations, \gls{pel} and \gls{mxl}, and this group was the least similar to the others. There was no clear pattern to the clustering order for both Fu and Li's _D_ and _F_, although Fu and Li's _F_ did have a few small groups of the same super population of no more than 3 individuals populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. Zeng's _E_ clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations part of it.
 
 
-Clustering on the full chromosome results for all chromsomes from PopGenome
-<!-- put each of the similar statistics together into a multiplot -->
+- td had eur cluste, nzm-cim, most of a sas, but the other populations are in groups of 2-3, the pol group is quite disimilar to the rest
+- fwh has the super populations but has AMR split in half. eas and pol are together and quite disimilar to the rest
+- fld looks almost random, nzm-gbr, maybe admixed pops being grouped together
+- flf has pockets fo 2-3 small groupings of the super populations, nzm-mxl-pel
+- flf and fld have a very similar first split
+- ze has afr cluster and is most disimilar. eas cluster has the wp integrated. nzc-clm-pur, eur cluster 
 
+
+
+<!--
 #### Tajima's D
 
 (ref:chrTDdendro) _Dendrogram for Tajima's D Clustering._ Hierarchical clustering of the populations based Tajima's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
@@ -140,13 +150,13 @@ ze_dendro <- readRDS('images/04_clustering/ze_dendro.RDS')
 ze_dendro + ggtitle(label ="Zeng's E Clustering",subtitle = "Euclidean Distance with Complete Linkage")
 rm(ze_dendro)
 ```
-
+-->
 ```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=10}
 td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
-p1 <- td_dendro + ggtitle(label = "Tajima's D")
+p1 <- td_dendro + ggtitle(label = "Tajima's D") 
 
 fwh_dendro <- readRDS('images/04_clustering/fwh_dendro.RDS')
-p2 <- fwh_dendro + ggtitle(label ="Fay and Wu's H")
+p2 <- fwh_dendro + ggtitle(label ="Fay and Wu's H") 
 
 fld_dendro <- readRDS('images/04_clustering/fld_dendro.RDS')
 p3 <- fld_dendro + ggtitle(label ="Fu and Li's D")
@@ -154,7 +164,9 @@ p3 <- fld_dendro + ggtitle(label ="Fu and Li's D")
 flf_dendro <- readRDS('images/04_clustering/flf_dendro.RDS')
 p4 <- flf_dendro + ggtitle(label ="Fu and Li's F")
 
-multiplot(p1, p2, p3, p4, cols = 1)
+ze_dendro <- readRDS('images/04_clustering/ze_dendro.RDS')
+p5 <- ze_dendro + ggtitle(label ="Zeng's E Clustering") 
+multiplot(p1, p2, p3, p4, p5, cols = 2)
 ```
 
 (ref:multichrplot) _Whole Chromosome Clustering._ Hierarchical clustering of the populations using selection test statistics for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria. Selection test statistic is in the label for each dendrogram.
@@ -165,7 +177,7 @@ The most extreme 1% from each side of the empirical distribution was selected to
 
 The mean number of windows per population was XXX with a minimum of XXX and a maximum of XXX. To assess the statistical significance of the proportion of populations being assigned the same cluster, a series of XXX random draws was done to establish a null model for each selection test statistic.
 
-Table \@ref(tab:windowTable) shows the distribution of number of windows for each super population used for each selection test statistic. Table \@(tab:totalewindowTable) show the total number of windows used for each. 
+Table \@ref(tab:windowTable) shows the distribution of number of windows for each super population used for each selection test statistic. Table \@(tab:totalwindowTable) show the total number of windows used for each. 
 
 
 ```{r, results = 'asis', echo = FALSE}
@@ -220,6 +232,7 @@ four_plot("fwh","Fay and Wu's H")
 - there looks to be a lot of unique regions within the POL
 - both neg and pos have the Pol cluster nearest to the EAS
 
+The clustering of Fay and Wu's H had the main groupings that came out the same as the defined super population groups, with the exception of the positive tail where the \gls{amr} super population was split in half. The Polynesian populations were clustered together in both the negative and positive tails for Fay and Wu's H. The Polynesian population group was closest to the \gls{eas} populations and also had the East/West split within the group.
 
 
 #### Fu and Li's D
@@ -232,7 +245,7 @@ four_plot("fld","Fu and Li's D")
 - sam/nzm and cim/ton split in neg
 - only sas and nearly eur are completely grouped together, looks somewhat random
 
-There was a ten-fold difference in the number of total windows used in the clustering between the positive and negative tails. This indicated that there was a large number of regions in common in the postive tail, whereas there is little in common in the negative tail with many windows being population specfic. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a  
+There was a nearly a ten-fold difference in the number of total windows used in the clustering between the positive (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and negative tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there was a large number of regions in common in the postive tail, whereas there is little in common in the negative tail with many windows being population specfic. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a mean of `r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']]` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` greater than the mean across all selection test stats used. In the positive tail the Polynesian populations were grouped together and also within the group, paired in their East/West split.
 
 #### Fu and Li's F
 ```{r flfTop1000}
@@ -293,7 +306,9 @@ results from other diseases that are late onset and see if they produce the same
 ## Discussion and Conclusions
 
 - using the chromosome wide results did not always return the super clusters.
+- often see admixed amr pops grouped with nzm/cim
 - clustering using the gout/urate/bmi/t2d/metsyn genes...
+- what are the strengths/weaknesses of each stat
 
 One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
 
