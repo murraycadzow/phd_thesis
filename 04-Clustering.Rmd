@@ -5,6 +5,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(ggdendro)
 source('scripts/multiplot.R')
+source('scripts/04_clustering.R')
 ```
 
 <!--
@@ -168,34 +169,13 @@ Table \@ref(tab:windowTable) shows the distribution of number of windows for eac
 
 
 ```{r, results = 'asis', echo = FALSE}
-mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_mat_d_list-28-6-2017.RDS')
-pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>% select(-pop) %>% group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% data.frame, caption = '(\\#tab:windowTable) Summary statistics for number of windows used in each custering analysis')
+
+pander::pandoc.table(create_windowTable(), caption = '(\\#tab:windowTable) Summary statistics for number of windows used in each custering analysis')
 ```
 
 <!-- want to include the min/mean/max number of windows shared-->
 ```{r, results = 'asis', echo = FALSE}
-pander::pandoc.table(bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, mean, max) %>% data.frame(), caption = '(\\#tab:totalwindowTable) Number of windows. Number of shared windows between populations'  )
-```
-
-
-
-```{r, echo = FALSE}
-theme_heat <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.x = element_blank())
-four_plot <- function(mat_d_name,statname){
-  multiplot(
-    ggdendrogram(hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_neg')]][,-1:-4]), method="euclidean"), method = "complete")) + ggtitle("A.", paste(statname,"lower tail")),
-    
-    mat_d_list[[paste0(mat_d_name,'_neg')]] %>% select(-contains('chrom')) %>% gather("pop", "value",2:NCOL(.))%>%  ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) +scale_fill_gradient2()+ theme_bw() + theme_heat + ggtitle("C."),
-    
-    ggdendrogram(hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_pos')]][,-1:-4]), method="euclidean"), method = "complete")) + ggtitle("B.",paste(statname,"upper tail")),
-    
-    mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>% gather("pop", "value",2:NCOL(.))%>%  ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) +scale_fill_gradient2()+ theme_bw() + theme_heat + ggtitle("D.")
-    , cols = 2) 
-}
-
-create_sums <- function(mat_d_name){
-  mat_d_list[[mat_d_name]] %>% mutate(POLsum =select(., contains("POL")) %>% rowSums(.), EURsum = select(., contains("EUR")) %>% rowSums(.), EASsum = select(., contains("EAS")) %>% rowSums(.), SASsum = select(., contains("SAS")) %>% rowSums(.), AMRsum = select(., contains("AMR")) %>% rowSums(.), AFRsum = select(., contains("AFR")) %>% rowSums(.), ALLsum = select(., -contains('chrom'), -posid) %>% rowSums(.))
-}
+pander::pandoc.table(create_windowSummaryTable(), caption = '(\\#tab:totalwindowTable) Number of windows. Number of shared windows between populations'  )
 ```
 
 
@@ -252,6 +232,7 @@ four_plot("fld","Fu and Li's D")
 - sam/nzm and cim/ton split in neg
 - only sas and nearly eur are completely grouped together, looks somewhat random
 
+There was a ten-fold difference in the number of total windows used in the clustering between the positive and negative tails. This indicated that there was a large number of regions in common in the postive tail, whereas there is little in common in the negative tail with many windows being population specfic. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a  
 
 #### Fu and Li's F
 ```{r flfTop1000}
