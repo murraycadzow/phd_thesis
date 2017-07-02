@@ -19,6 +19,8 @@ description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 
 \listoffigures
 
+
+
 # Preface {-}
 
 ```{r, echo = FALSE}
@@ -29,10 +31,12 @@ knitr::include_graphics('images/OUNZ_logo.png')
 
 ## Abbreviations {-}
 
+<!-- 
+to include the glossary first build the book, cp Thesis.tex into the root dir then run "makeglossaries Thesis" then re build the book
+-->
 \addcontentsline{toc}{section}{Glossary}
 
 \printglossary[style=super]
-
 
 
 \addcontentsline{toc}{section}{Acronyms}
@@ -40,7 +44,7 @@ knitr::include_graphics('images/OUNZ_logo.png')
 \printglossary[type=\acronymtype,style=super]
 
 
-
+<!--
 SNP: Single nucleotide polymorphism
 
 T2D: Type 2 diabetes
@@ -54,3 +58,4 @@ iHH: integrated haplotype homozygosity
 iHS: integrated haplotype homozygosity score
 
 BMI: Body mass index
+-->
