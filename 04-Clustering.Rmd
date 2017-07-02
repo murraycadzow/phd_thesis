@@ -16,7 +16,7 @@ key tasks to complete:
 - genes in the tails
 -->
 
-this is a test for the \gls{nz} acronymn feature to see when \gls{nz} becomes and acronymn \gls{t2d} is here as a test
+this is a test for the \gls{nz} acronym feature to see when \gls{nz} becomes and acronym \gls{t2d} is here as a test
 
 
 In this chapter I will investigate the idea that populations that share ancestry will display similar signals of selection. To test this Idea I will be clustering the various selection statistics and then comparing the clusters to current population migratory history.
@@ -39,12 +39,14 @@ In this chapter I will investigate the idea that populations that share ancestry
 - explain east/west split
 -->
 
-The history starts with migration out of Africa (50-100 kya) [@Nielsen2017], tracking up to the Levant and Arabian peninsula (? kya) <!-- same with this -->and splitting into South Asia, Indonesia, and Australia (50kya) [@Kivisild1999; @Quintana-Murci1999]. Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya) [@Groucutt2015]. <!--Lisa: The Pacific – or if you really are talking about Remote Oceania, you are talking about Lapita, which first appears in Near Oceania about 3300BP where they interact with the peoples who have been there for at least 40,000 years and then by 3,000 they are the first to establish settlement on the islands of New Caledonia, Vanuatu, Fiji, Samoa and Tonga. THEN around 1-1.2 kya we have the settlement of the rest of the Polynesian triangle, including the Cook Is avout 1,000 BP and New Zealand about 750 - 800 BP. --> The Pacific was settled in two events, the first was the settlement of Near Oceania (50 kya) followed by the settlement of Remote Oceania reaching Samoa and Tonga during the Lapita expansion (3 kya, [@Matisoo-Smith2015 ;  @Skoglund2016]) then the rest of the Polynesian triangle settled (1 – 1.2 kya, [@Wilmshurst2011]). The settlement of \gls{nz} by \gls{nz} Maori occurred 800 ya [@Duggan2014; @Matisoo-Smith2015].
+The history starts with migration out of Africa (50-100 kya) [@Nielsen2017], tracking up to the Levant and Arabian peninsula (? kya) <!-- same with this -->and splitting into South Asia, Indonesia, and Australia (50kya) [@Kivisild1999; @Quintana-Murci1999]. Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya) [@Groucutt2015]. <!--Lisa: The Pacific – or if you really are talking about Remote Oceania, you are talking about Lapita, which first appears in Near Oceania about 3300BP where they interact with the peoples who have been there for at least 40,000 years and then by 3,000 they are the first to establish settlement on the islands of New Caledonia, Vanuatu, Fiji, Samoa and Tonga. THEN around 1-1.2 kya we have the settlement of the rest of the Polynesian triangle, including the Cook Is avout 1,000 BP and New Zealand about 750 - 800 BP. --> The Pacific was settled in two events, the first was the settlement of Near Oceania (50 kya) followed by the settlement of Remote Oceania reaching Samoa and Tonga during the Lapita expansion (3 kya, [@Matisoo-Smith2015 ;  @Skoglund2016]) then the rest of the Polynesian triangle settled (1 – 1.2 kya, [@Wilmshurst2011]). The settlement of New Zealand by \gls{nz} Maori occurred 800 ya [@Duggan2014; @Matisoo-Smith2015].
+
+For largely economic reasons, during the 1950's and 60's there was a rural to urban migration of people in the Pacific. As part of this, many settled in New Zealand from Samoan, Tongan and the Cook Islands in search of work and now the populations in New Zealand largely outnumber the populations of their islands origin [@MatisooSmith2012highway]. Within \gls{nz}, the Polynesian populations are mostly focused within the Auckland region [@Barcham2009]
 
 <!--ref for pacific in NZ in 1960's [@MatisooSmith2012highway] 
 The modern population of \gls{nz} Maori 
 
-For largely ecomomnic reasons, during the 1950's and 60's there was a rural to urban migration of people in the Pacific. As part of this, many settled in New Zealand from Samoan, Tongan and the Cook Islands in search of work and now the populations in New Zealand largely outnumber the populations of their islands origin [@MatisooSmith2012highway]. Within \gls{nz}, the Polynesian populations are mostly focussed within the Auckland region [@Barcham2009]
+
 -->
 
 New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013a]. Polynesian populations share a common genetic ancestry with East Asia however there are Polynesian specific variants associated with increased risk to gout and elevated serum urate [@Phipps-Green2010; @Hollis-Moffatt2012]. Serum urate has been associated with metabolic disorders [@Choi2007b] and genes involved with complex diseases such as \gls{t2d}, gout, and other metabolic related disorders have shown evidence for selection [@Zhang2013a; @pickrell2009signals]. 
@@ -59,16 +61,15 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 
 
 ## Methods
-Selection pipeline for ihs/nsl
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, and Zeng's _E_ were all calulated using PopGenome v2.2.3 [@popgenome]. These statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Heirarchical clustering using the whole chromosome values used the statitic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings.
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@popgenome]. Excepting F~ST~, these statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings. F~ST~ was calculated pairwise for all populations for each chromosome.
 
 \Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was XXX kb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
-F~ST~
+.
 
 
-Disease associated genes were downloaded from the GWAS catalogue (https://www.ebi.ac.uk/gwas/, accessed 19 June 2017) and filtered for P < 5x10^-8^
+Disease associated genes were downloaded from the GWAS catalog (https://www.ebi.ac.uk/gwas/, accessed 19 June 2017) and filtered for P < 5x10^-8^
 
 ## Results
 
@@ -79,16 +80,16 @@ Disease associated genes were downloaded from the GWAS catalogue (https://www.eb
 
 #### Whole Chromosome Clustering
 
-Clustering on the full chromosome results for all chromsomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of Fay and Wu's _H_, which grouped all super populations although split the \gls{amr} into 2 pairs. Tajima's _D_ grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of 2-3 populations. \gls{cim},\gls{nzm}, and \gls{sam} were grouped with 2 \gls{amr} populations, \gls{pel} and \gls{mxl}, and this group was the least similar to the others. There was no clear pattern to the clustering order for both Fu and Li's _D_ and _F_, although Fu and Li's _F_ did have a few small groups of the same super population of no more than 3 individuals populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. Zeng's _E_ clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations part of it.
+Clustering on the full chromosome results for all chromosomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of Fay and Wu's _H_, which grouped all super populations although split the \gls{amr} into 2 pairs. Tajima's _D_ grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of 2-3 populations. \gls{cim},\gls{nzm}, and \gls{sam} were grouped with 2 \gls{amr} populations, \gls{pel} and \gls{mxl}, and this group was the least similar to the others. There was no clear pattern to the clustering order for both Fu and Li's _D_ and _F_, although Fu and Li's _F_ did have a few small groups of the same super population of no more than 3 individuals populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. Zeng's _E_ clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations part of it.
 
-
+<!--
 - td had eur cluste, nzm-cim, most of a sas, but the other populations are in groups of 2-3, the pol group is quite disimilar to the rest
 - fwh has the super populations but has AMR split in half. eas and pol are together and quite disimilar to the rest
 - fld looks almost random, nzm-gbr, maybe admixed pops being grouped together
 - flf has pockets fo 2-3 small groupings of the super populations, nzm-mxl-pel
 - flf and fld have a very similar first split
 - ze has afr cluster and is most disimilar. eas cluster has the wp integrated. nzc-clm-pur, eur cluster 
-
+-->
 
 
 <!--
@@ -165,7 +166,7 @@ flf_dendro <- readRDS('images/04_clustering/flf_dendro.RDS')
 p4 <- flf_dendro + ggtitle(label ="Fu and Li's F")
 
 ze_dendro <- readRDS('images/04_clustering/ze_dendro.RDS')
-p5 <- ze_dendro + ggtitle(label ="Zeng's E Clustering") 
+p5 <- ze_dendro + ggtitle(label ="Zeng's E") 
 multiplot(p1, p2, p3, p4, p5, cols = 2)
 ```
 
@@ -173,7 +174,7 @@ multiplot(p1, p2, p3, p4, p5, cols = 2)
 
 ### based on top X results
 
-The most extreme 1% from each side of the empirical distribution was selected to use as part of a hierachical clustering to cluster the individual populations from the \gls{1kgp} the Polynesian populations. Euclidean distance was used as the distance measure for clusters and complete linkage was used as the linkage method to between clusters. For each population, windows were ranked in ascending order on test value, with ties being given the same rank, and the top 1000 ranks were selected for either tail. Each tail was then clustered separately.
+The most extreme 1% from each side of the empirical distribution was selected to use as part of a hierarchical clustering to cluster the individual populations from the \gls{1kgp} the Polynesian populations. Euclidean distance was used as the distance measure for clusters and complete linkage was used as the linkage method to between clusters. For each population, windows were ranked in ascending order on test value, with ties being given the same rank, and the top 1000 ranks were selected for either tail. Each tail was then clustered separately.
 
 The mean number of windows per population was XXX with a minimum of XXX and a maximum of XXX. To assess the statistical significance of the proportion of populations being assigned the same cluster, a series of XXX random draws was done to establish a null model for each selection test statistic.
 
@@ -211,15 +212,15 @@ The main groupings also are of the populations that were designated as the same 
 
 _Negative values_
 
-The number of windows that were unique to the Polynesian super population was `r create_sums('td_neg') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, representing `r round(create_sums('td_neg') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.) / mat_d_list[['td_neg']] %>% NROW(.) *100, digits = 1)`% of the lower most extreme windows. Of those, `r create_sums('td_neg') %>% filter(POL_CIM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specfic to \gls{cim}, `r create_sums('td_neg') %>% filter(POL_NZM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specfic to \gls{nzm}, `r create_sums('td_neg') %>% filter(POL_SAM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specfic to \gls{sam}, and `r create_sums('td_neg') %>% filter(POL_TON == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specfic to \gls{ton}.
+The number of windows that were unique to the Polynesian super population was `r create_sums('td_neg') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, representing `r round(create_sums('td_neg') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.) / mat_d_list[['td_neg']] %>% NROW(.) *100, digits = 1)`% of the lower most extreme windows. Of those, `r create_sums('td_neg') %>% filter(POL_CIM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specific to \gls{cim}, `r create_sums('td_neg') %>% filter(POL_NZM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specific to \gls{nzm}, `r create_sums('td_neg') %>% filter(POL_SAM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specific to \gls{sam}, and `r create_sums('td_neg') %>% filter(POL_TON == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specific to \gls{ton}.
 
 The Eastern Polynesians had `r create_sums('td_neg') %>% filter((POL_CIM + POL_NZM) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows with `r create_sums('td_neg') %>% filter((POL_CIM + POL_NZM) == ALLsum & ALLsum == 2) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` of those shared between \gls{cim} and \gls{nzm}. Where as the Western Polynesians had `r create_sums('td_neg') %>% filter((POL_SAM + POL_TON) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, with `r create_sums('td_neg') %>% filter((POL_SAM + POL_TON) == ALLsum & ALLsum == 2) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` shared between \gls{cim} and \gls{nzm}.
 
-There were `r create_sums('td_neg') %>% filter(POLsum < ALLsum & ALLsum > 4) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows where all the Polynesian populations shared a window with a non-Polynesian population. This is compared to super population unqiue window numbers of `r create_sums('td_neg') %>% filter(AFRsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(AMRsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(EASsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(EURsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(SASsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` for the \gls{afr}, \gls{amr}, \gls{eas}, \gls{eur}, and \gls{sas} super populations respectively.  
+There were `r create_sums('td_neg') %>% filter(POLsum < ALLsum & ALLsum > 4) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows where all the Polynesian populations shared a window with a non-Polynesian population. This is compared to super population unique window numbers of `r create_sums('td_neg') %>% filter(AFRsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(AMRsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(EASsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(EURsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)`, `r create_sums('td_neg') %>% filter(SASsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` for the \gls{afr}, \gls{amr}, \gls{eas}, \gls{eur}, and \gls{sas} super populations respectively.  
 
 _Positive values_
 
-The positive tail had a total of `r create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, or `r round(create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.) / mat_d_list[['td_pos']] %>% NROW(.) *100, digits = 1)`% that were unqiue to the Polynesian populations. Eastern Polynesians made up `r create_sums('td_pos') %>% filter((POL_CIM + POL_NZM) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows, with \gls{cim} having `r create_sums('td_pos') %>% filter(POL_CIM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows and only \gls{nzm} having `r create_sums('td_pos') %>% filter(POL_NZM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows. The Western Polynesians had `r create_sums('td_pos') %>% filter((POL_SAM + POL_TON) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows. `r create_sums('td_pos') %>% filter(POL_SAM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were from only \gls{sam} and `r create_sums('td_pos') %>% filter(POL_TON == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from only \gls{ton}. 
+The positive tail had a total of `r create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, or `r round(create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.) / mat_d_list[['td_pos']] %>% NROW(.) *100, digits = 1)`% that were unique to the Polynesian populations. Eastern Polynesians made up `r create_sums('td_pos') %>% filter((POL_CIM + POL_NZM) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows, with \gls{cim} having `r create_sums('td_pos') %>% filter(POL_CIM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows and only \gls{nzm} having `r create_sums('td_pos') %>% filter(POL_NZM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows. The Western Polynesians had `r create_sums('td_pos') %>% filter((POL_SAM + POL_TON) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows. `r create_sums('td_pos') %>% filter(POL_SAM == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were from only \gls{sam} and `r create_sums('td_pos') %>% filter(POL_TON == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from only \gls{ton}. 
 
 
 #### Fay and Wu's H heatmap
@@ -245,7 +246,7 @@ four_plot("fld","Fu and Li's D")
 - sam/nzm and cim/ton split in neg
 - only sas and nearly eur are completely grouped together, looks somewhat random
 
-There was a nearly a ten-fold difference in the number of total windows used in the clustering between the positive (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and negative tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there was a large number of regions in common in the postive tail, whereas there is little in common in the negative tail with many windows being population specfic. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a mean of `r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']]` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` greater than the mean across all selection test stats used. In the positive tail the Polynesian populations were grouped together and also within the group, paired in their East/West split.
+There was a nearly a ten-fold difference in the number of total windows used in the clustering between the positive (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and negative tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there was a large number of regions in common in the positive tail, whereas there is little in common in the negative tail with many windows being population specific. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a mean of `r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']]` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` greater than the mean across all selection test stats used. In the positive tail the Polynesian populations were grouped together and also within the group, paired in their East/West split.
 
 #### Fu and Li's F
 ```{r flfTop1000}
@@ -312,3 +313,5 @@ results from other diseases that are late onset and see if they produce the same
 
 One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
 
+
+<!-- what ends of the distribution represent the different types (positive, balancing, negative selection) -->
