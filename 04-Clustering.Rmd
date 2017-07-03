@@ -66,7 +66,7 @@ Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, an
 
 \Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was XXX kb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
-.
+
 
 
 Disease associated genes were downloaded from the GWAS catalog (https://www.ebi.ac.uk/gwas/, accessed 19 June 2017) and filtered for P < 5x10^-8^
@@ -176,9 +176,9 @@ multiplot(p1, p2, p3, p4, p5, cols = 2)
 
 The most extreme 1% from each side of the empirical distribution was selected to use as part of a hierarchical clustering to cluster the individual populations from the \gls{1kgp} the Polynesian populations. Euclidean distance was used as the distance measure for clusters and complete linkage was used as the linkage method to between clusters. For each population, windows were ranked in ascending order on test value, with ties being given the same rank, and the top 1000 ranks were selected for either tail. Each tail was then clustered separately.
 
-The mean number of windows per population was XXX with a minimum of XXX and a maximum of XXX. To assess the statistical significance of the proportion of populations being assigned the same cluster, a series of XXX random draws was done to establish a null model for each selection test statistic.
+The mean number of windows per population was `r create_windowTable() %>% summarise(round(mean(mean), digits = 1))` (sd `r create_windowTable() %>% summarise(round(sd(mean), digits = 1))`) with a minimum of `r create_windowTable() %>% summarise(min(min))` and a maximum of `r create_windowTable() %>% summarise(max(max))`. To assess the statistical significance of the proportion of populations being assigned the same cluster, a series of 1000 random draws was done to establish a null model for each selection test statistic.
 
-Table \@ref(tab:windowTable) shows the distribution of number of windows for each super population used for each selection test statistic. Table \@(tab:totalwindowTable) show the total number of windows used for each. 
+Table \@ref(tab:windowTable) shows the distribution of number of windows for each super population used for each selection test statistic. Table \@ref(tab:totalwindowTable) show the total number of windows used for each. 
 
 
 ```{r, results = 'asis', echo = FALSE}
@@ -195,7 +195,9 @@ pander::pandoc.table(create_windowSummaryTable(), caption = '(\\#tab:totalwindow
 #### Tajima's D 
 <!-- create a 4 panel multiplot with each dendrogram and heat map for both tails on the same panel -->
 
-```{r tdTop1000, echo = FALSE}
+(ref:tdTop1000) _Tajima's D Clustering._ Hierarchical clustering of Tajima's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Tajima's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
+
+```{r tdTop1000, fig.cap = '(ref:tdTop1000)',echo = FALSE}
 four_plot("td","Tajima's D")
 ```
 
@@ -225,7 +227,9 @@ The positive tail had a total of `r create_sums('td_pos') %>% filter(POLsum == A
 
 #### Fay and Wu's H heatmap
 
-```{r fwhTop1000}
+(ref:fwhTop1000) _Fay and Wu's H Clustering._ Hierarchical clustering of Fay and Wu's _H_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fay and Wu's _H_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
+
+```{r fwhTop1000, fig.cap='(ref:fwhTop1000)'}
 four_plot("fwh","Fay and Wu's H")
 ```
 
@@ -237,7 +241,10 @@ The clustering of Fay and Wu's H had the main groupings that came out the same a
 
 
 #### Fu and Li's D
-```{r fldTop1000}
+
+(ref:fldTop1000) _Fu and Li's D Clustering._ Hierarchical clustering of Fu and Li's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fu and Li's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
+
+```{r fldTop1000, fig.cap = '(ref:fldTop1000)'}
 four_plot("fld","Fu and Li's D")
 ```
 - 10 fold difference in the number of windows
@@ -249,7 +256,10 @@ four_plot("fld","Fu and Li's D")
 There was a nearly a ten-fold difference in the number of total windows used in the clustering between the positive (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and negative tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there was a large number of regions in common in the positive tail, whereas there is little in common in the negative tail with many windows being population specific. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a mean of `r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']]` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` greater than the mean across all selection test stats used. In the positive tail the Polynesian populations were grouped together and also within the group, paired in their East/West split.
 
 #### Fu and Li's F
-```{r flfTop1000}
+
+(ref:flfTop1000) _Fu and Li's F Clustering._ Hierarchical clustering of Fu and Li's _F_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fu and Li's _F_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
+
+```{r flfTop1000, fig.cap = '(ref:flfTop1000)'}
 four_plot("flf","Fu and Li's F")
 ```
 - pos clustered super populations together, split AMR
@@ -258,7 +268,9 @@ four_plot("flf","Fu and Li's F")
 
 #### Zeng's E Heatmap
 
-```{r zeTop1000}
+(ref:zeTop1000) _Zeng's E Clustering._ Hierarchical clustering of Zeng's _E_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Zeng's _E_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
+
+```{r zeTop1000, fig.cap = '(ref:zeTop1000)'}
 four_plot("ze","Zeng's E")
 ```
 
@@ -282,6 +294,16 @@ For the haplotypic methods a similarity measure was created by calculating the
 1. iHS
 
 2. nSL
+
+
+### F~ST~
+
+```{r wholechrfst, fig.cap="(ref:wholechrfst)"}
+create_fst_dendro() + ggtitle(expression("Whole Chromosome F"["ST"]))
+```
+
+- all super populations cluster together with the exception of amr, which is split
+
 
 ### stats based on gene lists
 <!-- might be a good idea to use a grid to put multiple plots into one -->
