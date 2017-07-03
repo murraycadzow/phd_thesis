@@ -9,7 +9,7 @@ create_windowTable <- function(){
 }
 
 create_windowSummaryTable <- function(){
-bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
+  bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
 }
 
 theme_heat <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.x = element_blank())
@@ -19,7 +19,7 @@ four_plot <- function(mat_d_name,statname){
     
     mat_d_list[[paste0(mat_d_name,'_neg')]] %>% select(-contains('chrom')) %>% gather("pop", "value",2:NCOL(.))%>%  ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) +scale_fill_gradient2()+ theme_bw() + theme_heat + ggtitle("C."),
     
-    ggdendrogram(hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_pos')]][,-1:-4]), method="euclidean"), method = "complete")) + ggtitle("B.",paste(statname,"upper tail")),
+    ggdendrogram(hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_pos')]][,-1:-4]), method="euclidean"), method = "complete"), theme_dendro = TRUE) + ggtitle("B.",paste(statname,"upper tail")),
     
     mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>% gather("pop", "value",2:NCOL(.))%>%  ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) +scale_fill_gradient2()+ theme_bw() + theme_heat + ggtitle("D.")
     , cols = 2) 
@@ -27,4 +27,8 @@ four_plot <- function(mat_d_name,statname){
 
 create_sums <- function(mat_d_name){
   mat_d_list[[mat_d_name]] %>% mutate(POLsum =select(., contains("POL")) %>% rowSums(.), EURsum = select(., contains("EUR")) %>% rowSums(.), EASsum = select(., contains("EAS")) %>% rowSums(.), SASsum = select(., contains("SAS")) %>% rowSums(.), AMRsum = select(., contains("AMR")) %>% rowSums(.), AFRsum = select(., contains("AFR")) %>% rowSums(.), ALLsum = select(., -contains('chrom'), -posid) %>% rowSums(.))
+}
+
+create_fst_dendro <- function(){
+    return(ggdendrogram(readRDS("~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome_clust.3-7-2017.RDS"), method = "complete"))
 }
