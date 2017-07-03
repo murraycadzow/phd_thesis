@@ -151,7 +151,7 @@ vm_size = 4g
 ## run_selscan.sl
 
 **/home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/run_selscan.sl**
-  ```
+```
 #!/bin/bash
 #SBATCH -J selscan_array
 #SBATCH -A uoo00008         # Project Account
@@ -196,7 +196,7 @@ srun cp ${POP}.chr${i}.ihs.tar.gz $DIR/
 
 **/home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/run_nsl_selscan.sl**
   
-  ```
+```
 #!/bin/bash
 #SBATCH -J selscan_array
 #SBATCH -A uoo00008         # Project Account
@@ -301,4 +301,171 @@ cd $TMP_DIR
 srun tar -czf ${POP1}_${POP2}_chr${i}_xpehh.tar.gz ${POP1}_${POP2}* gap1mb
 mkdir -p $DIR/xpehh/${POP1}_${POP2}
 srun cp ${POP1}_${POP2}_chr${i}_xpehh.tar.gz $DIR/xpehh/${POP1}_${POP2}/
+```
+
+
+extract_results.sh
+```{r, engine='bash', eval = FALSE}
+#!/bin/bash
+results_dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/dbload
+input_dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/nesi_results
+
+# extract all the results files generated from the selection pipeline
+for i in $(seq 1 22)
+do
+    mkdir -p $results_dir/{daf,fawh,fixed_vcf,fst,ihs,kaks,nsl,tajd,xpehh}/chr${i}
+    echo chr${i}
+    echo ihs
+    parallel 'tar -C {3}/ihs/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.ihs.tar.gz) ::: $results_dir
+    echo nsl
+    parallel 'tar -C {3}/nsl/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.nsl.tar.gz) ::: $results_dir
+    echo tajd
+    parallel 'tar -C {3}/tajd/chr{1} -xzf {2} *taj_d --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    mv $results_dir/tajd/chr${i}/*/results/* $results_dir/tajd/chr${i}/
+    rmdir $results_dir/tajd/chr${i}/*/results
+    echo fawh
+    parallel 'tar -C {3}/fawh/chr{1} -xzf {2} *faw --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    mv $results_dir/fawh/chr${i}/*/results/* $results_dir/fawh/chr${i}/
+    rmdir $results_dir/fawh/chr${i}/*/results
+
+    echo daf
+    parallel 'tar -C {3}/daf/chr{1} -xzf {2} *aachanged.af --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    mv $results_dir/daf/chr${i}/*/*.af $results_dir/daf/chr${i}/
+    rename _aachanged.af ${i}_aachanged.af $results_dir/daf/chr${i}/*
+    echo fixed_vcf
+    parallel 'tar -C {3}/fixed_vcf/chr{1} -xzf {2} *fixed.vcf --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    mv $results_dir/fixed_vcf/chr${i}/*/*vcf $results_dir/fixed_vcf/chr${i}/
+    echo xpehh
+    parallel 'tar -C {3}/xpehh/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: $(ls $input_dir/xpehh/*/*chr${i}_xpehh.tar.gz) ::: $results_dir
+    
+done
+
+# calc the number of files for each population
+for pop in $(basename -a $(find $input_dir -type d | grep -v "xpehh" |grep [a-zA-Z] ) |grep -v "results")
+do
+    echo ------ $pop -------
+    echo ihs $(ls $results_dir/ihs/chr*/${pop}*out | wc -l)
+
+    echo nsl $(ls $results_dir/nsl/chr*/${pop}*out | wc -l)
+
+    echo fawh $(ls $results_dir/fawh/chr*/${pop}*faw | wc -l)
+
+    echo tajd $(ls $results_dir/tajd/chr*/${pop}*taj_d | wc -l)
+
+    echo daf $(ls $results_dir/daf/chr*/${pop}*af | wc -l)
+
+    echo fixed_vcf $(ls $results_dir/fixed_vcf/chr*/${pop}*vcf | wc -l)
+
+    echo xpehh $(ls $results_dir/xpehh/chr*/${pop}*out | wc -l)
+    echo -------------------
+    echo
+    echo
+done
+
+# clean up some of the extraction
+cd $results_dir/fixed_vcf/
+for pop in $(basename -a $(find $input_dir -type d | grep -v "xpehh" |grep [a-zA-Z] ) |grep -v "results")
+do
+    rmdir chr*/$pop
+done
+
+# combine vcfs, run snpEff and create panel files
+parallel 'bgzip {} && tabix -f -p vcf {}.gz ' ::: $(ls */*vcf)
+mkdir combined
+parallel -j 6 'bcftools merge $(ls chr{}/*gz| grep "AMR\|AFR\|EUR\|EAS\|SAS\|POL") | bgzip -c > combined/combined_super_chr{}.vcf.gz' ::: $(seq 1 22)
+parallel -j 6 'bcftools merge $(ls chr{}/*gz | grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL\|EPN\|WPN") | bgzip -c > combined/combined_chr{}.vcf.gz' ::: $(seq 1 22)
+parallel -j 16 'java -jar ~/Murray/src/snpEff4.2/snpEff/snpEff.jar -c ~/Murray/src/snpEff4.2/snpEff/snpEff.config -v GRCh37.75 -strict -stats chr{2}/{1}{2}.html chr{2}/{1}{2}_fixed.vcf.gz | bgzip -c > chr{2}/{1}{2}_fixed_ann.vcf.gz ' ::: $(ls chr22/*gz | sed 's/chr22\///g' |cut -d'2' -f1) ::: $(seq 1 22)
+for pop in $(basename -a -s 1_fixed.vcf.gz chr1/*fixed.vcf.gz); do zcat chr1/${pop}1_fixed.vcf.gz | head -100 | grep '^#CHR' |cut -f10- | tr '\t' '\n' | awk '{print $1"\t"$1}' > ${pop}.panel ; done
+
+# calculate Fst
+parallel -j 10 '
+for p1 in POL
+do
+    for p2 in AFR AMR EUR EAS SAS
+    do
+        vcftools --gzvcf combined/combined_super_chr{}.vcf.gz --weir-fst-pop ${p1}.panel --weir-fst-pop ${p2}.panel  --fst-window-size 1000000 --fst-window-step 1000 --out ../fst/chr{}/${p1}_${p2}_{}
+    done
+done
+' ::: $(seq 1 22)
+
+parallel -j 10 '
+for p1 in CIM NZC NZM NAD TON SAM EPN WPN
+do      
+    for p2 in $(basename -a -s .panel *.panel | grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL")
+    do
+       if [[ $p1 != $p2 ]]
+           then
+               vcftools --gzvcf combined/combined_chr{}.vcf.gz --weir-fst-pop ${p1}.panel --weir-fst-pop ${p2}.panel  --fst-window-size 1000000 --fst-window-step 1000 --out ../fst/chr{}/${p1}_${p2}_{}
+       fi
+    done
+done
+' ::: $(seq 1 22)
+
+# generate kaks files
+parallel 'zgrep -i "^#\|synonymous\|missense" {} > $(echo {}| cut -d'/' -f1)/$(basename -s .vcf.gz {}).txt ; python3.4 /Volumes/BiocArchive/staff_groups/merrimanlab/Merriman_Documents/Murray/SelectionPipeline/selectionTools-dev/extrascripts/kaks.py $(echo {}| cut -d'/' -f1)/$(basename -s .vcf.gz {}).txt > $(echo {} | cut -d'/' -f1)/$(basename -s .vcf.gz {}).kaks ' ::: $(ls chr*/*ann.vcf.gz)
+
+# move and rename the kaks files
+cd $results_dir/
+for i in $(seq 1 22);do mv fixed_vcf/chr${i}/*.kaks kaks/chr${i}/ ; done
+for i in $(seq 1 22);do rename ${i}_fixed_ann ${i} $(ls kaks/chr${i}/*) ; done
+
+# normalise the ihs files
+cd $results_dir/ihs
+for pop in $(ls chr1/*out | cut -d'/' -f2 | cut -d'_' -f1 | sort -u)
+do 
+    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
+    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
+done
+
+# rename the ihs files to remove the underscore
+for i in $(seq 1 22)
+do 
+    rename _${i} ${i} chr${i}/*
+    rename _${i} ${i} chr${i}/gap1mb/*
+    mkdir -p norm/chr${i}/gap1mb
+    mv chr${i}/*norm norm/chr${i}/
+    mv chr${i}/gap1mb/*norm norm/chr${i}/gap1mb/
+done
+
+# normalise the nsl files
+cd $results_dir/nsl
+for pop in $(ls chr1/*out | cut -d'/' -f2 | cut -d'_' -f1 | sort -u) 
+do 
+    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
+    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
+done
+
+# rename and move the nsl files
+for i in $(seq 1 22)
+do 
+    rename _${i} ${i} chr${i}/*
+    mkdir -p norm/chr${i}
+    mv chr${i}/*norm norm/chr${i}/
+    mv chr${i}/gap1mb/*norm norm/chr${i}/gap1mb/
+done
+
+
+# normalise xpehh files
+cd $results_dir/xpehh
+for p1 in POL CIM NZC NZM NAD TON SAM EPN WPN;
+do
+    for p2 in $(ls chr1/${p1}*.out | cut -d'_' -f2)
+    do
+        if [[ $p1 != $p2 ]]
+        then
+            ~/Murray/src/selscan/bin/linux/norm --xpehh --files chr*/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}.log
+            ~/Murray/src/selscan/bin/linux/norm --xpehh --files chr*/gap1mb/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}_gap1mb.log
+        fi
+    done
+done
+
+# move normalised xpehh files
+for i in $(seq 1 22)
+do 
+    mkdir -p norm/chr${i}/gap1mb
+    mv chr${i}/*norm norm/chr${i}/
+    mv chr${i}/gap1mb/*norm norm/chr${i}/gap1mb/
+done
+
+
 ```
