@@ -253,7 +253,11 @@ The mean Tajima's D for each chromosome can be seen in Table \@ref(tab:meanTDtab
 #### XP-EHH
 
 
-
+<!--
+homozygosity and hetersozygosity
+correlation with histone marks/DNAse hypersensitivity
+look at selected regions/snps and expression in GTex
+-->
 
 ## Chapter Discussion
 <!--
