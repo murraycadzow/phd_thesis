@@ -1,94 +1,28 @@
-# Introduction
 
-Charles @darwin1909origin in The Origin of Species declared: _“[The] preservation of favourable
-individual differences and variations, and the destruction of those which are injurious, I have called
-Natural Selection or Survival of the Fittest. Variations neither useful or injurious would not be
-affected by natural selection, and would be left either a fluctuating element, as perhaps we see in
-certain polymorphic species, or would ultimately become fixed, owing to the nature of the organism
-and the nature of the conditions.”_ This theory set the scene for research in population biology.
-Selection acts upon the phenotype and this pressure then transfers through to act upon the genetic
-make-up of that phenotype. Most important to this review is that Darwin’s Theory also created
-models for what natural selection should look like and the methods for being able to detect selective
-events on the genetics of organisms. A focus on selection in humans has added insight into past
-events since migration out of Africa [@Soares2012] and yielded possibilities of the influences
-on human disease.
+
+# Introduction
+<!-- \pagenumbering{arabic} -->
+Charles @darwin1909origin in The Origin of Species declared: _“[The] preservation of favourable individual differences and variations, and the destruction of those which are injurious, I have called Natural Selection or Survival of the Fittest. Variations neither useful or injurious would not be affected by natural selection, and would be left either a fluctuating element, as perhaps we see in certain polymorphic species, or would ultimately become fixed, owing to the nature of the organism and the nature of the conditions.”_ This theory set the scene for research in population biology. Selection acts upon the phenotype and this pressure then transfers through to act upon the genetic make-up of that phenotype. Most important to this review is that Darwin’s Theory also created models for what natural selection should look like and the methods for being able to detect selective events on the genetics of organisms. A focus on selection in humans has added insight into past events since migration out of Africa [@Soares2012] and yielded possibilities of the influences on human disease.
 
 
 ## Neutrality and Genetic Drift
 
-The random sampling of alleles can cause an increase or decrease in allele frequency of a population
-leads to genetic drift. @Wright1931 proposed genetic drift as an evolutionary model. He put forward
-that by chance, in a finite population without selection acting, an allele could increase in frequency
-over generations and time, change significantly from the original frequency values. Fisher believed
-that “Natural Selection depends on the succession of favourable chances”, and thought that genetic
-drift was insignificant compared to selection [@Fisher1930]. In Fisher's model, genetic variation
-would disappear at an extremely slow rate in a population without selection, and a moderate rate of
-new mutations would be enough to maintain the population variability [@Fisher1922]. @Feller1951
-unified the population models from both Wright and Fisher into what is now known as the Wright-
-Fisher model. The Wright-Fisher model in its simplest form treats a diploid population of size N as a
-haploid population of 2N. In unifying the population models Feller noted that the assumption of
-constant population size contributes a lot more than was previously thought, and this had been crucial
-in Wright’s model for gene frequency to satisfy a diffusion equation.
+The random sampling of alleles can cause an increase or decrease in allele frequency of a population leads to genetic drift. @Wright1931 proposed genetic drift as an evolutionary model. He put forward that by chance, in a finite population without selection acting, an allele could increase in frequency over generations and time, change significantly from the original frequency values. Fisher believed that “Natural Selection depends on the succession of favourable chances”, and thought that genetic drift was insignificant compared to selection [@Fisher1930]. In Fisher's model, genetic variation would disappear at an extremely slow rate in a population without selection, and a moderate rate of new mutations would be enough to maintain the population variability [@Fisher1922]. @Feller1951 unified the population models from both Wright and Fisher into what is now known as the Wright-Fisher model. The Wright-Fisher model in its simplest form treats a diploid population of size N as a haploid population of 2N. In unifying the population models Feller noted that the assumption of constant population size contributes a lot more than was previously thought, and this had been crucial in Wright’s model for gene frequency to satisfy a diffusion equation.
 
-Motoo Kimura added further to the genetic drift side of the discussion with his neutral theory of
-molecular evolution. The neutral theory of molecular evolution put forward by @Kimura1979a states
-that most evolutionary change is not due to selection but is due to random genetic drift. The term
-“drift” was used because the variants under neutrality are expected to convey no advantage, and rise
-and fall (or drift) randomly in prevalence over time. Random genetic drift plays a role in population
-structure by keeping the number of co-existing alleles down [@Kimura1955]. One of the problems
-with the neutral theory was how the diversity of species could be accounted for. The solution to this
-can be explained through a positive correlation between increased genetic diversity and an increase
-in recombination, hinting at a rise in mutation rate as frequency of genetic exchange increases
-[@Hellmann2003]. This link provided an explanation of a neutral process leading to increased
-genetic diversity.
+Motoo Kimura added further to the genetic drift side of the discussion with his neutral theory of molecular evolution. The neutral theory of molecular evolution put forward by @Kimura1979a states that most evolutionary change is not due to selection but is due to random genetic drift. The term “drift” was used because the variants under neutrality are expected to convey no advantage, and rise and fall (or drift) randomly in prevalence over time. Random genetic drift plays a role in population structure by keeping the number of co-existing alleles down [@Kimura1955]. One of the problems with the neutral theory was how the diversity of species could be accounted for. The solution to this can be explained through a positive correlation between increased genetic diversity and an increase
+in recombination, hinting at a rise in mutation rate as frequency of genetic exchange increases [@Hellmann2003]. This link provided an explanation of a neutral process leading to increased genetic diversity.
 
-Crucial to both the neutral theory and the theory of natural selection is the estimation of the population
-mutation rate, commonly referred to as $\theta$. The Watterson estimator, $\theta$ = 2 . ploidy . N ~e~ . $\mu$, represents
-the expected number of new mutations for a population per generation [@Watterson1975], where $\mu$ is
-the mutation rate and N~e~ is the effective population size. Effective population size is the size of an
-idealised population with the same amount of inbreeding or random gene frequency drift as the
-population under consideration [@KimuraCrow1963]. Other estimators of $\theta$ include: $\hat{\theta}$ =
-F~ST~ [@Weir1984], $\hat{\theta}$ = E($\pi$), in the infinite sites model, where $\mu$ is the average pairwise
-nucleotide differences per site [@Tajima1996a]. The infinite sites model assumes only one mutation
-occurs per site.
+Crucial to both the neutral theory and the theory of natural selection is the estimation of the population mutation rate, commonly referred to as $\theta$. The Watterson estimator, $\theta$ = 2 . ploidy . N ~e~ . $\mu$, represents the expected number of new mutations for a population per generation [@Watterson1975], where $\mu$ is the mutation rate and N~e~ is the effective population size. Effective population size is the size of an idealised population with the same amount of inbreeding or random gene frequency drift as the population under consideration [@KimuraCrow1963]. Other estimators of $\theta$ include: $\hat{\theta}$ = F~ST~ [@Weir1984], $\hat{\theta}$ = E($\pi$), in the infinite sites model, where $\mu$ is the average pairwise nucleotide differences per site [@Tajima1996a]. The infinite sites model assumes only one mutation occurs per site.
 
-Natural selection seems to be the more popular model to the neutral hypothesis, however the
-methodology for detecting selection utilises the neutral hypothesis for many of the methods
-mentioned later. These methods use a model for neutrality, and if the statistic reaches a level that is
-considered to be beyond that of the neutral model, the model is rejected. Typically the neutral
-hypothesis is a composite hypothesis using assumptions for which it would be difficult to find a
-human population that fulfils them, such as: “the population is in equilibrium at constant size with no
-population subdivision or gene flow from other populations” [@Nielsen2005a].
+Natural selection seems to be the more popular model to the neutral hypothesis, however the methodology for detecting selection utilises the neutral hypothesis for many of the methods mentioned later. These methods use a model for neutrality, and if the statistic reaches a level that is considered to be beyond that of the neutral model, the model is rejected. Typically the neutral hypothesis is a composite hypothesis using assumptions for which it would be difficult to find a human population that fulfils them, such as: “the population is in equilibrium at constant size with no population subdivision or gene flow from other populations” [@Nielsen2005a].
 
 ## Selection
 
-Possible types of selection that can act upon a population include balancing, background or directional
-selection. Balancing selection maintains both alleles in a population and is often the case when the
-heterozygote has an advantage over the homozygote and can be referred to as over dominant selection.
-An example of this is MHC class 1 [@Hughes1988] or sickle-cell anaemia [@ALLISON1956].
-Background selection is a reduction of genetic diversity at a locus because of deleterious selection
-acting on a separate but linked locus [@Charlesworth1993]. Background selection can be thought
-of as the opposite effect to genetic hitch-hiking. Directional selection operates in two fashions,
-positive or negative. Positive selection is where an allele conveys an advantage in fitness that
-enhances reproductive success, resulting in the beneficial allele increasing in frequency within the
-population. An example of positive selection is the lactase gene in European populations which
-enables the absorption of lactose [@Bersaglieri2004]. Negative selection occurs when the allele
-conveys a fitness disadvantage and ends with reduced reproductive success, decreasing the frequency
-of the allele in the population. The cystic fibrosis gene CFTR, is an example of negative selection,
-where in males splicing mutations can lead to sterility [@Pagani2005].
+Possible types of selection that can act upon a population include balancing, background or directional selection. Balancing selection maintains both alleles in a population and is often the case when the heterozygote has an advantage over the homozygote and can be referred to as over dominant selection. An example of this is MHC class 1 [@Hughes1988] or sickle-cell anaemia [@ALLISON1956]. Background selection is a reduction of genetic diversity at a locus because of deleterious selection acting on a separate but linked locus [@Charlesworth1993]. Background selection can be thought of as the opposite effect to genetic hitch-hiking. Directional selection operates in two fashions, positive or negative. Positive selection is where an allele conveys an advantage in fitness that enhances reproductive success, resulting in the beneficial allele increasing in frequency within the population. An example of positive selection is the lactase gene in European populations which enables the absorption of lactose [@Bersaglieri2004]. Negative selection occurs when the allele conveys a fitness disadvantage and ends with reduced reproductive success, decreasing the frequency of the allele in the population. The cystic fibrosis gene _CFTR_, is an example of negative selection, where in males splicing mutations can lead to sterility [@Pagani2005].
 
-Linkage disequilibrium (LD) can arise at sites that are under directional selection, even when the loci
-are unlinked [@Felsenstein1965]. Recombination will act to reduce this linkage disequilibrium.
-@Smith1974 came up with the concept of genetic hitch-hiking to explain the
-rise in LD during a selective event. Genetic hitch-hiking occurs when a locus is under selection, linked
-sites on the same chromosome will increase in frequency, causing a change in frequency of the alleles
-that are not on the same chromosome.
+\Gls{ld} can arise at sites that are under directional selection, even when the loci are unlinked [@Felsenstein1965]. Recombination will act to reduce this \gls{ld}. @Smith1974 came up with the concept of genetic hitch-hiking to explain the rise in \gls{ld} during a selective event. Genetic hitch-hiking occurs when a locus is under selection, linked sites on the same chromosome will increase in frequency, causing a change in frequency of the alleles that are not on the same chromosome.
 
-The way selection can affect allele frequencies can be thought of as a sweep: as an allele is selected
-it “sweeps” through the population. The intensity of this sweep can be classified as, hard, soft, and
-partial or incomplete. A hard sweep, also known as a classical sweep, is when a beneficial allele
-rapidly rises in frequency and through hitch-hiking the neutral variation is simultaneously reduced at
-linked sites, as shown in figure \@ref(fig:sweepDiagram) [@Hermisson2005; @Nielsen2005; @Smith1974].
+The way selection can affect allele frequencies can be thought of as a sweep: as an allele is selected it “sweeps” through the population. The intensity of this sweep can be classified as, hard, soft, and partial or incomplete. A hard sweep, also known as a classical sweep, is when a beneficial allele rapidly rises in frequency and through hitch-hiking the neutral variation is simultaneously reduced at linked sites, as shown in Figure \@ref(fig:sweepDiagram) [@Hermisson2005; @Nielsen2005; @Smith1974].
 
 (ref:sweepDiagram) _Representation of alleles before and after a hard sweep. 
 New mutation is shown in red. Neutral alleles are shown in black_
@@ -98,49 +32,17 @@ New mutation is shown in red. Neutral alleles are shown in black_
 knitr::include_graphics('images/sweep_diagram.png')
 ```
 
-A soft sweep occurs when an initially fitness neutral allele evolving under drift experiences a beneficial 
-environmental change and increases in frequency until fixation. The initial neutral nature of the allele 
-prior to becoming beneficial means there is a range of surrounding haplotypes and there is not as much reduction 
-in genetic diversity as happens with a hard sweep [@Hermisson2005; @Schrider2015b]. 
-The result of a soft sweep is multiple haplotypes of intermediate frequency around the selected site. 
-If the selective environment for a population changes frequently enough, soft sweeps could be the main
-method of adaptation [@Schrider2015b].
+A soft sweep occurs when an initially fitness neutral allele evolving under drift experiences a beneficial environmental change and increases in frequency until fixation. The initial neutral nature of the allele prior to becoming beneficial means there is a range of surrounding haplotypes and there is not as much reduction in genetic diversity as happens with a hard sweep [@Hermisson2005; @Schrider2015b]. The result of a soft sweep is multiple haplotypes of intermediate frequency around the selected site. If the selective environment for a population changes frequently enough, soft sweeps could be the main method of adaptation [@Schrider2015b].
 
-A partial or incomplete sweep occurs when part way through a sweep the selective pressure is
-changed/removed resulting in an increase in frequency for the allele that then returns to random
-genetic drift.
+A partial or incomplete sweep occurs when part way through a sweep the selective pressure is changed/removed resulting in an increase in frequency for the allele that then returns to random genetic drift.
 
-In order to determine if a selective event has occurred, one can attempt to find what are termed
-“signatures of selection”. Population differentiation can sometimes be indicative of a selective event.
-If extreme levels of differentiation are observed at a locus between populations, this can be interpreted
-as evidence of positive selection. Regions of the genome that have a reduction in variability in a
-population can be the effect of a selective sweep. A third example of a signature of selection are
-deviations in the frequency spectrum for alleles beyond what would be considered possible under
-neutrality [@Przeworski2002]. A key signature of positive selection is the increase in proportion of
-high frequency variants [@fay2000hitchhiking].
+In order to determine if a selective event has occurred, one can attempt to find what are termed “signatures of selection”. Population differentiation can sometimes be indicative of a selective event. If extreme levels of differentiation are observed at a locus between populations, this can be interpreted as evidence of positive selection. Regions of the genome that have a reduction in variability in a population can be the effect of a selective sweep. A third example of a signature of selection are deviations in the frequency spectrum for alleles beyond what would be considered possible under neutrality [@Przeworski2002]. A key signature of positive selection is the increase in proportion of high frequency variants [@fay2000hitchhiking].
 
-Assuming a background of neutrality means that there needs to be a way to identify variants under
-selection as opposed to population demographics, such as bottlenecks or expansions. In the case of
-Polynesian settlement, there is evidence for a founder effect which will need to be considered when
-interpreting selection results [@Kayser2006a]. It is for this reason that the unique features of a
-selective event need to be able to be identified from other possible features such as population
-demography or admixture. Population events and demography affect the entire genome, whereas
-selection acts on a localised region [@Stajich2005]. To be able to recreate demography, the
-choice in the SNPs used is important as there is chance for a large ascertainment bias if SNPs are only
-selected from a small number of populations [@Wall2008]. The SNPs used also need to be
-sampled away from genic areas.
+Assuming a background of neutrality means that there needs to be a way to identify variants under selection as opposed to population demographics, such as bottlenecks or expansions. In the case of Polynesian settlement, there is evidence for a founder effect which will need to be considered when interpreting selection results [@Kayser2006a]. It is for this reason that the unique features of a selective event need to be able to be identified from other possible features such as population demography or admixture. Population events and demography affect the entire genome, whereas selection acts on a localised region [@Stajich2005]. To be able to recreate demography, the choice in the \gls{snp}s used is important as there is chance for a large ascertainment bias if \gls{snp}s are only selected from a small number of populations [@Wall2008]. The \gls{snp}s used also need to be sampled away from genic areas.
 
 ## Methods
 
-Since 2005 there have been multiple reviews published (see @Nielsen2005, @sabeti2006positive, @Utsunomiya2015, and, @Vitti2013) 
-on methods of identifying selection, as there has been a renewed
-interest and push to examine selection at a genome wide scale due to increased availability of whole genomes. 
-Methods that have been developed to detect signatures of selection can be placed into two main categories, 
-those that only work on a single population and those that compare between populations. There are also main 
-underlying genetic features that these methods can use, such as allele frequency (frequency spectrum methods) 
-or differences in haplotype (linkage methods). There are also methods that combine different types of method 
-(composite methods). A summary of selection methods discussed in this review is provided in 
-Table \@ref(tab:selectionMethods).
+Since 2005 there have been multiple reviews published (see @Nielsen2005, @sabeti2006positive, @Utsunomiya2015, and, @Vitti2013) on methods of identifying selection, as there has been a renewed interest and push to examine selection at a genome wide scale due to increased availability of whole genomes. Methods that have been developed to detect signatures of selection can be placed into two main categories, those that only work on a single population and those that compare between populations. There are also main underlying genetic features that these methods can use, such as allele frequency (frequency spectrum methods) or differences in haplotype (linkage methods). There are also methods that combine different types of method (composite methods). A summary of selection methods discussed in this review is provided in Table \@ref(tab:selectionMethods).
 
 Table: (\#tab:selectionMethods) _Summary of Selection Methods_
 
@@ -194,578 +96,162 @@ CSS                   Within and Between                      @Randhawa2014
 <!-- make sure to update so that it includes the statistics used -->
 
 
-The different methods for detecting selection work best over different time periods. Recent soft sweeps are able 
-to be detected well with LD-based methods but frequency spectrum tests struggle with the opposite being the 
-case for hard sweeps [@Hermisson2005]. In humans, the method that is able to detect the most 
-ancient selection, ranging to millions of years ago is the Ka/Ks ratio, however if a strong background of neutrality 
-is present this can undermine the effectiveness of the test. Tajima's _D_ is able to detect selection events as 
-old as 250,000 years ago in regions of low diversity containing and excess of rare alleles. Fay and Wu's _H_ 
-is able to detect events less than 80,000 years ago based on derived alleles having arisen through mutation
-and then risen to a high frequency via hitch-hiking. F~ST~, in the range of less than 50,000 to 70,000 years a
-go, picks up geographic separation of populations that have been subject to different physical and cultural 
-environments based on the changes in allele frequency in one population versus another. Methods relying on long 
-haplotypes such as iHS have the shortest range at less than 30,000 years ago for a long haplotype that 
-hasn't had time to break down through recombination and contains a high frequency variant. Partial sweeps 
-can also be detected down to a minor allele frequency of approximately 10% [@sabeti2006positive].
+The different methods for detecting selection work best over different time periods. Recent soft sweeps are able to be detected well with \gls{ld}-based methods but frequency spectrum tests struggle with the opposite being the case for hard sweeps [@Hermisson2005]. In humans, the method that is able to detect the most ancient selection, ranging to millions of years ago is the Ka/Ks ratio, however if a strong background of neutrality is present this can undermine the effectiveness of the test. Tajima's _D_ is able to detect selection events as 
+old as 250,000 years ago in regions of low diversity containing and excess of rare alleles. Fay and Wu's _H_ is able to detect events less than 80,000 years ago based on derived alleles having arisen through mutation and then risen to a high frequency via hitch-hiking. F~ST~, in the range of less than 50,000 to 70,000 years ago, picks up geographic separation of populations that have been subject to different physical and cultural environments based on the changes in allele frequency in one population versus another. Methods relying on long haplotypes such as \gls{ihs} have the shortest range at less than 30,000 years ago for a long haplotype that hasn't had time to break down through recombination and contains a high frequency variant. Partial sweeps can also be detected down to a \gls{maf} of approximately 10% [@sabeti2006positive].
 
 ### Macroevolutionary
 
 #### Ka/Ks
-The ratio of non-synonymous to synonymous mutations is called the Ka/Ks ratio or dN/dS ratio as it is often 
-referred to, is used to infer functional impact from selection, since synonymous mutations are thought of 
-as silent mutations with a neutral effect on the protein [@Hughes1988]. Comparing the baseline rate of 
-mutation (synonymous) to the non-synonymous rate gives an understanding of the tolerance of amino acid 
-alternatives in the protein, with an excess of non-synonymous mutations indicating the novel protein structures 
-are being favoured and the protein is being positively selected for. A Ka/Ks ratio greater than 1 is indicative 
-of positive selection, while a value less than 1 is indicative of negative selection against deleterious 
-mutations and for keeping the protein conserved.
+The ratio of non-synonymous to synonymous mutations is called the Ka/Ks ratio or dN/dS ratio as it is often referred to, is used to infer functional impact from selection, since synonymous mutations are thought of as silent mutations with a neutral effect on the protein [@Hughes1988]. Comparing the baseline rate of mutation (synonymous) to the non-synonymous rate gives an understanding of the tolerance of amino acid alternatives in the protein, with an excess of non-synonymous mutations indicating the novel protein structures are being favoured and the protein is being positively selected for. A Ka/Ks ratio greater than 1 is indicative of positive selection, while a value less than 1 is indicative of negative selection against deleterious mutations and for keeping the protein conserved.
 
 #### HKA
 
-The HKA test [@Hudson1987] compares between and within populations the polymorphism and 
-divergence of two or more loci, and uses this to establish if a loci has been under selection, since variation 
-within, and diversity between, species under neutrality should be based only on the mutation rate.
+The HKA test [@Hudson1987] compares between and within populations the polymorphism and divergence of two or more loci, and uses this to establish if a loci has been under selection, since variation within, and diversity between, species under neutrality should be based only on the mutation rate.
 
 ### Haplotypic Methods
 
-There are a few methods that are different derivations and applications of looking at haplotype decay around a 
-core SNP. @sabeti2006positive put forward the concept of using extended haplotype homozygosity (EHH). The haplotypes 
-that had unusually long haplotype homozygosity and a high frequency in the population indicated that the 
-polymorphism had risen in prominence faster than it would be expected under the neutral model and therefore 
-under selection. The main concept is that a beneficial mutation wouldn't solely be selected for, but the 
-surrounding region would initially be selected and therefore have a conservation effect. As time and generations 
-progressed this haplotype would decay due to recombination and this haplotype decay can be used to assist in 
-the ageing of the selection event. In order to use haplotypic methods, there is a requirement to establish 
-the alleles that were inherited from the maternal side and those that were inherited from the paternal 
-side making the two haplotypes (phasing).
+There are a few methods that are different derivations and applications of looking at haplotype decay around a core \gls{snp}. @sabeti2006positive put forward the concept of using \gls{ehh}. The haplotypes that had unusually long haplotype homozygosity and a high frequency in the population indicated that the polymorphism had risen in prominence faster than it would be expected under the neutral model and therefore under selection. The main concept is that a beneficial mutation wouldn't solely be selected for, but the surrounding region would initially be selected and therefore have a conservation effect. As time and generations progressed this haplotype would decay due to recombination and this haplotype decay can be used to assist in the ageing of the selection event. In order to use haplotypic methods, there is a requirement to establish the alleles that were inherited from the maternal side and those that were inherited from the paternal side making the two haplotypes (phasing).
 
 #### Integrated Haplotype Homozygosity Score
 
-Integrated Haplotype Homozygosity Score (iHS; @voight2006map) starts with extended haplotype 
-homozygosity (EHH) which is the probability that 2 chromosomes are carrying a core haplotype are 
-homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity 
-meaning all haplotypes are the same. The EHH value versus distance is integrated to find the area under EHH curve 
-until EHH decays to 0.05. This integrated EHH (iHH) is calculated based on the ancestral or derived allele and 
-annotated as iHHa or iHHa. The unstandarised iHS is calculated by ln(iHHa /iHHd ). Standardisation of iHS is done 
-by (ln(iHHa /iHHd ) - E p [ln(iHHa /iHHd )] ) / SD p [ln(iHHa /iHHd )], where the expectations and standard deviation 
-of ln(iHHa /iHHd ) are estimated from the empirical distribution of SNPs whose derived allele frequency p 
-matches the frequency at the core SNP [@voight2006map]. Large positive values indicate long haplotypes 
-carrying the ancestral allele. The Integrated haplotype homozygosity score identifies variants under selection 
-driven to intermediate frequencies.
+\Gls{ihs} [@voight2006map] starts with \gls{ehh} which is the probability that 2 chromosomes are carrying a core haplotype are homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity  meaning all haplotypes are the same. The \gls{ehh} value versus distance is integrated to find the area under \gls{ehh} curve until \gls{ehh} decays to 0.05. This \gls{ihh} is calculated based on the ancestral or derived allele and annotated as \gls{ihh} or \gls{ihh}d. The unstandarised \gls{ihs} is calculated by ln(iHHa /iHHd ). Standardisation of \gls{ihs} is done by (ln(iHHa /iHHd ) - E p [ln(iHHa /iHHd )] ) / SD p [ln(iHHa /iHHd )], where the expectations and standard deviation of ln(iHHa /iHHd ) are estimated from the empirical distribution of SNPs whose derived allele frequency p matches the frequency at the core \gls{snp}[@voight2006map]. Large positive values indicate long haplotypes carrying the ancestral allele. \Gls{ihs} identifies variants under selection driven to intermediate frequencies.
 
 #### Cross Population Extended Haplotype Homozygosity
 
-Cross population extended haplotype homozygosity (XP-EHH), created by @tang2007new, is also known as 
-Rsb. XP-EHH was designed for use with SNP data rather than sequence. XP-EHH lacks power to detect intermediate 
-frequency variants but is designed to detect variants that are near fixation or completely fixed. The EHH 
-of SNP site (EHHS), integrates to sum the area under the decay by distance in EHH (iES) which is then used 
-as a log ratio (ln(Rsb)) between populations ln(iES pop1 /iES pop2 ) at a single site. Recombination rate 
-is mostly conserved within populations so provides an internal control in Rsb for effects of heterogeneous 
-recombination rates. Extreme values of Rsb indicate a slower decay of EHH in one population compared to the 
-other. XP-EHH relies on the breakdown of LD over time and has weak power to detect selective sweeps that were 
-historical and ended thousands of generations ago [@Chen2010]. F~ST~ is better than XP-EHH for 
-differential selection between closely related populations because haplotype-based signals are mostly 
-shared between geographically similar populations [@pickrell2009signals]. 
+\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iES) which is then used as a log ratio (ln(Rsb)) between populations ln(iES pop1 /iES pop2 ) at a single site. Recombination rate is mostly conserved within populations so provides an internal control in Rsb for effects of heterogeneous 
+recombination rates. Extreme values of Rsb indicate a slower decay of \gls{ehh} in one population compared to the other. \Gls{xpehh} relies on the breakdown of \gls{ld} over time and has weak power to detect selective sweeps that were historical and ended thousands of generations ago [@Chen2010]. F~ST~ is better than \gls{xpehh} for differential selection between closely related populations because haplotype-based signals are mostly shared between geographically similar populations [@pickrell2009signals]. 
 
 #### Number of Segragating Sites by Length
 
-Number of segregating sites by length (nSL) is another single population haplotypic method that is extremely 
-similar to iHS, however nSL also measures the length of a segment of haplotype homozygosity between a 
-pair of haplotypes in terms of number of mutations in the remaining haplotypes in the data set in 
-the same region [@Ferrer-Admetlla2014]. Demographic events affect nSL less than iHS. Under 
-simulations for different demographic events, nSL had a smaller total difference in variation between 
-the standard distribution of the test statistic and the distribution of the modelled demographic 
-event [@Ferrer-Admetlla2014]. 
+\Gls{nsl} is another single population haplotypic method that is extremely similar to \gls{ihs}, however nSL also measures the length of a segment of haplotype homozygosity between a pair of haplotypes in terms of number of mutations in the remaining haplotypes in the data set in the same region [@Ferrer-Admetlla2014]. Demographic events affect \gls{nsl} less than \gls{ihs}. Under simulations for different demographic events, \gls{nsl} had a smaller total difference in variation between the standard distribution of the test statistic and the distribution of the modelled demographic event [@Ferrer-Admetlla2014]. 
 
 ### Frequency Spectrum Methods
 
-The frequency spectrum methods are based on finding deviations in the frequency spectra of alleles 
-that would be outside of what would be expected under neutrality. These can involve an increase 
-in particular types of frequencies such as low, intermediate, high variant frequencies, or a difference 
-in allele frequencies between populations. 
+The frequency spectrum methods are based on finding deviations in the frequency spectra of alleles that would be outside of what would be expected under neutrality. These can involve an increase in particular types of frequencies such as low, intermediate, high variant frequencies, or a difference in allele frequencies between populations. 
 
 #### Tajima's _D_
 
-Tajima's _D_ [@Tajima1989] counts the number of segregating sites of individuals in a population 
-and finds the ratio between polymorphisms and pair-wise individual comparisons. Tajima's _D_ 
-is a test of the neutral hypothesis. The hypothesis is rejected when there is an excess of 
-low frequency variants. A negative Tajima's _D_ is indicative of positive selection or weak negative 
-selection but a negative value can also be attributed to population events such as population
-expansion. Positive values of Tajima's _D_ indicate an excess of intermediate frequency variants. 
-An excess of intermediate frequency variants could also be attributed to balancing selection,
-population structure, or population bottlenecks [@Kreitman2000; @Nielsen2005; @nielsen2007recent]. 
-The comparison of other polymorphisms, such as changes in SNPs vs changes 
-in INDEL numbers can provide further evidence for either selection or a population event, 
-since population events should affect both SNPs and INDELs in an equal fashion. The direction of 
-Tajima's D after a population bottleneck depends on the strength and duration of the bottleneck
-and can generate similar Tajima's _D_ values that can be positive, negative or zero [@Fay1999]. 
-After a population reduction or selective event it is expected the population will have excess 
-rare alleles (recent, low frequency) as the population recovers, therefore Tajima's _D_ will be
-negative [@Barton1998]. Tajima's _D_ is sensitive to sequencing errors because they appear 
-equivalent to low frequency variants [@Achaz2008].
+Tajima's _D_ [@Tajima1989] counts the number of segregating sites of individuals in a population and finds the ratio between polymorphisms and pair-wise individual comparisons. Tajima's _D_ is a test of the neutral hypothesis. The hypothesis is rejected when there is an excess of low frequency variants. A negative Tajima's _D_ is indicative of positive selection or weak negative selection but a negative value can also be attributed to population events such as populationexpansion. Positive values of Tajima's _D_ indicate an excess of intermediate frequency variants. An excess of intermediate frequency variants could also be attributed to balancing selection, population structure, or population bottlenecks [@Kreitman2000; @Nielsen2005; @nielsen2007recent]. The comparison of other polymorphisms, such as changes in \gls{snp}s vs changes in \gls{indel} numbers can provide further evidence for either selection or a population event, since population events should affect both \gls{snp}s and \gls{indel}s in an equal fashion. The direction of Tajima's _D_ after a population bottleneck depends on the strength and duration of the bottleneck and can generate similar Tajima's _D_ values that can be positive, negative or zero [@Fay1999]. After a population reduction or selective event it is expected the population will have excess rare alleles (recent, low frequency) as the population recovers, therefore Tajima's _D_ will be negative [@Barton1998]. Tajima's _D_ is sensitive to sequencing errors because they appear equivalent to low frequency variants [@Achaz2008].
 
 #### Fay and Wu's _H_
 
-Fay and Wu's _H_ is sensitive to SNPs rising to moderate to high frequency and uses an out group to 
-determine the derived/ancestral state of the allele. A positive value indicates a deficit in 
-derived moderate to high frequency SNPs. A negative value indicates an excess of derived moderate
-to high frequency SNPs. Fay and Wu's _H_ rejects neutrality when there is an excess of high but not 
-low frequency variants. An increase in the proportion of high frequency variants compared to 
-intermediate frequency variants is a unique signature of positive selection [@fay2000hitchhiking]. 
-Fay and Wu's _H_ can be used in regions of low recombination to distinguish hitch-hiking from
-neutral or background selection where it is expected there will be the same level of intermediate 
-to high frequency variants.
+Fay and Wu's _H_ is sensitive to \gls{snp}s rising to moderate to high frequency and uses an out group to determine the derived/ancestral state of the allele. A positive value indicates a deficit in derived moderate to high frequency \gls{snp}s. A negative value indicates an excess of derived moderate to high frequency \gls{snp}s. Fay and Wu's _H_ rejects neutrality when there is an excess of high but not low frequency variants. An increase in the proportion of high frequency variants compared to intermediate frequency variants is a unique signature of positive selection [@fay2000hitchhiking]. Fay and Wu's _H_ can be used in regions of low recombination to distinguish hitch-hiking from neutral or background selection where it is expected there will be the same level of intermediate to high frequency variants.
 
 #### F~ST~
 
-F~ST~ is a population differentiation metric that measures the differences in heterogenity of 
-a sub-population compared to a global population. Initially created by @Wright1951, as an 
-inbreeding coefficient for inbreeding as a whole in a population, F~ST~ = (F~IT~ – F~IS~)/ (1 – F~IS~) where F~IT~ 
-is the inbreeding coefficient for the individual in the total population and F~IS~ is the inbreeding 
-coefficient for inbreeding of the individual in the subpopulation. These fixation indices are ways 
-of summarising population structure. Selection will act to drive an allele to fixation, whereas
-immigration usually reduces the frequency. When the selective advantage is strong, selection will 
-be the dominant force on the locus, however, when the selective advantage is weak the allele will
-reduce in frequency and disappear. Cockerham [@Cockerham1969; @Cockerham1973] equated $\theta$ (population genetic differentiation) 
-with F~ST~ and so now F~ST~ was not just for population structure but differentiation. The fixation
-indices were further developed by @Weir1984 to add weightings in the 
-calculation for population sizes. F~ST~ values fall between 0 and 1, each represents the 
-fixation of an allele. Large differences in F~ST~ values are indicative of population differentiation, 
-suggesting directional selection at that locus, whereas small differences in F~ST~ indicates that the populations 
-are similar. F~ST~ can have high variation in neighbouring loci under neutrality [@Weir2005]. 
-Unless populations are closely related such as northwest and southeast Europeans [@Price2008a],  
-the noise will drown out the signal and identification of genome-wide significance in F~ST~ will be 
-difficult. @Weir2005 suggested taking a sliding window approach to help improve the signal to noise ratio.
+F~ST~ is a population differentiation metric that measures the differences in heterogenity of a sub-population compared to a global population. Initially created by @Wright1951, as an inbreeding coefficient for inbreeding as a whole in a population, F~ST~ = (F~IT~ – F~IS~)/ (1 – F~IS~) where F~IT~ is the inbreeding coefficient for the individual in the total population and F~IS~ is the inbreeding coefficient for inbreeding of the individual in the subpopulation. These fixation indices are ways of summarising population structure. Selection will act to drive an allele to fixation, whereas immigration usually reduces the frequency. When the selective advantage is strong, selection will be the dominant force on the locus, however, when the selective advantage is weak the allele will reduce in frequency and disappear. Cockerham [@Cockerham1969; @Cockerham1973] equated $\theta$ (population genetic differentiation) with F~ST~ and so now F~ST~ was not just for population structure but differentiation. The fixation indices were further developed by @Weir1984 to add weightings in the calculation for population sizes. F~ST~ values fall between 0 and 1, each represents the fixation of an allele. Large differences in F~ST~ values are indicative of population differentiation, suggesting directional selection at that locus, whereas small differences in F~ST~ indicates that the populations are similar. F~ST~ can have high variation in neighbouring loci under neutrality [@Weir2005]. Unless populations are closely related such as northwest and southeast Europeans [@Price2008a], the noise will drown out the signal and identification of genome-wide significance in F~ST~ will be difficult. @Weir2005 suggested taking a sliding window approach to help improve the signal to noise ratio.
 
-F~ST~ has been used in multiple studies as evidence for natural selection [@Akey2012; @myles2007identification; @pickrell2009signals]. 
-@Akey2012 used F~ST~ at individual loci and compared this to the distributions for the genome, chromosome and 
-gene levels. The use of the empirical distribution to compare to F~ST~ for each SNP controlled for the effects 
-of demography. F~ST~ as a method for detecting selection was developed further into di, which is a function of 
-pair-wise F~ST~ between population i and the remaining populations [@Akey2010]. Outside of the human 
-context F~ST~ has been a very popular method of reporting both population structure and evidence of selection 
-[@Akey2010; @Hancock2011; @Qanbari2011; @Wei2015b].
+F~ST~ has been used in multiple studies as evidence for natural selection [@Akey2012; @myles2007identification; @pickrell2009signals]. @Akey2012 used F~ST~ at individual loci and compared this to the distributions for the genome, chromosome and gene levels. The use of the empirical distribution to compare to F~ST~ for each \gls{snp} controlled for the effects of demography. F~ST~ as a method for detecting selection was developed further into di, which is a function of pair-wise F~ST~ between population i and the remaining populations [@Akey2010]. Outside of the human context F~ST~ has been a very popular method of reporting both population structure and evidence of selection [@Akey2010; @Hancock2011; @Qanbari2011; @Wei2015b].
 
 #### Selection by Conditional Coalescent Tree
 
-Selection by conditional coalescent tree (SCCT; @Wang2014) detects recent positive 
-selection by searching for an imbalance of genetic variants and conditions these on the allele 
-frequencies of the candidate loci. SCCT pinpoints the causal variant more accurately by using a method 
-that is based on the conditional coalescent tree method from @Wiuf1999, where haplotypes are 
-partitioned into two subgroups according to the allelic state at a particular locus, 
-it is assumed one subgroup carries the derived allele at the particular locus and 
-the other subgroup carries the ancestral allele. The coalescence of a sample of
-haplotypes conditioning on the particular mutation means each group should coalesce 
-together individually before the two subgroups coalesce. This is a similar idea to 
-that of extended haplotype homozygosity used by iHS and the results of iHS and SCCT 
-tends to be similar. The selection statistic (S) is based on comparing the lineage 
-lengths of the two groups. Under neutrality S approaches $\theta$, with significant departures 
-from $\theta$ being considered evidence of positive selection. When natural selection 
-has a strong hitch hiking effect on a selectively favoured allele, SCCT (and iHS) is 
-more powerful than Tajima's _D_, Fay and Wu’s _H_, and measuring change in derived allele 
-frequency (see 2.3.5). In most cases the power of SCCT is equivalent to iHS except 
-when selection is very strong, in which case iHS has more power [@Wang2014]. 
-The power of SCCT can be improved by increasing the sample size. SCCT performs 
-moderately to population demographic events (such as bottlenecks) and out performs 
-Tajima's D and iHS in false discovery rate, but Fay and Wu's H performed the 
-best [@Wang2014].
+Selection by conditional coalescent tree (SCCT; @Wang2014) detects recent positive selection by searching for an imbalance of genetic variants and conditions these on the allele frequencies of the candidate loci. SCCT pinpoints the causal variant more accurately by using a method that is based on the conditional coalescent tree method from @Wiuf1999, where haplotypes are partitioned into two subgroups according to the allelic state at a particular locus, it is assumed one subgroup carries the derived allele at the particular locus and the other subgroup carries the ancestral allele. The coalescence of a sample of haplotypes conditioning on the particular mutation means each group should coalesce together individually before the two subgroups coalesce. This is a similar idea to that of extended haplotype homozygosity used by \gls{ihs} and the results of \gls{ihs} and SCCT tends to be similar. The selection statistic (S) is based on comparing the lineage lengths of the two groups. Under neutrality S approaches $\theta$, with significant departures from $\theta$ being considered evidence of positive selection. When natural selection has a strong hitch hiking effect on a selectively favoured allele, SCCT (and \gls{ihs}) is more powerful than Tajima's _D_, Fay and Wu’s _H_, and measuring change in derived allele frequency (see \@ref:daf). In most cases the power of SCCT is equivalent to \gls{ihs} except when selection is very strong, in which case \gls{ihs} has more power [@Wang2014]. The power of SCCT can be improved by increasing the sample size. SCCT performs moderately to population demographic events (such as bottlenecks) and out performs Tajima's _D_ and \gls{ihs} in false discovery rate, but Fay and Wu's _H_ performed the best [@Wang2014].
 
-#### $\Delta$DAF
+#### $\Delta$DAF (ref:daf)
 
-Change in derived allele frequency ($\Delta$DAF) is similar to F~ST~ in that 
-it looks at population differentiation. The derived allele is determined through 
-the use of an ancestral outgroup such as chimpanzees when used in human 
-populations. $\Delta$DAF measures the absolute difference in the derived allele 
-frequency between two populations [@Grossman2010] and has greater 
-power to detect sweeps, both partial and complete, and outperforms XP-EHH 
-for partial sweeps [@Colonna2014]. $\Delta$DAF was originally part of 
-the composite of multiple sites statistic [@Grossman2010] but 
-has also been used as a standalone metric in humans 
-[@Colonna2014; @Gudbjartsson2015] and in other species 
-such as cattle [@Randhawa2014] to measure differentiation.
+Change in derived allele frequency ($\Delta$DAF) is similar to F~ST~ in that it looks at population differentiation. The derived allele is determined through the use of an ancestral outgroup such as chimpanzees when used in human populations. $\Delta$DAF measures the absolute difference in the derived allele frequency between two populations [@Grossman2010] and has greater power to detect sweeps, both partial and complete, and outperforms \gls{xpehh} for partial sweeps [@Colonna2014]. $\Delta$DAF was originally part of the composite of multiple sites statistic [@Grossman2010] but has also been used as a standalone metric in humans [@Colonna2014; @Gudbjartsson2015] and in other species such as cattle [@Randhawa2014] to measure differentiation.
 
 ### Composite Methods
 
-Composite methods are combine multiple methods with the goal to increase overall power 
-and/or spatial resolution for detecting selection. The combination of methods also gives 
-greater resilience to demographic events.
+Composite methods are combine multiple methods with the goal to increase overall power and/or spatial resolution for detecting selection. The combination of methods also gives greater resilience to demographic events.
 
 #### Composite Likelihood Ratio
 
-The composite likelihood ratio (CLR), created by @Kim2002, is a test for local
-hitch-hiking selection along a recombining chromosome. It calculates a null distribution 
-of variation from neutral coalescent simulations involving recombination and uses 
-this to calculate the probability of observing a threshold ratio of segregating variants. 
-The @Nielsen2005a version of CLR is similar to Kim and Stephan's test but creates
-the null distribution from the data itself, instead of using the neutral population model. 
-A key consideration for the use of CLR is that it is very sensitive to SNP 
-ascertainment bias [@Chen2010].
+The \gls{clr}, created by @Kim2002, is a test for local
+hitch-hiking selection along a recombining chromosome. It calculates a null distribution of variation from neutral coalescent simulations involving recombination and uses this to calculate the probability of observing a threshold ratio of segregating variants. The @Nielsen2005a version of \gls{clr} is similar to Kim and Stephan's test but creates the null distribution from the data itself, instead of using the neutral population model. A key consideration for the use of \gls{clr} is that it is very sensitive to \gls{snp} ascertainment bias [@Chen2010].
 
 #### Cross Population Composite Likelihoods ratio
 
-The cross population composite likelihoods ratio (XP-CLR) is an extension of the CLR test 
-developed by @Nielsen2009 that scans for multi-locus allele frequency
-differentiation between two populations and then tests if these frequency differences 
-are too young to be consistent with neutrality based on the LD on the 
-region [@Chen2010]. A down-weighting of SNPs that are in perfect 
-or high LD is performed because they essentially provide the same information. 
-By doing this it is hoped that false positives are reduced, since the correlation 
-of marginal likelihood terms in the composite likelihood function is often 
-overlooked and leads to false positives. Normalised XP-CLR scores should be 
-resistant to variation in demographic events, however a conservative approach 
-of using rank-order of scores across the genome is usually taken. Unlike single 
-population CLR and similar to XP-EHH, XP-CLR is resistant to SNP ascertainment 
-bias because population differentiation is not affected by ascertainment bias. 
-There is also a strong correlation between genes identified with XP-CLR and
-XP-EHH. XP-CLR is also considered an extension of F~ST~ and is beginning to be 
-used as a replacement for investigating selection in animal studies 
-(Cattle – @Lee2014; Goats - @Benjelloun2015)
+The cross population composite likelihoods ratio (XP-CLR) is an extension of the \gls{clr} test developed by @Nielsen2009 that scans for multi-locus allele frequency differentiation between two populations and then tests if these frequency differences are too young to be consistent with neutrality based on the \gls{ld} on the region [@Chen2010]. A down-weighting of \gls{snp}s that are in perfect or high \gls{ld} is performed because they essentially provide the same information. By doing this it is hoped that false positives are reduced, since the correlation of marginal likelihood terms in the composite likelihood function is often overlooked and leads to false positives. Normalised XP-CLR scores should be resistant to variation in demographic events, however a conservative approach of using rank-order of scores across the genome is usually taken. Unlike single population \gls{clr} and similar to \gls{xpehh}, XP-CLR is resistant to \gls{snp} ascertainment bias because population differentiation is not affected by ascertainment bias. There is also a strong correlation between genes identified with XP-CLR and \gls{xpehh}. XP-CLR is also considered an extension of F~ST~ and is beginning to be used as a replacement for investigating selection in animal studies (Cattle – @Lee2014; Goats - @Benjelloun2015)
 
 #### Composite of Multiple Signals
 
-Composite of Multiple Signals (CMS) is a combination metric composed of iHS, 
-XP-EHH, F~ST~, $\Delta$DAF, and $\Delta$iHH. $\Delta$iHH is used to compare the actual length of the 
-haplotype. CMS was created to take advantage of the combined power gained from 
-using all metrics together to be able to detect the source of the selective
-signal better than any test individually could [@Grossman2010]. 
-In CMS it was found that XP-EHH and F~ST~ contributed mostly to spatially
-locating the causal variant whereas iHS, $\Delta$DAF, and $\Delta$iHH did poorly in
-spatially locating the selective signal but performed well at identifying 
-the precise causal variant.
+Composite of Multiple Signals (CMS) is a combination metric composed of \gls{ihs}, \gls{xpehh}, F~ST~, $\Delta$\gls{daf}, and $\Delta$\gls{ihh}. $\Delta$\gls{ihh} is used to compare the actual length of the haplotype. CMS was created to take advantage of the combined power gained from using all metrics together to be able to detect the source of the selective signal better than any test individually could [@Grossman2010]. In CMS it was found that \gls{xpehh} and F~ST~ contributed mostly to spatially locating the causal variant whereas \gls{ihs}, $\Delta$DAF, and $\Delta$\gls{ihh} did poorly in spatially locating the selective signal but performed well at identifying the precise causal variant.
 
 #### Meta-analysis of Multiple Tests
 
-Meta-analysis of Multiple Tests (meta-SS; @Utsunomiya2013; @Utsunomiya2015)  
-is only able to combine selection statistics that generate P-values. It uses 
-an adapted version of a weighted  Stouffer method to combine Z-transformed 
-P-values. For each marker from each test i the respective P-value is 
-transformed into a Z score by Z~i~ = - $\phi$ -1(1 - $\pi$), where $\phi$ is the normal 
-cumulative density function. Each test is weighted (w~i~) to 1/n where 
-n is the number of comparisons. The combined statistic of k tests, for 
-each SNP in each population is defined as
+Meta-analysis of Multiple Tests (meta-SS; @Utsunomiya2013; @Utsunomiya2015) is only able to combine selection statistics that generate P-values. It uses an adapted version of a weighted  Stouffer method to combine Z-transformed P-values. For each marker from each test i the respective P-value is transformed into a Z score by Z~i~ = - $\phi$ -1(1 - $\pi$), where $\phi$ is the normal cumulative density function. Each test is weighted (w~i~) to 1/n where n is the number of comparisons. The combined statistic of k tests, for each \gls{snp} in each population is defined as
 
 #### Composite Selection Signals
 
-Composite of Selection Signals is similar to meta-SS, where by it is a method for 
-combining the results from multiple selection tests but is not limited to tests 
-that produce P-values [@Randhawa2014]. CSS currently uses FST, XP-EHH, 
-and $\Delta$DAF or change in selected allele frequency and combines them by taking 
-the test statistic for each method across each SNP (1,…,n) then obtaining 
-the rank of each statistic across each SNP (1 … n) and converting these
-into fractional ranks so they lie between 0 and 1, that is, 1/(n+1) to n/(n+1). 
-By doing this the magnitudes of the original statistics are not used, thus 
-increasing the robustness. The fractional ranks are converted to z-statistics 
-and the average z-values are calculated at each SNP position. P-values are 
-obtained from the distribution of the means with the -log10(p) being the 
-CSS value. The CSS is plotted against genomic position with an excess in 
-CSS showing a common signal between the multiple test statistics.
+Composite of Selection Signals is similar to meta-SS, where by it is a method for combining the results from multiple selection tests but is not limited to tests that produce P-values [@Randhawa2014]. CSS currently uses F~ST~, \gls{xpehh}, and $\Delta$\gls{daf} or change in selected allele frequency and combines them by taking the test statistic for each method across each \gls{snp}(1,…,n) then obtaining the rank of each statistic across each \gls{snp}(1 … n) and converting these into fractional ranks so they lie between 0 and 1, that is, 1/(n+1) to n/(n+1). By doing this the magnitudes of the original statistics are not used, thus increasing the robustness. The fractional ranks are converted to Z-statistics and the average z-values are calculated at each \gls{snp} position. P-values are obtained from the distribution of the means with the -log10(p) being the CSS value. The CSS is plotted against genomic position with an excess in CSS showing a common signal between the multiple test statistics.
 
 ### Power
 
-Power to detect selected sites can be very limited if the site is not an 
-outlier from empirical methods [Teshima2006]. A key 
-consideration when selecting a particular method for detecting 
-selection is the limitations the method has on power to detect a 
-selective event such as starting and final allele frequency of the
-variant after a sweep. Tajima's _D_ is most powered for low and intermediate 
-frequency variants [@Simonsen1995] whereas Fay and Wu's _H_ is 
-most powered for intermediate and high frequency variants. Some methods 
-such as iHS, are good for detection of middle frequency variants. XP-EHH, 
-on the other hand is most powered at the fixation ends of the spectrum. 
-XP-EHH, because it is correlated with linkage disequilibrium, lacks power 
-to detect ancient selective events [@Chen2010].  Sample size is 
-another factor to consider. Integrated haplotype score has modest reduction 
-of power when reducing samples until approximately 40 chromosomes. XP-EHH
-can maintain power to about 20 chromosomes, so long as the reference 
-population is a fixed size. The grouping of similar genetic populations 
-may be an option to increase power with low sample sizes [@pickrell2009signals])
-. For F~ST~, power to detect selection should be sufficient if samples > 1/F~ST~ 
-[@Bhatia2013a; @Bhatia2011]
+Power to detect selected sites can be very limited if the site is not an outlier from empirical methods [Teshima2006]. A key consideration when selecting a particular method for detecting selection is the limitations the method has on power to detect a selective event such as starting and final allele frequency of the variant after a sweep. Tajima's _D_ is most powered for low and intermediate frequency variants [@Simonsen1995] whereas Fay and Wu's _H_ is most powered for intermediate and high frequency variants. Some methods such as \gls{ihs}, are good for detection of middle frequency variants. \Gls{xpehh}, on the other hand is most powered at the fixation ends of the spectrum. \gls{xpehh}, because it is correlated with \gls{ld}, lacks power to detect ancient selective events [@Chen2010].  Sample size is another factor to consider. \Gls{ihs} has modest reduction of power when reducing samples until approximately 40 chromosomes. \gls{xpehh} can maintain power to about 20 chromosomes, so long as the reference population is a fixed size. The grouping of similar genetic populations may be an option to increase power with low sample sizes [@pickrell2009signals]). For F~ST~, power to detect selection should be sufficient if samples > 1/F~ST~ [@Bhatia2013a; @Bhatia2011]
 
-Power of a statistic also needs to be considered for the type of selective sweep 
-that may have occurred, such is the case with nSL, which has similar power to detect 
-selection to iHS, but performs better for larger starting allele frequencies. 
-It also outperforms iHS in power in both hard and soft sweep scenarios [@Ferrer-Admetlla2014].
-When it comes to picking up demographic events, haplotype tests are useful at
-detecting recent and more moderate bottlenecks, frequency spectrum tests 
-(such as Fay and Wu's _H_/ Tajima's _D_) have best power for detecting moderately 
-old severe bottlenecks [@Depaulis2003].
+Power of a statistic also needs to be considered for the type of selective sweep that may have occurred, such is the case with nSL, which has similar power to detect selection to \gls{ihs}, but performs better for larger starting allele frequencies. It also outperforms \gls{ihs} in power in both hard and soft sweep scenarios [@Ferrer-Admetlla2014]. When it comes to picking up demographic events, haplotype tests are useful at detecting recent and more moderate bottlenecks, frequency spectrum tests (such as Fay and Wu's _H_/ Tajima's _D_) have best power for detecting moderately old severe bottlenecks [@Depaulis2003].
 
 ### Challenges
 
-When scanning genome-wide, the variability in the genome also has population demographic 
-events that have acted upon it, such as population bottlenecks, migration, or growth. 
-Mutation and recombination are also acting on the genome. Methods based on comparing 
-non-synonymous to synonymous variants are relatively unaffected, methods based on allele 
-frequency are susceptible to detecting population demographic events along with mutation 
-and recombination rate changes [@Nielsen2009]. Bottlenecks with a metapopulation 
-model can lead to a high frequency derived alleles, greater than would have been 
-expected to arise through a neutral model [@Jensen2005]. A metapopulation 
-is a population which can be subdivided into many different demes among which there 
-is some pattern of migration, extinction, and recolonization [@Wakeley2001].
-As previously mentioned by @fay2000hitchhiking, this unique signature of selection 
-is not actually unique [@Przeworski2002].
+When scanning genome-wide, the variability in the genome also has population demographic events that have acted upon it, such as population bottlenecks, migration, or growth. Mutation and recombination are also acting on the genome. Methods based on comparing non-synonymous to synonymous variants are relatively unaffected, methods based on allele frequency are susceptible to detecting population demographic events along with mutation and recombination rate changes [@Nielsen2009]. Bottlenecks with a metapopulation model can lead to a high frequency derived alleles, greater than would have been expected to arise through a neutral model [@Jensen2005]. A metapopulation is a population which can be subdivided into many different demes among which there is some pattern of migration, extinction, and recolonization [@Wakeley2001]. As previously mentioned by @fay2000hitchhiking, this unique signature of selection is not actually unique [@Przeworski2002].
 
-SNP ascertainment bias is caused by the non-random sampling of SNPs on array chips. This
-is a problem that affects the selection detection methods to different extents, with 
-frequency spectrum methods being the most susceptible. Tajima's _D_ is biased upwards 
-due to the SNP discovery process having ascertainment biases, which leads to an excess 
-of intermediate frequency alleles in the sample [@Kelley2006]. Tests that 
-rely on long haplotypes are less susceptible to ascertainment bias [@sabeti2006positive] 
-but because long haplotypes can be quickly broken down through recombination, they 
-are only useful for short time periods. SNP ascertainment bias will be overcome with 
+\Gls{snp} ascertainment bias is caused by the non-random sampling of SNPs on array chips. This is a problem that affects the selection detection methods to different extents, with frequency spectrum methods being the most susceptible. Tajima's _D_ is biased upwards due to the \gls{snp} discovery process having ascertainment biases, which leads to an excess of intermediate frequency alleles in the sample [@Kelley2006]. Tests that rely on long haplotypes are less susceptible to ascertainment bias [@sabeti2006positive] but because long haplotypes can be quickly broken down through recombination, they are only useful for short time periods. \Gls{snp} ascertainment bias will be overcome with 
 the use of whole genome re-sequencing [@Albrechtsen2010]. 
 
-Many of these statistics were developed to investigate selection at a particular locus,
-at a time when applying the statistics across a genome was not possible. Up until 
-recently genome scans have been performed using SNP genotypes identified through a
-SNP discovery process, which means they are not random samples – which would include 
-non SNP genotypes and create an ascertainment bias [@Nielsen2005a]
+Many of these statistics were developed to investigate selection at a particular locus, at a time when applying the statistics across a genome was not possible. Up until recently genome scans have been performed using \gls{snp} genotypes identified through a \gls{snp} discovery process, which means they are not random samples – which would include non \gls{snp} genotypes and create an ascertainment bias [@Nielsen2005a]
 
-Identification of exactly what is deemed as being significantly selected has issues.
-The current practice is to take outlier loci, usually from an empirical distribution
-of the selection statistic and report these as significant (an empirical P-value).
-This is not necessarily indicative of selection, as cut off levels are created 
-subjectively rather than derived from the model [@Qanbari2012a]. Using 
-an empirical approach will result in many false positives, however this is 
-considered an acceptable approach for selecting candidate genes so long as it 
-is realised the false positive rate is high [@Kelley2006].
+Identification of exactly what is deemed as being significantly selected has issues. The current practice is to take outlier loci, usually from an empirical distribution of the selection statistic and report these as significant (an empirical P-value). This is not necessarily indicative of selection, as cut off levels are created subjectively rather than derived from the model [@Qanbari2012a]. Using an empirical approach will result in many false positives, however this is considered an acceptable approach for selecting candidate genes so long as it is realised the false positive rate is high [@Kelley2006].
 
-In order to use haplotypic methods requires being able to construct the haplotype. 
-Currently this involves the need for the phasing of haplotypes from genomic data.
-Phasing is the process of determining which alleles are found together on the 
-same physical chromosomes There are a number of ways that this can be done,
-such as through a pedigree, through the use of large population data, or 
-using the reads from next generation sequencing. Phasing through pedigree
-information is utilised in most agricultural species, whereas for human 
-populations the population genotypes are largely from unrelated individuals. 
-Phasing of unrelated individuals currently relies on probabilistic methods
-[@Browning2009; @Delaneau2012] in order to make the
-best guess at the individuals’ haplotype. Newer methods have been developed to use
-the reads from next generation sequencing and are able to trace a haplotype across 
-multiple overlapping reads, however these methods are heavily dependent on the 
-depth of coverage and can also be used to complement probabilistic phasing methods.
+In order to use haplotypic methods requires being able to construct the haplotype. Currently this involves the need for the phasing of haplotypes from genomic data. Phasing is the process of determining which alleles are found together on the same physical chromosomes There are a number of ways that this can be done, such as through a pedigree, through the use of large population data, or using the reads from next generation sequencing. Phasing through pedigree information is utilised in most agricultural species, whereas for human populations the population genotypes are largely from unrelated individuals. Phasing of unrelated individuals currently relies on probabilistic methods [@Browning2009; @Delaneau2012] in order to make the best guess at the individuals’ haplotype. Newer methods have been developed to use the reads from next generation sequencing and are able to trace a haplotype across multiple overlapping reads, however these methods are heavily dependent on the depth of coverage and can also be used to complement probabilistic phasing methods.
 
 
 ## Improving GWAS
 
-Genome wide association scan (GWAS) studies are a method to scan genomes, usually SNP 
-data, for association with a phenotype. The strength of GWAS studies is that prior 
-knowledge of loci is not required and loci are treated with an unbiased nature for the 
-association test. GWAS studies, because of the large number of association tests, 
-require large cohorts of samples to achieve sufficient power for statistical significance. 
-As the effect size for a variant decreases, larger sample sizes are also needed as power
-is proportional to the square of the effect size 
-[@Korte2013; @Hemani2013]. Limitations in recruiting sufficient 
-numbers of participants for GWAS studies therefore requires new ways of increasing power to 
-detect smaller effects without needing to increase sample size, as outlined in this section.
+\Gls{gwas} are a method to scan genomes, usually \gls{snp} data, for association with a phenotype. The strength of GWAS is that prior knowledge of loci is not required and loci are treated with an unbiased nature for the association test. \Gls{gwas}, because of the large number of association tests, require large cohorts of samples to achieve sufficient power for statistical significance. As the effect size for a variant decreases, larger sample sizes are also needed as power is proportional to the square of the effect size [@Korte2013; @Hemani2013]. Limitations in recruiting sufficient numbers of participants for \gls{gwas} therefore requires new ways of increasing power to detect smaller effects without needing to increase sample size, as outlined in this section.
 
-The basis GWAS studies is to identify SNPs that are associated with differences in 
-the mean of a trait. These studies don't necessarily identify the causal SNP but
-instead identify a marker for the causal variant, usually in LD. @Fisher1919 showed 
-that total genetic variance could be split into components of additive, dominance 
-and epistatic effects. The additive component has been shown to contribute the most 
-to the overall genetic variance with epistatic variance contributing little in an 
-outbred population [@Hill2008]. Complex traits gain their complexity 
-from being the sum of interactions from many small effect loci, or the product of 
-non-additive interactions between loci and the environment making it challenging 
-to find the exact contribution of a locus to a trait [@Fu2013a]. These small, 
-true effect loci can end up non-significant, due to the noise in the data, but 
-might be able to retrieved using methods that find non-additive effects.
+The basis \gls{gwas} studies is to identify \gls{snp}s that are associated with differences in the mean of a trait. These studies don't necessarily identify the causal \gls{snp} but instead identify a marker for the causal variant, usually in \gls{ld}. @Fisher1919 showed that total genetic variance could be split into components of additive, dominance and epistatic effects. The additive component has been shown to contribute the most to the overall genetic variance with epistatic variance contributing little in an outbred population [@Hill2008]. Complex traits gain their complexity from being the sum of interactions from many small effect loci, or the product of non-additive interactions between loci and the environment making it challenging to find the exact contribution of a locus to a trait [@Fu2013a]. These small, true effect loci can end up non-significant, due to the noise in the data, but might be able to retrieved using methods that find non-additive effects.
 
-The use of additional methods that capture additional loci with non-additive effects 
-should be able to explain more of missing heritability. When the ratio of explained
-heritability to total heritability is < 1, it is defined as missing heritability 
-[@Zuk2012]. Explained heritability is defined as the proportion of heritability 
-or phenotypic variance explained by a collection of genetic variants. Total heritability 
-is inferred from population data. Missing heritability infers there are additional loci 
-that contribute to the phenotypic variance that are yet to be discovered. 
+The use of additional methods that capture additional loci with non-additive effects should be able to explain more of missing heritability. When the ratio of explained heritability to total heritability is < 1, it is defined as missing heritability [@Zuk2012]. Explained heritability is defined as the proportion of heritability or phenotypic variance explained by a collection of genetic variants. Total heritability is inferred from population data. Missing heritability infers there are additional loci that contribute to the phenotypic variance that are yet to be discovered. 
 
 ### Non-additive Variance
 
-The goal of being able to prioritise GWAS results by using additional information, such as
-incorporating LD or selection statistics by using a weighting system to increase the power
-of a GWAS, has been suggested [@Ayodo2007; @Roeder2006]. The 
-incorporation of selection statistics or a variant genome wide association scan (vGWAS) 
-results has the potential to inform GWAS since these extra results capture some of the 
-non-additive effects and variance that may be influencing a locus. When LD between 
-observed SNPs and causal variants is high, greater power in GWAS can be achieved by 
-focusing on searching for non-additive variance [@Hemani2013]. To attempt 
-to capture this non-additive variance, vGWAS can be performed. This uses the phenotypic 
-variance, instead of mean, in the phenotype by genotype regression model. This method 
-captures not just additive effects but also alternative methods of genetic influence 
-[@Pare2010]. Additional work is required to determine if it is gene-gene or 
-gene-environment interactions that are the cause of this variation, such as a gene by 
-gene or gene by environment interaction analysis focussing on the top results from 
-the vGWAS.
+The goal of being able to prioritise \gls{gwas} results by using additional information, such as incorporating \gls{ld} or selection statistics by using a weighting system to increase the power of a \gls{gwas}, has been suggested [@Ayodo2007; @Roeder2006]. The incorporation of selection statistics or a \gls{vgwas} results has the potential to inform \gls{gwas} since these extra results capture some of the non-additive effects and variance that may be influencing a locus. When \gls{ld} between observed \gls{snp}s and causal variants is high, greater power in \gls{gwas} can be achieved by focusing on searching for non-additive variance [@Hemani2013]. To attempt to capture this non-additive variance, \gls{vgwas} can be performed. This uses the phenotypic variance, instead of mean, in the phenotype by genotype regression model. This method captures not just additive effects but also alternative methods of genetic influence [@Pare2010]. Additional work is required to determine if it is gene-gene or gene-environment interactions that are the cause of this variation, such as a gene by gene or gene by environment interaction analysis focussing on the top results from the \gls{vgwas}.
 
-Important issues to bear in mind when using vGWAS include the size of a dataset,
-imbalance between cases and controls, and test statistics becoming inflated when 
-minor allele frequency is small [@Yang2012]. A large dataset is often needed 
-in order to be able to detect small differences in variance between groups. 
-Imbalance in the data can appear as too many cases or controls but also in allele 
-frequency. If there are not enough samples in an affection or allele group then 
-the test statistic gets inflated due to sampling bias. For rare alleles this can 
-require very large sample sizes to compensate.
+Important issues to bear in mind when using \gls{vgwas} include the size of a dataset, imbalance between cases and controls, and test statistics becoming inflated when minor allele frequency is small [@Yang2012]. A large dataset is often needed in order to be able to detect small differences in variance between groups. Imbalance in the data can appear as too many cases or controls but also in allele frequency. If there are not enough samples in an affection or allele group then the test statistic gets inflated due to sampling bias. For rare alleles this can require very large sample sizes to compensate.
 
 #### Transformation of Variance
 
-A key consideration when investigating the variance of a dataset is the importance 
-of ensuring that the differences in variance cannot be explained by performing 
-transformations on the data, such as log or inverse normal transformations 
-[@Sun2013]. @Shen2013 agreed with the principle of 
-doing transformations but note that it is also very important for the transformations
-to make biological sense. For example, even though the scales are arbitrary
-biologically for BMI or height it doesn't make sense to have a larger difference 
-between a BMI of 21 and 22 than between 24 and 25.
+A key consideration when investigating the variance of a dataset is the importance of ensuring that the differences in variance cannot be explained by performing transformations on the data, such as log or inverse normal transformations [@Sun2013]. @Shen2013 agreed with the principle of doing transformations but note that it is also very important for the transformations to make biological sense. For example, even though the scales are arbitrary
+biologically for \gls{bmi} or height it doesn't make sense to have a larger difference between a \gls{bmi} of 21 and 22 than between 24 and 25.
 
 ### Selection and GWAS
 
-Significance of GWAS results is greatly increased when selection statistics and association
-studies are combined, this has been applied in a GWAS for malarial resistance variants
-[@Ayodo2007]. A smaller sample size can be used if there is evidence of positive selection
-because the beneficial allele will rise in prevalence, and will be in high LD with other
-variants due to genetic hitch-hiking which can act as proxy markers [@Karlsson2014]. 
-Complex disease traits compared to Mendelian disease associated traits have a bias
-towards larger mouse-human Ka/Ks ratios, which suggests that evidence of positive 
-selection could be utilised in identifying variation associated with complex 
-disease [@Thomas2004].
+Significance of \gls{gwas} results is greatly increased when selection statistics and association studies are combined, this has been applied in a \gls{gwas} for malarial resistance variants [@Ayodo2007]. A smaller sample size can be used if there is evidence of positive selection because the beneficial allele will rise in prevalence, and will be in high \gls{ld} with other variants due to genetic hitch-hiking which can act as proxy markers [@Karlsson2014]. Complex disease traits compared to Mendelian disease associated traits have a bias towards larger mouse-human Ka/Ks ratios, which suggests that evidence of positive selection could be utilised in identifying variation associated with complex disease [@Thomas2004].
 
 ### Pathway Analysis
 
-Pathways have been hypothesised to be involved in the genic adaptation of populations
-since altering a gene in a biochemical pathway are likely to alter different
-genes in the same pathway [@Bigham2010].  The use of pathway analysis rather than 
-focusing on individual SNPs is another way to increase the power of a GWAS
-[@Jia2011]. This increase in power is largely obtained through a reduction in 
-dimensionality in ways that attempt to remove noise from the underlying biological
-signal. There are however limitations to the effectiveness of using such an 
-approach, such as the selection of pathway database, density of SNPs per gene,
-or gene length and boundaries. 
+Pathways have been hypothesised to be involved in the genic adaptation of populations since altering a gene in a biochemical pathway are likely to alter different genes in the same pathway [@Bigham2010].  The use of pathway analysis rather than focusing on individual \gls{snp}s is another way to increase the power of a \gls{gwas} [@Jia2011]. This increase in power is largely obtained through a reduction in dimensionality in ways that attempt to remove noise from the underlying biological signal. There are however limitations to the effectiveness of using such an approach, such as the selection of pathway database, density of \gls{snp}s per gene, or gene length and boundaries. 
 
 ## Applications
 
 ### Genome-wide Selection
 
-Genome wide selection in humans has been investigated by @sabeti2006positive, @pickrell2009signals,
-@voight2006map, @Hancock2008, the 1000 Genomes Project Consortium [@1KGP2010;@Abecasis2012], @Grossman2010
-, and @Colonna2014. The population datasets used involved @Hapmap2005 , Human Genome Diversity Project
-[@Cann2002; @Rosenburg2002] and @1KGP2010. The 1000 Genomes Project Consortium [@1KGP2010; @Abecasis2012]
-reported genome wide diversification between main population groups based on F~ST~ and $\Delta$DAF. 
-Genome wide mean F~ST~ was found to only be a maximum of 8%, however several thousand SNPs had 
-large F~ST~ indicating local population adaptation [@1KGP2010]. The analysis also found 139 
-non-synonymous SNPs with large frequency differences between populations. Investigation of the 
-1000 genomes data set was also performed by @Colonna2014. Using $\Delta$DAF, it was found that 
-sites of high population differentiation ($\Delta$DAF > 0.7 between and > 0.25 within 
-continents) clustered together, the same was found for sites of low differentiation. 
-Genes containing highly differentiated sites were likely to also have additional evidence 
-of positive selection in a third. 
+Genome wide selection in humans has been investigated by @sabeti2006positive, @pickrell2009signals,@voight2006map, @Hancock2008, the 1000 Genomes Project Consortium [@1KGP2010;@Abecasis2012], @Grossman2010, and @Colonna2014. The population datasets used involved @Hapmap2005 , Human Genome Diversity Project [@Cann2002; @Rosenburg2002] and @1KGP2010. The 1000 Genomes Project Consortium [@1KGP2010; @Abecasis2012] reported genome wide diversification between main population groups based on F~ST~ and $\Delta$\gls{daf}. Genome wide mean F~ST~ was found to only be a maximum of 8%, however several thousand SNPs had large F~ST~ indicating local population adaptation [@1KGP2010]. The analysis also found 139 non-synonymous SNPs with large frequency differences between populations. Investigation of the \gls{1kgp} data set was also performed by @Colonna2014. Using $\Delta$\gls{daf}, it was found that sites of high population differentiation ($\Delta$\gls{daf} > 0.7 between and > 0.25 within continents) clustered together, the same was found for sites of low differentiation. Genes containing highly differentiated sites were likely to also have additional evidence of positive selection in a third. 
 
-There was also a high association of highly differentiated sites with genes and gene regulatory 
-elements. Genes that often return as having significant selection statistics when comparing
-populations are involved in skin pigmentation [@Grossman2010; @1KGP2010; @voight2006map], metabolism 
-of sugars [@tang2007new; @voight2006map], drug metabolism [@tang2007new], immune system 
-[@Grossman2010; @tang2007new], and climate adaptation [@Hancock2008]. Genes that 
-play a role in adaptation to climate extremes are likely to play a role in metabolic disorders 
-that make up metabolic syndrome [@Hancock2008]. In contrast, variation in metabolic 
-related genes can lead to elite phenotypes in athletes [@Ahmetov2009a].
+There was also a high association of highly differentiated sites with genes and gene regulatory elements. Genes that often return as having significant selection statistics when comparing populations are involved in skin pigmentation [@Grossman2010; @1KGP2010; @voight2006map], metabolism of sugars [@tang2007new; @voight2006map], drug metabolism [@tang2007new], immune system [@Grossman2010; @tang2007new], and climate adaptation [@Hancock2008]. Genes that play a role in adaptation to climate extremes are likely to play a role in metabolic disorders that make up metabolic syndrome [@Hancock2008]. In contrast, variation in metabolic related genes can lead to elite phenotypes in athletes [@Ahmetov2009a].
 
 #### Selection in Polynesia
 
-The inclusion of Oceanic populations in multi-population studies has had a focus on genetic structure,
-measured via FST for differentiation, rather than selection [@Friedlaender2008; @Tennessen2011]. 
-The migratory history of Polynesian populations suggests that the points of differentiation are
-likely the events possibly occurring since the out of Africa dispersal at ~60,000 years ago
-[@Soares2012] with settlement of Near Oceania ~40,000 years ago, and Remote Oceania ~3,100
-years ago [@Matisoo-Smith2004] and the Polynesian triangle ~1,000-1,200 years ago [@Wilmshurst2011. 
-The time frame for these events means that nearly all of the previously mentioned methods 
-would still be within their powered time frames to detect selective events. The haplotypic 
-methods would possibly not be able to detect selective events as old as the Africa
-dispersal and may be at the fringe of the time period for the Near Oceania settlement. 
+The inclusion of Oceanic populations in multi-population studies has had a focus on genetic structure, measured via F~ST~ for differentiation, rather than selection [@Friedlaender2008; @Tennessen2011]. The migratory history of Polynesian populations suggests that the points of differentiation are likely the events possibly occurring since the out of Africa dispersal at ~60,000 years ago [@Soares2012] with settlement of Near Oceania ~40,000 years ago, and Remote Oceania ~3,100 years ago [@Matisoo-Smith2004] and the Polynesian triangle ~1,000-1,200 years ago [@Wilmshurst2011]. The time frame for these events means that nearly all of the previously mentioned methods would still be within their powered time frames to detect selective events. The haplotypic methods would possibly not be able to detect selective events as old as the Africa dispersal and may be at the fringe of the time period for the Near Oceania settlement. 
 
-Large population comparison studies have used Oceanic populations but analyses were limited to
-Melanesians and Papuan populations because of their inclusion in the Human Genome Diversity 
-Project [@Cann2002]. The Melanesian and Papuan populations are often used to infer the genetics 
-of Polynesian populations. This extrapolation doesn't take into account the current ancestry 
-predictions of Polynesians populations being more closely related to Asian/Taiwanese
-Aboriginal populations than Melanesian groups, and the presence of European admixture 
-[@Friedlaender2008]. The genomic DNA and mitochondrial DNA suggest Polynesians have East 
-Asian ancestry, with a large male Melanesian admixture [@Kayser2008a]. There has been limited
-analyses of selection in Polynesian populations beyond @Kimura2008, where 24 Tongan samples
-in conjunction with other populations were analysed using both F~ST~ and a modified EHH test.
-Regions with evidence of having been selected in the Tongans were potential candidates for
-increased fat, muscle and bone masses.
+Large population comparison studies have used Oceanic populations but analyses were limited to Melanesians and Papuan populations because of their inclusion in the Human Genome Diversity Project [@Cann2002]. The Melanesian and Papuan populations are often used to infer the genetics of Polynesian populations. This extrapolation doesn't take into account the current ancestry predictions of Polynesians populations being more closely related to Asian/Taiwanese Aboriginal populations than Melanesian groups, and the presence of European admixture [@Friedlaender2008]. The genomic DNA and mitochondrial DNA suggest Polynesians have East Asian ancestry, with a large male Melanesian admixture [@Kayser2008a]. There has been limited analyses of selection in Polynesian populations beyond @Kimura2008, where 24 Tongan samples in conjunction with other populations were analysed using both F~ST~ and a modified \gls{ehh} test. Regions with evidence of having been selected in the Tongans were potential candidates for increased fat, muscle and bone masses.
 
 ### Gout and Metabolic Syndrome
 
-The World Health Organisation has previously defined Metabolic Syndrome to be glucose intolerance,
-or diabetes mellitus, and or insulin resistance combined with at least two of the following: 
-impaired glucose regulation or diabetes, insulin resistance, raised arterial pressure, raised 
-plasma triglycerides or low HDL-cholesterol, central obesity, and microalbuminuria [@Alberti1998].
-Hyperuricaemia can also be considered a component but is not required for the condition to be 
-recognised. Hyperuricaemia is defined as a serum uric acid $\geq$ 0.42 mmol/L in males and $\geq$ 0.36 mmol/L 
-in females [@Choi2007b]. There has been a slight revision and refinement in the criteria for a
-diagnosis of metabolic syndrome [@Alberti2009]. The requirement for diabetes mellitus and or 
-insulin resistance is no longer used, instead a requirement of having 3 of the 5
-co-morbidities is used.
+The World Health Organisation has previously defined Metabolic Syndrome to be glucose intolerance, or diabetes mellitus, and or insulin resistance combined with at least two of the following: impaired glucose regulation or diabetes, insulin resistance, raised arterial pressure, raised plasma triglycerides or low HDL-cholesterol, central obesity, and microalbuminuria [@Alberti1998]. Hyperuricaemia can also be considered a component but is not required for the condition to be recognised. Hyperuricaemia is defined as a serum uric acid $\geq$ 0.42 mmol/L in males and $\geq$ 0.36 mmol/L in females [@Choi2007b]. There has been a slight revision and refinement in the criteria for a diagnosis of metabolic syndrome [@Alberti2009]. The requirement for diabetes mellitus and or  insulin resistance is no longer used, instead a requirement of having 3 of the 5 co-morbidities is used.
 
-Obesity is defined as a body mass index (BMI) of >30 kg/m2 and is a contributing risk factor 
-for many other diseases such as type II diabetes (T2D) and cardiovascular disease [@Haslam2005]. 
-Obesity has been a key focus for research as the prevalence continues to increase and is posing 
-a major threat to health systems in many countries [@Wang2011]. With respect to Polynesian
-populations obesity is a major problem with an obesity rate of 68%. New Zealand Maori have 
-an obesity prevalence of 48% [@Health2013]. From 2012 to 2013 the prevalence of obesity increased by 6% in Pacific populations. Heritability of BMI ranges from 45% to 84% in twin studies [@Schousboe2003].
+Obesity is defined as a \gls{bmi} of >30 kg/m2 and is a contributing risk factor for many other diseases such as type II diabetes (T2D) and cardiovascular disease [@Haslam2005]. Obesity has been a key focus for research as the prevalence continues to increase and is posing a major threat to health systems in many countries [@Wang2011]. With respect to Polynesian populations obesity is a major problem with an obesity rate of 68%. New Zealand M\={a}ori have an obesity prevalence of 48% [@Health2013]. From 2012 to 2013 the prevalence of obesity increased by 6% in Pacific populations. Heritability of \gls{bmi} ranges from 45% to 84% in twin studies [@Schousboe2003].
 
-Type II diabetes is diagnosed by a fasting blood glucose of >7.0 mmol/L or 2-hr post blood glucose 
-load of  >11.1 mmol/L [@Alberti1998]. The risk of developing T2D is strongly correlated with 
-excess weight [@Rana2007]. The prevalence of diabetes is 13% in Polynesians and 7% in NZ 
-Maori [@Health2013] compared to 5.5% in Europeans [@Winnard2013a]. In New Zealand, the 
-rate of diabetes is twice that in Maori compared to non-Maori, and the rate is 3.6 fold 
-higher in Pacific compared to non-Pacific ethnicities. 
+Type II diabetes is diagnosed by a fasting blood glucose of >7.0 mmol/L or 2-hr post blood glucose load of  >11.1 mmol/L [@Alberti1998]. The risk of developing T2D is strongly correlated with excess weight [@Rana2007]. The prevalence of diabetes is 13% in Polynesians and 7% in NZ M\={a}ori [@Health2013] compared to 5.5% in Europeans [@Winnard2013a]. In New Zealand, the rate of diabetes is twice that in M\={a}ori compared to non-M\={a}ori, and the rate is 3.6 fold higher in Pacific compared to non-Pacific ethnicities. 
 
-There have been multiple loci associated with T2D [@Billings2010], however, @Chen2010 found no evidence
-for enrichment in selection for BMI, but found significant enrichment for T2D. The genes associated 
-with T2D have been found to be differentiated by population, however the individual SNPs are often 
-not [@pickrell2009signals]. @Koh2014 identified 6 SNPs in or near 9 genes that had been reported 
-as T2D associated and overlapped with evidence of positive selection in East Asian populations. 
-Common variants that have been found in European populations associating with obesity don't 
-replicate in the Samoan population [@Karns2012]. The non-replication of European variants in 
-Polynesians and the high prevalence of obesity in Polynesians suggest there is likely to be 
-some population specific variants that are yet to be identified. Rare variants tend to be 
-recent and therefore geographically restricted [@Abecasis2012].
+There have been multiple loci associated with T2D [@Billings2010], however, @Chen2010 found no evidence for enrichment in selection for \gls{bmi}, but found significant enrichment for T2D. The genes associated with T2D have been found to be differentiated by population, however the individual \gls{snp}s are often not [@pickrell2009signals]. @Koh2014 identified 6 \gls{snp}s in or near 9 genes that had been reported as T2D associated and overlapped with evidence of positive selection in East Asian populations. Common variants that have been found in European populations associating with obesity don't replicate in the Samoan population [@Karns2012]. The non-replication of European variants in Polynesians and the high prevalence of obesity in Polynesians suggest there is likely to be 
+some population specific variants that are yet to be identified. Rare variants tend to be recent and therefore geographically restricted [@Abecasis2012].
 
-Hyperuricaemia can be caused by diet, genetic predisposition or under-excretion of urate. The elevated 
-uric acid levels in the blood contributes to the forming of urate crystals in the joints, triggering 
-an inflammatory response by stimulating the synthesis and release of humoral and cellular
-inflammatory mediators [@Choi2005a]. There is a clear relationship between hyperuricaemia and 
-the causal role in gout [@Snaith2004]. There is also an increased prevalence in gout in 
-different ethnicities. New Zealand Maori and Pacific ethnicities have a prevalence of 12% 
-and 14% respectively in males, compared to 4% in both European and Asian males 
-[@Winnard2012;@Winnard2013a]. While New Zealand Maori and Polynesians have an increased 
-prevalence of hyperuricaemia, they also have a genetic predisposition to elevated urate 
-and risk of gout [@Hollis-Moffatt2009; @Hollis-Moffatt2011; @Phipps-Green2010]. The 
-prevalence of metabolic syndrome in US gout patients is ~60%, or nearly 3 fold higher 
-than US adults without gout [@Choi2007b].
+Hyperuricaemia can be caused by diet, genetic predisposition or under-excretion of urate. The elevated uric acid levels in the blood contributes to the forming of urate crystals in the joints, triggering an inflammatory response by stimulating the synthesis and release of humoral and cellular inflammatory mediators [@Choi2005a]. There is a clear relationship between hyperuricaemia and the causal role in gout [@Snaith2004]. There is also an increased prevalence in gout in different ethnicities. New Zealand M\={a}ori and Pacific ethnicities have a prevalence of 12% and 14% respectively in males, compared to 4% in both European and Asian males [@Winnard2012; @Winnard2013a]. While New Zealand M\={a}ori and Polynesians have an increased prevalence of hyperuricaemia, they also have a genetic predisposition to elevated urate and risk of gout  [@Hollis-Moffatt2009; @Hollis-Moffatt2011; @Phipps-Green2010]. The prevalence of metabolic syndrome in US gout patients is ~60%, or nearly 3 fold higher than US adults without gout [@Choi2007b].
 
-Variability in serum urate explained by the main urate loci SLC2A9 and ABCG2, expressed 
-in the kidney, is 3.4%. Twenty six other loci associated with serum urate explain a further 
-3.6% of the variance [@Kottgen2013]. The heritability of serum uric acid ranging from 
-40 - 70% [@Nath2007; @Yang2005]. This difference in explained variability and total 
-heritability leaves a large component yet to be explained. This missing heritability 
-could be reduced through identifying additional variance attributed to non-additive effects.
+Variability in serum urate explained by the main urate loci _SLC2A9_ and _ABCG2_, expressed in the kidney, is 3.4%. Twenty six other loci associated with serum urate explain a further 3.6% of the variance [@Kottgen2013]. The heritability of serum uric acid ranging from 40 - 70% [@Nath2007; @Yang2005]. This difference in explained variability and total heritability leaves a large component yet to be explained. This missing heritability could be reduced through identifying additional variance attributed to non-additive effects.
 
-The benefits of urate are in line with the categories found to be enriched by selection
-in genome wide scans. Urate has an anti-oxidant in blood, acting to protect not just 
-erythrocytes but also T and B lymphocites and macrophages [@Ames1981]. Urate has also
-been hypothesised to have had a survival advantage during the Miocene period, when a 
-series of mutations in urate oxidase is thought to have occurred, leading to elevated 
-urate. Hyperuricaemia enables blood pressure to be maintained under low salt dietary 
-conditions [@Watanabe2002]. Later in life elevated serum urate is associated with 
-increased cognitive function [@Euser2009]. Uric acid also activates the NLRP3 inflammasome 
-which plays an important role in systemic infection and sepsis [@Opitz2009]. The role 
-of urate in these situations show that while hyperuricaemia is now considered as 
-contributing to disease, in the past it may have influenced longevity and survival, 
-therefore increasing reproductive success and been a phenotype having undergone selection. 
+The benefits of urate are in line with the categories found to be enriched by selection in genome wide scans. Urate has an anti-oxidant in blood, acting to protect not just erythrocytes but also T and B lymphocites and macrophages [@Ames1981]. Urate has also been hypothesised to have had a survival advantage during the Miocene period, when a series of mutations in urate oxidase is thought to have occurred, leading to elevated urate. Hyperuricaemia enables blood pressure to be maintained under low salt dietary conditions [@Watanabe2002]. Later in life elevated serum urate is associated with increased cognitive function [@Euser2009]. Uric acid also activates the NLRP3 inflammasome which plays an important role in systemic infection and sepsis [@Opitz2009]. The role of urate in these situations show that while hyperuricaemia is now considered as contributing to disease, in the past it may have influenced longevity and survival, therefore increasing reproductive success and been a phenotype having undergone selection. 
 
-Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia against a unique 
-genetic background of the Polynesians provides an excellent opportunity to study the role 
-that selection might have played and the effect on these metabolic conditions.
+Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia against a unique genetic background of the Polynesians provides an excellent opportunity to study the role that selection might have played and the effect on these metabolic conditions.
