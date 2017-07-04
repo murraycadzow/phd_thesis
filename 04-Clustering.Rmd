@@ -64,12 +64,24 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 
 Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@popgenome]. Excepting F~ST~, these statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings. F~ST~ was calculated pairwise for all populations for each chromosome.
 
-\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was XXX kb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
+\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was 1 Mb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
 
 
 
-Disease associated genes were downloaded from the GWAS catalog (https://www.ebi.ac.uk/gwas/, accessed 19 June 2017) and filtered for P < 5x10^-8^
+Disease associated genes were downloaded from the GWAS catalog^[https://www.ebi.ac.uk/gwas/, accessed 19 June 2017][@MacArthur2017]  and filtered for P < 5x10^-8^. See table XXX for a complete list of SNPs and references.
+
+(ref:gwascataccess) https://www.ebi.ac.uk/gwas/, accessed 19 June 2017
+
+
+Table \@ref(tab:gwascatref) shows the references and disease
+
+```{r, results = 'asis'}
+m <- create_gwas_cat_table() %>% data.frame() %>% select(-REPORTED.GENE.S., 'Disease_Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% distinct() %>% arrange(Disease_Trait, Reference)
+#colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
+pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used", keep.line.breaks = TRUE)
+```
+
 
 ## Results
 
@@ -262,6 +274,7 @@ There was a nearly a ten-fold difference in the number of total windows used in 
 ```{r flfTop1000, fig.cap = '(ref:flfTop1000)'}
 four_plot("flf","Fu and Li's F")
 ```
+
 - pos clustered super populations together, split AMR
 - pos looks like there is a reasonable number of windows shared between pops (5188)
 - neg looks pretty sparse 17044

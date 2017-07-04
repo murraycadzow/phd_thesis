@@ -32,3 +32,8 @@ create_sums <- function(mat_d_name){
 create_fst_dendro <- function(){
     return(ggdendrogram(readRDS("~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome_clust.3-7-2017.RDS"), method = "complete"))
 }
+
+create_gwas_cat_table <-function(){
+  load('~/data/gwas_catalog/disease_ref_table-26-6-2017.RData')
+  return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
+}
