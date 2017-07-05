@@ -37,3 +37,19 @@ create_gwas_cat_table <-function(){
   load('~/data/gwas_catalog/disease_ref_table-26-6-2017.RData')
   return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
 }
+
+ihs_dendro_plot <- function(){
+  mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-6-7-2017.RDS')
+  multiplot(ggdendrogram( hclust(dist(t(mat_ihs), method="euclidean"), method = "complete")), 
+  p2 <- as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()),
+  cols = 2
+  )
+  
+}
+
+nsl_dendro_plot <- function(){
+  mat_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clustered_dist_mat-6-7-2017.RDS')
+  multiplot(ggdendrogram( hclust(dist(t(mat_nsl), method="euclidean"), method = "complete")),
+            as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()), 
+            cols = 2)
+}

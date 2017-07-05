@@ -51,25 +51,21 @@ The modern population of \gls{nz} Maori
 
 New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013a]. Polynesian populations share a common genetic ancestry with East Asia however there are Polynesian specific variants associated with increased risk to gout and elevated serum urate [@Phipps-Green2010; @Hollis-Moffatt2012]. Serum urate has been associated with metabolic disorders [@Choi2007b] and genes involved with complex diseases such as \gls{t2d}, gout, and other metabolic related disorders have shown evidence for selection [@Zhang2013a; @pickrell2009signals]. 
 
-It is hypothesised that elevated serum urate may have undergone positive selection in Polynesians populations due to some of the beneficial properties [@gosling2014], such as its role as a powerful anti-oxidant [@Ames1981], or as an adjuvant for the innate immune system [@Opitz2009]. Serum urate has also been suggested to have a protective neurological effect [@Euser2009]. Characterisation of selection within Polynesian populations has been largely limited to population differentiation due to sample sizes [@Kimura2008; @Mallick2016].
+It is hypothesised that elevated serum urate may have undergone positive selection in Polynesians populations due to some of the beneficial properties [@Gosling2014], such as its role as a powerful anti-oxidant [@Ames1981], or as an adjuvant for the innate immune system [@Opitz2009]. Serum urate has also been suggested to have a protective neurological effect [@Euser2009]. Characterisation of selection within Polynesian populations has been largely limited to population differentiation due to sample sizes [@Kimura2008; @Mallick2016].
 
 Here we investigate genetic selection of serum urate in Polynesian populations and if there is a selection signature shared amongst Polynesian populations.
 
 
-
-
-
-
 ## Methods
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@popgenome]. Excepting F~ST~, these statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings. F~ST~ was calculated pairwise for all populations for each chromosome.
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014]. Excepting F~ST~, these statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings. F~ST~ was calculated pairwise for all populations for each chromosome.
 
-\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN v? algorithm. The maximum distance was 1 Mb from the cluster. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
-
-
+\Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@Szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref]. The search radius used was 200 kb and the minimum number of points for a cluster was 1. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
 
-Disease associated genes were downloaded from the GWAS catalog^[https://www.ebi.ac.uk/gwas/, accessed 19 June 2017][@MacArthur2017]  and filtered for P < 5x10^-8^. See table XXX for a complete list of SNPs and references.
+
+
+Disease associated genes were downloaded from the GWAS catalog^[https://www.ebi.ac.uk/gwas/, accessed 19 June 2017][@MacArthur2017]  and filtered for P < 5x10^-8^. See Table \@ref(tab:gwascataccess)  for a complete list of SNPs and references.
 
 (ref:gwascataccess) https://www.ebi.ac.uk/gwas/, accessed 19 June 2017
 
@@ -300,16 +296,27 @@ comparison about the random draws and the proportion of the same super clusters 
 
 ### Haplotypic
 
-Markers with a significant \gls{ihs} and \gls{nsl} after normalisation were grouped together by using the DBSCAN algorithm, where nearby \gls{snp} were assigned the same group id <!-- more detail here and include dbscan version -->.
+Markers with a significant \gls{ihs} and \gls{nsl} after normalisation were grouped together by using the DBSCAN package v1.1.1 [@dbscanref] in R, where nearby \gls{snp} were assigned the same group id using a search radius of 200 kb.<!-- more detail here and include dbscan version -->. Cluster regions were created by taking the minimum and maximum position for each cluster. The distance matrix was the result of calculating P(A $\cap$ B)/ P(A) and P(A $\cap$ B) / P(B), where P(A $\cap$ B) is the sum of the intersection of clustered regions between population A and population B, and P(A) and P(B) is the sum of the clustered regions for population A and population B respectively. 
 
 For the haplotypic methods a similarity measure was created by calculating the 
 
 1. iHS
 
+```{r, fig.cap='(ref:ihsclust)', echo = FALSE}
+ihs_dendro_plot()
+```
+
+
+
 2. nSL
 
+```{r, fig.cap='(ref:nslclust)', echo = FALSE}
+nsl_dendro_plot()
+```
 
 ### F~ST~
+
+(ref:wholechrfst) _F~ST~_
 
 ```{r wholechrfst, fig.cap="(ref:wholechrfst)"}
 create_fst_dendro() + ggtitle(expression("Whole Chromosome F"["ST"]))
