@@ -37,6 +37,9 @@ a
 
 ### Phasing
 
+
+Phasing was performed using shapeit v2 using the \gls{1kgp} haplotype panel for the AXIOM and OMNI datasets.
+
 -axiom
 -omni
 -coreExome
@@ -47,13 +50,16 @@ a
 
 Ancestral allele - The ancestral allele was used as annotated from the 1000 Genomes Phase 3 VCF file where possible. A new sample identified as 'Ancestor' was included into the VCF and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependant on the ancestral allele matching, otherwise the Ancestor genotype was set to missing.
 
-When the VCF files were loaded into the R package PopGenome populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
+When the VCF files were loaded into the R package PopGenome [@Pfeifer2014] populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
 
 #### SelectionTools {#selectionTools}
 
 SelectionTools v1.1 [@Cadzow2014] was used to generate the following statistics as per Table \@ref(tab:seltoolStats)
-Ancestral allele
+Ancestral allele was assigned using the ancestral allele fasta (see table ??) 
 
+Each population was filtered for a \gls{maf} of 0.01 and a \gls{hwe} exact test of 10^-6^
+
+\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation was done using norm as part of selscan v1.1.0b [@Spezich2014] using a significance level of 99%
 
 Table: (\#tab:seltoolStats) 
 
@@ -125,7 +131,7 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 
 #### PCA - eigenstrat
-```
+```{r, engine='bash', eval = FALSE}
 dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/
 #combine the chromosomes
 bcftools concat \
@@ -173,7 +179,7 @@ smartpca.perl \
   -m 0
 ```
 #### admixture analysis
-```
+```{r, engine = 'bash', eval = FALSE}
 dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection
 
 bcftools concat -O z -o combined_super_all.vcf.gz \
@@ -486,7 +492,7 @@ To create a data set to calculate selection statistics, a subset of the individu
 
 The first step was comprised of two parts, firstly was based on samples to remove individuals who had failed the QC, and keep only the individuals who had been selected through PCA and had a genotyping rate across. Secondly, markers were filtered to remove INDELs so that only SNPs remained.
 
-```
+```{r, engine = 'bash', eval = FALSE}
 parallel -j 11 '
   plink2 \
     --bfile src_data/QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff \
@@ -503,7 +509,7 @@ parallel -j 11 '
 
 The second step was to ensure that all the core Exome markers were normalised against the hs37d5 human reference. This was to make sure the REF/ALT alleles would match with the 1000 Genomes Project phase 3 for a successful merge after phasing and subject selection. Shapeit2 was then used to find SNP alleles that disagreed with the 1000 Genomes Project haplotype reference and phase the core Exome markers. This step also reduced markers to biallelic positions and removed duplicate positions.
 
-```
+```{r, engine = 'bash', eval = FALSE}
 parallel -j 11 '
   bcftools norm \
     -N \
@@ -566,7 +572,7 @@ parallel '
 
 In order to efficiently merge the data sets, the overlap in the markers from the 1kgp dataset and the coreExome needed to be found. This was done by extracting the markers and alleles from the coreExome data and then matching these to the markers extracted from the 1000 Genomes Project phase 3. The 1000 Genomes Project phase 3 markers were also filtered to remove non biallelic SNPs.
 
-```
+```{r, engine = 'bash', eval = FALSE}
 # extract markers from core exome
 parallel '
   zgrep \
@@ -617,7 +623,7 @@ write.table(file = 'ce_1kg_matched_markers.txt', ce_kg[,c(1,2)], row.names = FAL
 ```
 
 Once the combined marker list was created, both the core exome and 1000 Genomes Project data sets had have their markers filtered to this consensus set.
-```
+```{r, engine = 'bash', eval = FALSE}
 # working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Phase3_v5
 # filter 1000 Genomes markers
 parallel '
@@ -657,7 +663,7 @@ parallel
 ```
 
 Sample IDs were then updated
-```
+```{r, engine = 'bash', eval = FALSE}
 # working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
 for i in $(seq 1 22)
 do 
