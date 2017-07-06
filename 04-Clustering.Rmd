@@ -63,8 +63,6 @@ Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, an
 \Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@Szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref]. The search radius used was 200 kb and the minimum number of points for a cluster was 1. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
 
-
-
 Disease associated genes were downloaded from the GWAS catalog^[https://www.ebi.ac.uk/gwas/, accessed 19 June 2017][@MacArthur2017]  and filtered for P < 5x10^-8^. See Table \@ref(tab:gwascataccess)  for a complete list of SNPs and references.
 
 (ref:gwascataccess) https://www.ebi.ac.uk/gwas/, accessed 19 June 2017
@@ -81,10 +79,7 @@ pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS c
 
 ## Results
 
-
-
 ### Frequency Spectrum
-
 
 #### Whole Chromosome Clustering
 
@@ -201,7 +196,6 @@ pander::pandoc.table(create_windowSummaryTable(), caption = '(\\#tab:totalwindow
 
 
 #### Tajima's D 
-<!-- create a 4 panel multiplot with each dendrogram and heat map for both tails on the same panel -->
 
 (ref:tdTop1000) _Tajima's D Clustering._ Hierarchical clustering of Tajima's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Tajima's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
@@ -241,11 +235,22 @@ The positive tail had a total of `r create_sums('td_pos') %>% filter(POLsum == A
 four_plot("fwh","Fay and Wu's H")
 ```
 
+<!--
 - Fay and Wu's H put all of the super populations together both neg and pos (split AMR)
 - there looks to be a lot of unique regions within the POL
 - both neg and pos have the Pol cluster nearest to the EAS
+-->
+The clustering of Fay and Wu's H had the main groupings that came out the same as the defined super population groups, with the exception of the positive tail where the \gls{amr} super population was split in half. The Polynesian populations were clustered together in both the negative and positive tails for Fay and Wu's _H_. The Polynesian population group was closest to the \gls{eas} populations with `r create_sums('fwh_pos') %>% filter(POLsum + EASsum <= ALLsum & POLsum > 0 & EASsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows from the positive tail and `r create_sums('fwh_neg') %>% filter(POLsum + EASsum <= ALLsum & POLsum > 0 & EASsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows from the negative tail in common between at least one Polynesian population and one \gls{eas} population. In both tails the Polynesian cluster also had the East/West split within the group. 
 
-The clustering of Fay and Wu's H had the main groupings that came out the same as the defined super population groups, with the exception of the positive tail where the \gls{amr} super population was split in half. The Polynesian populations were clustered together in both the negative and positive tails for Fay and Wu's H. The Polynesian population group was closest to the \gls{eas} populations and also had the East/West split within the group.
+_negative_
+There were a total of `r create_windowSummaryTable() %>% filter(stat == 'fwh_neg') %>% .[['total_windows']]` windows with `r create_sums('fwh_neg') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows specific to Polynesian populations.
+
+
+_positive_
+Of the `r create_windowSummaryTable() %>% filter(stat == 'fwh_pos') %>% .[['total_windows']]` windows,  `r create_sums('fwh_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows were from Polynesian populations only. 
+
+
+
 
 
 #### Fu and Li's D
@@ -288,10 +293,22 @@ four_plot("ze","Zeng's E")
 
 <!-- create df from the clustering results to be able to pull numbers out of for number of windows per population for each statistic, and for the proportion of pops being clustered -->
 
+#### Random draws
+```{r}
+td_random <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/td_random-28-6-2017.RDS')
+bind_rows(td_random) %>% group_by(super) %>% summarise(min = min(max_prop), mean = mean(max_prop), sd = sd(max_prop), max = max(max_prop), complete_prop = sum(if_else(max_prop == 1, 1, 0))/NROW(.))
+```
 
-<!-- 
-comparison about the random draws and the proportion of the same super clusters in each main cluster compared with the actual extremes
--->
+<!-- why does the Eur never produce a max prop of 1?-->
+
+To assess the likelihood of obtaining the super population clusters by chance, 1000 iterations of random resampling of 1000 windows per population was undertaken and then clustered. The maximum proportion of populations being clustered into their designated super population was then calculated when the tree was cut to have 6 groups. Then a mean proportion across all iterations is reported.
+
+```{r}
+bind_rows(lapply(td_random, function(x){ x %>% spread('super', 'max_prop')})) %>% filter(POL >= 2/4, EUR >= 3/6, EAS >= 3/5, AFR >= 3/6, SAS >= 3/5) %>% arrange(POL)
+
+bind_rows(lapply(td_random, function(x){ x %>% spread('super', 'max_prop')})) %>% mutate(rn = as.numeric(rownames(.)), exp_prop = rowSums(.)/6) %>% filter(EUR > .5) %>% arrange(exp_prop)
+```
+
 
 
 ### Haplotypic
