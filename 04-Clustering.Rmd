@@ -94,67 +94,7 @@ Clustering on the full chromosome results for all chromosomes from PopGenome (Fi
 - ze has afr cluster and is most disimilar. eas cluster has the wp integrated. nzc-clm-pur, eur cluster 
 -->
 
-
-<!--
-#### Tajima's D
-
-(ref:chrTDdendro) _Dendrogram for Tajima's D Clustering._ Hierarchical clustering of the populations based Tajima's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
-
-```{r chrTDdendro, fig.cap='(ref:chrTDdendro)'}
-# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
-td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
-td_dendro + ggtitle(label = "Tajima's D Clustering",subtitle = "Euclidean Distance with Complete Linkage")
-rm(td_dendro)
-```
-
-- In Figure \@ref(fig:chrTDdendro) it can be seen there is no clear groupings of the super populations.
-
-#### Fay and Wu's H
-
-(ref:chrFWHdendro) _Fay and Wu's H Clustering._ Hierarchical clustering of the populations based Fay and Wu's H values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
-
-```{r chrFWHdendro, fig.cap='(ref:chrFWHdendro)'}
-# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
-fwh_dendro <- readRDS('images/04_clustering/fwh_dendro.RDS')
-fwh_dendro + ggtitle(label ="Fay and Wu's H Clustering",subtitle = "Euclidean Distance with Complete Linkage")
-rm(fwh_dendro)
-```
-
-- In Figure \@ref(fig:chrFWHdendro) it can be seen that the there are clustering of the super populations although the American super populations are distributed across the other clusters.
-
-#### Fu and Li's D
-
-(ref:chrFLDdendro) _Fu and Li's D Clustering._ Hierarchical clustering of the populations based Fu and Li's D values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
-
-```{r chrFLDdendro, fig.cap='(ref:chrFLDdendro)'}
-# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
-fld_dendro <- readRDS('images/04_clustering/fld_dendro.RDS')
-fld_dendro + ggtitle(label ="Fu and Li's D Clustering",subtitle = "Euclidean Distance with Complete Linkage")
-rm(fld_dendro)
-```
-
-#### Fu and Li's F
-
-(ref:chrFLFdendro) _Fu and Li's F Clustering._ Hierarchical clustering of the populations based Fu and Li's F values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
-
-```{r chrFLFdendro, fig.cap='(ref:chrFLFdendro)'}
-# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
-flf_dendro <- readRDS('images/04_clustering/flf_dendro.RDS')
-flf_dendro + ggtitle(label ="Fu and Li's F Clustering",subtitle = "Euclidean Distance with Complete Linkage")
-rm(flf_dendro)
-```
-
-#### Zeng E
-
-(ref:chrZEdendro) _Zeng's E Clustering._ Hierarchical clustering of the populations based Zeng's E values for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria.
-
-```{r chrZEdendro, fig.cap='(ref:chrZEdendro)', echo = FALSE}
-# generated in ~/Git_repos/Thesis/rnotebooks/CoreExome/coreExome_1kg_popgenome_clustering.Rmd
-ze_dendro <- readRDS('images/04_clustering/ze_dendro.RDS')
-ze_dendro + ggtitle(label ="Zeng's E Clustering",subtitle = "Euclidean Distance with Complete Linkage")
-rm(ze_dendro)
-```
--->
+(ref:multichrplot) _Whole Chromosome Clustering._ Hierarchical clustering of the populations using selection test statistics for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria. Selection test statistic is in the label for each dendrogram.
 ```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=10}
 td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
 p1 <- td_dendro + ggtitle(label = "Tajima's D") 
@@ -173,7 +113,7 @@ p5 <- ze_dendro + ggtitle(label ="Zeng's E")
 multiplot(p1, p2, p3, p4, p5, cols = 2)
 ```
 
-(ref:multichrplot) _Whole Chromosome Clustering._ Hierarchical clustering of the populations using selection test statistics for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria. Selection test statistic is in the label for each dendrogram.
+
 
 ### based on top X results
 
