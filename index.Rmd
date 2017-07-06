@@ -9,19 +9,23 @@ output:
   includes:
    in_header: preamble.tex
 documentclass: report #book
-bibliography: [references.bib]
+bibliography: ["references.bib", "/home/murraycadzow/data/gwas_catalog/diseaseGR-26-6-2017.bib"]
 biblio-style: apalike
 link-citations: true
 description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 ---
 
-\listoftables
-
-\listoffigures
 
 
 
 # Preface {-}
+\clearpage
+
+<!--\pagenumbering{roman} -->
+
+\listoftables
+
+\listoffigures
 
 ```{r, echo = FALSE}
 knitr::include_graphics('images/OUNZ_logo.png')
@@ -59,3 +63,6 @@ iHS: integrated haplotype homozygosity score
 
 BMI: Body mass index
 -->
+
+\glsresetall
+\clearpage
