@@ -1,7 +1,7 @@
 library(tidyverse)
 library(ggdendro)
 
-
+# made from rnotebooks/CoreExome/coreExome_30kb_windows_intra.Rmd 
 mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_mat_d_list-28-6-2017.RDS')
 
 create_windowTable <- function(){
@@ -29,27 +29,46 @@ create_sums <- function(mat_d_name){
   mat_d_list[[mat_d_name]] %>% mutate(POLsum =select(., contains("POL")) %>% rowSums(.), EURsum = select(., contains("EUR")) %>% rowSums(.), EASsum = select(., contains("EAS")) %>% rowSums(.), SASsum = select(., contains("SAS")) %>% rowSums(.), AMRsum = select(., contains("AMR")) %>% rowSums(.), AFRsum = select(., contains("AFR")) %>% rowSums(.), ALLsum = select(., -contains('chrom'), -posid) %>% rowSums(.))
 }
 
+
 create_fst_dendro <- function(){
-    return(ggdendrogram(readRDS("~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome_clust.3-7-2017.RDS"), method = "complete"))
+  #data from rnotebooks/CoreExome/coreExome_fst.Rmd
+  return(ggdendrogram(readRDS("~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome_clust.3-7-2017.RDS"), method = "complete"))
 }
 
 create_gwas_cat_table <-function(){
+  # data from rnotebooks/CoreExome/gwas_catalog.Rmd
   load('~/data/gwas_catalog/disease_ref_table-26-6-2017.RData')
   return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
 }
 
 ihs_dendro_plot <- function(){
+  # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
   mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-6-7-2017.RDS')
-  multiplot(ggdendrogram( hclust(dist(t(mat_ihs), method="euclidean"), method = "complete")), 
-  p2 <- as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()),
+  multiplot(ggdendrogram( hclust(dist(t(mat_ihs), method="euclidean"), method = "complete")) + ggtitle('A'), 
+  p2 <- as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()) + ggtitle('B"'),
   cols = 2
   )
   
 }
 
 nsl_dendro_plot <- function(){
+  # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
   mat_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clustered_dist_mat-6-7-2017.RDS')
-  multiplot(ggdendrogram( hclust(dist(t(mat_nsl), method="euclidean"), method = "complete")),
-            as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()), 
+  multiplot(ggdendrogram( hclust(dist(t(mat_nsl), method="euclidean"), method = "complete")) + ggtitle("A"),
+            as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()) + ggtitle(("B")), 
             cols = 2)
+}
+
+prop_unique <- function(statname){
+  create_sums(statname) %>% 
+    filter(ALLsum == 1) %>% 
+    select(-posid, -contains('sum')) %>% 
+    gather(., "pop", "value", -contains('chrom')) %>% 
+    group_by(pop) %>% summarise(unique_windows = sum(value))  %>%  
+    left_join(., create_sums(statname) %>% 
+                select(-posid, -contains('sum')) %>% 
+                gather(., "pop", "value", -contains('chrom')) %>% 
+                group_by(pop) %>% 
+                summarise(total_windows = sum(value)) , by = "pop") %>%  
+    mutate(prop = unique_windows / total_windows)
 }
