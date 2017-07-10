@@ -45,7 +45,7 @@ ihs_dendro_plot <- function(){
   # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
   mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-6-7-2017.RDS')
   multiplot(ggdendrogram( hclust(dist(t(mat_ihs), method="euclidean"), method = "complete")) + ggtitle('A'), 
-  p2 <- as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()) + ggtitle('B"'),
+  p2 <- as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank()) + ggtitle('B'),
   cols = 2
   )
   
@@ -72,3 +72,23 @@ prop_unique <- function(statname){
                 summarise(total_windows = sum(value)) , by = "pop") %>%  
     mutate(prop = unique_windows / total_windows)
 }
+
+
+lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_lower_sig_stat_genes-27-6-2017.RDS')
+lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
+  lower_sig_stats[[y]] <- bind_rows(
+    lapply(names(lower_sig_stats[[y]]), function(x){
+      lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
+    }
+    ))
+}))
+
+upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_upper_sig_stat_genes-27-6-2017.RDS')
+
+upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
+  upper_sig_stats[[y]] <- bind_rows(
+    lapply(names(upper_sig_stats[[y]]), function(x){
+      upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
+    }
+    ))
+}))
