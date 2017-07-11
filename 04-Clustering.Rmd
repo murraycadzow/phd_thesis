@@ -97,7 +97,7 @@ Clustering on the full chromosome results for all chromosomes from PopGenome (Fi
 
 (ref:multichrplot) _Whole Chromosome Clustering._ Hierarchical clustering of the populations using selection test statistics for each entire chromosome. Clustering was performed using euclidean distance for the distance measure and complete linkage for the linkage criteria. Selection test statistic is in the label for each dendrogram.
 
-```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=10}
+```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=8}
 td_dendro <-readRDS('images/04_clustering/td_dendro.RDS')
 p1 <- td_dendro + ggtitle(label = "Tajima's D") 
 
@@ -139,11 +139,13 @@ pander::pandoc.table(create_windowSummaryTable(), caption = '(\\#tab:totalwindow
 
 #### Tajima's D 
 
-(ref:tdTop1000) _Tajima's D Clustering._ Hierarchical clustering of Tajima's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Tajima's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r tdTop1000, fig.cap = '(ref:tdTop1000)',echo = FALSE}
+```{r tdTop1000, fig.cap='(ref:tdTop1000)',echo = FALSE, fig.height = 7}
 four_plot("td","Tajima's D")
 ```
+
+(ref:tdTop1000) _Tajima's D Clustering._ Hierarchical clustering of Tajima's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Tajima's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
+
 <!--
 - neg gave super pop clusters
 - pos gave super pop clusters
@@ -151,6 +153,7 @@ four_plot("td","Tajima's D")
 - number of windows shared by POL with others was X
 - number of windows shared EP/WP was X
 - number of unique windows was X for CIM, NZM, SAM, TON
+- genes involved?
 -->
 The clustering of the individual populations for 1000 most extreme values from each of the negative and positive tails of the Tajima's D distribution both showed the East/West split in the Polynesians (Figure \@ref(fig:tdTop1000)). But also showed that the Polynesian populations were most similar to each other. The negative tail has the Polynesian cluster most closely related to the \gls{afr} super population, whereas, the positive tail has the Polynesian cluster closest to the \gls{eas} cluster. 
 
@@ -173,7 +176,7 @@ The positive tail had a total of `r create_sums('td_pos') %>% filter(POLsum == A
 
 (ref:fwhTop1000) _Fay and Wu's H Clustering._ Hierarchical clustering of Fay and Wu's _H_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fay and Wu's _H_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r fwhTop1000, fig.cap='(ref:fwhTop1000)'}
+```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', fig.height=7}
 four_plot("fwh","Fay and Wu's H")
 ```
 
@@ -198,7 +201,7 @@ Of the `r create_windowSummaryTable() %>% filter(stat == 'fwh_pos') %>% .[['tota
 
 (ref:fldTop1000) _Fu and Li's D Clustering._ Hierarchical clustering of Fu and Li's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fu and Li's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r fldTop1000, fig.cap = '(ref:fldTop1000)'}
+```{r fldTop1000, fig.cap = '(ref:fldTop1000)', fig.height=7}
 four_plot("fld","Fu and Li's D")
 ```
 <!--
@@ -222,7 +225,7 @@ The Eastern Polynesian populations had a total of `r create_sums('fld_pos') %>% 
 
 (ref:flfTop1000) _Fu and Li's F Clustering._ Hierarchical clustering of Fu and Li's _F_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fu and Li's _F_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r flfTop1000, fig.cap = '(ref:flfTop1000)'}
+```{r flfTop1000, fig.cap = '(ref:flfTop1000)', fig.height=7}
 four_plot("flf","Fu and Li's F")
 ```
 <!--
@@ -247,7 +250,7 @@ The Eastern Polynesian populations had a total of `r create_sums('flf_pos') %>% 
 
 (ref:zeTop1000) _Zeng's E Clustering._ Hierarchical clustering of Zeng's _E_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Zeng's _E_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r zeTop1000, fig.cap = '(ref:zeTop1000)'}
+```{r zeTop1000, fig.cap = '(ref:zeTop1000)', fig.height=7}
 four_plot("ze","Zeng's E")
 ```
 
@@ -345,7 +348,7 @@ The actual values for the windows that intersected the associated gene windows w
 
 There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance. This mapped to XXX windows for each of the frequency based selection test statistics. Zeng's _E_ and Fay and Wu's _H_ clustered each super population into their own group and each cluster was exclusive to that super population. Both Tajima's _D_ and Fu and Li's _F_ grouped most of the super populations correctly and nearly all clusters had good exclusivity for a single super population. Fu and Li's _D_ did not cluster the super populations well. Both Fu and Li's _D_ and _H_ grouped the \gls{ton} into a mini \gls{eas} group with \gls{chb} and \gls{jpt}. With the exception of Fu and Li's _D_, the clustering for the other selection test statistics gave an East/West Polynesian population sub group within the Polyensian group.
 
-`r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes had evidence from at least one selection statistic of possible selection. There were 5 genes; _BCAS3_, _IGF1R_, _PRKAG2_, _RREB1_, and _SLC2A9_, that had at least one statistic in all of the Polynesian populations.
+There were 5 genes; _BCAS3_, _IGF1R_, _PRKAG2_, _RREB1_, and _SLC2A9_, that had at least one statistic in all of the Polynesian populations. `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes had evidence from at least one selection statistic of possible selection. 
 <!--`r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% .[['SYMBOL']]` -->
 
 <!--
@@ -360,16 +363,19 @@ There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association
 
 #### Obesity
 
-The GWAS catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated Obesity, this was represented by XXX windows.
+The GWAS catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with obesity, this was represented by XXX windows. With the exception of Fu and Li's _D_, clustering resulted in the groupings of super populations. Exclusivity of the a single super population to a cluster was also high with the notible exception being the \gls{amr} populations of \gls{clm} and \gls{pur} often being part of the \gls{eur} cluster. The Polynesan population cluster was also closest to \gls{eas} in all except Fu and Li's D.
 
+<!--
 - td excellent groupings, mxl/pel on their own and clm/pur with eur. exclusivity was also pretty much perfect. ep/wp split
 - fwh near perfect, get 3/4 amr being clustered with the eur group. ep/wp split
 - fld nzm-mxl. eas, afr grouped. eur, amr and sas inter mixed somewhat. cim-sam-ton
 - flf nice super populations, eas-pol, eur-2amr, mxl/pel
 - ze good super populations, amr-eur and nearly sas, pol-eas with ep/wp split. pretty good exclusivity.
-
+-->
 
 #### T2D
+
+The GWAS catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}.
 
 - td ep/wp split, pol as outlier. pretty good clustering and exclusivity
 - fwh ep/wp split, pol-eas as outlier, not bad for exclusivity, clustering was good
@@ -397,6 +403,7 @@ number of significant
 - often see admixed amr pops grouped with nzm/cim
 - clustering using the gout/urate/bmi/t2d/metsyn genes...
 - what are the strengths/weaknesses of each stat
+- Fu and Li's D doesn't cluster well
 
 One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
 
