@@ -1,8 +1,8 @@
 library(tidyverse)
 library(ggdendro)
 library(scales)
-# made from rnotebooks/CoreExome/coreExome_30kb_windows_intra.Rmd 
-mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_mat_d_list-28-6-2017.RDS')
+# made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered_3ns.Rmd
+mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-12-7-2017.RDS')
 
 heatmap_col <- scale_fill_gradient(low = "white", high = "steelblue")
 
@@ -86,7 +86,7 @@ ihs_dendro_plot <- function(){
                        aes(label=label, x=x, y=y-0.1, colour=labs$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
     multiplot(#ggdendrogram(clus_c) + ggtitle('A'),
             p1 + ggtitle("A"),
-      as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom') + ggtitle('B')+ heatmap_col,
+      as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
   cols = 2
   )
   
@@ -109,7 +109,7 @@ nsl_dendro_plot <- function(){
   
   multiplot(#ggdendrogram( hclust(dist(t(mat_nsl), method="euclidean"), method = "complete"), colour = 'red') + ggtitle("A"),
     p1 + ggtitle("A"),
-    as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom') + ggtitle('B')+ heatmap_col,
+    as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
             cols = 2)
 }
 
@@ -128,7 +128,7 @@ prop_unique <- function(statname){
 }
 
 
-lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_lower_sig_stat_genes-27-6-2017.RDS')
+lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-12-7-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
@@ -137,7 +137,7 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
     ))
 }))
 
-upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_upper_sig_stat_genes-27-6-2017.RDS')
+upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-12-7-2017.RDS')
 
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(

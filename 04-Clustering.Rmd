@@ -59,7 +59,7 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 
 ## Methods
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014]. Excepting F~ST~, these statistics were calculated using a window size of 30 kb and a slide of 3 kb and for each entire chromosome. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings. F~ST~ was calculated pairwise for all populations for each chromosome.
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014]. Excepting F~ST~, these statistics were calculated using a window size of 100 kb and a slide of 10 kb for each entire chromosome. A filter to remove windows containing fewer than 4 segregating sites was applied. Windows were then updated to have the central 10 kb used as coordinates for the boundary to the window. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1000 values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and complete linkage was the linkage criteria in both clusterings. F~ST~ was calculated pairwise for all populations for each chromosome.
 
 \Gls{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@Szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref]. The search radius used was 200 kb and the minimum number of points for a cluster was 1. A distance matrix was then created using the proportion of shared genomic regions between each population. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
@@ -69,7 +69,7 @@ Disease associated genes were downloaded from the GWAS catalog^[https://www.ebi.
 (ref:gwascataccess) https://www.ebi.ac.uk/gwas/, accessed 19 June 2017
 
 
-Table \@ref(tab:gwascatref) shows the references and disease
+Table \@ref(tab:gwascatref) shows source disease trait and reference used to create categories of gene lists for gout/urate, obesity, \gls{t2d}, and metabolic syndrome. The gene lists from these categories were used in Section \@ref(genelistcluster) for clustering using the selection test statistic values for windows that intersected these gene regions.
 
 ```{r, results = 'asis'}
 m <- create_gwas_cat_table() %>% data.frame() %>% select(-REPORTED.GENE.S., 'Disease_Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% distinct() %>% arrange(Disease_Trait, Reference)
@@ -137,7 +137,7 @@ pander::pandoc.table(create_windowSummaryTable(), caption = '(\\#tab:totalwindow
 ```
 
 
-#### Tajima's D 
+#### Tajima's _D_ 
 
 
 ```{r tdTop1000, fig.cap='(ref:tdTop1000)',echo = FALSE, fig.height = 7}
@@ -155,7 +155,7 @@ four_plot("td","Tajima's D")
 - number of unique windows was X for CIM, NZM, SAM, TON
 - genes involved?
 -->
-The clustering of the individual populations for 1000 most extreme values from each of the negative and positive tails of the Tajima's D distribution both showed the East/West split in the Polynesians (Figure \@ref(fig:tdTop1000)). But also showed that the Polynesian populations were most similar to each other. The negative tail has the Polynesian cluster most closely related to the \gls{afr} super population, whereas, the positive tail has the Polynesian cluster closest to the \gls{eas} cluster. 
+The clustering of the individual populations for 1000 most extreme values from each of the negative and positive tails of the Tajima's _D_ distribution both showed the East/West split in the Polynesians (Figure \@ref(fig:tdTop1000)). But also showed that the Polynesian populations were most similar to each other. The negative tail has the Polynesian cluster most closely related to the \gls{afr} super population, whereas, the positive tail has the Polynesian cluster closest to the \gls{eas} cluster. 
 
 The main groupings also are of the populations that were designated as the same super population. Although the \gls{amr} super population in both tails has been split into two.
 
@@ -172,7 +172,7 @@ _Positive values_
 The positive tail had a total of `r create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, or `r round(create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.) / mat_d_list[['td_pos']] %>% NROW(.) *100, digits = 1)`% that were unique to the Polynesian populations. Eastern Polynesians made up `r create_sums('td_pos') %>% filter((POL_CIM + POL_NZM & ALLsum > 0) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows, with \gls{cim} having `r create_sums('td_pos') %>% filter(POL_CIM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows and only \gls{nzm} having `r create_sums('td_pos') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows. The Western Polynesians had `r create_sums('td_pos') %>% filter((POL_SAM + POL_TON) == ALLsum & ALLsum > 0)  %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows. `r create_sums('td_pos') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were from only \gls{sam} and `r create_sums('td_pos') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from only \gls{ton}. 
 
 
-#### Fay and Wu's H heatmap
+#### Fay and Wu's _H_
 
 (ref:fwhTop1000) _Fay and Wu's H Clustering._ Hierarchical clustering of Fay and Wu's _H_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fay and Wu's _H_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
@@ -185,7 +185,7 @@ four_plot("fwh","Fay and Wu's H")
 - there looks to be a lot of unique regions within the POL
 - both neg and pos have the Pol cluster nearest to the EAS
 -->
-The clustering of Fay and Wu's H  (Figure \@ref(fig:fwhTop1000)) had the main groupings that came out the same as the defined super population groups, with the exception of the positive tail where the \gls{amr} super population was split in half. The Polynesian populations were clustered together in both the negative and positive tails for Fay and Wu's _H_. The Polynesian population group was closest to the \gls{eas} populations with `r create_sums('fwh_pos') %>% filter(POLsum + EASsum <= ALLsum & POLsum > 0 & EASsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows from the positive tail and `r create_sums('fwh_neg') %>% filter(POLsum + EASsum <= ALLsum & POLsum > 0 & EASsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows from the negative tail in common between at least one Polynesian population and one \gls{eas} population. In both tails the Polynesian cluster also had the East/West split within the group. 
+The clustering of Fay and Wu's _H_  (Figure \@ref(fig:fwhTop1000)) had the main groupings that came out the same as the defined super population groups, with the exception of the positive tail where the \gls{amr} super population was split in half. The Polynesian populations were clustered together in both the negative and positive tails for Fay and Wu's _H_. The Polynesian population group was closest to the \gls{eas} populations with `r create_sums('fwh_pos') %>% filter(POLsum + EASsum <= ALLsum & POLsum > 0 & EASsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows from the positive tail and `r create_sums('fwh_neg') %>% filter(POLsum + EASsum <= ALLsum & POLsum > 0 & EASsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows from the negative tail in common between at least one Polynesian population and one \gls{eas} population. In both tails the Polynesian cluster also had the East/West split within the group. 
 
 _negative_
 There were a total of `r create_windowSummaryTable() %>% filter(stat == 'fwh_neg') %>% .[['total_windows']]` windows with `r create_sums('fwh_neg') %>% filter(POLsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows specific to Polynesian populations. This compared to `r create_sums('fwh_neg') %>% filter(AFRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{afr}, `r create_sums('fwh_neg') %>% filter(AMRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{amr}, `r create_sums('fwh_neg') %>% filter(EURsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{eur}, and `r create_sums('fwh_neg') %>% filter(EASsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{eas}. The Eastern Polynesian populations had `r create_sums('fwh_neg') %>% filter(POL_CIM + POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, of those, `r create_sums('fwh_neg') %>% filter(POL_CIM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specific to \gls{cim} and `r create_sums('fwh_neg') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were specific to \gls{nzm}. The Western Polynesian populations had`r create_sums('fwh_neg') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, with `r create_sums('fwh_neg') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{sam} and `r create_sums('fwh_neg') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{ton}.
@@ -197,7 +197,7 @@ Of the `r create_windowSummaryTable() %>% filter(stat == 'fwh_pos') %>% .[['tota
 
 
 
-#### Fu and Li's D
+#### Fu and Li's _D_
 
 (ref:fldTop1000) _Fu and Li's D Clustering._ Hierarchical clustering of Fu and Li's _D_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fu and Li's _D_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
@@ -211,7 +211,7 @@ four_plot("fld","Fu and Li's D")
 - sam/nzm and cim/ton split in neg
 - only sas and nearly eur are completely grouped together, looks somewhat random
 -->
-There was a nearly a ten-fold difference in the number of total windows used in the clustering between the positive (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and negative tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there was a large number of regions in common in the positive tail, whereas there is little in common in the negative tail with many windows being population specific. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a mean of `r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']]` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` greater than the mean across all selection test stats used. In the positive tail the Polynesian populations were grouped together and also within the group, paired in their East/West split.
+There was a nearly a ten-fold difference in the number of total windows used in the clustering between the positive (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and negative tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there was a large number of regions in common in the positive tail, whereas there is little in common in the negative tail with many windows being population specific. In the negative tail the Polynesians were split into a \gls{sam} - \gls{nzm} and \gls{ton} - \gls{cim} pairing, with the \gls{ton} - \gls{cim} pair being next closest to a group of 4 \gls{afr} populations. In the positive tail there was a mean of `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']], digits = 2)` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` greater than the mean across all selection test stats used. In the positive tail the Polynesian populations were grouped together and also within the group, paired in their East/West split.
 
 The Eastern Polynesian populations had a total of `r create_sums('fld_neg') %>% filter(POL_CIM + POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows, `r create_sums('fld_neg') %>% filter(POL_CIM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were unique to \gls{cim} and `r create_sums('fld_neg') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were unique to \gls{nzm}. The Western Polynesian populations had `r create_sums('fld_neg') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows. Of these `r create_sums('fld_neg') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were unique to \gls{sam} and `r create_sums('fld_neg') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` to \gls{ton}.
 
@@ -221,7 +221,7 @@ positive
 The Eastern Polynesian populations had a total of `r create_sums('fld_pos') %>% filter(POL_CIM + POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows with `r create_sums('fld_pos') %>% filter(POL_CIM == ALLsum & ALLsum > 0 ) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` only from \gls{cim} and `r create_sums('fld_pos') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from \gls{nzm}. From the Western Polynesian populations there were `r create_sums('fld_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific windows. There were `r create_sums('fld_pos') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{sam} and `r create_sums('fld_pos') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{ton}.
 
 
-#### Fu and Li's F
+#### Fu and Li's _F_
 
 (ref:flfTop1000) _Fu and Li's F Clustering._ Hierarchical clustering of Fu and Li's _F_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Fu and Li's _F_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
@@ -233,7 +233,7 @@ four_plot("flf","Fu and Li's F")
 - pos looks like there is a reasonable number of windows shared between pops (5188)
 - neg looks pretty sparse 17044
 -->
-Clustering on the Fu and Li's F (Figure \@ref(fig:flfTop1000)) had `r create_windowSummaryTable() %>% filter(stat == 'flf_pos') %>% .[['total_windows']]` windows in the positive tail (Figure \@ref(fig:flfTop1000) B and D) and `r create_windowSummaryTable() %>% filter(stat == 'flf_neg') %>% .[['total_windows']]` windows in the negative tail (Figure \@ref(flf:flfTop1000) A and C). The mean number of unique windows per population was XXX in the positive tail, compared with XXX in the negative tail. Clustering on the windows from the positive tail put the super populations into their own groups, but also split the \gls{amr} populations into 2 separate groups. The Polynesian populations were also sub grouped as an East/West split. Clustering on the negative tail windows grouped the majority of the individual populations together into their super populations. The Polyesians populations were grouped togther as an East Polynesian group and the Samoan population, however the Tongan population was least similar to the other populations with `r  round(prop_unique('flf_neg') %>% filter(pop == "POL_TON") %>% .[['prop']] * 100, 2)`% of windows being unique, compared to a mean of `r  round(prop_unique('flf_neg')  %>% summarise(mean(prop)) * 100, 2)`%. 
+Clustering on the Fu and Li's _F_ (Figure \@ref(fig:flfTop1000)) had `r create_windowSummaryTable() %>% filter(stat == 'flf_pos') %>% .[['total_windows']]` windows in the positive tail (Figure \@ref(fig:flfTop1000) B and D) and `r create_windowSummaryTable() %>% filter(stat == 'flf_neg') %>% .[['total_windows']]` windows in the negative tail (Figure \@ref(flf:flfTop1000) A and C). The mean number of unique windows per population was XXX in the positive tail, compared with XXX in the negative tail. Clustering on the windows from the positive tail put the super populations into their own groups, but also split the \gls{amr} populations into 2 separate groups. The Polynesian populations were also sub grouped as an East/West split. Clustering on the negative tail windows grouped the majority of the individual populations together into their super populations. The Polyesians populations were grouped togther as an East Polynesian group and the Samoan population, however the Tongan population was least similar to the other populations with `r  round(prop_unique('flf_neg') %>% filter(pop == "POL_TON") %>% .[['prop']] * 100, 2)`% of windows being unique, compared to a mean of `r  round(prop_unique('flf_neg')  %>% summarise(mean(prop)) * 100, 2)`%. 
 
 
 negative
@@ -246,7 +246,7 @@ positive
 The Eastern Polynesian populations had a total of `r create_sums('flf_pos') %>% filter(POL_CIM + POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows with `r create_sums('flf_pos') %>% filter(POL_CIM == ALLsum & ALLsum > 0 ) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` only from \gls{cim} and `r create_sums('flf_pos') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from \gls{nzm}. From the Western Polynesian populations there were `r create_sums('flf_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific windows. There were `r create_sums('flf_pos') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{sam} and `r create_sums('flf_pos') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{ton}.
 
 
-#### Zeng's E
+#### Zeng's _E_
 
 (ref:zeTop1000) _Zeng's E Clustering._ Hierarchical clustering of Zeng's _E_ using the positive and negative tails of the distribution. *A* and *B* Dendrogram representing the clusters of Zeng's _E_ lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. *C* and *D* Plots representing the windows present in each population from the lower and upper tails respectfully.
 
@@ -255,7 +255,7 @@ four_plot("ze","Zeng's E")
 ```
 
 
-Clustering on Zeng's E on the positive tail (Figure \@ref(fig:zeTop1000) B and D) of the distribution gave clustering that matched the super popualations, with the Polyesian populations grouped together and subgrouped into an East/West split. The Polyensian population group's next closest group was the \gls{eas} super population. The negative tail (Figure \@ref(fig:zeTop1000) A and C) showed a similar grouping but split the \gls{amr} super population.
+Clustering on Zeng's _E_ on the positive tail (Figure \@ref(fig:zeTop1000) B and D) of the distribution gave clustering that matched the super popualations, with the Polyesian populations grouped together and subgrouped into an East/West split. The Polyensian population group's next closest group was the \gls{eas} super population. The negative tail (Figure \@ref(fig:zeTop1000) A and C) showed a similar grouping but split the \gls{amr} super population.
 
 
 negative
@@ -271,7 +271,7 @@ The Eastern Polynesian populations had `r create_sums('ze_pos') %>% filter(POL_C
 
 #### Random draws
 ```{r}
-td_random <- readRDS('~/data/NZ_coreExome_1kgp/30kbWindow_intra/td_random-7-7-2017.RDS')
+td_random <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/td_random_filtered_3ns-12-7-2017.RDS')
 bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$super_prop})) %>% group_by(super) %>% group_by(super) %>% summarise(min = min(max_prop), mean = mean(max_prop), sd = sd(max_prop), max = max(max_prop), complete_prop = sum(if_else(max_prop == 1, 1, 0))/NROW(.))
 ```
 
@@ -329,11 +329,11 @@ create_fst_dendro() + ggtitle(expression("Whole Chromosome F"["ST"]))
 - all super populations cluster together with the exception of amr, which is split
 Hierarchical clustering using chromosome wide F~ST~ (Figure \@ref(fig:wholechrfst))
 
-### stats based on gene lists
+### stats based on gene lists (ref:genelistcluster)
 <!-- might be a good idea to use a grid to put multiple plots into one -->
 ```{r}
 load('~/data/gwas_catalog/diseaseGR-26-6-2017.RData')# brings in objects called 
-load('~/data/NZ_coreExome_1kgp/30kbWindow_intra/gene_clustering-11-7-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
+load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-13-7-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
 names(gout) <- c('mat_d','prop')
 names(t2d) <-  c('mat_d','prop')
 names(obesity) <-  c('mat_d','prop')
@@ -370,8 +370,8 @@ multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajim
           gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
           gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-          gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
-  , cols = 2)
+          gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+  cols = 2)
 ```
 (ref:goutdendros) _Gout Clustering_ Clustering applied to 
 
@@ -382,8 +382,8 @@ multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Ta
           gene_dendros(gene_data = obesity$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = obesity$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
           gene_dendros(gene_data = obesity$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-          gene_dendros(gene_data = obesity$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
-  , cols = 2)
+          gene_dendros(gene_data = obesity$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2)
 ```
 
 The GWAS catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with obesity, this was represented by `r nrow(obesity$mat_d$Tajima.D)` windows. With the exception of Fu and Li's _D_, clustering resulted in the groupings of super populations. Exclusivity of the a single super population to a cluster was also high with the notible exception being the \gls{amr} populations of \gls{clm} and \gls{pur} often being part of the \gls{eur} cluster. The Polynesan population cluster was also closest to \gls{eas} in all except Fu and Li's D.
@@ -403,8 +403,8 @@ multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima
           gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
           gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-          gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
-  , cols = 2)
+          gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2)
 ```
 
 The GWAS catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}.
@@ -425,8 +425,8 @@ multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Taj
           gene_dendros(gene_data = metsyn$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = metsyn$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
           gene_dendros(gene_data = metsyn$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-          gene_dendros(gene_data = metsyn$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
-  , cols = 2)
+          gene_dendros(gene_data = metsyn$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2)
 ```
 
 - td
