@@ -332,7 +332,12 @@ Hierarchical clustering using chromosome wide F~ST~ (Figure \@ref(fig:wholechrfs
 ### stats based on gene lists
 <!-- might be a good idea to use a grid to put multiple plots into one -->
 ```{r}
-load('~/data/gwas_catalog/diseaseGR-26-6-2017.RData')
+load('~/data/gwas_catalog/diseaseGR-26-6-2017.RData')# brings in objects called 
+load('~/data/NZ_coreExome_1kgp/30kbWindow_intra/gene_clustering-11-7-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
+names(gout) <- c('mat_d','prop')
+names(t2d) <-  c('mat_d','prop')
+names(obesity) <-  c('mat_d','prop')
+names(metsyn) <-  c('mat_d','prop')
 ```
 
 
@@ -346,9 +351,10 @@ The actual values for the windows that intersected the associated gene windows w
 #### urate/gout
 
 
-There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance. This mapped to XXX windows for each of the frequency based selection test statistics. Zeng's _E_ and Fay and Wu's _H_ clustered each super population into their own group and each cluster was exclusive to that super population. Both Tajima's _D_ and Fu and Li's _F_ grouped most of the super populations correctly and nearly all clusters had good exclusivity for a single super population. Fu and Li's _D_ did not cluster the super populations well. Both Fu and Li's _D_ and _H_ grouped the \gls{ton} into a mini \gls{eas} group with \gls{chb} and \gls{jpt}. With the exception of Fu and Li's _D_, the clustering for the other selection test statistics gave an East/West Polynesian population sub group within the Polyensian group.
+There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance. This mapped to `r nrow(gout$mat_d$Tajima.D)` windows for each of the frequency based selection test statistics. Zeng's _E_ and Fay and Wu's _H_ clustered each super population into their own group and each cluster was exclusive to that super population. Both Tajima's _D_ and Fu and Li's _F_ grouped most of the super populations correctly and nearly all clusters had good exclusivity for a single super population. Fu and Li's _D_ did not cluster the super populations well. Both Fu and Li's _D_ and _H_ grouped the \gls{ton} into a mini \gls{eas} group with \gls{chb} and \gls{jpt}. With the exception of Fu and Li's _D_, the clustering for the other selection test statistics gave an East/West Polynesian population sub group within the Polyensian group.
 
-There were 5 genes; _BCAS3_, _IGF1R_, _PRKAG2_, _RREB1_, and _SLC2A9_, that had at least one statistic in all of the Polynesian populations. `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes had evidence from at least one selection statistic of possible selection. 
+There were 5 genes; _BCAS3_, _IGF1R_, _PRKAG2_, _RREB1_, and _SLC2A9_, that had at least one statistic in all of the Polynesian populations that met the threshold of significance. There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes thta had evidence from at least one selection statistic of possible selection in any of the Polynesian populations. 
+
 <!--`r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% .[['SYMBOL']]` -->
 
 <!--
@@ -359,11 +365,28 @@ There were 5 genes; _BCAS3_, _IGF1R_, _PRKAG2_, _RREB1_, and _SLC2A9_, that had 
 - ze perfect super populations, perfect exclusivity
 -->
 
-
+```{r, fig.cap='(ref:goutdendros)', fig.height=7}
+multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
+  , cols = 2)
+```
+(ref:goutdendros) _Gout Clustering_ Clustering applied to 
 
 #### Obesity
 
-The GWAS catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with obesity, this was represented by XXX windows. With the exception of Fu and Li's _D_, clustering resulted in the groupings of super populations. Exclusivity of the a single super population to a cluster was also high with the notible exception being the \gls{amr} populations of \gls{clm} and \gls{pur} often being part of the \gls{eur} cluster. The Polynesan population cluster was also closest to \gls{eas} in all except Fu and Li's D.
+```{r, fig.cap='(ref:obesitydendros)', fig.height=7}
+multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = obesity$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = obesity$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = obesity$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = obesity$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
+  , cols = 2)
+```
+
+The GWAS catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with obesity, this was represented by `r nrow(obesity$mat_d$Tajima.D)` windows. With the exception of Fu and Li's _D_, clustering resulted in the groupings of super populations. Exclusivity of the a single super population to a cluster was also high with the notible exception being the \gls{amr} populations of \gls{clm} and \gls{pur} often being part of the \gls{eur} cluster. The Polynesan population cluster was also closest to \gls{eas} in all except Fu and Li's D.
 
 <!--
 - td excellent groupings, mxl/pel on their own and clm/pur with eur. exclusivity was also pretty much perfect. ep/wp split
@@ -374,6 +397,15 @@ The GWAS catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with
 -->
 
 #### T2D
+
+```{r, fig.cap='(ref:t2ddendros)', fig.height=7}
+multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
+  , cols = 2)
+```
 
 The GWAS catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}.
 
@@ -387,6 +419,15 @@ results from other diseases that are late onset and see if they produce the same
 -->
 
 #### Metabolic Syndrome
+
+```{r, fig.cap='(ref:metsyndendros)', fig.height=7}
+multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = metsyn$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = metsyn$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = metsyn$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = metsyn$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E")
+  , cols = 2)
+```
 
 - td
 - fwh
@@ -404,7 +445,7 @@ number of significant
 - clustering using the gout/urate/bmi/t2d/metsyn genes...
 - what are the strengths/weaknesses of each stat
 - Fu and Li's D doesn't cluster well
-
+- when clustering on actual values how much does it matter a population has shifted overall distribution?
 One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
 
 
