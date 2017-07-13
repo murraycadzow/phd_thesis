@@ -53,7 +53,7 @@ Establish the influence of key parameters in selectionTools pipeline
 
 for the selection pipeline we need to split into populations
 
-```
+```{r, engine = 'bash', eval = FALSE}
 # working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
 # make a combined panel file
 cut -f1-3 /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/integrated_call_samples_v3.20130502.ALL.panel |\
@@ -74,7 +74,7 @@ parallel '
 
 Break into super populations to analyse the Polynesians (NZM,CIM,TON,SAM) - make sure to exclude the NZC from the EUR super pop and also exclude the admixed NZM (NAD), Eastern Polynesians (EPN), and Western Polynesians (WPN).
 
-```
+```{r, engine = 'bash', eval = FALSE}
 # working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
 mkdir Super_pops
 
@@ -94,7 +94,7 @@ Now send to NeSI pan cluster for the selectionTools pipeline to take place
 
 Individual populations are first run through selectionTools with iHS, nSL, and XP-EHH calculated later
 
-```
+```{r, engine = 'bash', eval = FALSE}
 # on nesi
 mkdir -p /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/{Indiv_pops,Indiv_pops_results}
 
@@ -114,7 +114,7 @@ done
 ```
 
 Then run run_selscan.sl and run_nsl_selscan on each population results file
-```
+```{r, engine = 'bash', eval = FALSE}
 # on nesi
 # working dir: Indiv_pops_results
 for p in $(find ./[A-Z]* -type d | grep -v xpehh | sed 's/\.\///g')
@@ -129,7 +129,7 @@ done
 
 
 
-```
+```{r, engine = 'bash', eval = FALSE}
 # on nesi
 # working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops_results
 # individual pops
@@ -169,18 +169,18 @@ do
   sbatch ../run_xpehh.sl POL $p
   sleep 5
 done
-```
 
-Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
-```
+# Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
 rm -r NAD_{WPN,EPN}
 rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
-
 ```
+
 
 ## PopGenome
 
-### Comparision of window sizes
+### Influence of window sizes and slide
+
+
 <!--
 
 This is at least covered for TD in the R notebook
@@ -194,10 +194,19 @@ The 1 kb window provides a very large number of windows with no snps present and
 
 the window size of 30kb starts to offer a 
 
+table: summary of n segreating sites by window size
 
 -->
 
-### Comparision of window slide
+```{r, results = 'markup'}
+ knitr::kable(data.frame(
+  Window = c(30,30,50,50,100,100,150,150),
+  Slide = c(3,10,5,10,10,25,10,35)
+), caption = 'Window and Slide Sizes (kilobases)')
+```
+
+
+Window slides of 10% of the window size and ~25% of the window size were tested for window sizes of 30 kb, 100 kb, and 150 kb.
 
 
 
@@ -212,6 +221,7 @@ Tajima's _D_, Fay and Wu's _H_, and F~ST~ calculation window size was tested.
 
 iHS and nSL
 tested gap width to try and bring in SLC2A9 for coreExome data
+Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TONDon't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
 
 ### Slide
 
