@@ -2,24 +2,31 @@ library(tidyverse)
 library(ggdendro)
 library(scales)
 # made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered_3ns.Rmd
-mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-12-7-2017.RDS')
+mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-18-7-2017.RDS')
+
+prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-18-7-2017.RDS')
+clus_r_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_r_list-18-7-2017.RDS')
+clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_c_list-18-7-2017.RDS')
+
+panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
 
 heatmap_col <- scale_fill_gradient(low = "white", high = "steelblue")
 
 
 create_windowTable <- function(){
-  bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>% select(-pop) %>% group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% data.frame()
+  
+  bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>% select(-pop) %>% group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% data.frame()
 }
 
 create_windowSummaryTable <- function(){
-  bind_rows(lapply(names(mat_d_list), function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
+  bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
 }
 
 theme_heat <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.x = element_blank(), panel.grid = element_blank())
 
 four_plot <- function(mat_d_name,statname){
-  hr_c_neg <- hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_neg')]][,-1:-4]), method="euclidean"), method = "complete")
-  hr_r_neg <- hclust(dist((mat_d_list[[paste0(mat_d_name,'_neg')]][,-1:-4]), method="euclidean"), method = "complete")
+  hr_c_neg <- clus_c_list[[paste0(mat_d_name,'_neg')]]
+  hr_r_neg <- clus_r_list[[paste0(mat_d_name,'_neg')]]
   mat_d_list[[paste0(mat_d_name,'_neg')]] <- mat_d_list[[paste0(mat_d_name,'_neg')]][hr_r_neg$order,]
   
   ddata_x_neg <- dendro_data(hr_c_neg)
@@ -31,8 +38,8 @@ four_plot <- function(mat_d_name,statname){
                        aes(label=label, x=x, y=y-0.1, colour=labs_neg$group, angle = 90, hjust = 1.1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x_neg$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
   
   
-  hr_c_pos <- hclust(dist(t(mat_d_list[[paste0(mat_d_name,'_pos')]][,-1:-4]), method="euclidean"), method = "complete")
-  hr_r_pos <- hclust(dist((mat_d_list[[paste0(mat_d_name,'_pos')]][,-1:-4]), method="euclidean"), method = "complete")
+  hr_c_pos <- clus_c_list[[paste0(mat_d_name,'_pos')]]
+  hr_r_pos <- clus_r_list[[paste0(mat_d_name,'_pos')]]
   mat_d_list[[paste0(mat_d_name,'_pos')]] <- mat_d_list[[paste0(mat_d_name,'_pos')]][hr_r_pos$order,]
   
   ddata_x_pos <- dendro_data(hr_c_pos)
@@ -61,7 +68,25 @@ create_sums <- function(mat_d_name){
 
 create_fst_dendro <- function(){
   #data from rnotebooks/CoreExome/coreExome_fst.Rmd
-  return(ggdendrogram(readRDS("~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome_clust.3-7-2017.RDS"), method = "complete"))
+  #return(ggdendrogram(readRDS("~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome_clust.3-7-2017.RDS"), method = "complete"))
+  fst <- readRDS('~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome.3-7-2017.RDS')
+  a <- bind_rows(lapply(fst, function(x){x %>% mutate(pop1 = as.character(pop1), pop2 = as.character(pop2))%>% select(-p1,-p2) %>% filter(!pop1 %in% c('WPN','EPN','NAD'), !pop2 %in% c('WPN','EPN','NAD')) %>% left_join(., panel %>% mutate(super_pop = paste(super_pop, pop, sep = '_')) %>% select("pop1" = pop, super_pop) %>% distinct(), by = "pop1" ) %>% select(-pop1) %>% spread(., "super_pop", fst )}))
+  mat_d <- as.matrix(a[,c(-1,-2)])
+  rownames(mat_d) <- paste(a$pop2, a$chrom, sep = '_')
+  #hr_d <- hclust(dist(mat_d, method="euclidean"), method = "complete")
+  hc_d <- hclust(dist(t(mat_d), method="euclidean"), method = "complete")
+  
+  
+  ddata_x <- dendro_data(hc_d)
+  p1 <- ggplot(segment(ddata_x)) +
+    geom_segment(aes(x=x, y=y, xend=xend, yend=yend))
+  labs <- label(ddata_x)
+  labs$group <- unlist(lapply(as.character(labs$label), function(x){strsplit(x, split = '_')[[1]][1]}))
+  p1 <- p1 + geom_text(data=label(ddata_x),
+                       aes(label=label, x=x, y=y-0.1, colour=labs$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
+  return(p1)
+  
+  
 }
 
 create_gwas_cat_table <-function(){
@@ -86,7 +111,7 @@ ihs_dendro_plot <- function(){
                        aes(label=label, x=x, y=y-0.1, colour=labs$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
     multiplot(#ggdendrogram(clus_c) + ggtitle('A'),
             p1 + ggtitle("A"),
-      as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
+      as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
   cols = 2
   )
   
@@ -109,7 +134,7 @@ nsl_dendro_plot <- function(){
   
   multiplot(#ggdendrogram( hclust(dist(t(mat_nsl), method="euclidean"), method = "complete"), colour = 'red') + ggtitle("A"),
     p1 + ggtitle("A"),
-    as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop1, y = pop2, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
+    as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
             cols = 2)
 }
 
