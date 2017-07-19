@@ -22,7 +22,9 @@ create_windowSummaryTable <- function(){
   bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
 }
 
+
 theme_heat <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = 'none', axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.x = element_blank(), panel.grid = element_blank())
+
 
 four_plot <- function(mat_d_name,statname){
   hr_c_neg <- clus_c_list[[paste0(mat_d_name,'_neg')]]
@@ -85,15 +87,15 @@ create_fst_dendro <- function(){
   p1 <- p1 + geom_text(data=label(ddata_x),
                        aes(label=label, x=x, y=y-0.1, colour=labs$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
   return(p1)
-  
-  
 }
+
 
 create_gwas_cat_table <-function(){
   # data from rnotebooks/CoreExome/gwas_catalog.Rmd
   load('~/data/gwas_catalog/disease_ref_table-26-6-2017.RData')
   return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
 }
+
 
 ihs_dendro_plot <- function(){
   # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
@@ -114,8 +116,8 @@ ihs_dendro_plot <- function(){
       as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
   cols = 2
   )
-  
 }
+
 
 nsl_dendro_plot <- function(){
   # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
@@ -137,6 +139,7 @@ nsl_dendro_plot <- function(){
     as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col,
             cols = 2)
 }
+
 
 prop_unique <- function(statname){
   create_sums(statname) %>% 
@@ -161,6 +164,7 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
     }
     ))
 }))
+
 
 upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-12-7-2017.RDS')
 
