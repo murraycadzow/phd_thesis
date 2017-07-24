@@ -345,8 +345,8 @@ This is a test sentence to find out if table \@ref(tab:meanSegSites) is referenc
 
 -->
 ```{r}
-# This is created by coreExome_30kb_windows_intra.Rmd
-load("~/data/NZ_coreExome_1kgp/30kbWindow_intra/30kbwindows_chr_summary_popgenome.27-6-2017.RData")
+# This is created by coreExome_100kb_windows_intra_filtered.Rmd
+chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_chr_summary_popgenome_filtered_3ns.20-7-2017.RDS")
 pops <- list()
 panel <- read.delim('/home/murraycadzow/data/NZ_coreExome_1kgp/nz_1kgp.panel', stringsAsFactors = FALSE)
 for(p in unique(panel$pop)){
