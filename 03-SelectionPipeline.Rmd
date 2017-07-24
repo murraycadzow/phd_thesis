@@ -43,9 +43,12 @@ literature
 Cadzow2014
 Cadzow2016
 Pybus2014
+Ramos2017
 
 ### objectives
-Establish the influence of key parameters in selectionTools pipeline
+
+- Investigate regions that are under selection in the Polynesian populations
+
 
 ## Selection dataset creation
 
@@ -180,6 +183,7 @@ rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
 
 ### Influence of window sizes and slide
 
+The effect of window and slide size was investigated using windows sizes ranging from 30 kb through to 150 kb, and slide sizes ranging from 3 kb through to 35 kb. The general trend was as window size increased the entire distribution was shifted to the right and also widened. Similar to @Pybus2014, a trade off between increasing the number of \gls{snp}s per window and adequate resolution was made and the window size of 100 kb and slide of 10 kb was chosen.
 
 <!--
 
@@ -198,16 +202,49 @@ table: summary of n segreating sites by window size
 
 -->
 
-```{r, results = 'markup'}
- knitr::kable(data.frame(
+```{r,echo= FALSE }
+test_windows <- data.frame(
   Window = c(30,30,50,50,100,100,150,150),
-  Slide = c(3,10,5,10,10,25,10,35)
-), caption = 'Window and Slide Sizes (kilobases)')
+  Slide = c(3,10,5,10,10,25,10,35) )
+
 ```
 
 
 Window slides of 10% of the window size and ~25% of the window size were tested for window sizes of 30 kb, 100 kb, and 150 kb.
 
+used the GBR and NZC populations
+
+looked at the min/mean/max across each window size and slide
+
+fld was quite variable but smoothed out as window size increased
+
+
+filtered out windows that had fewer than 4 segregating sites to reduce the impact of a few snps
+
+
+table: 
+
+```{r, results = 'asis'}
+#pop: 1 = GBR, 2 = NZC 
+
+summary_results <- readRDS('~/data/NZ_coreExome_1kgp/popgenome_window_tests_filtered_3ns_summary-19-7-2017.RDS')
+#summary_results %>% ungroup()%>% mutate(pop = ifelse(pop == 1, "GBR", "NZC"), range = max - min) %>% group_by(pop) %>% mutate_at(vars(c('mean', 'sd', 'lower_1', 'upper_99', 'median', 'min', 'max','range')), funs(round(., digits = 3))) %>% ungroup()  %>% left_join(., test_windows %>% mutate(ws = as.numeric(rownames(.))), by = 'ws') %>% select(stat, Window, Slide, pop, min, lower_1, median, mean, sd, upper_99, max, range) %>% data.frame #%>%  pander::pandoc.table(.)
+```
+
+
+
+```{r}
+summary_results %>% mutate(range = max - min)%>% mutate_at(vars(c('mean', 'sd', 'lower_1', 'upper_99', 'median', 'min', 'max', 'range')), funs(round(., digits = 3))) %>% ungroup() %>% mutate(pop = ifelse(pop == 1, "GBR", "NZC")) %>% left_join(., test_windows %>% mutate(ws = as.numeric(rownames(.))), by = 'ws') %>% select(stat, Window, Slide, pop, min, lower_1, median, mean, sd, upper_99, max, range) %>% gather("sumStat", 'value', 5:NCOL(.))%>% filter(Slide == 10) %>% ggplot(., aes(x = Window, y = value, by = pop, colour = sumStat )) + geom_line()  + geom_vline(xintercept = 100, colour = "grey") + facet_wrap(~stat, scales = 'free_y') + theme_bw()
+```
+
+
+
+<!--
+want to have the
+
+decided on 100kb with 10 kb slide
+number of segregating sites
+-->
 
 
 ## Comparison of selectionTools Parameters
@@ -255,10 +292,26 @@ Individual populations - CIM/NZM/SAM/TON/NZC
 
 ```
 
+There each population had a differnt distribution of values
+
+the super populations had similar min, mean, sd, median, max for the stats
+
+<!--
+table for each stat that give global mins/means/sd/max for each population
+-->
 
 #### Tajima's D
 
 The mean Tajima's D for each chromosome can be seen in Table \@ref(tab:meanTDtable) and is found in the appendix
+
+```{r}
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_summary_popgenome_filtered_3ns.20-7-2017.RDS")
+```
+
+```{r, results='asis'}
+global_summary %>% ungroup%>% filter(stat == 'Tajima.D') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(., justify = c('left', rep('right', NCOL(.)-1)))
+```
+
 
 CIM
 
@@ -267,6 +320,11 @@ CIM
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from CIM
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "CIM", statname == 'Tajima.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 NZM
 
@@ -276,6 +334,11 @@ NZM
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from NZM
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
 
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "NZM", statname == 'Tajima.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 SAM
 
@@ -284,6 +347,11 @@ SAM
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from SAM
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "SAM", statname == 'Tajima.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 TON
 
@@ -292,6 +360,11 @@ TON
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from TON
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "TON", statname == 'Tajima.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 
 EP
@@ -301,6 +374,8 @@ EP
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM', 'NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM', 'NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from EP
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
+
+
 
 WP
 
@@ -318,19 +393,20 @@ POL
 - `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
 
-There were 
-```{r}
 
-```
 
-Genes Unique to each population
-```{r}
-
+Genes Unique to Polynesian Populations
+```{r, results = 'asis'}
+lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table()
 ```
 
 
 
 #### Fay and Wu's H
+
+```{r, results='asis'}
+global_summary %>% ungroup%>% filter(stat == 'Fay.Wu.H') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+```
 
 CIM
 
@@ -338,6 +414,10 @@ CIM
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from CIM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "CIM", statname == 'Fay.Wu.H') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
 
 NZM
 
@@ -345,6 +425,11 @@ NZM
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from NZM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "NZM", statname == 'Fay.Wu.H') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 SAM
 
@@ -352,6 +437,11 @@ SAM
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from SAM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "SAM", statname == 'Fay.Wu.H') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 TON
 
@@ -359,6 +449,11 @@ TON
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from TON
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "TON", statname == 'Fay.Wu.H') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 
 EP
@@ -382,7 +477,179 @@ POL
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
 
+
+Genes Unique to Polynesian populations
+```{r}
+lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+```
+
+#### Fu and Li's D
+
+```{r, results='asis'}
+global_summary %>% ungroup%>% filter(stat == 'Fu.Li.D') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+```
+
+CIM
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from CIM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "CIM", statname == 'Fu.Li.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+NZM
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from NZM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "NZM", statname == 'Fu.Li.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+
+SAM
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from SAM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "SAM", statname == 'Fu.Li.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+
+TON
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from TON
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "TON", statname == 'Fu.Li.D') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+
+
+EP
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM', 'NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM', 'NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM', 'NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM', 'NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from EP
+
+WP
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM','TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from WP
+
+POL
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
+
+
+Genes Unique to Polynesian populations
+```{r}
+lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+```
+
+
+#### Fu and Li's F
+
+```{r, results='asis'}
+global_summary %>% ungroup%>% filter(stat == 'Fu.Li.F') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+```
+
+CIM
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from CIM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "CIM", statname == 'Fu.Li.F') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+NZM
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from NZM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "NZM", statname == 'Fu.Li.F') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+
+SAM
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from SAM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "SAM", statname == 'Fu.Li.F') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+
+TON
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from TON
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "TON", statname == 'Fu.Li.F') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
+
+
+EP
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM', 'NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM', 'NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM', 'NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM', 'NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from EP
+
+WP
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM','TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from WP
+
+POL
+
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
+- `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
+
+Genes Unique to Polynesian populations
+```{r}
+lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+```
+
 #### Zeng's E
+
+```{r, results='asis'}
+global_summary %>% ungroup%>% filter(stat == 'Zeng.E') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+```
 
 CIM
 
@@ -390,6 +657,10 @@ CIM
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from CIM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "CIM", statname == 'Zeng.E') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
 
 NZM
 
@@ -397,6 +668,11 @@ NZM
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('NZM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from NZM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "NZM", statname == 'Zeng.E') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
+
 
 SAM
 
@@ -404,6 +680,10 @@ SAM
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('SAM')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from SAM
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "SAM", statname == 'Zeng.E') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
 
 TON
 
@@ -411,6 +691,10 @@ TON
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('TON')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp of region 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from TON
+```{r}
+gr <- lower_sig_stats %>% filter(pop == "TON", statname == 'Zeng.E') %>%  GenomicRanges::GRanges() %>% GenomicRanges::reduce()
+gr[GenomicRanges::width(gr) >= 20 * 10e3]
+```
 
 
 EP
@@ -434,12 +718,55 @@ POL
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes 
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
 
-
-
+Genes Unique to Polynesian populations
+```{r}
+lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+```
 
 
 #### iHS/nSL
 
+```{r}
+sig_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_clus-14-7-2017.RDS')
+sig_ihs %>% group_by(pop) %>% tally()
+```
+
+The Polynesians populations had a mean of `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'POL') %>% .[['mn']] %>% sprintf("%.0f",.)` SNPs with a \gls{ihs} value that was significant.<!-- This compared to `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'AFR') %>% .[['mn']]` for the \gls{afr}, `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'AMR') %>% .[['mn']]` from \gls{amr}, `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'EAS') %>% .[['mn']]` for \gls{eas}, `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'EUR') %>% .[['mn']]` for \gls{eur}, and `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'SAS') %>% .[['mn']]` for \gls{sas}. Found only in the \gls{cim} population were `r sig_ihs %>% anti_join(., sig_ihs %>% filter(pop != 'POL_CIM'), by = c('genename')) %>% tally()` \gls{snp}s from `r sig_ihs %>% anti_join(., sig_ihs %>% filter(pop != 'POL_CIM'), by = c('genename')) %>% select(genename) %>% distinct() %>% NROW()` distinct genes. 
+-->
+
+```{r}
+sig_ihs %>% anti_join(., sig_ihs %>% filter(superpop != 'POL'), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4)
+```
+
+
+
+There were a total of XXX regions that had significant
+```{r}
+ihs_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
+ihs_clus %>% group_by(pop) %>% tally()
+```
+
+```{r}
+nsl_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
+nsl_clus %>% group_by(pop) %>% tally()
+```
+
+- overlap in regions between ihs and nsl
+- how many significant snps
+
+ihs
+- total snps significant
+- mean per population
+
+```{r}
+
+```
+
+
+
+nsl
+- total snps significant
+- mean per population
 
 #### Summary of Intra
 
@@ -457,7 +784,15 @@ upper_sig_stats %>% filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.L
 
 #### F~ST~
 
+<!--
+table
+-->
+
 #### $\Delta$ DAF
+
+<!--
+
+-->
 
 #### XP-EHH
 
