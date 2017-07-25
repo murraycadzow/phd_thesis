@@ -397,7 +397,7 @@ POL
 
 Genes Unique to Polynesian Populations
 ```{r, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table()
+lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
 
@@ -405,7 +405,7 @@ lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM',
 #### Fay and Wu's H
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Fay.Wu.H') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+global_summary %>% ungroup%>% filter(stat == 'Fay.Wu.H') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
 ```
 
 CIM
@@ -480,13 +480,13 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r}
-lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
 #### Fu and Li's D
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Fu.Li.D') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+global_summary %>% ungroup%>% filter(stat == 'Fu.Li.D') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
 ```
 
 CIM
@@ -561,14 +561,14 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r}
-lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
 
 #### Fu and Li's F
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Fu.Li.F') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+global_summary %>% ungroup%>% filter(stat == 'Fu.Li.F') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
 ```
 
 CIM
@@ -642,13 +642,13 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r}
-lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
 #### Zeng's E
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Zeng.E') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table()
+global_summary %>% ungroup%>% filter(stat == 'Zeng.E') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(., justify = c('left', rep('right', NCOL(.)-1)))
 ```
 
 CIM
@@ -720,7 +720,7 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r}
-lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))
+lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
 
