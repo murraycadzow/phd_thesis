@@ -92,7 +92,7 @@ create_fst_dendro <- function(){
 
 create_gwas_cat_table <-function(){
   # data from rnotebooks/CoreExome/gwas_catalog.Rmd
-  load('~/data/gwas_catalog/disease_ref_table-26-6-2017.RData')
+  load('~/data/gwas_catalog/disease_ref_table-25-7-2017.RData')
   return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
 }
 
@@ -156,7 +156,7 @@ prop_unique <- function(statname){
 }
 
 
-lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-12-7-2017.RDS')
+lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
@@ -166,7 +166,7 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
 }))
 
 
-upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-12-7-2017.RDS')
+upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
 
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(
