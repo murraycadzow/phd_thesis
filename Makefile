@@ -9,7 +9,8 @@ preview : $(FILES)
 	Rscript preview_thesis.R
 	
 pdf : preview
-	cp _book/Thesis.tex .
+	#cp _book/Thesis.tex .
+	sed 's/\\bibliography/\\fontsize{10}{12}\n\\linespread\{1}\\selectfont\n\\\bibliography/' < _book/Thesis.tex > Thesis.tex
 	ln -s _bookdown_files/Thesis_files .
 	pdflatex Thesis
 	bibtex Thesis
