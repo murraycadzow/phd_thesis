@@ -9,8 +9,8 @@ output:
   includes:
    in_header: preamble.tex
 documentclass: report #book
-bibliography: ["references.bib", "/home/murraycadzow/data/gwas_catalog/diseaseGR-26-6-2017.bib"]
-biblio-style: apalike
+bibliography: ["references.bib", "/home/murraycadzow/data/gwas_catalog/diseaseGR-25-7-2017.bib"]
+biblio-style: otago
 link-citations: true
 description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 ---
