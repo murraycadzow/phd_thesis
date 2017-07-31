@@ -394,7 +394,7 @@ POL
 - `r paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% .[["SYMBOL"]], collapse = " ")`
 
 
-
+<!-- sort into numerical order for chromosome -->
 Genes Unique to Polynesian Populations
 ```{r, results = 'asis'}
 lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
@@ -479,7 +479,7 @@ POL
 
 
 Genes Unique to Polynesian populations
-```{r}
+```{r, results='asis'}
 lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
@@ -560,7 +560,7 @@ POL
 
 
 Genes Unique to Polynesian populations
-```{r}
+```{r, results = 'asis'}
 lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
@@ -641,7 +641,7 @@ POL
 - `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
 
 Genes Unique to Polynesian populations
-```{r}
+```{r, results = 'asis'}
 lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
 ```
 
@@ -779,6 +779,7 @@ lower_sig_stats %>% filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.L
 upper_sig_stats %>% filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.Li.F', 'Fu.Li.D'), pop %in% c('CIM','NZM','SAM','TON')) %>% select(pop,statname ,SYMBOL) %>% distinct() %>% group_by(pop, SYMBOL) %>% tally() %>%filter(n > 1) %>% group_by(SYMBOL) %>% tally()  %>% arrange(desc(nn))
 ```
 
+regions that differed between the 2 stats?
 
 ### Inter
 
@@ -805,6 +806,8 @@ look at selected regions/snps and expression in GTex
 
 ## Chapter Discussion
 <!--
+Important to remember that the modern day populations esp AFR won't necessarily have the same results as AFR pops did 100 kya
+
 Pipeline discussion - how were the results?
   - Are the genes that are picked up similar to what has been discovered?
 
