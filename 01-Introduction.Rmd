@@ -114,7 +114,11 @@ There are a few methods that are different derivations and applications of looki
 
 #### Integrated Haplotype Homozygosity Score
 
-\Gls{ihs} [@voight2006map] starts with \gls{ehh} which is the probability that 2 chromosomes are carrying a core haplotype are homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity  meaning all haplotypes are the same. The \gls{ehh} value versus distance is integrated to find the area under \gls{ehh} curve until \gls{ehh} decays to 0.05. This \gls{ihh} is calculated based on the ancestral or derived allele and annotated as \gls{ihh} or \gls{ihh}d. The unstandarised \gls{ihs} is calculated by ln(iHHa /iHHd ). Standardisation of \gls{ihs} is done by (ln(iHHa /iHHd ) - E p [ln(iHHa /iHHd )] ) / SD p [ln(iHHa /iHHd )], where the expectations and standard deviation of ln(iHHa /iHHd ) are estimated from the empirical distribution of SNPs whose derived allele frequency p matches the frequency at the core \gls{snp}[@voight2006map]. Large positive values indicate long haplotypes carrying the ancestral allele. \Gls{ihs} identifies variants under selection driven to intermediate frequencies.
+\Gls{ihs} [@voight2006map] starts with \gls{ehh} which is the probability that 2 chromosomes are carrying a core haplotype are homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity  meaning all haplotypes are the same. The \gls{ehh} value versus distance is integrated to find the area under \gls{ehh} curve until \gls{ehh} decays to 0.05. This \gls{ihh} is calculated based on the ancestral or derived allele and annotated as \gls{ihh} or \gls{ihh}d. The unstandarised \gls{ihs} is calculated by ln(iHHa \ iHHd). Standardisation of \gls{ihs} is done by (ln(iHHa /iHHd ) - E p [ln(iHHa /iHHd )] ) / SD p [ln(iHHa /iHHd )], where the expectations and standard deviation of ln(iHHa /iHHd ) are estimated from the empirical distribution of SNPs whose derived allele frequency p matches the frequency at the core \gls{snp}[@voight2006map]. Large positive values indicate long haplotypes carrying the ancestral allele. \Gls{ihs} identifies variants under selection driven to intermediate frequencies.
+
+\begin{equation*} 
+\ln{\frac{iHHa}{iHHd}}
+\end{equation*}
 
 #### Cross Population Extended Haplotype Homozygosity
 
@@ -255,3 +259,18 @@ Variability in serum urate explained by the main urate loci _SLC2A9_ and _ABCG2_
 The benefits of urate are in line with the categories found to be enriched by selection in genome wide scans. Urate has an anti-oxidant in blood, acting to protect not just erythrocytes but also T and B lymphocites and macrophages [@Ames1981]. Urate has also been hypothesised to have had a survival advantage during the Miocene period, when a series of mutations in urate oxidase is thought to have occurred, leading to elevated urate. Hyperuricaemia enables blood pressure to be maintained under low salt dietary conditions [@Watanabe2002]. Later in life elevated serum urate is associated with increased cognitive function [@Euser2009]. Uric acid also activates the NLRP3 inflammasome which plays an important role in systemic infection and sepsis [@Opitz2009]. The role of urate in these situations show that while hyperuricaemia is now considered as contributing to disease, in the past it may have influenced longevity and survival, therefore increasing reproductive success and been a phenotype having undergone selection. 
 
 Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia against a unique genetic background of the Polynesians provides an excellent opportunity to study the role that selection might have played and the effect on these metabolic conditions.
+
+
+## Extras
+
+A nice little summary of some of the stats http://citeseerx.ist.psu.edu/viewdoc/download?rep=rep1&type=pdf&doi=10.1.1.210.4017
+
+### Zeng's E
+
+In contrast to Fay and Wu's H and Tajima's D, which compares either high or low frequency variants with intermediate frequency variants, Zeng's E compares the low and high frequency variants [@Zeng2006]. After a selective sweep, the lower frequency variants are expected to 'bounce back' faster than the higher frequency variants. The E test is not sensitive to population subdivision. A negative vaue for E is indicative of a selective sweep, but a rapid population expansion 
+
+
+### Fu and Li's D and F
+
+Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species [@Fu1993].
+
