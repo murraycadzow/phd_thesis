@@ -19,6 +19,7 @@ pdf : preview
 	pdflatex Thesis
 	rm Thesis_files
 	mv Thesis.pdf _book/
+	xdg-open _book/Thesis.pdf
 
 .PHONY : clean
 clean : 
