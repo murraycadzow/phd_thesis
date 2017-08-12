@@ -1,1 +1,18 @@
 # Conclusions and Discussions
+
+
+summary of regions that were selected
+
+was gout/urate and other diseases under selection?
+
+
+
+
+- chip data
+- imputation
+- phasing
+- filters
+    - QC filters
+    - HWE
+    - MAF
+    
