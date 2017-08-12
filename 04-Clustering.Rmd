@@ -202,7 +202,7 @@ refer to figure
 #### Tajima's _D_ 
 
 
-```{r tdTop1000, fig.cap='(ref:tdTop1000)',echo = FALSE, fig.height = 7}
+```{r tdTop1000, fig.cap='(ref:tdTop1000)',echo = FALSE, fig.height = 7, cache=TRUE}
 four_plot("td","Tajima's D")
 ```
 
@@ -263,7 +263,7 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 
 (ref:fwhTop1000) _\gls{fwh} Clustering._ Hierarchical clustering of \gls{fwh} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fwh} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', fig.height=7}
+```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', fig.height=7, cache=TRUE}
 four_plot("fwh","Fay and Wu's H")
 ```
 
@@ -298,7 +298,7 @@ In the upper tail of the \gls{fwh} distribution, the clustering assigned all of 
 
 (ref:fldTop1000) _\gls{fld} Clustering._ Hierarchical clustering of \gls{fld} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fld} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully. Colour represents a window being present.
 
-```{r fldTop1000, fig.cap = '(ref:fldTop1000)', fig.height=7}
+```{r fldTop1000, fig.cap = '(ref:fldTop1000)', fig.height=7, cache=TRUE}
 four_plot("fld","Fu and Li's D")
 ```
 
@@ -336,7 +336,7 @@ The clustering of the upper tail (Figure \@ref(fig:fldTop1000) B and D) grouped 
 
 (ref:flfTop1000) _\gls{flf} Clustering._ Hierarchical clustering of \gls{flf} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{flf} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r flfTop1000, fig.cap = '(ref:flfTop1000)', fig.height=7}
+```{r flfTop1000, fig.cap = '(ref:flfTop1000)', fig.height=7, cache=TRUE}
 four_plot("flf","Fu and Li's F")
 ```
 
@@ -371,7 +371,7 @@ Clustering on the windows from the upper tail put the super populations into the
 
 (ref:zeTop1000) _\gls{ze} Clustering._ Hierarchical clustering of \gls{ze} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{ze} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
-```{r zeTop1000, fig.cap = '(ref:zeTop1000)', fig.height=7}
+```{r zeTop1000, fig.cap = '(ref:zeTop1000)', fig.height=7, cache=TRUE}
 four_plot("ze","Zeng's E")
 ```
 
@@ -877,21 +877,27 @@ fld: lower split amr, upper only clustered afr, eas, and sas entirely
 flf: lower split amr, nzm/mxl/pel. upper split amr clustered others
 ze: both split amr, clustered others
 -->
+It is difficult to apply a biological interpretation onto what the clustering of the most extreme windows represents other than a similarity in allele frequencies between populations that have a pattern that is consistent with the out of Africa model [@ref].
+The ends of the distributions represent different types of selections or demographic events and are different depending on the selection test statistic being used. The upper end of the distribution is largely able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics. The lower extreme however was a mix of negative and positive values, with the positive values mostly from the \gls{afr} populations. This mix means that the windows from one population do not nesscessarily represent the same selective or demographic even component and thus are not able to be compared.
 
 
-One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
+The simplest reason that explains the similar clustering that occurred with the gene lists is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other. This would explain why with \gls{td}, \gls{fwh}, and \gls{ze}, which are based on comparing ratios of low, intermediate and high frequency variants, that they all grouped the individual populations into their super population groups. This differed to the statistics based on singletons (\gls{fld} and \gls{flf}) which were 
+
+Haplotypic
 
 clustering on actual values because the stats are based on the underlying frequency distribution are likely to reflect this distribution and not the actual state of selection - therefore I would assume that given any list of genes sufficiently long (say >10), that the population clusters would appear. If the selection event occurred post out of Africa, then there would be some expectation that the clustering would. 
 
 using median centering was required as each population had their own distribution.
 
-The ends of the distributions represent different types of selections or demographic events and are different depending on the selection test statistic being used.
 
-Under a neutral model the differences in allele frequency are due to genetic drift [@ref]. Demographic events such as bottleneck, migration, expansion, and admixture also contribute to the differences in allele frequencies found between populations [@ref]. Selection on the other hand acts in a targeted manner so therefore if the selection occurred post population split then in should look neutral in one population but not in the other, however if the selective event happened in an ancestral population of the two then dependent on time, it should show up in both populations [@ref].
+
+Under a neutral model the differences in allele frequency are due to genetic drift [@ref; @kimura1979neutral]. Demographic events such as bottleneck, migration, expansion, and admixture also contribute to the differences in allele frequencies found between populations [@ref; @Wright1951]. Selection on the other hand acts in a targeted manner so therefore if the selection occurred post population split then in should look neutral in one population but not in the other, however if the selective event happened in an ancestral population of the two then dependent on time, it should show up in both populations [@ref].
 
 _Admixture_
 
 The cutree method used to assess the proportions and exclusivity of the clustering was relatively crude and did not always match the clusters that were visible in the dendrogram. The use of k = 6 was due to there being 6 super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering. Many of the selection tests split \gls{amr} into 2 groups, CLM/PUR and MXL/PEL. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @Auton2015 ]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for both Fu and Li's _D_ and _F_ they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand Caucasian [@Hollis-Moffatt2012; @Gravel2013]. 
+
+
 
 _Limitiations_
 
@@ -916,15 +922,6 @@ The choice of out-group for \gls{fwh} can also have an effect as it is used to r
 
 
 
-
-
-
-
-
-
-
-
-
 Clustering on the extreme values returned groupings that were consistent with the super population groups.
 
 The clustering of the disease related genes gave the groupings that, with the exception of \gls{fld} were consistent with the super populations.
@@ -939,7 +936,7 @@ Diseases with a late on-set were chosen as these should have little to no select
 
 
 
-this is exploratory, not predictive or creating a model
+this is exploratory, not predictive or creating a model, but is evidence that the Polynesian populations are similar most to each other
 <!-- what ends of the distribution represent the different types (positive, balancing, negative selection) -->
 
 
