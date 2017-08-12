@@ -395,3 +395,72 @@ Zeng E Table
 ```{r, results='asis', echo = FALSE}
 create_sel_stat_table("Zeng.E", "Mean Zeng E")
 ```
+
+
+```{r, results ='asis'}
+# prop_list[['td_neg']]$exclusivity %>% data.frame%>% mutate(pop = rownames(.)) %>% gather("cluster", "prop", 1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean(prop))
+# 
+# prop_list[['td_neg']]$super_prop %>% data.frame() %>% spread(super, max_prop) 
+
+#prop
+stat_to_short <- function(x){
+  switch(x,
+         Tajima.D = "td",
+         Fay.Wu.H = "fwh",
+         Fu.Li.D = "fld",
+         Fu.Li.F = "flf",
+         Zeng.E = "ze",
+         x
+         )
+}
+
+short_to_latex <- function(x){switch(x, 
+       td = "\\gls{td}",
+       fwh = "\\gls{fwh}",
+       fld = "\\gls{fld}",
+       flf = "\\gls{flf}",
+       ze = "\\gls{ze}",
+       x
+       )
+}
+
+
+bind_rows(list(
+  bind_rows(lapply(names(prop_list), function(x){prop_list[[x]]$super_prop %>%  spread(super, max_prop) %>% mutate(stat = sapply(x, function(y){strsplit(y, '_')[[1]][1]}), Type = sapply(x, function(y){strsplit(y, '_')[[1]][2]}) ) %>% select(NCOL(.), 1:(NCOL(.)-1)) })), #%>% mutate_if(., is.numeric, funs(sprintf("%.3f",.))),
+  
+  bind_rows(lapply(names(gout[[2]]), function(x){gout[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Urate/Gout'),
+  
+  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = '\\gls{t2d}'),
+  
+  bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Obesity'),
+  
+  bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$super_prop %>% spread(super, max_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Metabolic Syndrome')
+  
+)) %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf('%.2f',.)))%>%  select(stat, Type, everything()) %>% data.frame %>% arrange(stat) %>%  data.frame %>% pander::pandoc.table(., caption = "Proportion")#knitr::kable(., caption = "Proportion", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) %>% kableExtra::kable_styling(latex_options = "scale_down")
+
+```
+
+
+
+
+```{r exclusivity, results = 'asis'}
+#exclusivity
+bind_rows(list(
+  bind_rows(lapply(names(prop_list), function(x){prop_list[[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = sapply(x, function(y){strsplit(y, '_')[[1]][1]}), Type = sapply(x, function(y){strsplit(y, '_')[[1]][2]}) ) %>% select(NCOL(.), 1:(NCOL(.)-1)) })),
+  
+  bind_rows(lapply(names(gout[[2]]), function(x){gout[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Urate/Gout'),
+  
+  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = '\\gls{t2d}'),
+  
+  bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Obesity'),
+  
+  bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Metabolic Syndrome')    
+  
+  
+)) %>% select(stat, Type, everything())  %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf("%.3f",.))) %>% arrange(Type) %>%  data.frame %>% pander::pandoc.table(., caption = "Exclusivity")#knitr::kable(., caption = "Exclusivity", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) 
+
+
+
+
+
+```
