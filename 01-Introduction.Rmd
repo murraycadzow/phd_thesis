@@ -274,3 +274,22 @@ In contrast to Fay and Wu's H and Tajima's D, which compares either high or low 
 
 Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species [@Fu1993].
 
+
+
+<!--
+A negative D is means there is an excess of external branches, whereas a positive means there is a deficency
+
+without an outgroup you can't lcoate the root of the tree
+
+Based on a 'geneology' of genes. older part will have internal branches, younger part will be mostly external branches
+
+Negative/purifying selection:
+-excess in mutations in external branches because deleterious alleles are present in low freq
+
+excess of mutations in external branches if advantageous allele recently fixed then the majority of mutations are expected to be young
+
+F can be thought of as the normalised difference between the average number of segregating sites ($\pi$) between 2 sequences and the number of singletons 
+-->
+
+
+<!-- TD and FLD + haplotype homozygosity have lower power to detect thanfwh in admixted populations - Lohmueller2011 \cite{Lohmueller2011b} -->
