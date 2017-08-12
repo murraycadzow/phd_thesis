@@ -45,7 +45,7 @@ The history starts with migration out of Africa (50-100 kya) [@Nielsen2017], tra
 need something about what consitutes east and west polynesia and why that matters
 -->
 
-For largely economic reasons, during the 1950's and 60's there was a rural to urban migration of people in the Pacific. As part of this, many settled in New Zealand from Samoan, Tongan and the Cook Islands in search of work and now the populations in New Zealand largely outnumber the populations of their islands origin [@MatisooSmith2012highway]. Within \gls{nz}, the Polynesian populations are mostly focused within the Auckland region [@Barcham2009].
+For largely economic reasons, during the 1950's and 60's there was a rural to urban migration of people in the Pacific. As part of this, many settled in New Zealand from Samoa, Tonga, and the Cook Islands in search of work and now the populations in New Zealand largely outnumber the populations of their islands origin [@MatisooSmith2012highway]. Within \gls{nz}, the Polynesian populations are mostly focused within the Auckland region [@Barcham2009].
 
 <!--ref for pacific in NZ in 1960's [@MatisooSmith2012highway] 
 The modern population of \gls{nz} Maori 
@@ -67,16 +67,16 @@ Here we investigate genetic selection of serum urate in Polynesian populations a
 
 ### Frequency Spectrum
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014]. Excepting F~ST~, these statistics were calculated using a window size of 100 kb and a slide of 10 kb for each entire chromosome. A filter to remove windows containing fewer than 4 segregating sites was applied. Windows were then updated to have the central 10 kb used as coordinates for the boundary to the window. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1% of values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and the linkage criteria was complete linkage for both sets of clustering. Accuracy of the clustering was assessed by descending the dendrogram until there 6 groups could be made and then calculating the maximum proportion of the individual populations of the same super population assigned to the same cluster. Exclusivity of each cluster was calculated using the proportion of populations from a given super population compared to the total number of individual populations assigned that cluster. F~ST~ was calculated pairwise for all populations for each chromosome.
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014] for each entire chomomsome. Excepting F~ST~, these statistics were also calculated using a window size of 100 kb and a slide of 10 kb for each entire chromosome. A filter to remove windows containing fewer than 4 segregating sites was applied. Windows were then updated to have the central 10 kb used as coordinates for the boundary to the window. For each selection test statistic, windows were ordered by test statistic value and the most extreme 1% of values were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the whole chromosome values used the statistic value itself to create the distance matrix. The distance measure used was euclidean distance and the linkage criteria was complete linkage for both sets of clustering. Accuracy of the clustering was assessed by descending the dendrogram until there 6 groups could be made and then calculating the maximum proportion of the individual populations of the same super population assigned to the same cluster. Exclusivity of each cluster was calculated using the proportion of populations from a given super population compared to the total number of individual populations assigned that cluster. F~ST~ was calculated pairwise for all populations for each chromosome.
 
 ### Haplotypic
 
-\glsdesc{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@Szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} that were determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R where nearby \gls{snp}s were assigned the same group id. The search radius used was 200 kb and the minimum number of points for a cluster was 1.  Cluster regions were created by taking the minimum and maximum position for each group id, population and chromosome. The distance matrix was the result of calculating P(A $\cap$ B)/ P(A) and P(A $\cap$ B) / P(B), where P(A $\cap$ B) is the sum of the intersection of clustered regions between population A and population B, and P(A) and P(B) is the sum of the clustered regions for population A and population B respectively. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
+\glsdesc{ihs} and \gls{nsl} were calculated and normalised using selscan v1.1.0b [@Szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as described in Section \@ref(selectionTools). Markers with an \gls{ihs} or \gls{nsl} value that was determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R where nearby \gls{snp}s were assigned the same group id. The search radius used was 200 kb and the minimum number of points for a cluster was one.  Cluster regions were created by taking both the minimum and maximum position for each group id, population and chromosome. The distance matrix was the result of calculating P(A $\cap$ B)/ P(A) and P(A $\cap$ B) / P(B), where P(A $\cap$ B) was the sum of the intersection of clustered regions between population A and population B, and P(A) and P(B) was the sum of the clustered regions for population A and population B respectively. Hierarchical clustering was then performed using euclidean distance as the distance measure, and complete linkage for the linkage criteria.
 
 
 ### Disease Associated Genes
 
-Disease associated markers and their annotated genes were downloaded from the \gls{gwas} catalog^[https://www.ebi.ac.uk/gwas/, accessed 19 June 2017][@MacArthur2017]  and filtered for P < 5x10^-8^. See Table \@ref(tab:gwascataccess)  for a complete list of SNPs and references. Gene lists were then created for each of the following diseases or traits; urate and gout, \gls{t2d}, obesity, and metabolic syndrome by filtering the study disease trait on keywords. Table \@ref(tab:gwascatref) shows source disease trait and reference used to create categories of gene lists for gout/urate, obesity, \gls{t2d}, and metabolic syndrome. Selection test statistics values for each population were centred using the population median. The gene lists from these categories were used in Section \@ref(genelistcluster) for clustering using the selection test statistic values for windows that intersected these gene regions.
+Disease associated markers and their annotated genes were downloaded from the \gls{gwas} catalog^[https://www.ebi.ac.uk/gwas/, accessed 19 June 2017] [@MacArthur2017]  and filtered for assocation (P < 5x10^-8^). See Table \@ref(tab:gwascataccess)  for a complete list of SNPs and references. Gene lists were then created for each of the following diseases or traits; urate and gout, \gls{t2d}, obesity, and metabolic syndrome by filtering the study disease trait on keywords. Table \@ref(tab:gwascatref) shows source disease trait and reference used to create categories of gene lists for gout/urate, obesity, \gls{t2d}, and metabolic syndrome. Selection test statistics values for each population were centred using the population median. The gene lists from these categories were used in Section \@ref(genelistcluster) for hierarchical clustering using the selection test statistic values for windows that intersected these gene regions. Complete linkage and euclidean distance was used for the clustering.
 
 (ref:gwascataccess) https://www.ebi.ac.uk/gwas/, accessed 19 June 2017
 
@@ -88,17 +88,23 @@ TODO: add column for category
 -->
 
 ```{r, results = 'asis'}
-m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, Reference)
+m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, Reference) %>% filter(Category != "Kidney Disease")
 #colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
 #pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", keep.line.breaks = TRUE)
 
-kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", longtable = TRUE, booktabs = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE) %>% group_rows("Gout and Urate",1,18) %>% group_rows("Kidney Disease",19,26) %>% group_rows("Metabolic Syndrome", 27,30) %>% group_rows("Obesity", 31, 63) %>% group_rows("T2D", 64, 102)
+kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", longtable = TRUE, booktabs = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE) %>% group_rows("Gout and Urate",1,18)  %>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94)
+
+#%>% group_rows("Kidney Disease",19,26) %>% group_rows("Metabolic Syndrome", 27,30) %>% group_rows("Obesity", 31, 63) %>% group_rows("T2D", 64, 102)
 ```
 
 
 ## Results
 
 ### Frequency Spectrum
+
+
+
+
 
 #### Whole Chromosome Clustering
 
@@ -516,13 +522,13 @@ The proportion of significant \gls{ihs} regions the Polynesian populations share
 
 The Polynesian populations were clustered together with a high proportion of shared significant regions. The Eastern Polynesians had on average `r mat_ihs %>% data.frame %>% mutate(pop1 = row.names(.))%>% gather("pop2","ihs", 1:(NCOL(.)-1)) %>%  filter(pop1!=pop2, (pop1 %in% c("POL_CIM","POL_NZM") & pop2 %in% c("POL_CIM","POL_NZM"))) %>% summarise(mean(ihs)*100) %>% sprintf('%.1f',.)`% in common, and the Western Polynesians had `r mat_ihs %>% data.frame %>% mutate(pop1 = row.names(.))%>% gather("pop2","ihs", 1:(NCOL(.)-1)) %>%  filter(pop1!=pop2, (pop1 %in% c("POL_TON","POL_SAM") & pop2 %in% c("POL_TON","POL_SAM"))) %>% summarise(mean(ihs)*100) %>% sprintf('%.1f',.)`%. However, shared regions between the Eastern and Western populations was on average `r mat_ihs %>% data.frame %>% mutate(pop1 = row.names(.))%>% gather("pop2","ihs", 1:(NCOL(.)-1)) %>% filter((pop1 %in% c("POL_CIM","POL_NZM") & pop2 %in% c("POL_TON","POL_SAM")) | (pop2 %in% c("POL_CIM","POL_NZM") & pop1 %in% c("POL_TON","POL_SAM")))  %>% summarise(mean(ihs)*100) %>% sprintf('%.1f',.)`%. 
 
-```{r ihsclust, fig.cap='(ref:ihsclust)', echo = FALSE}
+```{r ihsclust, fig.cap='(ref:ihsclust)', echo = FALSE, fig.height=7}
 ihs_dendro_plot()
 ```
 
 (ref:ihsclust) _\gls{ihs} Clustering_ A. Dendrogram from hierarchical clustering based on proportion of significant \gls{ihs} regions shared between populations Coloured by super population. B. Heatmap showing the proportion of significant \gls{ihs} regions shared.
 
-```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE}
+```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE, fig.height=7}
 nsl_dendro_plot()
 ```
 
@@ -791,65 +797,8 @@ number of significant
 results from other diseases that are late onset and see if they produce the same patterns
 -->
 
-\clearpage
-
-## Discussion and Conclusions
-
-Overall, it was found that the the selection test statistics were not effective at clustering the individual populations into their super populations groups and did not resemble the grouping that clustering on F~ST~ produced. Using windows from the extremes of the distribution was effective at clustering the individual populations into their super population groups. This clustering of populations was consistent with the results in @Auton2015 (Supplementary table 5).
-
-Under a neutral model the differences in allele frequency are due to genetic drift [@ref]. Demographic events such as bottleneck, migration, expansion, and admixture also contribute to the differences in allele frequencies found between populations [@ref]. Selection on the other hand acts in a targeted manner so therefore if the selection occurred post population split then in should look neutral in one population but not in the other, however if the selective event happened in an ancestral population of the two then dependent on time, it should show up in both populations [@ref].
-
-The cutree method used to assess the proportions and exclusivity of the clustering was relatively crude and did not always match the clusters that were visible in the dendrogram. The use of k = 6 was due to there being 6 super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering. Many of the selection tests split \gls{amr} into 2 groups, CLM/PUR and MXL/PEL. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @Auton2015 ]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for both Fu and Li's _D_ and _F_ they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand Caucasian [@Hollis-Moffatt2012; @Gravel2013]. 
 
 
-\gls{flf} and \gls{fld} had a very sparse lower tail, this would influence how well the clustering did. At the extremes of similarity, the clusters are determined by only a few differences which means a large amount of information is not being used for the descision. As the lower tail represents and excess of singletons this is likely to have been impacted on by using chip data as there was a very strong bias against them during the quality control protocol [@Guo2014]. In this situation because the data has a reduced singletons, the distribution for \gls{fld} and \gls{flf} is shifted to the right, with the upper tail representing a deficit of singletons [@Fu1993]. This shift now means there is an under representation of regions in the lower tail and the clustering was no better than drawing regions at random.
-
-- using the chromosome wide results did not always return the super clusters.
-- often see admixed amr pops grouped with nzm/cim
-- clustering using the gout/urate/bmi/t2d/metsyn genes...
-- are the genes found more than you would expect by chance?
-- cutree method is rather crude
-- what are the strengths/weaknesses of each stat
-- Fu and Li's D doesn't cluster well
-- when clustering on actual values how much does it matter a population has shifted overall distribution? - centre on the median to help fix this
-
-Th choice of out-group for \gls{fwh} can also have an effect as it is used to root the tree <!-- is it or is it used to work out what the frequency is? -->. In this case the out-group was a single sample created that was homozygote for the ancestral allele
-
-
-clustering on actual values because the stats are based on the underlying frequency distribution are likely to reflect this distribution and not the actual state of selection - therefore I would assume that given any list of genes sufficiently long (say >10), that the population clusters would appear. If the selection event occurred post OoA then there would be some expectation that the clustering would. using median centering was required as each population had their own distribution.
-
-not correct: all selection stats had afr, eur, eas, sas, pol clustered as single clusters each but split the amr into clm/pur and pel/mxl, except \gls{fwh} which for the negative tail clustered all populations into their super populations perfectly.
-
-correct:
-td: both split amr, clustered others
-fwh: upper split amr, lowre did not, all pops clustered
-fld: lower split amr, upper only clustered afr, eas, and sas entirely
-flf: lower split amr, nzm/mxl/pel. upper split amr clustered others
-ze: both split amr, clustered others
-
-The \gls{amr} super population was the only super population that was consistently not grouped together in its entirety. 
-
-
-
-One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
-
-Clustering on the extreme values returned groupings that were consistent with the super population groups.
-
-The clustering of the disease related genes gave the groupings that, with the exception of \gls{fld} were consistent with the super populations.
-
-Using the extremes of the distributions and the gene lists for gout and co-morbidities had clustering that was consistent with the super population groups and largely matched. Clustering on chromosome wide F~ST~ did give the super population groupings and also split the \gls{amr} populations. This was not the case for \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} using entire chromosomes, which did not produce groups that were consistent with the super population groups. \Gls{fwh} and \gls{ze} chromosome wide did the best at grouping the populations.
-
-
-
-
-
-
-
-
-this is exploratory, not predictive or creating a model
-<!-- what ends of the distribution represent the different types (positive, balancing, negative selection) -->
-
-The ends of the distributions represent different types of selections or demographic events and are different depending on the selection test statistic being used.
 
 ```{r, results ='asis'}
 # prop_list[['td_neg']]$exclusivity %>% data.frame%>% mutate(pop = rownames(.)) %>% gather("cluster", "prop", 1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean(prop))
@@ -878,20 +827,18 @@ short_to_latex <- function(x){switch(x,
        )
 }
 
-
 bind_rows(list(
   bind_rows(lapply(names(prop_list), function(x){prop_list[[x]]$super_prop %>%  spread(super, max_prop) %>% mutate(stat = sapply(x, function(y){strsplit(y, '_')[[1]][1]}), Type = sapply(x, function(y){strsplit(y, '_')[[1]][2]}) ) %>% select(NCOL(.), 1:(NCOL(.)-1)) })), #%>% mutate_if(., is.numeric, funs(sprintf("%.3f",.))),
   
   bind_rows(lapply(names(gout[[2]]), function(x){gout[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Urate/Gout'),
-
-bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = '\\gls{t2d}'),
-
-bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Obesity'),
-
-bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$super_prop %>% spread(super, max_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Metabolic Syndrome')
   
-)) %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf('%.2f',.)))%>%  select(stat, Type, everything()) %>% data.frame %>% arrange(stat) %>%  data.frame %>% pander::pandoc.table(., caption = "Proportion")#knitr::kable(., caption = "Proportion", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) %>% kableExtra::kable_styling(latex_options = "scale_down")
-
+  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = '\\gls{t2d}'),
+  
+  bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Obesity'),
+  
+  bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$super_prop %>% spread(super, max_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Metabolic Syndrome') 
+  
+)) %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf('%.2f',.))) %>%  select( Type, stat, everything()) %>% arrange(stat) %>%  data.frame %>% pander::pandoc.table(., caption = "Proportion")#knitr::kable(., caption = "Proportion", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) %>% kableExtra::kable_styling(latex_options = "scale_down")
 ```
 
 
@@ -909,15 +856,95 @@ bind_rows(list(
   bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Obesity'),
   
   bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Metabolic Syndrome')    
-  
-  
 )) %>% select(stat, Type, everything())  %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf("%.3f",.))) %>% arrange(Type) %>%  data.frame %>% pander::pandoc.table(., caption = "Exclusivity")#knitr::kable(., caption = "Exclusivity", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) 
-
-
-
-
-
 ```
+
+
+
+\clearpage
+
+## Discussion and Conclusions
+
+_Summary of Results_
+
+Overall, it was found that the the selection test statistics were not effective at clustering the individual populations into their super populations groups and did not resemble the grouping that clustering on F~ST~ produced. Using windows from the extremes of the distribution was effective at clustering the individual populations into their super population groups. \gls{fwh} was the only statistic that grouped all individual populations into their corresponding super populations, whereas \gls{td} and \gls{ze} had the same split of the \gls{amr} populations as with the F~ST~ clustering. The haplotypic based methods of \gls{ihs} and \gls{nsl} clustered into super populations and had the \gls{amr} population split too. There was not a high amount of region sharing outside of each super population. Clustering from gene lists consistently grouped the individual populations into their super populations although there was inconsistency for the \gls{amr} populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with the results in @Auton2015 (Supplementary table 5). 
+
+<!--windows
+correct:
+td: both split amr, clustered others
+fwh: upper split amr, lowre did not, all pops clustered
+fld: lower split amr, upper only clustered afr, eas, and sas entirely
+flf: lower split amr, nzm/mxl/pel. upper split amr clustered others
+ze: both split amr, clustered others
+-->
+
+
+One of the possible reasons why the genes give a similar cluster is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other.
+
+clustering on actual values because the stats are based on the underlying frequency distribution are likely to reflect this distribution and not the actual state of selection - therefore I would assume that given any list of genes sufficiently long (say >10), that the population clusters would appear. If the selection event occurred post out of Africa, then there would be some expectation that the clustering would. 
+
+using median centering was required as each population had their own distribution.
+
+The ends of the distributions represent different types of selections or demographic events and are different depending on the selection test statistic being used.
+
+Under a neutral model the differences in allele frequency are due to genetic drift [@ref]. Demographic events such as bottleneck, migration, expansion, and admixture also contribute to the differences in allele frequencies found between populations [@ref]. Selection on the other hand acts in a targeted manner so therefore if the selection occurred post population split then in should look neutral in one population but not in the other, however if the selective event happened in an ancestral population of the two then dependent on time, it should show up in both populations [@ref].
+
+_Admixture_
+
+The cutree method used to assess the proportions and exclusivity of the clustering was relatively crude and did not always match the clusters that were visible in the dendrogram. The use of k = 6 was due to there being 6 super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering. Many of the selection tests split \gls{amr} into 2 groups, CLM/PUR and MXL/PEL. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @Auton2015 ]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for both Fu and Li's _D_ and _F_ they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand Caucasian [@Hollis-Moffatt2012; @Gravel2013]. 
+
+_Limitiations_
+
+- use of chip
+- non-imputed
+
+\gls{flf} and \gls{fld} had a very sparse lower tail, this would influence how well the clustering did. At the extremes of similarity, the clusters are determined by only a few differences which means a large amount of information is not being used for the descision. As the lower tail represents and excess of singletons this is likely to have been impacted on by using chip data as there was a very strong bias against them during the quality control protocol [@Guo2014]. In this situation because the data has a reduced singletons, the distribution for \gls{fld} and \gls{flf} is shifted to the right, with the upper tail representing a deficit of singletons [@Fu1993]. This shift now means there is an under representation of regions in the lower tail and the clustering was no better than drawing regions at random.
+
+The choice of out-group for \gls{fwh} can also have an effect as it is used to root the tree <!-- is it or is it used to work out what the frequency is? -->. In this case the out-group was a single sample created that was homozygote for the ancestral allele
+
+
+
+- **what does this answer??**
+- using the chromosome wide results did not always return the super clusters.
+- often see admixed amr pops grouped with nzm/cim
+- clustering using the gout/urate/bmi/t2d/metsyn genes...
+- are the genes found more than you would expect by chance?
+- cutree method is rather crude
+- what are the strengths/weaknesses of each stat
+- Fu and Li's D doesn't cluster well
+- when clustering on actual values how much does it matter a population has shifted overall distribution? - centre on the median to help fix this
+
+
+
+
+
+
+
+
+
+
+
+
+Clustering on the extreme values returned groupings that were consistent with the super population groups.
+
+The clustering of the disease related genes gave the groupings that, with the exception of \gls{fld} were consistent with the super populations.
+
+Using the extremes of the distributions and the gene lists for gout and co-morbidities had clustering that was consistent with the super population groups and largely matched. Clustering on chromosome wide F~ST~ did give the super population groupings and also split the \gls{amr} populations. This was not the case for \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} using entire chromosomes, which did not produce groups that were consistent with the super population groups. \Gls{fwh} and \gls{ze} chromosome wide did the best at grouping the populations. 
+
+Diseases with a late on-set were chosen as these should have little to no selection acting on them due to affecting the individuals post reproduction age. Clustering using the genes associated with these diseases had very similar groupings to the genes associated with gout and 
+
+
+
+
+
+
+
+this is exploratory, not predictive or creating a model
+<!-- what ends of the distribution represent the different types (positive, balancing, negative selection) -->
+
+
+
+
 
 ```{r, results = 'asis', eval = FALSE}
 bind_rows(list(
