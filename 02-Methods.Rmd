@@ -46,7 +46,7 @@ Phasing was performed using shapeit v2 using the \gls{1kgp} haplotype panel for 
 
 ### Selection Statistics
 
-#### PopGenome
+#### PopGenome {#popgenomeMethods}
 
 Ancestral allele - The ancestral allele was used as annotated from the 1000 Genomes Phase 3 VCF file where possible. A new sample identified as 'Ancestor' was included into the VCF and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependant on the ancestral allele matching, otherwise the Ancestor genotype was set to missing.
 
@@ -61,7 +61,7 @@ Ancestral allele was assigned using the ancestral allele fasta (see table ??)
 
 Each population was filtered for a \gls{maf} of 0.01 and a \gls{hwe} exact test of 10^-6^
 
-\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation was done using norm as part of selscan v1.1.0b [@Spezich2014] using a significance level of 99%
+\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation was done using norm as part of selscan v1.1.0b [@Szpiech2014] using a significance level of 99%
 
 Table: (\#tab:seltoolStats) 
 
@@ -484,7 +484,7 @@ This used table \@ref(tab:refDatasets) for the stuff
 \newpage
 
 
-## Selection dataset
+## Selection dataset {#selectionDataset}
 
 ### PCA sample selection
 
