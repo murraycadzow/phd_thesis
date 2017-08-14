@@ -1,4 +1,4 @@
-FILES = index.Rmd 01-Introduction.Rmd 02-Methods.Rmd 03-SelectionPipeline.Rmd 04-Clustering.Rmd 05-Selection_and_association.Rmd 06-Conclusion_discussions.Rmd references.bib
+FILES = index.Rmd 01-Introduction.Rmd 02-Methods.Rmd 03-SelectionPipeline.Rmd 04-Clustering.Rmd 05-Selection_and_association.Rmd 06-Conclusion_discussions.Rmd A1-Unimputed_coreExome_anlaysis.Rmd A5-Supplementary_Tables.Rmd references.bib
 
 preview_pdf: pdf
 
@@ -9,7 +9,7 @@ preview : $(FILES)
 	Rscript preview_thesis.R
 	
 pdf : preview
-	#cp _book/Thesis.tex .
+	mv _book/Thesis.pdf _book/Thesis_bookdown.pdf
 	sed 's/\\bibliography/\\fontsize{10}{12}\n\\linespread\{1}\\selectfont\n\\\bibliography/' < _book/Thesis.tex > Thesis.tex
 	ln -s _bookdown_files/Thesis_files .
 	pdflatex Thesis
@@ -18,7 +18,7 @@ pdf : preview
 	pdflatex -bib Thesis
 	pdflatex Thesis
 	rm Thesis_files
-	mv Thesis.pdf _book/
+	mv Thesis.pdf _book/Thesis.pdf
 	xdg-open _book/Thesis.pdf
 
 .PHONY : clean
