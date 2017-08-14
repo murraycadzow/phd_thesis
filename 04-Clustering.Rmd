@@ -162,9 +162,9 @@ some stats about the largest and smallest fsts and focus on the Polynesians
 
 Hierarchical clustering for each selection test statistic using the most extreme 1% windows by value for the frequency spectrum based methods and proportion of region overlap for the haplotypic methods grouped individual populations into each of their super population groups was only done by \gls{fwh}. If an allowance is made for the two \gls{amr} populations to be grouped with the \gls{eur} populations, as in the chromosomal F~ST~ clustering, then both haplotypic methods and six tails of the frequency spectrum based methods clustered super populations into their respective super populations.  
 <!-- check the mean same as the mean of means -->
-There were differing numbers of windows used for each population (Table \@ref(tab:windowTable)). The mean number of windows per population was `r create_windowTable() %>% summarise(round(mean(mean), digits = 1))` (sd `r create_windowTable() %>% summarise(round(sd(mean), digits = 1))`) with a minimum of `r create_windowTable() %>% summarise(min(min))` and a maximum of `r create_windowTable() %>% summarise(max(max))` 
+There were differing numbers of windows used for each population, ranging from a a minimum of `r create_windowTable() %>% summarise(min(min))` to a maximum of `r create_windowTable() %>% summarise(max(max))`. The mean number of windows per population was `r create_windowTable() %>% summarise(round(mean(mean), digits = 1))` (SD = `r create_windowTable() %>% summarise(round(sd(mean), digits = 1))`). Table \@ref(tab:proportion)
 
-(Table Table \@ref(tab:totalwindowTable). 
+
 
 
 <!--
@@ -173,7 +173,7 @@ TODO: make Tail column nice
 ```{r, results = 'asis', echo = FALSE}
 tab <- create_windowTable() %>% mutate(statname = sapply(d, function(x){paste0("\\gls{",strsplit(x, "_")[[1]][1], "}") }),  tail = sapply(d, function(x){strsplit(x, "_")[[1]][2]})) %>% select(statname, tail, super, min,mean,max) %>% mutate(tail = ifelse(tail == 'neg', "Lower","Upper"))
 colnames(tab) <- c("Statistic Name","Tail", "Super Population", "Min","Mean","Max")
-pander::pandoc.table(tab, caption = '(\\#tab:windowTable) Summary statistics for number of windows used in each custering analysis. Tail indicates which extreme of the distribution the windows were from. Min and max are the minimum and maximum number of windows contributed from the individual populations for the given super population. Mean is the mean number of windows for the individual populations for the given super population.' )
+#pander::pandoc.table(tab, caption = '(\\#tab:windowTable) Summary statistics for number of windows used in each custering analysis. Tail indicates which extreme of the distribution the windows were from. Min and max are the minimum and maximum number of windows contributed from the individual populations for the given super population. Mean is the mean number of windows for the individual populations for the given super population.' )
 ```
 
 <!-- 
@@ -203,7 +203,8 @@ refer to figure
 
 
 ```{r tdTop1000, fig.cap='(ref:tdTop1000)',echo = FALSE, fig.height = 7, cache=TRUE}
-four_plot("td","Tajima's D")
+#ggsave(plot = four_plot("td","Tajima's D"), filename = 'images/04_clustering/tdTop1000.png', device = 'png', height = 7, width = 7)
+knitr::include_graphics('images/04_clustering/tdTop1000.png')
 ```
 
 (ref:tdTop1000) _\gls{td} Clustering._ Hierarchical clustering of \gls{td} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{td} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
@@ -264,7 +265,8 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 (ref:fwhTop1000) _\gls{fwh} Clustering._ Hierarchical clustering of \gls{fwh} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fwh} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
 ```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', fig.height=7, cache=TRUE}
-four_plot("fwh","Fay and Wu's H")
+#ggsave(four_plot("fwh","Fay and Wu's H"), filename = 'images/04_clustering/fwhTop1000.png', device = 'png', height = 7, width = 7)
+knitr::include_graphics('images/04_clustering/fwhTop1000.png')
 ```
 
 <!--
@@ -299,7 +301,8 @@ In the upper tail of the \gls{fwh} distribution, the clustering assigned all of 
 (ref:fldTop1000) _\gls{fld} Clustering._ Hierarchical clustering of \gls{fld} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fld} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully. Colour represents a window being present.
 
 ```{r fldTop1000, fig.cap = '(ref:fldTop1000)', fig.height=7, cache=TRUE}
-four_plot("fld","Fu and Li's D")
+#ggsave(four_plot("fld","Fu and Li's D"), filename = 'images/04_clustering/fldTop1000.png', device = 'png', height = 7, width = 7)
+knitr::include_graphics('images/04_clustering/fldTop1000.png')
 ```
 
 <!--
@@ -337,7 +340,8 @@ The clustering of the upper tail (Figure \@ref(fig:fldTop1000) B and D) grouped 
 (ref:flfTop1000) _\gls{flf} Clustering._ Hierarchical clustering of \gls{flf} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{flf} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
 ```{r flfTop1000, fig.cap = '(ref:flfTop1000)', fig.height=7, cache=TRUE}
-four_plot("flf","Fu and Li's F")
+#ggsave(four_plot("flf","Fu and Li's F"), filename = 'images/04_clustering/flfTop1000.png', device = 'png', height = 7, width = 7)
+knitr::include_graphics('images/04_clustering/flfTop1000.png')
 ```
 
 <!--
@@ -372,7 +376,8 @@ Clustering on the windows from the upper tail put the super populations into the
 (ref:zeTop1000) _\gls{ze} Clustering._ Hierarchical clustering of \gls{ze} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{ze} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
 ```{r zeTop1000, fig.cap = '(ref:zeTop1000)', fig.height=7, cache=TRUE}
-four_plot("ze","Zeng's E")
+#ggsave(four_plot("ze","Zeng's E"), filename = 'images/04_clustering/zeTop1000.png', device = 'png', height = 7, width = 7)
+knitr::include_graphics('images/04_clustering/zeTop1000.png')
 ```
 
 <!--
@@ -800,7 +805,7 @@ results from other diseases that are late onset and see if they produce the same
 
 
 
-```{r, results ='asis'}
+```{r, results ='asis', eval = FALSE}
 # prop_list[['td_neg']]$exclusivity %>% data.frame%>% mutate(pop = rownames(.)) %>% gather("cluster", "prop", 1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean(prop))
 # 
 # prop_list[['td_neg']]$super_prop %>% data.frame() %>% spread(super, max_prop) 
@@ -844,7 +849,7 @@ bind_rows(list(
 
 
 
-```{r exclusivity, results = 'asis'}
+```{r, results = 'asis', eval = FALSE}
 #exclusivity
 bind_rows(list(
   bind_rows(lapply(names(prop_list), function(x){prop_list[[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = sapply(x, function(y){strsplit(y, '_')[[1]][1]}), Type = sapply(x, function(y){strsplit(y, '_')[[1]][2]}) ) %>% select(NCOL(.), 1:(NCOL(.)-1)) })),
@@ -878,12 +883,13 @@ flf: lower split amr, nzm/mxl/pel. upper split amr clustered others
 ze: both split amr, clustered others
 -->
 It is difficult to apply a biological interpretation onto what the clustering of the most extreme windows represents other than a similarity in allele frequencies between populations that have a pattern that is consistent with the out of Africa model [@ref].
-The ends of the distributions represent different types of selections or demographic events and are different depending on the selection test statistic being used. The upper end of the distribution is largely able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics. The lower extreme however was a mix of negative and positive values, with the positive values mostly from the \gls{afr} populations. This mix means that the windows from one population do not nesscessarily represent the same selective or demographic even component and thus are not able to be compared.
-
+The extremes of the distributions represent different types of selection or demographic events and are different depending on the selection test statistic being used. The upper end of the distribution is largely able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics. The lower extreme however was a mix of negative and positive values, with the positive values mostly from the \gls{afr} populations. This mix means that the windows from one population do not nesscessarily represent the same selective or demographic even component and thus are not able to be compared.
 
 The simplest reason that explains the similar clustering that occurred with the gene lists is that for the tests of selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other. This would explain why with \gls{td}, \gls{fwh}, and \gls{ze}, which are based on comparing ratios of low, intermediate and high frequency variants, that they all grouped the individual populations into their super population groups. This differed to the statistics based on singletons (\gls{fld} and \gls{flf}) which were 
 
 Haplotypic
+
+
 
 clustering on actual values because the stats are based on the underlying frequency distribution are likely to reflect this distribution and not the actual state of selection - therefore I would assume that given any list of genes sufficiently long (say >10), that the population clusters would appear. If the selection event occurred post out of Africa, then there would be some expectation that the clustering would. 
 
