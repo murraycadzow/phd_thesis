@@ -2,14 +2,36 @@
 
 ```{r, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(xtable)
 library(tidyverse)
 source('scripts/multiplot.R')
 source('scripts/03_selectionpipeline.R')
+
 ```
+
+Part of this work was originally published in @Cadzow2016 but I have updated the selection analysis to make use of a new dataset that became available after publication.
 
 
 ## Introduction
 
+
+
+In this chapter I investigate regions of the genome that exhibit signatures of selection in Polynesian populations. 
+
+Much of the early work in looking at selection was focused at the gene level [@Wright1951;@Fisher] and the methods that were developed were intended for few loci, or limited sequence from a single region [@ref;@ref;@ref]. This was largely due to the high cost and limited availability of whole genome chip or sequence data. It wasn't until after the completion of the human genome project in 2001 and the advent of 'next generation sequencing' where the cost of full genome data rapidly dropped and there became an abundance of whole genome sequence data [@ref]. There were a few large efforts to characterise human variation, the first main project was the HapMap project [@Hapmap2005], which was followed on by the 1000 Genomes Project [@1KGP2010; @1KGP2012; @1KGP2015snp]. Alongside these variation projects were a few projects that aimed to focus on the diversity of humans, this was the Human Genome Diversity Project [@Cann2002; @Rosenburg2002], and later the Simons Genome Diversity Project [@Mallick2016].
+
+One of the methods to still use the selection and neutrality tests with the genome-wide data was to use the empirical distribution [@ref; @Clarke?]
+
+over the last decade there has been a steady flow of studies into genome-wide selection. The main samples for this have been a part of the 1000 Genomes Project, which sample over 2500 individuals for full genome (re)sequencing from five 'super' population groups. This dataset, while capturing a large representation of the human population variation, does not have representation for the people's of the pacific [@ref]. 
+
+More recently there have been a studies that have looked at selection in Polynesian populations but with a focus on a few candidate loci, not at a genome-wide scale [@Cadzow2016; @Minster2016].
+
+Thrifty hypothesis
+
+- @Neel1962
+- @Gosling2015
+- @Minster2016
+- @Cadzow2016
 <!--
 motivation: seemed to be little in the way of calculating stats genome wide and wasn't sure how sensitive these stats were to snp density
 
@@ -21,7 +43,7 @@ from the literature there doesn't seem to be any recommendation as to how to com
 
 Fst has a paper in early 2000's from Bruce Weir that touched on what sort of size to use howver it largely just came down to 'this window size seems to have enough of a smoothing effect as well as display some of the variation in the data' type approach and was largely just based on a this looks good enough.
 
-Pybus et al specified their window sizes which was roughly 30 kb window and 3kb slide for most statistics however I don't remember reading how they arrived at these sizes.
+Pybus et al specified their window sizes which was roughly 30 kb window and 3kb slide for most statistics however this was decided on unshown data as a trade off between resolution and density.
 
 In cadzow 2014 I tried had tried a few sizes and it it seemed that there was little difference between them other than the smaller the window the more noisy the data looked.
 
@@ -44,14 +66,32 @@ Cadzow2014
 Cadzow2016
 Pybus2014
 Ramos2017
+Minster2017
 
 ### objectives
 
 - Investigate regions that are under selection in the Polynesian populations
 
+## Methods
 
-## Selection dataset creation
+### Selection dataset creation
 
+
+The selection of samples and preliminary data preparation for the selection data set is detailed in Section \@ref(selectionDataset).
+
+
+
+The phased \gls{vcf} files for the combined \gls{nz} and 1000 Genome
+
+The selection statistics were calculated for the Polynesian populations 
+
+\gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} were calculated using the Popgenome package.
+
+Haplotypic stats of \gls{ihs}, \gls{nsl}, and \gls{xpehh} were calculated using the selectionTools pipeline with significance set as being the 99th percentile for the absolute normalised score. Frequency based statistics were also generated such as \gls{daf} and F~ST~.
+
+
+
+<!--
 ## SelectionTools pipeline
 
 for the selection pipeline we need to split into populations
@@ -178,10 +218,10 @@ rm -r NAD_{WPN,EPN}
 rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
 ```
 
+-->
+### PopGenome
 
-## PopGenome
-
-### Influence of window sizes and slide
+#### Influence of window sizes and slide
 
 The effect of window and slide size was investigated using windows sizes ranging from 30 kb through to 150 kb, and slide sizes ranging from 3 kb through to 35 kb. The general trend was as window size increased the entire distribution was shifted to the right and also widened. Similar to @Pybus2014, a trade off between increasing the number of \gls{snp}s per window and adequate resolution was made and the window size of 100 kb and slide of 10 kb was chosen.
 
@@ -247,9 +287,9 @@ number of segregating sites
 -->
 
 
-## Comparison of selectionTools Parameters
+### Comparison of selectionTools Parameters
 
-### Window size
+#### Window size
 Tajima's _D_, Fay and Wu's _H_, and F~ST~ calculation window size was tested.
 
 - TD = 1,5, and 30 kbp windows
@@ -265,6 +305,7 @@ Don't actually want the comparisons between NAD and EPN or WPN, or the ones for 
 
 ## Comparison of Imputation Thresholds
 
+<!--
 ## Simulations
 
 ### Bottleneck
@@ -279,6 +320,8 @@ Don't actually want the comparisons between NAD and EPN or WPN, or the ones for 
 
 ### Negative Selection
 
+
+-->
 
 ## Results
 <!--
@@ -397,7 +440,7 @@ POL
 <!-- sort into numerical order for chromosome -->
 Genes Unique to Polynesian Populations
 ```{r, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
+lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left")
 ```
 
 
@@ -480,7 +523,7 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r, results='asis'}
-lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
+lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr)%>%  pander::pandoc.table(., justify = "left")
 ```
 
 #### Fu and Li's D
@@ -561,7 +604,7 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
+lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left")
 ```
 
 
@@ -642,7 +685,7 @@ POL
 
 Genes Unique to Polynesian populations
 ```{r, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
+lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left")
 ```
 
 #### Zeng's E
@@ -719,8 +762,8 @@ POL
 - `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only from POL
 
 Genes Unique to Polynesian populations
-```{r}
-lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% pander::pandoc.table(., justify = "left")
+```{r, results='asis'}
+lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left")
 ```
 
 
@@ -734,9 +777,28 @@ sig_ihs %>% group_by(pop) %>% tally()
 The Polynesians populations had a mean of `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'POL') %>% .[['mn']] %>% sprintf("%.0f",.)` SNPs with a \gls{ihs} value that was significant.<!-- This compared to `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'AFR') %>% .[['mn']]` for the \gls{afr}, `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'AMR') %>% .[['mn']]` from \gls{amr}, `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'EAS') %>% .[['mn']]` for \gls{eas}, `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'EUR') %>% .[['mn']]` for \gls{eur}, and `r sig_ihs %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'SAS') %>% .[['mn']]` for \gls{sas}. Found only in the \gls{cim} population were `r sig_ihs %>% anti_join(., sig_ihs %>% filter(pop != 'POL_CIM'), by = c('genename')) %>% tally()` \gls{snp}s from `r sig_ihs %>% anti_join(., sig_ihs %>% filter(pop != 'POL_CIM'), by = c('genename')) %>% select(genename) %>% distinct() %>% NROW()` distinct genes. 
 -->
 
+There were `r sig_ihs %>% anti_join(., sig_ihs %>% filter(superpop != 'POL'), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4) %>% NROW()` genes that all Polynesian populations and no other super populations had a \gls{snp} with a significant \gls{ihs} marker, and there were `r sig_ihs %>% anti_join(., sig_ihs %>% filter(superpop != 'POL'), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter(n > 0) %>% NROW()` genes that at least one Polynesian population and no other super populations had.
+
+
 ```{r}
 sig_ihs %>% anti_join(., sig_ihs %>% filter(superpop != 'POL'), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4)
 ```
+
+```{r}
+sig_ihs %>% anti_join(., sig_ihs %>% filter(superpop != 'POL'), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally()
+
+sig_ihs %>% anti_join(., sig_ihs %>% filter(!pop %in% c('POL_CIM', 'POL_NZM')), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 2)
+
+sig_ihs %>% anti_join(., sig_ihs %>% filter(!pop %in% c('POL_SAM', 'POL_TON')), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 2)
+```
+
+
+Gout/urate specific:
+```{r}
+sig_ihs %>% filter(genename %in% urate_goutGR$SYMBOL) %>% group_by(pop, genename) %>% tally() %>% arrange(genename)
+```
+
+
 
 
 
@@ -745,6 +807,13 @@ There were a total of XXX regions that had significant
 ihs_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
 ihs_clus %>% group_by(pop) %>% tally()
 ```
+
+```{r}
+sig_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_clus-14-7-2017.RDS')
+sig_nsl %>% group_by(pop) %>% tally()
+```
+
+
 
 ```{r}
 nsl_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
@@ -768,6 +837,15 @@ nsl
 - total snps significant
 - mean per population
 
+
+
+difference between ihs and nsl:
+```{r}
+sig_ihs %>% select(chrom, chrom_start, chrom_end, pop)%>% inner_join(., sig_nsl, by =c("chrom","chrom_start", "chrom_end","pop")) %>% group_by(pop, genename) %>% tally() %>%  arrange(genename)
+```
+
+
+
 #### Summary of Intra
 
 ```{r}
@@ -784,18 +862,41 @@ regions that differed between the 2 stats?
 ### Inter
 
 #### F~ST~
+<!-- need fst at a windowed level -->
+```{r}
+fst <- readRDS('~/data/NZ_coreExome_1kgp/whole_chr_fst_popgenome.3-7-2017.RDS')
+  a <- bind_rows(lapply(fst, function(x){x %>% mutate(pop1 = as.character(pop1), pop2 = as.character(pop2))%>% select(-p1,-p2) %>% filter(!pop1 %in% c('WPN','EPN','NAD'), !pop2 %in% c('WPN','EPN','NAD')) %>% left_join(., panel %>% mutate(super_pop = paste(super_pop, pop, sep = '_')) %>% select("pop1" = pop, super_pop) %>% distinct(), by = "pop1" ) %>% select(-pop1) %>% spread(., "super_pop", fst )})) %>% group_by(pop2) %>% summarise_all(mean) %>% left_join(., panel %>% mutate(super_pop = paste(super_pop, pop, sep = '_')) %>% select("pop2" = pop, super_pop) %>% distinct(), by = "pop2" ) %>% select(Population = super_pop, everything(),-chrom, -pop2) %>% arrange(Population) %>% mutate_if(is.numeric, funs(sprintf('%.4f',.))) %>% data.frame(., row.names = NULL)
+  
+```
+
+```{r, results = 'asis'}
+xtable::print.xtable(xtable::xtable(a, caption = "Fst"),floating = TRUE,  rotate.colnames = TRUE, floating.environment = "sidewaystable" , scalebox = 0.5)
+```
+
+
+```{r, results = 'asis'}
+knitr::kable(a, booktabs = TRUE) %>% kableExtra::kable_styling(latex_options = 'scale_down')%>%  kableExtra::group_rows("African", 1, 7) %>%
+kableExtra::group_rows("American", 8, 11) %>% kableExtra::group_rows("East Asian", 12,16) %>% kableExtra::group_rows("European", 17,22) %>% kableExtra::group_rows("Polynesian",23, 26)%>% kableExtra::group_rows("South Asian", 27, 31) %>% kableExtra::landscape()
+```
 
 <!--
 table
 -->
 
+supplemental table 5 @1KGP2015snp
+
 #### $\Delta$ DAF
 
 <!--
-
+summary of allele frequencies
 -->
 
 #### XP-EHH
+
+```{r, eval = FALSE}
+read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_5-6-2017.csv', delim = ',') %>% str()
+```
+
 
 
 <!--
@@ -815,4 +916,27 @@ Is there anything special about the population comparisons?
   - shared genes between similar populations?
   - East/West split seen?
   - NZC vs GBR similarity?
+  
+  @Rafajlovic2014 has a good talk about the use of the empirical distribution for sfs stats.
+  
+  
+Because fld and flf are based on the number of singletons, how is this going to be affected by using chip data that should have essentially 0. presumable this will dramatically affect the interpretability of the statistic and push everything over to the right but is it acceptable to recentre the distribution and look that the extremes from there? does it have biological plausibility?  
+
+what does it mean to have a significant window of one tail neighboured by the other tail? Or on the broad scale what does it mean to have a gene classed as significant in both tails?
+
+effect of phasing when polynesian populations aren't represented in the 1000 genomes populations
+
+window size meant that snps that snps not in the window might not even be near the actual window ie -45 and +45 kb away from the edge of the defined window in the worst case. This would lead to some difficulty in definitive location. There was a trade off between snp density and window size.
+
+
+limitations of using the chip data versus imputed data
+- ascertainment bias of snps on the chip
+- imputation from the chip might not work well given the polys aren't (unconfirmed) well represented in the reference panel
+- phasing of haplotypes doesn't have polynesian haplotypes in the panel
+
 -->
+
+The shift in the distributions due to having chip data for the selection tests that rely on frequency spectrum is seen here. Mostly the African populations have shifted so far to the right with Tajima's D that the first percentile is > 0. 
+XXX The intermediate frequency variants are over represented
+
+With the adaptation of the selection and neutrality tests into genome-wide usage, specifically the sliding window approach, there was the need to balance the number of segregating sites with the window size [@Pybus2014]. This balance is entirely influenced by \gls{snp} density with whole genome (re)sequence data offering high density XXX snps/kb, but \gls{snp} chip data being less dense XXX snps/kb. This means that window size needs to increase for \gls{snp} chip data in order to have the same number of segregating sites. However, as window size increases it also reduces the resolution of the genome and with it the ability to associate a window with particular genomic features.
