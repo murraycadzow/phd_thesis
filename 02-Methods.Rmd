@@ -7,6 +7,7 @@ output:
 
 # Methods/Data
 ```{r, echo = FALSE, message = FALSE, warning= FALSE}
+library(tidyverse)
 library(pander)
 source("scripts/methods_tables.R")
 
@@ -35,22 +36,61 @@ a
 
 ## Methods
 
-### Phasing
+### Phasing {#phase}
 
 
-Phasing was performed using shapeit v2 using the \gls{1kgp} haplotype panel for the AXIOM and OMNI datasets.
+Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} haplotype panel. There were two steps involved for phasing of genotypes. The first was to check the markers were aligned with the markers in the reference haplotypes. This was done using the SHAPEIT2 -check flag.
 
--axiom
--omni
--coreExome
+```{bash, eval = FALSE, echo =TRUE}
+# Check alignment of markers against reference haplotypes
+# ? = chromosome
+shapeit2 \
+-check \
+-M genetic_map_chr?_combined_b37.txt \
+--input-vcf coreExome_norm.chr?.vcf.gz \
+--input-ref 1000GP_Phase3_chr?.hap \
+  1000GP_Phase3_chr?.legend \
+  1000GP_Phase3.sample \
+  --output-log coreExome_norm.chr?.checked \
+  -T 12
+```
+
+The second step was the actual phasing step. 
+
+
+```{bash, eval = FALSE, echo = TRUE}
+# Run phasing against reference haplotypes
+# Exclude misaligned markers
+# Use 8 threads
+# ? = chromosome
+shapeit2 \
+-M genetic_map_chr?_combined_b37.txt \
+--input-vcf coreExome_norm.chr?.vcf.gz \
+--input-ref 1000GP_Phase3_chr?.hap \
+  1000GP_Phase3_chr?.legend \
+  1000GP_Phase3.sample \
+--output-max coreExome_norm.chr?.phased \
+--exclude-snp coreExome_norm.chr?.checked.snp.strand.exclude \
+-T 8
+
+
+# Convert haps to vcf.gz
+shapeit2 \
+-convert \
+--input-haps coreExome_norm.chr?.phased \
+--output-vcf coreExome_norm.chr?.phased.vcf 
+```
+
+
+
 
 ### Selection Statistics
 
 #### PopGenome {#popgenomeMethods}
 
-Ancestral allele - The ancestral allele was used as annotated from the 1000 Genomes Phase 3 VCF file where possible. A new sample identified as 'Ancestor' was included into the VCF and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependant on the ancestral allele matching, otherwise the Ancestor genotype was set to missing.
+Ancestral allele - The ancestral allele was used as had been annotated from the 1000 Genomes Phase 3 \gls{vcf} file where possible. A new sample identified as 'Ancestor' was included into the \gls{vcf} and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependant on the ancestral allele matching, otherwise the Ancestor genotype was set to missing.
 
-When the VCF files were loaded into the R package PopGenome [@Pfeifer2014] populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
+When the \gls{vcf} files were loaded into the R package PopGenome (vXXX, @Pfeifer2014) populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
 
 for \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} a significance threshold was created using the empirical distribution with significance being designated as being in the either the 1st or 99th percentile, and negative for the lower tail, or positive for the upper tail.
 
@@ -213,7 +253,7 @@ grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 Uk Biobank GWAS
 
 
-####
+#### 
 
 #### Heritability Analysis
 
@@ -275,9 +315,13 @@ A pipeline for calling genetic variation from whole genome re-sequence data was 
 This entire pipeline was implemented on the NeSI PAN cluster and automated to process each sample. The automation involves a wrapper program that given a list of samples will initiate transfer of the raw sequences to the cluster, then initiate the processing pipeline, and upon completion of the processing pipeline transfer the outputted data back before proceeding to the next sample in the batch. 
 
 #### Alignment of reads
-Paired end Fastq files were split into chunks of smaller files containing no more than 12.5 million reads per chunk. each paired chunk was then aligned to the human reference genome (build GRCh37) containing autosomes, sex chromosomes, MT (NC_XXXX), alternate contigs, as well as decoy sequence. Alignment was performed using the Burrows Wheeler Transform Aligner (BWA, v0.7.12)[@Li2010]. 
+Paired end Fastq files were split into chunks of smaller files containing no more than 12.5 million reads per chunk. each paired chunk was then aligned to the human reference genome (build GRCh37) containing autosomes, sex chromosomes, rCRS mitochondrial sequence (AC:NC_012920), alternate contigs, as well as decoy sequence. Alignment was performed using the Burrows Wheeler Transform Aligner (BWA, v0.7.12)[@Li2010]. 
 
-```
+```{bash, eval = FALSE}
+# align
+bwa mem -M -t ${SLURM_JOB_CPUS_PER_NODE} \
+  -R ${RG} $REF $DIR/temp/R1_${i}.fastq.gz $DIR/temp/R2_${i}.fastq.gz |\
+samtools view -bh - > $DIR/temp/${sample}_aligned_reads_${i}.bam
 
 ```
 
@@ -287,24 +331,187 @@ Paired end Fastq files were split into chunks of smaller files containing no mor
 The unsorted bam files for each chunk outputted from the alignment stage were then individually sorted into chromosome coordinate order using the picardtools (v2.10) [@picardref] sortSam module. Once all chunks were sorted they were merged into a single bam file for the sample using picardtools (v2.1.0) MergeSamFiles module.
 
 
-```
+```{bash, eval = FALSE}
 
+# sort
+java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \                                      INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam \
+  OUTPUT=$DIR/temp/${sample}_sorted_${i}.bam \
+  SORT_ORDER=coordinate \
+  CREATE_INDEX=true \
+  TMP_DIR=$DIR
+
+# merge
+java -Xmx19g -jar $EBROOTPICARD/picard.jar MergeSamFiles \
+  $(sed 's/^/I=/g' < temp/sorted_bams.txt | tr '\n' ' ') \                               OUTPUT=$DIR/temp/${sample}_gathered.bam \
+  USE_THREADING=true \
+  CREATE_INDEX=true \
+  SORT_ORDER=coordinate                                                    
 ```
 
 #### Mark Duplicates
 
 The bam file for the sample then had PCR duplicates marked using the Mark Duplicates module of the GATK
 
+```{bash, eval = FALSE}
+java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	-T BaseRecalibrator \
+	-R $REF \
+	-I $DIR/temp/${sample}_dedup_reads_${chr}.bam \
+	-o $DIR/temp/${sample}_recal_data_${chr}.grp \
+	-knownSites $DBSNP \
+	-knownSites $MILLS \
+	-knownSites $INDELS \
+	-l INFO \
+	-cov ReadGroupCovariate \
+	-cov QualityScoreCovariate \
+	-cov CycleCovariate \
+	-cov ContextCovariate \
+	-log $DIR/logs/${sample}_baserecal_${chr}.log \
+	-L ${chr}
+```
+
 #### Base Recalibration
 The bam files had the base recalibration step applied to account for platform specific base bias
 
+```{bash, eval = FALSE}
+java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	-T BaseRecalibrator \
+	-R $REF \
+	-I $DIR/temp/${sample}_dedup_reads_${chr}.bam \
+	-o $DIR/temp/${sample}_recal_data_${chr}.grp \
+	-knownSites $DBSNP \
+	-knownSites $MILLS \
+	-knownSites $INDELS \
+	-l INFO \
+	-cov ReadGroupCovariate \
+	-cov QualityScoreCovariate \
+	-cov CycleCovariate \
+	-cov ContextCovariate \
+	-log $DIR/logs/${sample}_baserecal_${chr}.log \
+	-L ${chr}
+	
+	java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	-T PrintReads \
+	-R $REF \
+	-BQSR $DIR/temp/${sample}_recal_data_${chr}.grp \
+	-I $DIR/temp/${sample}_dedup_reads_${chr}.bam \
+	-o $DIR/final/${sample}_baserecal_reads_${chr}.bam \
+	-l INFO \
+	-log $DIR/logs/printreads_${chr}.log \
+	-L ${chr} 
+```
+
 #### Haplotype caller - GVCF
 
-
+```{bash, eval = FALSE}
+java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysisTK.jar \
+	-T HaplotypeCaller \
+	-R $REF \
+	-I $DIR/final/${sample}_baserecal_reads_${chr}.bam \
+	-L ${chr} \
+	--emitRefConfidence GVCF \
+	--variant_index_type LINEAR \
+	--variant_index_parameter 128000 \
+	--dbsnp $DBSNP \
+	-o $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf \
+	-nct ${SLURM_JOB_CPUS_PER_NODE}
+```
 
 #### Genotype GVCF
 
+```
+parallel -j 22 'java -Xmx8g -jar /Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar -T CombineGVCFs -R /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa  $(find ./ -name \*_{2}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g\") -o ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf -log ../combined_gvcf/{1}_combine_{2}.log -L {2} && pigz -p 4 ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf ' ::: man015 ::: $(seq 1 22)
+
+
+/Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
+ -T GenotypeGVCFs \
+ -R /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa \
+ $(find ./combined_gvcf -name \*_{1}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g") \
+ -o ./variant_called/man001-014_{1}.raw.snps.indels.vcf \
+ -log ./variant_called/man001-014_combine_{1}.log \
+ -L {1} -nt 20 && pigz -p 4 ./variant_called/man001-014_{1}.raw.snps.indels.vcf '  ::: $(seq 1 3)
+```
+
 #### Variant Recalibration
+
+```{bash, eval = FALSE}
+java -Xmx48g -jar \ 
+  GATK/nightly-19-11-2016/GenomeAnalysisTK.jar \
+  -T VariantRecalibrator \
+  -R reference_files/FASTA/hs37d5/hs37d5.fa \
+  $(find ./variant_called/  -name \*vcf | tr '\n' ' ' | sed 's/ $//g' | sed 's/\.\//-input \.\//g') \
+  -resource:hapmap,known=false,training=true,truth=true,prior=15.0 \
+  reference_files/resource_bundle_dec14/hapmap_3.3.b37.vcf \
+  -resource:omni,known=false,traning=true,truth=false,prior=12.0 \
+  reference_files/resource_bundle_dec14/1000G_omni2.5.b37.vcf \
+  -resource:1000G,known=false,training=true,truth=false,prior=10.0 \
+  reference_files/resource_bundle_dec14/1000G_phase1.snps.high_confidence.b37.vcf \
+  -resource:dbsnp,known=true,training=false,truth=false,prior=2.0 reference_files/resource_bundle_dec14/dbsnp_138.b37.vcf \
+  -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -an InbreedingCoeff \
+  -mode SNP \
+  -recalFile variant_recal/man001-014.SNP.recal \
+  -tranchesFile variant_recal/man001-014.SNP.tranches \
+  -rscriptFile variant_recal/man001-014.SNP.plots.R \
+  -log variant_recal/man001-014.SNP.log
+```
+ 
+```{bash, eval = FALSE}
+java -Xmx48g -jar \
+  GATK/nightly-19-11-2016/GenomeAnalysisTK.jar \
+  -T VariantRecalibrator \
+  -R reference_files/FASTA/hs37d5/hs37d5.fa \
+  $(find ./variant_called/  -name \*vcf | tr '\n' ' ' | sed 's/ $//g' | sed 's/\.\//-input \.\//g') \
+  --maxGaussians 4 \
+  -resource:mills,known=false,training=true,truth=true,prior=12.0 \
+  reference_files/resource_bundle_dec14/Mills_and_1000G_gold_standard.indels.b37.vcf \
+  -resource:dbsnp,known=true,training=false,truth=false,prior=2.0 \
+  reference_files/resource_bundle_dec14/dbsnp_138.b37.vcf \
+  -an QD -an DP -an FS -an SOR -an ReadPosRankSum -an MQRankSum -an InbreedingCoeff \
+  -mode INDEL \
+  -recalFile variant_recal/man001-014.INDEL.recal \
+  -tranchesFile variant_recal/man001-014.INDEL.tranches \
+  -rscriptFile variant_recal/man001-014.INDEL.plots.R \
+  -log variant_recal/man001-014.INDEL.log
+```
+ 
+ Apply recalibration
+```{bash, eval = FALSE}
+for i in $(seq 1 22) 
+do 
+  java -Xmx12g  \
+    -Djava.io.tmpdir=/Volumes/BiocArchive/archivetemp/java_tmp/ \
+    -jar GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
+    -T ApplyRecalibration \
+    -R  /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa  \
+    -input ./variant_called/man001-014_${i}.raw.snps.indels.vcf  \
+    -mode SNP  \
+    -recalFile ./variant_recal/man001-014.SNP.recal  \
+    -tranchesFile ./variant_recal/man001-014.SNP.tranches  \
+    -nt 4  \
+    -L ${i} \
+    -o ./variant_recal/man001-014_${i}.recal.snp.vcf  \
+    --ts_filter_level 99.5  \
+    -log ./variant_recal/man001-014_${i}.snp.applyrecal.log
+done
+ 
+for i in $(seq 1 22)
+do
+  java -Xmx12g \
+    -Djava.io.tmpdir=/Volumes/BiocArchive/archivetemp/java_tmp/ \
+    -jar GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
+    -T ApplyRecalibration \
+    -R  /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa \
+    -input ./variant_recal/man001-014_${i}.recal.snp.vcf \
+    -mode INDEL \
+    -recalFile ./variant_recal/man001-014.INDEL.recal \
+    -tranchesFile ./variant_recal/man001-014.INDEL.tranches \
+    -nt 4 \
+    -o ./variant_recal/man001-014_${i}.recal.snp.indel.vcf \
+    --ts_filter_level 99.0 \
+    -L ${i} \
+    -log ./variant_recal/man001-014_${i}.indel.applyrecal.log
+done
+```
 
 #### Genotype Concordence
 
@@ -320,7 +527,7 @@ snpEff
 
 ### 1000 Genomes Project Phase 3
 
-
+<!--
 @misc{1kgp_ftp,
 keywords = {1KGP},
 mendeley-groups = {PPARGC1Apaper,Datasets},
@@ -329,6 +536,15 @@ title = {{1000 Genomes Project FTP}},
 url = {ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/},
 urldate = {2015-08-18}
 }
+-->
+
+The \glsdesc{1kgp} was an international consortium that was established in 2007 to provide a comprehensive record of human genetic variation. The project consisted of three main data phases. A pilot phase that whole-genome sequenced 179 individuals from four populations at low coverage (2-4x), along with high coverage sequencing for two trios (mother, father, and child), and exon targeted sequencing for 697 individuals from seven populations [@1kgp_phase1]. The second main data phase provided sequencing data for 1092 individuals from 14 populations. This sequencing data was a combination of low coverage whole-genome and exon sequencing [@1gp_1092]. The third main phase (Phase 3) was a dataset consisting of low coverage whole-genome sequencing, deep exome sequencing, and dense microarray genotyping for 2504 individuals from 26 populations [@1kgp_phase3]. The 1000 Genomes data set used was the Phase 3 release^[ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ accessed 20 March 2017].
+
+
+```{r populations, results = 'asis', echo = FALSE}
+read.csv('~/Git_repos/SelectionDW_ETL/data/populations.csv', stringsAsFactors = FALSE) %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, "Genotype\nPlatform" = genotypePlatform) %>%   knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations') %>% kableExtra::group_rows("African Super Population (AFR)", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR)", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS)", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR)", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)*", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS)", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are not 1000 Genomes Project populations", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
+```
+
 
 ### Genetics of Gout in Aoteroa
 
@@ -336,6 +552,7 @@ The genetics of Gout in Aoteroa study is a case-control cohort with recruitment 
 
 Individuals from this study have been genotyped on at least one of the following platforms: an affymetrix AXIOM SNP chip, an Illumina OMNIexpress SNP chip, an Illumina CoreExome SNP chip, whole genome low-coverage resequenced, or exome resequence data.
 
+<!--
 #### Axiom
 
 - about
@@ -376,10 +593,10 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 - population
 - markers
 - density
-
+-->
 #### CoreExome
 
-The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @Guo2014. Illumina’s Genome Studio vXXX genotyping module vXXXwas used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
+The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @Guo2014. Illumina’s Genome Studio vXXX genotyping module vXXX was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
 
 - removed gender mismatches
 - checked relatedness of samples
@@ -391,6 +608,7 @@ The Infinium CoreExome-24 beadchip is a genotyping platform available from Illum
 
 Selection of samples to form the populations used in the selection analyses
 Gout affection was determined by...
+
 A single individual was randomly selected from family groups identified through identity by state analysis. Individuals who had a mismatch between self reported and genetic ancestry were also removed. Principle components 2 and 4 were found to provide the greatest separation between Europeans, East Polynesians, and West Polynesians. Individuals reporting 4 grandparents of Caucasian, NZ Maori, CI Maori, Samoan, and Tongan ancestry were used to define the threshold values. Thresholds were calculated using mean +/- 2 SD for PC2 and PC4 for each population group. Once thresholds were calculated all samples were filtered so that only those that lay within a boundary remained. Remaining samples were then randomly sampled to form groups of 100 individuals, where possible trying to match general population prevalence for gout.
 
 Marker Categories | Number of Markers
@@ -488,12 +706,13 @@ This used table \@ref(tab:refDatasets) for the stuff
 
 ### PCA sample selection
 
+Principle components were calculated for all 
 
 ### Core Exome - Filter individuals and markers 
 
 To create a data set to calculate selection statistics, a subset of the individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the 1000 Genomes Project phase 3 release. Before the data sets could be combined there were a series of steps that were performed.
 
-The first step was comprised of two parts, firstly was based on samples to remove individuals who had failed the QC, and keep only the individuals who had been selected through PCA and had a genotyping rate across. Secondly, markers were filtered to remove INDELs so that only SNPs remained.
+The first step was to indentify and remove individuals who had failed the QC, and keep only the individuals who had been selected through \gls{pca} and had a genotyping rate of at least 95%. Markers were filtered to remove \gls{indel}s so that only \gls{snp}s remained.
 
 ```{r, engine = 'bash', eval = FALSE}
 parallel -j 11 '
@@ -527,53 +746,13 @@ parallel -j 11 '
     -o QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.vcf.gz \
   ' ::: $(seq 1 22)
 
-haplo_ref=/Volumes/BiocArchive/archive/merrimanlab/reference_files/Impute_ref_files/1000GP_Phase3/
-parallel -j 2 '
-  shapeit2 \
-    -check \
-    -M $haplo_ref/genetic_map_chr{}_combined_b37.txt \
-    --input-vcf QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.vcf.gz \
-    --input-ref $haplo_ref/1000GP_Phase3_chr{}.hap \
-    $haplo_ref/1000GP_Phase3_chr{}.legend \
-    $haplo_ref/1000GP_Phase3.sample \
-    --output-log QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.checked \
-    -T 12 
-  ' ::: $(seq 1 22)
-
-parallel '
-  touch QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.checked.snp.strand.exclude
-  ' ::: $(seq 1 22)
-
-# phase
-parallel -j 6 '
-  shapeit2 \
-    -M $haplo_ref/genetic_map_chr{}_combined_b37.txt \
-    --input-vcf QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.vcf.gz \
-    --input-ref $haplo_ref/1000GP_Phase3_chr{}.hap \
-    $haplo_ref/1000GP_Phase3_chr{}.legend \
-    $haplo_ref/1000GP_Phase3.sample \
-    --output-max QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased \
-    --exclude-snp QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.checked.snp.strand.exclude \
-    -T 8 
-  ' ::: $(seq 1 22)
-
-# convert from haps to vcf
-parallel '
-  shapeit2 \
-    -convert \
-    --input-haps QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased \
-    --output-vcf QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff_norm.chr{}.phased.vcf 
-  ' ::: $(seq 1 22)
-
-# compress and index vcf
-parallel '
-  bgzip {} ;tabix -p vcf {}.gz 
-  ' ::: $(ls *phased.vcf)
 ```
+
+After normalisation, the vcf files were phased using the 1000 Genomes Project phase 3 reference haplotypes as described in section \@ref(phase).
 
 ### Merge NZ coreExome with 1000 Genomes Project
 
-In order to efficiently merge the data sets, the overlap in the markers from the 1kgp dataset and the coreExome needed to be found. This was done by extracting the markers and alleles from the coreExome data and then matching these to the markers extracted from the 1000 Genomes Project phase 3. The 1000 Genomes Project phase 3 markers were also filtered to remove non biallelic SNPs.
+In order to efficiently merge the data sets, the intersection of the markers from the 1kgp dataset and the coreExome was found. This was done by extracting the marker positions and alleles from the coreExome data and then matching these to the marker positions extracted from the 1000 Genomes Project phase 3. The 1000 Genomes Project phase 3 markers were also filtered to remove non biallelic SNPs.
 
 ```{r, engine = 'bash', eval = FALSE}
 # extract markers from core exome
@@ -621,8 +800,6 @@ for(i in 1:22){
 kg_markers <- do.call(rbind, tmp_list2)
 ce_kg <- merge(ce_markers, kg_markers, by = c("V1","V2","V3","V4"))
 write.table(file = 'ce_1kg_matched_markers.txt', ce_kg[,c(1,2)], row.names = FALSE, col.names=FALSE, quote=FALSE)
-
-
 ```
 
 Once the combined marker list was created, both the core exome and 1000 Genomes Project data sets had have their markers filtered to this consensus set.
@@ -665,7 +842,7 @@ parallel
   ' ::: $(seq 1 22)
 ```
 
-Sample IDs were then updated
+Sample identifiers were then updated to match the panel file that describe the population and super population an individual belonged to.
 ```{r, engine = 'bash', eval = FALSE}
 # working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
 for i in $(seq 1 22)
