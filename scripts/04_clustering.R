@@ -1,7 +1,19 @@
 library(tidyverse)
 library(ggdendro)
 library(scales)
-# made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered_3ns.Rmd
+
+# data is from:
+# coreExome_100kb_windows_intra.Rmd which is then filtered for 
+#
+#
+#
+#
+#
+
+
+
+
+
 mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-18-7-2017.RDS')
 
 prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-18-7-2017.RDS')
@@ -14,7 +26,6 @@ heatmap_col <- scale_fill_gradient(low = "white", high = "steelblue")
 
 
 create_windowTable <- function(){
-  
   bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>% select(-pop) %>% group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% data.frame()
 }
 
@@ -155,7 +166,7 @@ prop_unique <- function(statname){
     mutate(prop = unique_windows / total_windows)
 }
 
-
+# made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered.Rmd
 lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
@@ -165,7 +176,7 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN"))
 
-
+# made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered.Rmd
 upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
 
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
