@@ -4,10 +4,8 @@ author: "Murray Cadzow"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
- bookdown::gitbook: default
- bookdown::pdf_book:
-  includes:
-   in_header: preamble.tex
+# bookdown::gitbook: default
+ bookdown::pdf_book 
 documentclass: report #book
 bibliography: ["references.bib", "/home/murraycadzow/data/gwas_catalog/diseaseGR-25-7-2017.bib"]
 biblio-style: otago
@@ -17,35 +15,31 @@ description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 
 
 
-
-# Preface {-}
-\clearpage
-
-<!--\pagenumbering{roman} -->
+<!-- %\pagenumbering{roman}
 
 \listoftables
 
 \listoffigures
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 knitr::include_graphics('images/OUNZ_logo.png')
 ```
+-->
+<!-- ## Abstract {-} -->
 
-## Abstract {-}
-
-## Abbreviations {-}
+<!-- ## Abbreviations {-} -->
 
 <!-- 
 to include the glossary first build the book, cp Thesis.tex into the root dir then run "makeglossaries Thesis" then re build the book
 -->
-\addcontentsline{toc}{section}{Glossary}
+<!-- \addcontentsline{toc}{section}{Glossary} -->
 
-\printglossary[style=super]
+<!-- \printglossary[style=super] -->
 
 
-\addcontentsline{toc}{section}{Acronyms}
+<!-- \addcontentsline{toc}{section}{Acronyms} -->
 
-\printglossary[type=\acronymtype,style=super]
+<!-- \printglossary[type=\acronymtype,style=super] -->
 
 
 <!--
@@ -64,5 +58,5 @@ iHS: integrated haplotype homozygosity score
 BMI: Body mass index
 -->
 
-\glsresetall
-\clearpage
+<!-- \glsresetall -->
+<!-- \clearpage -->

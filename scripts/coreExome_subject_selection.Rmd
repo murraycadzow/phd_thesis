@@ -1,0 +1,487 @@
+---
+title: "Untitled"
+author: ""
+date: "`r format(Sys.Date())`"
+output: html_document
+--- 
+
+Decisions!!
+
+1. no 1 deg relatives
+2. pop n as close to 100 as possible
+3. aim to keep gout prevalence of pop close to actual prevalence
+
+
+
+
+```{r}
+library(tidyverse)
+
+library(RColorBrewer)
+set.seed(743)
+scratch_dir = '/media/xsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/NZ_coreExome/'
+
+exclude_peeps <- read.delim(paste0(scratch_dir,'src_data/QC1_7-BlanketExclusions.txt'),header=FALSE, stringsAsFactors = FALSE)
+
+euro_samples <- read.delim(paste0(scratch_dir,'src_data/QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff.fam'), stringsAsFactors = FALSE, header=FALSE, sep=' ')
+names(euro_samples) <- c('FID','IID','PID','MID','SEX','AFF')
+
+poly_samples <- read.delim(paste0(scratch_dir,'src_data/QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygoutAff.fam'), stringsAsFactors = FALSE, header=FALSE)
+names(poly_samples) <- c('FID','IID','PID','MID','SEX','AFF')
+
+pca_ancestry <- read.delim(paste0(scratch_dir,"src_data/PCA_afterRuthsApp_210317.txt"), stringsAsFactors = FALSE, header =TRUE, sep ='\t')
+
+table(duplicated(euro_samples$IID))
+table(euro_samples$AFF, exclude = NULL)
+table(poly_samples$AFF, exclude = NULL)
+
+euro_pca <- pca_ancestry %>% inner_join(., euro_samples %>% select(SUBJECT=IID, AFF), by = 'SUBJECT') %>% filter(AFF != -9 & !is.na(AFF) & !Ethnicity.Matching.PCA  %in% c("No","unknown") & STUDYCOHORTNAME == "Gout" & !SUBJECT %in% exclude_peeps$V2)
+
+
+poly_pca <- pca_ancestry %>% inner_join(., poly_samples %>% select(SUBJECT=IID, AFF), by = 'SUBJECT') %>% filter(AFF != -9 & !is.na(AFF) & !Ethnicity.Matching.PCA  %in% c("No","unknown") & STUDYCOHORTNAME == "Gout" & !SUBJECT %in% exclude_peeps$V2)
+
+# randomly keep one person from each family
+p_tmp <- data.frame(SUBJECT = poly_pca$SUBJECT, FAMILYID = poly_pca$FAMILYID) %>% mutate(ran_sort = rnorm(nrow(.), mean = 0, sd = 100)) %>% arrange(ran_sort) %>% filter(!duplicated(FAMILYID))
+poly_pca <- poly_pca %>% filter(SUBJECT %in% p_tmp$SUBJECT) 
+
+p_tmp <- data.frame(SUBJECT = euro_pca$SUBJECT, FAMILYID = euro_pca$FAMILYID) %>% mutate(ran_sort = rnorm(nrow(.), mean = 0, sd = 100)) %>% arrange(ran_sort) %>%  filter(!duplicated(FAMILYID)) 
+euro_pca <- euro_pca %>% filter(SUBJECT %in% p_tmp$SUBJECT) 
+
+
+rbind(euro_pca,poly_pca) %>% slice(grep('1.0', ETH_DESCRIP)) %>% group_by(ETH_DESCRIP, AFF) %>% tally()
+
+rbind(euro_pca,poly_pca) %>% group_by(SRSpecific, AFF) %>% tally()
+```
+define a colour scale
+```{r}
+myColors <- brewer.pal(12,"Paired")
+names(myColors) <- levels(factor(rbind(euro_pca,poly_pca) %>% select(ETH_DESCRIP) %>% slice(grep('1.0', ETH_DESCRIP)) %>% slice(grep("Unknown", ETH_DESCRIP, invert = TRUE)) %>% as.character()))
+colScale <- scale_colour_manual(name = "grp",values = myColors)
+```
+
+pair plots
+```{r}
+pairs(rbind(euro_pca,poly_pca)[,13:22], col = factor(rbind(euro_pca,poly_pca)$ETH_DESCRIP))
+```
+
+
+## PCA plot based on ETH_DESCRIP
+```{r}
+
+
+# PCA 1 vs 3
+rbind(euro_pca,poly_pca) %>% slice(grep('1.0', ETH_DESCRIP)) %>% slice(grep("Unknown", ETH_DESCRIP, invert = TRUE))%>% ggplot(., aes(x = PCA1, y =PCA3, colour = ETH_DESCRIP)) + geom_point() 
+
+#PCA 2 and 4
+rbind(euro_pca,poly_pca) %>% slice(grep('1.0', ETH_DESCRIP)) %>% slice(grep("Unknown", ETH_DESCRIP, invert = TRUE))%>% ggplot(., aes(x = PCA2, y =PCA4, colour = ETH_DESCRIP)) + geom_point()
+```
+
+```{r}
+filter_pca <- function(pca, sd_coeff) {
+  pca_mean <- mean(pca, na.rm = TRUE)
+  pca_sd <- sd(pca, na.rm = TRUE)
+  return(ifelse( (pca < (pca_mean + sd_coeff * pca_sd) & pca > (pca_mean - sd_coeff * pca_sd)), TRUE, FALSE
+  ))
+}
+```
+
+
+
+How many fall into my groups?
+
+European
+```{r}
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0 Caucasian", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  
+  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% 
+  group_by(ETH_DESCRIP,AFF) %>% tally()
+
+
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0 Caucasian", ETH_DESCRIP)) %>% filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(AFF))) + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.02))
+
+cau_pca <- rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0 Caucasian", ETH_DESCRIP)) %>%filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% mutate(AFF = AFF -1)
+
+broom::tidy(glm(AFF ~ PCA2 + PCA4, data = cau_pca, family='binomial'))
+
+```
+
+
+The group looks good alone, and there is no association between the PCAs and affection status
+
+East Polynesian - NZM and CIM
+
+```{r}
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0", ETH_DESCRIP)) %>% slice(grep("Maori", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2))%>% group_by(ETH_DESCRIP,AFF) %>% tally()
+
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0", ETH_DESCRIP)) %>% slice(grep("Maori", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(AFF)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.02))
+
+nzm_cim_pca <- rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0", ETH_DESCRIP)) %>% slice(grep("Maori", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>% filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP) %>% mutate(AFF = AFF -1)
+
+broom::tidy(glm(AFF ~ PCA2 + PCA4 + ETH_DESCRIP, data = nzm_cim_pca, family='binomial'))
+
+```
+
+groups look a little spead out but there is no assocation between affection and PCAs
+
+
+
+West Polynesian - Samoan and Tongan
+
+```{r}
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0", ETH_DESCRIP)) %>% slice(grep("Samoan|Tongan", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% tally()
+
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0", ETH_DESCRIP)) %>% slice(grep("Samoan|Tongan", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(AFF)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.02))
+
+sam_ton_pca <- rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF) %>% slice(grep("1.0", ETH_DESCRIP)) %>% slice(grep("Samoan|Tongan", ETH_DESCRIP)) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP) %>% mutate(AFF = AFF -1)
+
+broom::tidy(glm(AFF ~ PCA2 + PCA4 + ETH_DESCRIP, data = sam_ton_pca, family='binomial'))
+
+```
+
+The groups look rather spread and affection is not significantly associated PCAs
+
+
+Plot the selected samples back together
+```{r}
+bind_rows(cau_pca, nzm_cim_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF), sam_ton_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF)) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(ETH_DESCRIP)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.03))
+
+bind_rows(cau_pca, nzm_cim_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF), sam_ton_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF)) %>% group_by(ETH_DESCRIP, AFF) %>% tally()
+```
+
+pairs plot of the samples that survived filtering
+```{r}
+all_pca <- rbind(euro_pca,poly_pca)
+#pairs(rbind(euro_pca,poly_pca)[,13:22], col = factor(rbind(euro_pca,poly_pca)$ETH_DESCRIP))
+pairs(all_pca %>% semi_join(., bind_rows(cau_pca, nzm_cim_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF), sam_ton_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF)) %>% select(SUBJECT), by = "SUBJECT" ) %>% select(PCA1:PCA10), col = factor(all_pca %>% semi_join(., bind_rows(cau_pca, nzm_cim_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF), sam_ton_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF)) %>% select(SUBJECT), by = "SUBJECT" ) %>% select(PCAETHBROAD) %>% t() %>% as.character()))
+
+```
+
+
+
+create the cluster boundries for using all samples
+```{r}
+(eth1.0bounds <- bind_rows(cau_pca, nzm_cim_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF), sam_ton_pca %>% select(SUBJECT, PCA2,PCA4, ETH_DESCRIP,AFF)) %>% group_by(ETH_DESCRIP) %>%  summarise(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) )
+```
+
+
+```{r}
+rbind(euro_pca,poly_pca) %>% filter(PCAETHBROAD != 'Polynesian') %>% 
+  filter( apply(data.frame(.$PCA2, .$PCA4) ,1,  function(x){ 
+    a <- (x[1]<  eth1.0bounds$pca2mean + 2 * eth1.0bounds$pca2sd) & (x[1] >  eth1.0bounds$pca2mean - 2 * eth1.0bounds$pca2sd)
+    b <- (x[2]<  eth1.0bounds$pca4mean + 2 * eth1.0bounds$pca4sd) & (x[2] >  eth1.0bounds$pca4mean - 2 * eth1.0bounds$pca4sd)
+    any(a & b)
+} )) %>% select(SUBJECT, PCA2,PCA4, PCAETHBROAD,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(PCAETHBROAD)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.03)) 
+
+rbind(euro_pca,poly_pca) %>% filter(PCAETHBROAD != 'Polynesian')%>% filter( apply(data.frame(.$PCA2, .$PCA4) ,1,  function(x){ 
+    a <- (x[1]<  eth1.0bounds$pca2mean + 2 * eth1.0bounds$pca2sd) & (x[1] >  eth1.0bounds$pca2mean - 2 * eth1.0bounds$pca2sd)
+    b <- (x[2]<  eth1.0bounds$pca4mean + 2 * eth1.0bounds$pca4sd) & (x[2] >  eth1.0bounds$pca4mean - 2 * eth1.0bounds$pca4sd)
+    any(a & b)
+} )) %>% select(SUBJECT, PCA2,PCA4, PCAETHBROAD,AFF, SRSpecific, ETH_DESCRIP) %>% group_by(PCAETHBROAD, AFF) %>% tally()
+
+rbind(euro_pca,poly_pca) %>% filter(PCAETHBROAD != 'Polynesian')%>% filter( apply(data.frame(.$PCA2, .$PCA4) ,1,  function(x){ 
+    a <- (x[1]<  eth1.0bounds$pca2mean + 2 * eth1.0bounds$pca2sd) & (x[1] >  eth1.0bounds$pca2mean - 2 * eth1.0bounds$pca2sd)
+    b <- (x[2]<  eth1.0bounds$pca4mean + 2 * eth1.0bounds$pca4sd) & (x[2] >  eth1.0bounds$pca4mean - 2 * eth1.0bounds$pca4sd)
+    any(a & b)
+} )) %>% select(SUBJECT, PCA2,PCA4, PCAETHBROAD,AFF, SRSpecific, ETH_DESCRIP) %>% group_by(SRSpecific,AFF) %>% tally()
+```
+
+Admixed NZM
+```{r}
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD, SRSpecific) %>% 
+  filter(SRSpecific == "NZ Maori" & 
+         PCA2 < eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2mean - 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2sd &
+           PCA2 >  eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2mean + 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2sd) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(PCAETHBROAD)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.03))
+
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD, SRSpecific) %>% 
+  filter(SRSpecific == "NZ Maori" & 
+         PCA2 < eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2mean - 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2sd &
+           PCA2 >  eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2mean + 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2sd) %>% group_by(AFF) %>% mutate(PCAETHBROAD = "AdNZM") %>% tally()
+
+adnzm_pca <- rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD, SRSpecific) %>% 
+  filter(SRSpecific == "NZ Maori" & 
+         PCA2 < eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2mean - 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2sd &
+           PCA2 >  eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2mean + 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2sd) %>% mutate(PCAETHBROAD = "AdNZM")
+```
+
+Complete plot with NZC, NZM, adNZM, CIM, SAM, and TON
+
+```{r}
+all_pops <- bind_rows(
+rbind(euro_pca,poly_pca) %>% filter(PCAETHBROAD != 'Polynesian') %>% 
+  filter( apply(data.frame(.$PCA2, .$PCA4) ,1,  function(x){ 
+    a <- (x[1]<  eth1.0bounds$pca2mean + 2 * eth1.0bounds$pca2sd) & (x[1] >  eth1.0bounds$pca2mean - 2 * eth1.0bounds$pca2sd)
+    b <- (x[2]<  eth1.0bounds$pca4mean + 2 * eth1.0bounds$pca4sd) & (x[2] >  eth1.0bounds$pca4mean - 2 * eth1.0bounds$pca4sd)
+    any(a & b)
+} )) %>% select(SUBJECT, PCA2,PCA4, PCAETHBROAD,AFF,SRSpecific),
+
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD, SRSpecific) %>% 
+  filter(SRSpecific == "NZ Maori" & 
+         PCA2 < eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2mean - 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 NZ Maori'),]$pca2sd &
+           PCA2 >  eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2mean + 3 * eth1.0bounds[which(eth1.0bounds$ETH_DESCRIP == '1.0 Caucasian'),]$pca2sd) %>% group_by(AFF) %>%  mutate(PCAETHBROAD = "AdNZM")
+)
+all_pops <- all_pops %>% slice(grep("^G2|^0", SUBJECT, invert=TRUE)) # remove the G2 and 02 people with poor phenotypes
+all_pops %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(PCAETHBROAD)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.03)) 
+
+```
+
+
+East Polynesian
+
+```{r}
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD) %>% slice(grep("1.0", ETH_DESCRIP)) %>% filter(PCAETHBROAD == "East Polynesian") %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% tally()
+
+rbind(euro_pca,poly_pca) %>%select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD) %>% slice(grep("1.0", ETH_DESCRIP)) %>% filter(PCAETHBROAD == "East Polynesian") %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(AFF)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.02))
+
+ep_pca <- rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD, SRSpecific) %>% slice(grep("1.0", ETH_DESCRIP)) %>% filter(PCAETHBROAD == "East Polynesian") %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) #%>% group_by(ETH_DESCRIP) %>% mutate(AFF = AFF -1)
+
+#broom::tidy(glm(AFF ~ PCA2 + PCA4 + ETH_DESCRIP, data = ep_pca, family='binomial'))
+
+```
+
+
+
+West Polynesian
+
+```{r}
+rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD) %>% slice(grep("1.0", ETH_DESCRIP)) %>% filter(PCAETHBROAD == "West Polynesian") %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% tally()
+
+rbind(euro_pca,poly_pca) %>%select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD) %>% slice(grep("1.0", ETH_DESCRIP)) %>% filter(PCAETHBROAD == "West Polynesian") %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(ETH_DESCRIP,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = factor(AFF)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.02))
+
+wp_pca <- rbind(euro_pca,poly_pca) %>% select(SUBJECT, ETH_DESCRIP, PCA2, PCA4, AFF,PCAETHBROAD, SRSpecific) %>% slice(grep("1.0", ETH_DESCRIP)) %>% filter(PCAETHBROAD == "West Polynesian") %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) # %>% mutate(AFF = AFF -1)
+
+#broom::tidy(glm(AFF ~ PCA2 + PCA4 + ETH_DESCRIP, data = wp_pca, family='binomial'))
+
+```
+
+
+
+## PCA plot based on SRSpecific
+
+```{r}
+myColors <- brewer.pal(7,"Set2")
+names(myColors) <- levels(factor(rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern")) %>% select(SRSpecific) %>%  t()))
+colScale <- scale_colour_manual(name = "SRSpecific",values = myColors) 
+
+# PCA 1 vs 3
+rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern"))%>% ggplot(., aes(x = PCA1, y =PCA3, colour = SRSpecific)) + geom_point()
+
+#PCA 2 and 4
+rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern"))%>% ggplot(., aes(x = PCA2, y =PCA4, colour = SRSpecific)) + geom_point() 
+```
+
+From this I'll re-apply the same +/- 2 SD approach for each of European, CI/NZ Maori, Samoan and Tongan
+
+
+```{r}
+rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern"))%>%  slice(grep("Maori|European|Samoan|Tongan", SRSpecific)) %>% group_by(SRSpecific) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2))%>% group_by(SRSpecific, AFF) %>% tally()
+
+
+
+
+rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern"))%>%  slice(grep("Maori|European|Samoan|Tongan", SRSpecific)) %>% group_by(SRSpecific) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 2) & filter_pca(PCA4, 2)) %>% group_by(SRSpecific,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = SRSpecific)) + geom_point() 
+
+
+rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern"))%>%  slice(grep("Maori|European|Samoan|Tongan", SRSpecific)) %>% group_by(SRSpecific) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 1) & filter_pca(PCA4, 1)) %>% group_by(SRSpecific,AFF) %>% ggplot(., aes(x = PCA2, y =PCA4, colour = SRSpecific)) + geom_point() 
+
+rbind(euro_pca,poly_pca) %>% filter(!SRSpecific %in% c("","African","Iberian","East Asian", "Native American","South Asian", "Melanesian","Middle Eastern"))%>%  slice(grep("Maori|European|Samoan|Tongan", SRSpecific)) %>% group_by(SRSpecific) %>% mutate(pca2mean = mean(PCA2), pca2sd = sd(PCA2), pca4mean = mean(PCA4), pca4sd = sd(PCA4)) %>%  filter(filter_pca(PCA2, 1) & filter_pca(PCA4, 1))%>% group_by(SRSpecific,AFF) %>% tally()
+
+```
+
+
+It looks like there is a whole group of NZ Maori that 
+
+
+
+
+
+
+```{r}
+# prevalences
+gen_gout_prev <- data.frame(pop= c("nzcau", "nzmaori", 'pacific', 'adnzm'), prev = c(2.3, 7.7, 8.6, 5))
+
+```
+
+prevalences: based on Winnard et al 2013 table 2 age-standardised rates
+NZ Cau ```r gen_gout_prev[gen_gout_prev$pop =='nzcau','prev']```%  
+NZ Maori ```r gen_gout_prev[gen_gout_prev$pop =='nzmaori','prev']```%  
+Admixed NZ Maori ```r gen_gout_prev[gen_gout_prev$pop =='adnzm','prev']```
+
+Talking with Tony: use Pacific prevalence for all pacific populations. AdNZM should be between Euro and NZM rate.
+
+CI Maori ```r gen_gout_prev[gen_gout_prev$pop =='pacific','prev']```%  
+Pukapuka ```r gen_gout_prev[gen_gout_prev$pop =='pacific','prev']```%  
+Samoan ```r gen_gout_prev[gen_gout_prev$pop =='pacific','prev']```%  
+Tongan ```r gen_gout_prev[gen_gout_prev$pop =='pacific','prev']```%  
+
+
+```{r}
+pop_subsample <- function(pop_df = NULL, n = NULL, pop = NULL){
+  # AFF is 1 = control, 2 = case
+  if(missing(pop_df) | missing(n)| missing(pop)){
+    stop("missing arguments")
+  }
+  # possible pop values have to match gen_gout_prev$pop 
+  n_controls_avail <- pop_df %>% filter(AFF == 1) %>% select(SUBJECT) %>% nrow()
+  n_gout_avail <- pop_df %>% filter(AFF == 2) %>% select(SUBJECT) %>% nrow()
+  
+  n_gout <- round(gen_gout_prev[gen_gout_prev$pop == pop, 'prev'] / 100 * n, digits = 0)
+  n_control <- n - n_gout
+  
+  if(n_controls_avail <= n_control){
+    control <- as.character(pop_df %>% filter(AFF == 1) %>% select( SUBJECT) %>% t())
+  } else {
+    control <- as.character(sample(pop_df %>% filter(AFF == 1) %>% select(SUBJECT) %>% t(), n_control, replace = FALSE))
+  }
+  
+  #if difference in positive, need extra gouts to reach n (if possible)
+  diff <- n_control - length(control)
+  if(diff == 0){
+    if(n_gout >= n_gout_avail){
+      gout <- as.character(pop_df %>% filter(AFF == 2) %>% select(SUBJECT) %>% t())
+    } else {
+      gout <- as.character(sample(pop_df %>% filter(AFF == 2) %>% select(SUBJECT) %>% t(), n_gout, replace = FALSE))
+    }
+  } else {
+    n_gout <- n_gout + diff
+    if(n_gout >= n_gout_avail){
+      gout <- as.character(pop_df %>% filter(AFF == 2) %>% select(SUBJECT) %>% t())
+    } else {
+      gout <- as.character(sample(pop_df %>% filter(AFF == 2) %>% select(SUBJECT) %>% t(),n_gout, replace = FALSE))
+    }
+  }
+  if(!length(c(control,gout)) == n){
+    message("n does not equal c(control,gout)")
+  }
+  if(!length(gout) == n_gout & n >= (n_controls_avail + n_gout_avail)){
+    stop("gout does not equal n_gout")
+  }
+  return(pop_df %>% filter(SUBJECT %in% c(control,gout)) %>% select(SUBJECT))
+}
+
+
+```
+
+
+
+
+```{r}
+nzc <- pop_subsample(pop_df = all_pops %>% filter(SRSpecific == "European") %>% filter(PCAETHBROAD == "European") ,n = 100, pop = "nzcau")
+
+#write.table(nzcau_ids, paste0(scratch_dir,'coreExome_selection/NZ/coreExome_nzcau_selection2.txt'), sep ="\t",quote=FALSE, row.names=FALSE, col.names=FALSE)
+```
+
+```{r}
+nzm <- pop_subsample(pop_df = all_pops %>% filter(SRSpecific == 'NZ Maori') %>%  filter(PCAETHBROAD == "East Polynesian") ,n = 100, pop = "nzmaori")
+```
+
+```{r}
+cim <- pop_subsample(pop_df = all_pops %>% slice(grep('CI Maori', SRSpecific)) %>% filter(PCAETHBROAD == "East Polynesian") ,n = 100, pop = "pacific")
+```
+
+```{r}
+sam <- pop_subsample(pop_df = all_pops %>% filter(SRSpecific == 'Samoan') %>% filter(PCAETHBROAD == "West Polynesian") ,n = 100, pop = "pacific")
+```
+
+```{r}
+ton <- pop_subsample(pop_df = all_pops %>% filter(SRSpecific == 'Tongan') %>% filter(PCAETHBROAD == "West Polynesian") ,n = 100, pop = "pacific")
+```
+
+
+```{r}
+nad <- pop_subsample(pop_df = all_pops %>% filter(SRSpecific == 'NZ Maori') %>% filter(PCAETHBROAD == 'AdNZM') ,n = 100, pop = "adnzm")
+```
+
+
+```{r}
+epn <- pop_subsample(pop_df = ep_pca ,n = 100, pop = "pacific")
+```
+
+
+```{r}
+wpn <- pop_subsample(pop_df = wp_pca ,n = 100, pop = "pacific")
+```
+
+
+```{r}
+a <- read_delim(paste0(scratch_dir,'src_data/QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_related.genome.tsv'), progress = TRUE, col_names = TRUE, delim = '\t') %>%  filter(., IID1 %in% c(t(nzc),t(nzm),t(cim),t(sam),t(ton),t(nad),t(epn),t(wpn)) & IID2 %in%c(t(nzc),t(nzm),t(cim),t(sam),t(ton),t(nad),t(epn),t(wpn))  )
+```
+
+```{r}
+plot(a$Z0, a$Z1, xlim=c(0,1), ylim=c(0,1))
+```
+all relatedness
+```{r}
+filter(a, Z0 < 0.5)
+```
+
+
+
+nzcau relatedness
+```{r}
+a %>% filter(IID1 %in% t(nzc) & IID2 %in% t(nzc), Z0 < 0.5) 
+```
+
+
+nzm relatedness
+```{r}
+a %>% filter(IID1 %in% t(nzm) & IID2 %in% t(nzm), Z0 < 0.5) 
+```
+
+cim relatedness
+```{r}
+a %>% filter(IID1 %in% t(cim) & IID2 %in% t(cim), Z0 < 0.5) 
+```
+
+sam relatedness
+```{r}
+a %>% filter(IID1 %in% t(sam) & IID2 %in% t(sam), Z0 < 0.5) 
+```
+
+
+ton relatedness
+```{r}
+a %>% filter(IID1 %in% t(ton) & IID2 %in% t(ton), Z0 < 0.5) 
+```
+
+adnzm relatedness
+```{r}
+a %>% filter(IID1 %in% t(nad) & IID2 %in% t(nad), Z0 < 0.5) 
+```
+
+ep relatedness
+```{r}
+a %>% filter(IID1 %in% t(epn) & IID2 %in% t(epn), Z0 < 0.5) 
+```
+
+
+wp relatedness
+```{r}
+a %>% filter(IID1 %in% t(wpn) & IID2 %in% t(wpn), Z0 < 0.5) 
+```
+create file lists
+```{r}
+selected_ids <- list(NZC = nzc, NZM = nzm, CIM = cim, SAM = sam, TON = ton, NAD = nad, EPN = epn, WPN = wpn)
+```
+
+```{r}
+for(pop in names(selected_ids)){
+  write.table(file = paste0(scratch_dir, pop,".panel"), rbind(euro_pca,poly_pca) %>% filter(SUBJECT %in% t(selected_ids[[pop]])) %>% select(SUBJECT) %>% mutate(pop = pop, superpop = unlist(lapply(pop,function(x){switch(x, NZC = {"EUR"}, NZM = {"POL"}, CIM = {"POL"}, TON = {"POL"}, SAM = {"POL"}, NAD = {"POL"}, EPN = {"POL"}, WPN = {"POL"})}))) , col.names = FALSE, row.names = FALSE, quote = FALSE, sep = '\t')
+  selected_ids[[pop]] <- rbind(euro_pca,poly_pca) %>% filter(SUBJECT %in% t(selected_ids[[pop]])) %>% select(SUBJECT,FAMILYID)
+ 
+}
+```
+plot the final populations
+```{r}
+si <- bind_rows(lapply(names(selected_ids), function(x){selected_ids[[x]]$pop <- x; return(selected_ids[[x]])}))
+all_pops %>% right_join(., si, "SUBJECT") %>%  ggplot(., aes(x = PCA2, y =PCA4, colour = factor(pop)))  + geom_point() + xlim(c(-0.01, 0.02)) + ylim(c(-0.04, 0.03))
+```
+
+```{r}
+write.table(file = paste0(scratch_dir, "coreExome_selection_keep_ids.txt"),bind_rows(selected_ids) %>% select(FAMILYID,SUBJECT), col.names=FALSE, row.names= FALSE, quote=FALSE, sep ='\t')
+```
+
+```{r}
+save(file = "~/Dropbox/PhD/Thesis_Draft/bookdown_thesis/data/ce_selected_ids_27-4-2017.Rdata", selected_ids)
+```
+
+
+

@@ -1,5 +1,11 @@
 # Selection and Association Studies
 
+This chapter about using the results of selection analyses to better inform \gls{gwas}
+
+The first section of this chapter has been published 
+
+The UK Biobank provides a unique opportunity
+
 objectives:
 The objectives for this chapter are to:
 - Determine the improvement (if any) of genotype imputation in Polynesians from incorporating Polynesian haplotypes into the imputatation reference panel
@@ -12,11 +18,13 @@ Selection, vGwAS, GWAS, and Imputation of Polynesian Populations
 
 ## European GWAS, vGWAS and Selection
 
+Part of this work has been published in @Cadzow2017.
+
 This section describes the gout GWAS and vGWAS performed in the UKBiobank data and the comparision with the results from the selection analysis in the 1000 Genomes Project data.
 
 ### European Gout GWAS
 
-Prior to conducting the GWAS for gout, phenotypic models were assessed. Logisitic regression was and the Akaike information criterion for each model was used for model selection. The covariates used included: age, sex, BMI, waist, waist to height ratio, and waist to hip ratio. Each covariate was significant (P < 0.05) on their own.
+Prior to conducting the GWAS for gout, phenotypic models were assessed. Logisitic regression was performed and the Akaike information criterion for each model was used for model selection. The covariates used included: age, sex, BMI, waist, waist to height ratio, and waist to hip ratio. Each covariate was significant (P < 0.05) on their own.
 
 
 - GWAS results
@@ -57,6 +65,9 @@ ALL GROUP: the most significant snps are from ABCG2. SLC2A9 also features highly
 ```{r, engine='block', eval = FALSE, echo = FALSE, include=FALSE }
 here I want to include the results from the heritability analysis across the different criteria
 ```
+
+10000 controls were randomly selected. The same 10000 samples were then combined with each different gout criteria and heritiability estimates were obtained by first creating the genetic relationship matrix and then the variance of gout 
+
 
 ### European Gout vGWAS
 - vGWAS results

@@ -90,7 +90,7 @@ shapeit2 \
 
 Ancestral allele - The ancestral allele was used as had been annotated from the 1000 Genomes Phase 3 \gls{vcf} file where possible. A new sample identified as 'Ancestor' was included into the \gls{vcf} and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependant on the ancestral allele matching, otherwise the Ancestor genotype was set to missing.
 
-When the \gls{vcf} files were loaded into the R package PopGenome (vXXX, @Pfeifer2014) populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
+When the \gls{vcf} files were loaded into the R package PopGenome (v2.2.3, @Pfeifer2014) populations were identified using panel files which were whitespace delimited files with sample id, population, and super population as the columns. The outgroup population was set to be that of the Ancestor sample.
 
 for \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} a significance threshold was created using the empirical distribution with significance being designated as being in the either the 1st or 99th percentile, and negative for the lower tail, or positive for the upper tail.
 
@@ -221,6 +221,7 @@ smartpca.perl \
   -l combined_all_indep_eigen.log \
   -m 0
 ```
+
 #### admixture analysis
 ```{r, engine = 'bash', eval = FALSE}
 dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection
@@ -257,7 +258,9 @@ Uk Biobank GWAS
 
 #### Heritability Analysis
 
-10000 controls were randomly selected. The same 10000 samples were then combined with each different gout criteria and heritiability estimates were obtained by first creating the genetic relationship matrix and then the variance of gout 
+The GCTA v1.26.0 [@gctaref] was used to calculate the proportion of heritability explained. A genetic relationship matrix was calculated 
+
+
 ```{r, engine='bash', eval=FALSE}
 
 # load fam into R
@@ -311,8 +314,7 @@ done
 
 ### Variant calling from sequence data
 
-A pipeline for calling genetic variation from whole genome re-sequence data was implemented based on the best practices for the Genome Analysis ToolKit (GATK) v3.6. [@DePristo2011;@mckenna2010genome]
-This entire pipeline was implemented on the NeSI PAN cluster and automated to process each sample. The automation involves a wrapper program that given a list of samples will initiate transfer of the raw sequences to the cluster, then initiate the processing pipeline, and upon completion of the processing pipeline transfer the outputted data back before proceeding to the next sample in the batch. 
+A pipeline for calling genetic variation from whole genome re-sequence data was implemented based on the best practices for the Genome Analysis ToolKit (GATK) v3.6  [@DePristo2011;@mckenna2010genome]. This entire pipeline was implemented and automated on the NeSI PAN cluster and automated to process each sample^[www.github.com/merrimanlab/NeSI_GATK/]. The automation involves a wrapper program that given a list of samples will initiate transfer of the raw sequences to the cluster, then initiate the processing pipeline, and upon completion of the processing pipeline transfer the outputted data back before proceeding to the next sample in the batch. 
 
 #### Alignment of reads
 Paired end Fastq files were split into chunks of smaller files containing no more than 12.5 million reads per chunk. each paired chunk was then aligned to the human reference genome (build GRCh37) containing autosomes, sex chromosomes, rCRS mitochondrial sequence (AC:NC_012920), alternate contigs, as well as decoy sequence. Alignment was performed using the Burrows Wheeler Transform Aligner (BWA, v0.7.12)[@Li2010]. 
@@ -334,7 +336,8 @@ The unsorted bam files for each chunk outputted from the alignment stage were th
 ```{bash, eval = FALSE}
 
 # sort
-java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \                                      INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam \
+java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \
+  INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam \
   OUTPUT=$DIR/temp/${sample}_sorted_${i}.bam \
   SORT_ORDER=coordinate \
   CREATE_INDEX=true \
@@ -342,7 +345,8 @@ java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \                             
 
 # merge
 java -Xmx19g -jar $EBROOTPICARD/picard.jar MergeSamFiles \
-  $(sed 's/^/I=/g' < temp/sorted_bams.txt | tr '\n' ' ') \                               OUTPUT=$DIR/temp/${sample}_gathered.bam \
+  $(sed 's/^/I=/g' < temp/sorted_bams.txt | tr '\n' ' ') \                               
+  OUTPUT=$DIR/temp/${sample}_gathered.bam \
   USE_THREADING=true \
   CREATE_INDEX=true \
   SORT_ORDER=coordinate                                                    
@@ -350,7 +354,7 @@ java -Xmx19g -jar $EBROOTPICARD/picard.jar MergeSamFiles \
 
 #### Mark Duplicates
 
-The bam file for the sample then had PCR duplicates marked using the Mark Duplicates module of the GATK
+The bam file for the sample then had PCR duplicates marked using the Mark Duplicates module of the \gls{gatk}. This is done so that the reads generated as part of the PCR process don't add or subtract evidence for a putative variant during the variant calling stage.
 
 ```{bash, eval = FALSE}
 java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
@@ -371,7 +375,8 @@ java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 ```
 
 #### Base Recalibration
-The bam files had the base recalibration step applied to account for platform specific base bias
+
+The bam files had the base recalibration step applied to account for platform specific base bias. The base quality is weighted highly in variant calling alogrithms, but different platforms have paticular inheirant systematic biases. The base recalibration step employs a machine learning approach to correct for these systematic errors.
 
 ```{bash, eval = FALSE}
 java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
@@ -403,6 +408,8 @@ java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 
 #### Haplotype caller - GVCF
 
+The haplotype caller is used to call genetic variants. The haplotype caller is capable of calling \gls{snp}s and \gls{indel}s simulataneously by using de-novo local assembly. In GVCF mode the haplotype caller creates an intermediate genome \gls{vcf} (gVCF) file per sample. Each samples gVCF file is then able to be combined and all samples are then jointly genotyped together.
+
 ```{bash, eval = FALSE}
 java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysisTK.jar \
 	-T HaplotypeCaller \
@@ -415,15 +422,23 @@ java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysisTK.jar \
 	--dbsnp $DBSNP \
 	-o $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf \
 	-nct ${SLURM_JOB_CPUS_PER_NODE}
-```
-
-#### Genotype GVCF
-
-```
-parallel -j 22 'java -Xmx8g -jar /Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar -T CombineGVCFs -R /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa  $(find ./ -name \*_{2}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g\") -o ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf -log ../combined_gvcf/{1}_combine_{2}.log -L {2} && pigz -p 4 ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf ' ::: man015 ::: $(seq 1 22)
 
 
-/Volumes/BiochemXsan/scratch/merrimanlab/CoreTools/CurrentVersions/GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
+# combine gVCFs
+parallel -j 22 '
+  java -Xmx8g -jar \
+    GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
+    -T CombineGVCFs \
+    -R reference_files/FASTA/hs37d5/hs37d5.fa  \
+    $(find ./ -name \*_{2}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g\") \
+    -o ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf \
+    -log ../combined_gvcf/{1}_combine_{2}.log \
+    -L {2} \
+    && pigz -p 4 ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf ' ::: man015 ::: $(seq 1 22)
+
+# variant call gVCF
+java -Xmx32g -jar \
+  GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
  -T GenotypeGVCFs \
  -R /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa \
  $(find ./combined_gvcf -name \*_{1}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g") \
@@ -446,7 +461,8 @@ java -Xmx48g -jar \
   reference_files/resource_bundle_dec14/1000G_omni2.5.b37.vcf \
   -resource:1000G,known=false,training=true,truth=false,prior=10.0 \
   reference_files/resource_bundle_dec14/1000G_phase1.snps.high_confidence.b37.vcf \
-  -resource:dbsnp,known=true,training=false,truth=false,prior=2.0 reference_files/resource_bundle_dec14/dbsnp_138.b37.vcf \
+  -resource:dbsnp,known=true,training=false,truth=false,prior=2.0 \
+  reference_files/resource_bundle_dec14/dbsnp_138.b37.vcf \
   -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -an InbreedingCoeff \
   -mode SNP \
   -recalFile variant_recal/man001-014.SNP.recal \
@@ -482,7 +498,7 @@ do
     -Djava.io.tmpdir=/Volumes/BiocArchive/archivetemp/java_tmp/ \
     -jar GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
     -T ApplyRecalibration \
-    -R  /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa  \
+    -R  reference_files/FASTA/hs37d5/hs37d5.fa  \
     -input ./variant_called/man001-014_${i}.raw.snps.indels.vcf  \
     -mode SNP  \
     -recalFile ./variant_recal/man001-014.SNP.recal  \
@@ -500,7 +516,7 @@ do
     -Djava.io.tmpdir=/Volumes/BiocArchive/archivetemp/java_tmp/ \
     -jar GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
     -T ApplyRecalibration \
-    -R  /Volumes/BiocArchive/archive/merrimanlab/reference_files/FASTA/hs37d5/hs37d5.fa \
+    -R  reference_files/FASTA/hs37d5/hs37d5.fa \
     -input ./variant_recal/man001-014_${i}.recal.snp.vcf \
     -mode INDEL \
     -recalFile ./variant_recal/man001-014.INDEL.recal \
@@ -517,7 +533,8 @@ done
 
 
 ### Variant Annotation
-snpEff
+
+Variant annotation of \gls{vcf} files was performed using snpEff vXXX [@snpeff] with the homo sapiens GRCh37 database.
 
 
 ### Pathway Analysis
@@ -538,11 +555,11 @@ urldate = {2015-08-18}
 }
 -->
 
-The \glsdesc{1kgp} was an international consortium that was established in 2007 to provide a comprehensive record of human genetic variation. The project consisted of three main data phases. A pilot phase that whole-genome sequenced 179 individuals from four populations at low coverage (2-4x), along with high coverage sequencing for two trios (mother, father, and child), and exon targeted sequencing for 697 individuals from seven populations [@1kgp_phase1]. The second main data phase provided sequencing data for 1092 individuals from 14 populations. This sequencing data was a combination of low coverage whole-genome and exon sequencing [@1gp_1092]. The third main phase (Phase 3) was a dataset consisting of low coverage whole-genome sequencing, deep exome sequencing, and dense microarray genotyping for 2504 individuals from 26 populations [@1kgp_phase3]. The 1000 Genomes data set used was the Phase 3 release^[ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ accessed 20 March 2017].
+The \glsdesc{1kgp} was an international consortium that was established in 2007 to provide a comprehensive record of human genetic variation. The project consisted of three main data phases. A pilot phase that whole-genome sequenced 179 individuals from four populations at low coverage (2-4x), along with high coverage sequencing for two trios (mother, father, and child), and exon targeted sequencing for 697 individuals from seven populations [@1KGP2010]. The second main data phase provided sequencing data for 1092 individuals from 14 populations. This sequencing data was a combination of low coverage whole-genome and exon sequencing [@1KGP2012]. The third main phase (Phase 3) was a dataset consisting of low coverage whole-genome sequencing, deep exome sequencing, and dense microarray genotyping for 2504 individuals from 26 populations [@1KGP2015snp]. The 1000 Genomes data set used was the Phase 3 release^[ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ accessed 20 March 2017].
 
 
 ```{r populations, results = 'asis', echo = FALSE}
-read.csv('~/Git_repos/SelectionDW_ETL/data/populations.csv', stringsAsFactors = FALSE) %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, "Genotype\nPlatform" = genotypePlatform) %>%   knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations') %>% kableExtra::group_rows("African Super Population (AFR)", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR)", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS)", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR)", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)*", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS)", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are not 1000 Genomes Project populations", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
+read.csv('~/Git_repos/SelectionDW_ETL/data/populations.csv', stringsAsFactors = FALSE) %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, "Genotype\nPlatform" = genotypePlatform) %>%   knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations') %>% kableExtra::group_rows("African Super Population (AFR)", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR)", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS)", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR)", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)*", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS)", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from 'Genetics of Aoteroa' and are not 1000 Genomes Project populations", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
 ```
 
 
@@ -550,9 +567,12 @@ read.csv('~/Git_repos/SelectionDW_ETL/data/populations.csv', stringsAsFactors = 
 
 The genetics of Gout in Aoteroa study is a case-control cohort with recruitment mainly from the Auckland, Wellington, Christchurch and Dunedin regions of New Zealand. Individuals were asked to fill in a questionaire regarding demographics information, clinical information, and food consumption at the time of recruitment. 
 
-Individuals from this study have been genotyped on at least one of the following platforms: an affymetrix AXIOM SNP chip, an Illumina OMNIexpress SNP chip, an Illumina CoreExome SNP chip, whole genome low-coverage resequenced, or exome resequence data.
+Individuals from this study were genotyped on Illumina CoreExome v24 microarray. A subset of individuals in this study were also whole genome sequenced at low coverage (XXX).
+
+
 
 <!--
+whole genome low-coverage resequenced, or exome resequence data.
 #### Axiom
 
 - about
@@ -596,18 +616,27 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 -->
 #### CoreExome
 
-The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX.  Genotyping quality control was performed following the protocol from @Guo2014. Illumina’s Genome Studio vXXX genotyping module vXXX was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. 
+The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina. It comprises a core set of 551,839 markers with a mean density of XXX. Genotyping quality control was performed following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. Inidivuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed.
 
-- removed gender mismatches
-- checked relatedness of samples
-- checked ancestry with PCA
-- HWE by population
-- checked heterozygosity and inbreeding outliers
-- checked genotype consistency
+Heterozygosity and depression of genetic variation was also checked for outliers.
+
+
+
+Relatedness between individuals was assessed through inheritence by state using Plink2 (v1.9b3.32) and a pedigree of created to 
+Duplicates and first degree relations were excluded.
+
+Hardy-Weinberg equilibrium of markers was checked for European, East Polynesian, and West Polynesian populations (3 or more grandparents self reported ethnicity) using an exact test in plink2 and variants were removed that had a Bonferroni multiple testing corrected p < 0.05.
+
+The genetic ancestry determined through \gls{pca} was compared with self reported ethnicity and individuals were removed where there was disagreement.
+
+
+
 
 
 Selection of samples to form the populations used in the selection analyses
-Gout affection was determined by...
+Gout affection was determined by the American College of Rheumatology criteria
+
+
 
 A single individual was randomly selected from family groups identified through identity by state analysis. Individuals who had a mismatch between self reported and genetic ancestry were also removed. Principle components 2 and 4 were found to provide the greatest separation between Europeans, East Polynesians, and West Polynesians. Individuals reporting 4 grandparents of Caucasian, NZ Maori, CI Maori, Samoan, and Tongan ancestry were used to define the threshold values. Thresholds were calculated using mean +/- 2 SD for PC2 and PC4 for each population group. Once thresholds were calculated all samples were filtered so that only those that lay within a boundary remained. Remaining samples were then randomly sampled to form groups of 100 individuals, where possible trying to match general population prevalence for gout.
 
@@ -704,9 +733,16 @@ This used table \@ref(tab:refDatasets) for the stuff
 
 ## Selection dataset {#selectionDataset}
 
-### PCA sample selection
+### Sample selection
 
-Principle components were calculated for all 
+Principle components were calculated for all individuals genotyped on the coreExome mircoarray using SmartPCA (EIGENSOFT v6.0.1, see PCA section) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethncity of grandparents and their genetic ancestry, or if they had self reported their ethnicity as unknown.
+
+Principle component 2 was identifed as providing the best separation of European ancestry from Polynesian ancestry, and PC4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. To determine the boundaries of the population groups, the mean +/- 1 sd for PC2 and 4 were used
+
+```{r, fig.cap = '(ref:cePCA) XXX temp plot of PCAs for subject selection'}
+knitr::include_graphics('images/02_methods/temp_pca_plot.png')
+```
+
 
 ### Core Exome - Filter individuals and markers 
 

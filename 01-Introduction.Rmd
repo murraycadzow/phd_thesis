@@ -1,5 +1,4 @@
 
-
 # Introduction
 <!-- \pagenumbering{arabic} -->
 Charles @darwin1909origin in The Origin of Species declared: _“[The] preservation of favourable individual differences and variations, and the destruction of those which are injurious, I have called Natural Selection or Survival of the Fittest. Variations neither useful or injurious would not be affected by natural selection, and would be left either a fluctuating element, as perhaps we see in certain polymorphic species, or would ultimately become fixed, owing to the nature of the organism and the nature of the conditions.”_ This theory set the scene for research in population biology. Selection acts upon the phenotype and this pressure then transfers through to act upon the genetic make-up of that phenotype. Most important to this review is that Darwin’s Theory also created models for what natural selection should look like and the methods for being able to detect selective events on the genetics of organisms. A focus on selection in humans has added insight into past events since migration out of Africa [@Soares2012] and yielded possibilities of the influences on human disease.

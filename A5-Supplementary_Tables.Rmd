@@ -3,7 +3,7 @@
 library(tidyverse)
 library(formattable)
 ```
-# Appendix E
+# Appendix {-}
 
 ## Tables
 
