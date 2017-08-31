@@ -2,23 +2,23 @@ panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsF
 
 # load the significant data
 ## frequency based
-lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-30-8-2017.RDS')
+lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
       lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
-upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-30-8-2017.RDS')
+upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(
     lapply(names(upper_sig_stats[[y]]), function(x){
       upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
 ## load ihs and nsl data
 ihs_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')

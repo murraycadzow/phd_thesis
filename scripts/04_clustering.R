@@ -2,23 +2,16 @@ library(tidyverse)
 library(ggdendro)
 library(scales)
 
-# data is from:
-# coreExome_100kb_windows_intra.Rmd which is then filtered for 
-#
-#
-#
-#
-#
 
 
 
-
-
-mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-18-7-2017.RDS')
-
-prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-18-7-2017.RDS')
-clus_r_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_r_list-18-7-2017.RDS')
-clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_c_list-18-7-2017.RDS')
+###
+# made in clustering/coreExome_1kg_popgenome_clustering_100kb_filtered_3ns.Rmd
+mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-31-8-2017.RDS')
+prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
+clus_r_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_r_list-31-8-2017.RDS')
+clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_c_list-31-8-2017.RDS')
+###
 
 panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
 
@@ -166,18 +159,18 @@ prop_unique <- function(statname){
     mutate(prop = unique_windows / total_windows)
 }
 
-# made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered.Rmd
-lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
+# made from clustering/popgenome_freq_stats.Rmd
+lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
       lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
-# made from rnotebooks/CoreExome/coreExome_100kb_windows_intra_filtered.Rmd
-upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
+# made from clustering/popgenome_freq_stats.Rmd
+upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(
@@ -185,7 +178,7 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
       upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
 
 gene_dendros <- function(gene_data){

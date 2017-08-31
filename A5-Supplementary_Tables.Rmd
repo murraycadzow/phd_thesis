@@ -13,7 +13,7 @@ This is a test sentence to find out if table \@ref(tab:meanSegSitesTable) is ref
 -->
 ```{r}
 # This is created by coreExome_100kb_windows_intra_filtered.Rmd
-chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_chr_summary_popgenome_filtered_3ns.20-7-2017.RDS")
+chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS")
 pops <- list()
 panel <- read.delim('/home/murraycadzow/data/NZ_coreExome_1kgp/nz_1kgp.panel', stringsAsFactors = FALSE)
 for(p in unique(panel$pop)){
@@ -75,23 +75,23 @@ rm(list=ls())
 ## Chapter 3 Tables
 
 ```{r}
-lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_lower_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
+lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
       lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
-upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_upper_sig_stat_genes_filtered_ns3-27-7-2017.RDS')
+upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(
     lapply(names(upper_sig_stats[[y]]), function(x){
       upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
 ```
 
@@ -119,10 +119,10 @@ lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','T
 ## Chapter 4 Tables
 
 ```{r chap4data}
-prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-18-7-2017.RDS')
+prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
 
 load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR, 
-load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-26-7-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
+load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-31-8-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
 names(gout) <- c('mat_d','prop')
 names(t2d) <-  c('mat_d','prop')
 names(obesity) <-  c('mat_d','prop')

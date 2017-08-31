@@ -212,7 +212,7 @@ refer to figure
 
 
 ```{r tdTop1000, fig.cap='(ref:tdTop1000)',echo = FALSE, fig.height = 7, cache=TRUE}
-#ggsave(plot = four_plot("td","Tajima's D"), filename = 'images/04_clustering/tdTop1000.png', device = 'png', height = 7, width = 7)
+ggsave(plot = four_plot("td","Tajima's D"), filename = 'images/04_clustering/tdTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/tdTop1000.png')
 ```
 
@@ -274,7 +274,7 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 (ref:fwhTop1000) _\gls{fwh} Clustering._ Hierarchical clustering of \gls{fwh} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fwh} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
 ```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', fig.height=7, cache=TRUE}
-#ggsave(four_plot("fwh","Fay and Wu's H"), filename = 'images/04_clustering/fwhTop1000.png', device = 'png', height = 7, width = 7)
+ggsave(four_plot("fwh","Fay and Wu's H"), filename = 'images/04_clustering/fwhTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/fwhTop1000.png')
 ```
 
@@ -310,7 +310,7 @@ In the upper tail of the \gls{fwh} distribution, the clustering assigned all of 
 (ref:fldTop1000) _\gls{fld} Clustering._ Hierarchical clustering of \gls{fld} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fld} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully. Colour represents a window being present.
 
 ```{r fldTop1000, fig.cap = '(ref:fldTop1000)', fig.height=7, cache=TRUE}
-#ggsave(four_plot("fld","Fu and Li's D"), filename = 'images/04_clustering/fldTop1000.png', device = 'png', height = 7, width = 7)
+ggsave(four_plot("fld","Fu and Li's D"), filename = 'images/04_clustering/fldTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/fldTop1000.png')
 ```
 
@@ -349,7 +349,7 @@ The clustering of the upper tail (Figure \@ref(fig:fldTop1000) B and D) grouped 
 (ref:flfTop1000) _\gls{flf} Clustering._ Hierarchical clustering of \gls{flf} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{flf} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
 ```{r flfTop1000, fig.cap = '(ref:flfTop1000)', fig.height=7, cache=TRUE}
-#ggsave(four_plot("flf","Fu and Li's F"), filename = 'images/04_clustering/flfTop1000.png', device = 'png', height = 7, width = 7)
+ggsave(four_plot("flf","Fu and Li's F"), filename = 'images/04_clustering/flfTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/flfTop1000.png')
 ```
 
@@ -385,7 +385,7 @@ Clustering on the windows from the upper tail put the super populations into the
 (ref:zeTop1000) _\gls{ze} Clustering._ Hierarchical clustering of \gls{ze} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{ze} lower and upper tails respectfully using hierarchical clustering with euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully.
 
 ```{r zeTop1000, fig.cap = '(ref:zeTop1000)', fig.height=7, cache=TRUE}
-#ggsave(four_plot("ze","Zeng's E"), filename = 'images/04_clustering/zeTop1000.png', device = 'png', height = 7, width = 7)
+ggsave(four_plot("ze","Zeng's E"), filename = 'images/04_clustering/zeTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/zeTop1000.png')
 ```
 
@@ -581,7 +581,7 @@ The Polynesian populations were clustered together with a high proportion of sha
 <!-- might be a good idea to use a grid to put multiple plots into one -->
 ```{r, include = FALSE}
 load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR, 
-load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-26-7-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
+load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-31-8-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
 names(gout) <- c('mat_d','prop')
 names(t2d) <-  c('mat_d','prop')
 names(obesity) <-  c('mat_d','prop')

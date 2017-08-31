@@ -396,7 +396,7 @@ The mean number of windows per population that met the significance threshold fo
 
 
 ```{r}
-global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_summary_popgenome_filtered_3ns.30-8-2017.RDS")
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS")
 ```
 
 ```{r, results='asis'}
