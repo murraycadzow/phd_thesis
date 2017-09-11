@@ -2,6 +2,8 @@
 #knitr::opts_knit$set(root.dir = '/home/murraycadzow/data/NZ_coreExome_1kgp/' )
 library(tidyverse)
 library(formattable)
+library(knitr)
+library(kableExtra)
 ```
 # Appendix {-}
 
@@ -117,6 +119,27 @@ lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','T
 ```
 
 ## Chapter 4 Tables
+
+```{r}
+create_gwas_cat_table <-function(){
+  # data from rnotebooks/CoreExome/gwas_catalog.Rmd
+  load('~/data/gwas_catalog/disease_ref_table-25-7-2017.RData')
+  return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
+}
+
+```
+
+
+```{r, results = 'asis'}
+m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, Reference) %>% filter(Category != "Kidney Disease")
+#colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
+#pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", keep.line.breaks = TRUE)
+
+kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% group_rows("Gout and Urate",1,18)  %>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE)
+
+#%>% group_rows("Kidney Disease",19,26) %>% group_rows("Metabolic Syndrome", 27,30) %>% group_rows("Obesity", 31, 63) %>% group_rows("T2D", 64, 102)
+```
+
 
 ```{r chap4data}
 prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
