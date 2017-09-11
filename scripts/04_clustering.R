@@ -1,7 +1,7 @@
 library(tidyverse)
 library(ggdendro)
 library(scales)
-
+library(ggpubr)
 
 
 
@@ -15,7 +15,7 @@ clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_
 
 panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
 
-heatmap_col <- scale_fill_gradient(low = "white", high = "steelblue")
+heatmap_col <- scale_fill_gradient(low = "white", high = "steelblue", guide = 'colourbar', breaks = c(0.0, 0.25, 0.5, 0.75, 1.0 ), limits = c(0,1))
 
 gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
@@ -104,11 +104,6 @@ create_fst_dendro <- function(){
 }
 
 
-create_gwas_cat_table <-function(){
-  # data from rnotebooks/CoreExome/gwas_catalog.Rmd
-  load('~/data/gwas_catalog/disease_ref_table-25-7-2017.RData')
-  return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
-}
 
 
 ihs_dendro_plot <- function(){
@@ -119,17 +114,34 @@ ihs_dendro_plot <- function(){
   mat_ihs <- mat_ihs[clus_r$order,clus_c$order]
   
   ddata_x <- dendro_data(clus_c)
+  ddata_y <- dendro_data(clus_r)
+  
+  labs_x <- label(ddata_x)
+  labs_y <- label(ddata_y)
+  labs_x$group <- unlist(lapply(as.character(labs_x$label), function(x){strsplit(x, split = '_')[[1]][1]}))
+  labs_y$group <- unlist(lapply(as.character(labs_y$label), function(x){strsplit(x, split = '_')[[1]][1]}))
+
   p1 <- ggplot(segment(ddata_x)) +
     geom_segment(aes(x=x, y=y, xend=xend, yend=yend))
-  labs <- label(ddata_x)
-  labs$group <- unlist(lapply(as.character(labs$label), function(x){strsplit(x, split = '_')[[1]][1]}))
+  
   p1 <- p1 + geom_text(data=label(ddata_x),
-                       aes(label=label, x=x, y=y-0.1, colour=labs$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
-    multiplot(#ggdendrogram(clus_c) + ggtitle('A'),
-            p1 + ggtitle("A"),
-      as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col + labs(fill = "Proportion"),
-  cols = 1
-  )
+                       aes(label=label, x=x, y=y-0.1, colour=labs_x$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none', plot.margin = unit(c(0.5,0.5,0.1,0.5), "cm"), aspect.ratio = 1/2) + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
+  
+  p2 <- as.data.frame(mat_ihs) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + 
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, colour = as.character(left_join(labs_x, super_pop_colours, by = 'group' ) %>% .[['colour']])), 
+          axis.text.y = element_text(hjust = 1, vjust = 0.5, colour = as.character(left_join(labs_y, super_pop_colours, by = 'group' ) %>% .[['colour']])), 
+          axis.title.y = element_blank(), 
+          axis.title.x = element_blank(),
+          axis.ticks = element_blank(),
+          legend.position = 'bottom', 
+          panel.grid = element_blank(), 
+          plot.margin = unit(c(0.1,0.5,0.1,0.5), 'cm'), 
+          aspect.ratio = 1, 
+          panel.border = element_rect(colour = "black", fill=NA, size= 1)) + 
+    heatmap_col + labs(fill = "Proportion") + guides(fill = guide_colorbar(barwidth = 10, barheight = 0.5))
+
+  ggarrange(p1, p2, heights = c(1, 2),
+            ncol = 1, nrow = 2, align = "v", labels = c("A","B"))
 }
 
 
@@ -141,18 +153,38 @@ nsl_dendro_plot <- function(){
   mat_nsl <- mat_nsl[clus_r$order,clus_c$order]
   
   ddata_x <- dendro_data(clus_c)
+  ddata_y <- dendro_data(clus_r)
+  
+  labs_x <- label(ddata_x)
+  labs_y <- label(ddata_y)
+  labs_x$group <- unlist(lapply(as.character(labs_x$label), function(x){strsplit(x, split = '_')[[1]][1]}))
+  labs_y$group <- unlist(lapply(as.character(labs_y$label), function(x){strsplit(x, split = '_')[[1]][1]}))
+  
   p1 <- ggplot(segment(ddata_x)) +
     geom_segment(aes(x=x, y=y, xend=xend, yend=yend))
-  labs <- label(ddata_x)
-  labs$group <- unlist(lapply(as.character(labs$label), function(x){strsplit(x, split = '_')[[1]][1]}))
-  p1 <- p1 + geom_text(data=label(ddata_x),
-                 aes(label=label, x=x, y=y-0.1, colour=labs$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
   
-  multiplot(#ggdendrogram( hclust(dist(t(mat_nsl), method="euclidean"), method = "complete"), colour = 'red') + ggtitle("A"),
-    p1 + ggtitle("A"),
-    as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),  axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.title.x = element_blank(), legend.position = 'bottom', panel.grid = element_blank()) + ggtitle('B')+ heatmap_col + labs(fill = "Proportion"),
-            cols = 1)
+  p1 <- p1 + geom_text(data=label(ddata_x),
+                       aes(label=label, x=x, y=y-0.1, colour=labs_x$group, angle = 90, hjust = 1), size = 3)  + theme_dendro() + theme(legend.position = 'none', plot.margin = unit(c(0.5,0.5,0.1,0.5), "cm"), aspect.ratio = 1/2) + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
+  
+  p2 <- as.data.frame(mat_nsl) %>% mutate(pop1 = rownames(.)) %>% gather("pop2", "value",1:(NCOL(.)-1)) %>% mutate(pop1 = factor(pop1), pop2 = factor(pop2)) %>% mutate(pop1 = factor(pop1, levels = levels(pop1)[clus_r$order]), pop2 = factor(pop2, levels = levels(pop2)[clus_c$order])) %>%  ggplot(., aes(x = pop2, y = pop1, fill = value)) + geom_tile() + 
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, colour = as.character(left_join(labs_x, super_pop_colours, by = 'group' ) %>% .[['colour']])), 
+          axis.text.y = element_text(hjust = 1, vjust = 0.5, colour = as.character(left_join(labs_y, super_pop_colours, by = 'group' ) %>% .[['colour']])), 
+          axis.title.y = element_blank(), 
+          axis.title.x = element_blank(), 
+          axis.ticks = element_blank(),
+          legend.position = 'bottom', 
+          panel.grid = element_blank(), 
+          aspect.ratio = 1, 
+          panel.border = element_rect(colour = "black", fill=NA, size= 1)
+          ) + 
+    heatmap_col + 
+    labs(fill = "Proportion")  + guides(fill = guide_colorbar(barwidth = 10, barheight = 0.5, draw.llim = TRUE, draw.ulim = TRUE ))
+  
+  ggarrange(p1, p2, heights = c(1, 2),
+            ncol = 1, nrow = 2, align = "v", labels = c("A","B"))
 }
+
+
 
 
 prop_unique <- function(statname){
