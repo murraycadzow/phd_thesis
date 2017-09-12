@@ -2,3 +2,22 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Latex related files
+Thesis.acn
+Thesis.aux
+Thesis.glg
+Thesis.ist
+Thesis.lot
+Thesis.tex
+Thesis.acr
+Thesis.bbl
+Thesis.glo
+Thesis.lof
+Thesis.out
+Thesis.toc
+Thesis.alg
+Thesis.blg
+Thesis.gls
+Thesis.log
+Thesis.Rmd
