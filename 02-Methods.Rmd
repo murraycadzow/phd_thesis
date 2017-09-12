@@ -155,6 +155,29 @@ Gene
 - Ka/Ks
 -->
 
+### Disease Gene Lists {#diseaselist}
+
+Lists were filtered for P <  5x10^-8^. From the filtered results the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Rows were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data each disease selected rows using keywords in the "disease trait". Gout and urate used the keywords "urate" and "gout", obesity used "obesity" and "body mass", \gls{t2d} used "diabetes", and metabolic syndrome used "syndrome". The other disease genelsits used the filtered P-value data and used selected on keywords; for age-related macular degeneration, "age-related macular degeneration" was used. For Alzheimer's disease, "Alzheimer's disease" was used. For Parkinson's disease, "Parkinson's disease" was used, removing entries with the keyword "early". And for colerectal cancer, "Colorectal cancer" and "Colon cancer" were used. All keyword matching was case-insensitve.
+
+```{r, eval = FALSE}
+gwas_interested <- gwas_cat[grep('metabolic syndrome|obesity|diabetes|urate|gout|body mass|lipid traits', gwas_cat$DISEASE.TRAIT, ignore.case = TRUE) ,]
+
+#filter out potentially misleading gwas hits
+kd<- gwas_cat %>% filter(grepl(DISEASE.TRAIT, pattern = 'kidney|renal', ignore.case=TRUE) & !grepl(DISEASE.TRAIT, pattern = 'transplant|carcinoma|Type|stones|gout|related')) %>% filter(DISEASE.TRAIT != "Diabetic kidney disease")
+
+gwas_interested <- rbind(gwas_interested[grep("child|erectile|lean|autoantibodies|gestational|cancer|psychopharmacol|metaformin|metformin|obstructive|interaction|asthmatics|omega|pain|cataracts|time|bilirubin|chain|thyroid|zhi|Type 1|cystic", gwas_interested$DISEASE.TRAIT, invert = TRUE, ignore.case = TRUE),], kd)
+
+
+
+obesity_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("obesity|body mass",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+t2d_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("diabetes",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+metsyn_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("Syndrome",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+gc_urate_gout_GR <-  gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("urate|gout",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+```
+
 
 
 ### Selection database creation
