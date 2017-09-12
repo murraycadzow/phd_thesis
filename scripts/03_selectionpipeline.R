@@ -28,3 +28,7 @@ nsl_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions
 table(unique(lower_sig_stats$SYMBOL) %in% (lower_sig_stats %>% filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.Li.F', 'Fu.Li.D'), pop %in% c('CIM','NZM','SAM','TON')) %>% .[['SYMBOL']] %>% unique()))
 
 load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR
+
+# made from Thesis/selectionpipeline/consec_regions.R
+consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions-12-9-2017.RDS')
+consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions-12-9-2017.RDS')
