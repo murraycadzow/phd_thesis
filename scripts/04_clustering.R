@@ -138,7 +138,7 @@ ihs_dendro_plot <- function(){
           plot.margin = unit(c(0.1,0.5,0.1,0.5), 'cm'), 
           aspect.ratio = 1, 
           panel.border = element_rect(colour = "black", fill=NA, size= 1)) + 
-    heatmap_col + labs(fill = "Proportion") + guides(fill = guide_colorbar(barwidth = 10, barheight = 0.5))
+    heatmap_col + labs(fill = "Proportion") + guides(fill = guide_colorbar(barwidth = 8, barheight = 0.5))
 
   ggarrange(p1, p2, heights = c(1, 2),
             ncol = 1, nrow = 2, align = "v", labels = c("A","B"))
@@ -178,7 +178,7 @@ nsl_dendro_plot <- function(){
           panel.border = element_rect(colour = "black", fill=NA, size= 1)
           ) + 
     heatmap_col + 
-    labs(fill = "Proportion")  + guides(fill = guide_colorbar(barwidth = 10, barheight = 0.5, draw.llim = TRUE, draw.ulim = TRUE ))
+    labs(fill = "Proportion")  + guides(fill = guide_colorbar(barwidth = 8, barheight = 0.5, draw.llim = TRUE, draw.ulim = TRUE ))
   
   ggarrange(p1, p2, heights = c(1, 2),
             ncol = 1, nrow = 2, align = "v", labels = c("A","B"))
