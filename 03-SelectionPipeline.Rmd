@@ -2,6 +2,8 @@
 
 ```{r, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(knitr)
+library(kableExtra)
 library(xtable)
 library(tidyverse)
 source('scripts/multiplot.R')
@@ -411,7 +413,7 @@ td_super_pop_means <- global_summary %>% filter(stat == 'Tajima.D') %>% left_joi
 ```{r, results='asis'}
 gs_td_table <- global_summary %>% ungroup%>% filter(stat == 'Tajima.D') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() 
 #gs_td_table %>% pander::pandoc.table(., justify = c('left', rep('right', NCOL(.)-1)))
-gs_td_table %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), align = "lrrrrrrr", caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population") %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31) 
+gs_td_table %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31) 
 ```
 
 
@@ -565,7 +567,11 @@ The mean number of windows per population that met the significance threshold fo
 
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Fay.Wu.H') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
+gs_fwh_table <- global_summary %>% ungroup%>% filter(stat == 'Fay.Wu.H') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame()
+
+#pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
+
+gs_fwh_table %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
 CIM
@@ -691,7 +697,10 @@ The mean number of windows per population that met the significance threshold fo
 
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Fu.Li.D') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
+gs_fld_table <- global_summary %>% ungroup%>% filter(stat == 'Fu.Li.D') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame()
+#pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
+
+gs_fld_table %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
 CIM
@@ -816,7 +825,11 @@ The mean number of windows per population that met the significance threshold fo
 
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Fu.Li.F') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
+gs_flf_table <- global_summary %>% ungroup%>% filter(stat == 'Fu.Li.F') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame()
+  
+#pander::pandoc.table(. , justify = c('left', rep('right', NCOL(.)-1)))
+
+gs_flf_table %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFlfTable) \\gls{flf} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
 CIM
@@ -942,7 +955,11 @@ The mean number of windows per population that met the significance threshold fo
 
 
 ```{r, results='asis'}
-global_summary %>% ungroup%>% filter(stat == 'Zeng.E') %>% select(pop, mean, sd, min, lower_1,median,upper_99, max) %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame() %>% pander::pandoc.table(., justify = c('left', rep('right', NCOL(.)-1)))
+gs_ze_table <- global_summary %>% ungroup%>% filter(stat == 'Zeng.E') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  data.frame()
+
+#pander::pandoc.table(., justify = c('left', rep('right', NCOL(.)-1)))
+
+gs_ze_table %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
 CIM
@@ -1117,6 +1134,16 @@ sig_ihs %>% select(chrom, chrom_start, chrom_end, pop)%>% inner_join(., sig_nsl,
 ```
 
 
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop %in% c('POL_CIM','POL_NZM', 'POL_SAM', 'POL_TON'), genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% mutate(pop = substring(pop, 5,8)) %>% mutate(pop = paste(statname,pop))%>% group_by(genename, pop) %>% tally() %>% arrange(desc(n)) %>% spread(pop, n, fill = "") %>% kable(., longtable = TRUE)
+```
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop %in% c('POL_CIM','POL_NZM', 'POL_SAM', 'POL_TON'), genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% mutate(pop = substring(pop, 5,8)) %>% mutate(pop = paste(statname,pop))%>% group_by(genename, pop) %>% tally() %>% arrange(desc(n)) %>% anti_join(., bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(!pop %in% c('POL_CIM','POL_NZM', 'POL_SAM', 'POL_TON')) %>% select(pop, genename), by = c('pop', 'genename') ) %>% spread(pop, n, fill = '') %>% kable(., caption = 'Disease genes with significant hit in only Polynesian populations', longtable = TRUE)
+```
+
+
+
 
 #### Summary of Intra
 
@@ -1172,8 +1199,8 @@ summary of allele frequencies
 
 #### XP-EHH
 
-```{r, eval = FALSE}
-xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_5-6-2017.csv', delim = ',')
+```{r load xpehh, include = FALSE}
+xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_5-6-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD"))
 
 # only genes that were significant for CIM with POL populations and not found in any other pops
 xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 %in% c('NZM','SAM','TON')) %>%  group_by(pop1,pop2,genename) %>% tally() %>% anti_join(., xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', !pop2 %in% c('NZM','SAM','TON')) %>%  group_by(pop1,pop2,genename) %>% tally(), by = c('genename') )
@@ -1189,9 +1216,40 @@ look at selected regions/snps and expression in GTex
 
 
 
+```{r, eval = FALSE}
+# genes that were significant in n populations for CIM
+xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == "CIM") %>% select(pop1, pop2, genename) %>% filter(!is.na(genename)) %>% distinct() %>% group_by(genename) %>% tally() %>% arrange(desc(n))
+```
+
+look at the number of urate genes that were significant for the polynesian populations
+```{r}
+xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON")) %>% filter(genename %in% urate_goutGR$SYMBOL) %>% group_by(pop1,pop2, genename) %>%tally()
+```
+
+```{r xpehh urate, results = 'asis'}
+xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON")) %>% filter(genename %in% urate_goutGR$SYMBOL) %>% select(pop1,pop2, genename) %>% distinct() %>% group_by(pop1, genename)%>% tally() %>%  spread(pop1, n, fill = "") %>% kable(., caption = 'number of populations with significant xpehh for urate/gout genes', booktabs = TRUE, longtable = TRUE)
+```
+
+```{r xpehh t2d, results = 'asis'}
+xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON")) %>% filter(genename %in% t2d_GR$SYMBOL) %>% select(pop1,pop2, genename) %>% distinct() %>% group_by(pop1, genename)%>% tally() %>%  spread(pop1, n, fill = "") %>% kable(., caption = 'number of populations with significant xpehh for t2d genes', longtable = TRUE, booktabs = TRUE)
+```
+
+```{r xpehh obesity, results = 'asis'}
+xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON")) %>% filter(genename %in% obesity_GR$SYMBOL) %>% select(pop1,pop2, genename) %>% distinct() %>% group_by(pop1, genename)%>% tally() %>%  spread(pop1, n, fill = "") %>% kable(., caption = 'number of populations with significant xpehh for obesity genes', longtable = TRUE, booktabs = TRUE)
+```
 
 
+```{r xpehh metsyn, results = 'asis'}
+xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON")) %>% filter(genename %in% metsyn_GR$SYMBOL) %>% select(pop1,pop2, genename) %>% distinct() %>% group_by(pop1, genename)%>% tally() %>%  spread(pop1, n, fill = "") %>% kable(., caption = 'number of populations with significant xpehh for met syn genes', longtable = TRUE, booktabs = TRUE)
+```
 
+
+```{r}
+xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON")) %>% filter(genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% select(pop = pop1,pop2, genename) %>% distinct() %>% group_by(pop, genename)%>% tally() %>% inner_join(., bind_rows(sig_ihs, sig_nsl) %>% mutate(pop = substring(pop, 5,8)) %>% select(pop,genename) %>% distinct(), by = c('pop','genename')) %>%  spread(pop, n, fill = "") %>% kable(., caption = 'number of populations with significant xpehh and significane ihs/nsl', longtable = TRUE, booktabs = TRUE)
+```
+
+
+\clearpage
 
 ## populations
 
@@ -1319,12 +1377,50 @@ There were fewer genes that intersected the windows that met the threshold for s
 upper_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>% distinct() %>% spread(statname, statname) %>% left_join(., upper_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>% distinct() %>% group_by(SYMBOL) %>% tally(), by = "SYMBOL")
 ```
 
-From the lower tail there were `r consec_lower_regions$CIM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_lower_regions$CIM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_lower_regions$CIM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_lower_regions$CIM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_lower_regions$CIM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+- From the lower tail there were `r consec_lower_regions$CIM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_lower_regions$CIM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_lower_regions$CIM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_lower_regions$CIM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_lower_regions$CIM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+- The upper tail had `r consec_upper_regions$CIM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_upper_regions$CIM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_upper_regions$CIM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_upper_regions$CIM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_upper_regions$CIM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
 
 From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs %>% filter(pop == "POL_CIM") %>% select(genename) %>% anti_join(., sig_ihs %>% filter(pop !="POL_CIM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{cim} for \gls{ihs}, and `r sig_nsl %>% filter(pop == "POL_CIM") %>% select(genename) %>% anti_join(., sig_nsl %>% filter(pop !="POL_CIM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}.
 
 
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_CIM', genename %in% urate_goutGR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
 
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_CIM', genename %in% t2d_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_CIM', genename %in% obesity_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_CIM', genename %in% metsyn_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+xpehh total number of genes that were significant  CIM versus:
+- NZM `r xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 == "NZM", !is.na(genename)) %>%  group_by(pop1,pop2,genename) %>% tally()  %>% NROW()`
+- SAM `r xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 == "SAM",  !is.na(genename)) %>%  group_by(pop1,pop2,genename) %>% tally() %>%  NROW()`
+- TON `r xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 == "TON",  !is.na(genename)) %>%  group_by(pop1,pop2,genename) %>% tally()  %>% NROW()`
+
+
+xpehh number of genes that were significant in only CIM versus:
+- NZM `r xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 == "NZM", !is.na(genename)) %>%  group_by(pop1,pop2,genename) %>% tally() %>% anti_join(., xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 != "NZM")%>%  group_by(pop1,pop2,genename) %>% tally(), by = c('genename')) %>% NROW()`
+- SAM `r xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 == "SAM",  !is.na(genename)) %>%  group_by(pop1,pop2,genename) %>% tally() %>% anti_join(., xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 != "SAM")%>%  group_by(pop1,pop2,genename) %>% tally(), by = c('genename')) %>% NROW()`
+- TON `r xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 == "TON",  !is.na(genename)) %>%  group_by(pop1,pop2,genename) %>% tally() %>% anti_join(., xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 == 'CIM', pop2 != "TON")%>%  group_by(pop1,pop2,genename) %>% tally(), by = c('genename')) %>% NROW()`
+-
+
+_combined_
+```{r}
+ihs_clus_regions %>% filter(pop == 'POL_CIM') %>% mutate(chrom = paste0('chr', chrom), statname = "ihs") %>% select(-pop, -ClusterID) %>% data.frame %>% GenomicRanges::GRanges()
+
+nsl_clus_regions %>% filter(pop == 'POL_CIM') %>% mutate(chrom = paste0('chr', chrom), statname = "nsl") %>% select(-pop, -ClusterID) %>% data.frame %>% GenomicRanges::GRanges()
+
+
+```
 
 
 ```{markdown, echo = FALSE, eval = FALSE}
@@ -1363,7 +1459,13 @@ There were `r lower_sig_stats %>% filter(pop == 'NZM') %>% select(SYMBOL) %>% di
 
 There were `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes for \gls{td} that intersected with windows that met the significance threshold in the lower tail. There were a similar numbers for \gls{fld} (`r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`), and \gls{flf} (`r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`). There were more genes for \gls{fwh} (`r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`), and \gls{ze} (`r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`).
 
+_DNAH10_, DNAH6, RGS3, and SUPT3H were the only genes that intersected a significant window in \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. 
 
+- 5 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==5, !is.na(SYMBOL)) %>% .[['SYMBOL']]`
+- 4 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4, !is.na(SYMBOL)) %>% NROW()`
+- 3 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()`
+- 2 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
+- 1 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
 
 - td most genes
 - fld most genes
@@ -1372,9 +1474,45 @@ There were `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('NZM
 
 From the upper tail, there were fewer genes overall that intersected windows that met the significance threshold than for the lower threshold. \gls{td} had `r upper_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, \gls{fwh} `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, \gls{fld} `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, \gls{flf} `r upper_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, and \gls{ze} had `r upper_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`. Within the Polynesian populations, \gls{nzm} had the most independent consecutive regions for \gls{fwh}.\gls{fld} and \gls{flf} also had the most genes that intersected significant windows and the highest number of genes that were only found in a single population, of the Polynesian populations.
 
+
+- 5 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==5, !is.na(SYMBOL)) %>% .[['SYMBOL']]`
+- 4 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4, !is.na(SYMBOL)) %>% NROW()`
+- 3 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()`
+- 2 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
+- 1 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
+
 - fwh most regions
 - fld most regions, genes, and pop specific genes
 - flf most regions, genes, and pop specific genes
+
+
+- From the lower tail there were `r consec_lower_regions$NZM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_lower_regions$NZM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_lower_regions$NZM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_lower_regions$NZM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_lower_regions$NZM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+- The upper tail had `r consec_upper_regions$NZM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_upper_regions$NZM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_upper_regions$NZM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_upper_regions$NZM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_upper_regions$NZM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs %>% filter(pop == "POL_NZM") %>% select(genename) %>% anti_join(., sig_ihs %>% filter(pop !="POL_NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{nzm} for \gls{ihs}, and `r sig_nsl %>% filter(pop == "POL_NZM") %>% select(genename) %>% anti_join(., sig_nsl %>% filter(pop !="POL_NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}.
+
+
+
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_NZM', genename %in% urate_goutGR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_NZM', genename %in% t2d_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_NZM', genename %in% obesity_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+
+```{r}
+bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_NZM', genename %in% metsyn_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+```
+
+
 
 ```{markdown, echo = FALSE, eval = FALSE}
 <!--
@@ -1407,7 +1545,15 @@ For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname =
 
 There were `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes that intersected the windows that met the significance threshold in the lower tail for \gls{td}. For \gls{fwh}, there were `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, \gls{fld} had `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, \gls{flf} had `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, and \gls{ze} had `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`. \gls{sam} had the most (XXX) independent consecutive regions of the Polynesian populations for \gls{fld}.
 
+CNTNAP5, SPAG16, SPECC1, SUPT3H had all 5 selection stats
+
 lower
+
+- 5 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==5, !is.na(SYMBOL)) %>% .[['SYMBOL']]`
+- 4 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4, !is.na(SYMBOL)) %>% NROW()`
+- 3 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()`
+- 2 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
+- 1 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
 
 - td most specific
 - fld most regions
@@ -1416,9 +1562,23 @@ In the upper tail, there were `r upper_sig_stats %>% filter(statname == 'Tajima.
 
 upper
 
+- 5 stats: `r upper_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==5, !is.na(SYMBOL)) %>% .[['SYMBOL']]`
+- 4 stats: `r upper_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4, !is.na(SYMBOL)) %>% NROW()`
+- 3 stats: `r upper_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()`
+- 2 stats: `r upper_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
+- 1 stats: `r upper_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
+
 - td most specific
 
 \gls{sam} had the most genes that were specific to \gls{sam} for \gls{td} out of the Polynesian populations for both significance thresholds.
+
+
+- From the lower tail there were `r consec_lower_regions$SAM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_lower_regions$SAM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_lower_regions$SAM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_lower_regions$SAM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_lower_regions$SAM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+- The upper tail had `r consec_upper_regions$SAM$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_upper_regions$SAM$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_upper_regions$SAM$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_upper_regions$SAM$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_upper_regions$SAM$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs %>% filter(pop == "POL_SAM") %>% select(genename) %>% anti_join(., sig_ihs %>% filter(pop !="POL_SAM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{sam} for \gls{ihs}, and `r sig_nsl %>% filter(pop == "POL_SAM") %>% select(genename) %>% anti_join(., sig_nsl %>% filter(pop !="POL_SAM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}.
+
 
 ```{markdown, echo = FALSE, eval = FALSE}
 _Tajima's D_
@@ -1449,16 +1609,36 @@ For the \gls{sam} population there were `r lower_sig_stats %>% filter(statname =
 
 lower
 
+- 5 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==5, !is.na(SYMBOL)) %>% .[['SYMBOL']]`
+- 4 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4, !is.na(SYMBOL)) %>% NROW()`
+- 3 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()`
+- 2 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
+- 1 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
+
 - fwh most genes, and most specific
 - flf most regions, and most specific
 
 
 upper
 
+- 5 stats: `r upper_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==5, !is.na(SYMBOL)) %>% .[['SYMBOL']]`
+- 4 stats: `r upper_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4, !is.na(SYMBOL)) %>% NROW()`
+- 3 stats: `r upper_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()`
+- 2 stats: `r upper_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
+- 1 stats: `r upper_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
+
+
 - td most regions, and most genes
 - fwh most genes
 - flf most genes and most specific
 - ze most genes and most specific
+
+
+- From the lower tail there were `r consec_lower_regions$TON$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_lower_regions$TON$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_lower_regions$TON$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_lower_regions$TON$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_lower_regions$TON$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+- The upper tail had `r consec_upper_regions$TON$Tajima.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_upper_regions$TON$Fay.Wu.H %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_upper_regions$TON$Fu.Li.D %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_upper_regions$TON$Fu.Li.F %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_upper_regions$TON$Zeng.E %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}.
+
+From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs %>% filter(pop == "POL_TON") %>% select(genename) %>% anti_join(., sig_ihs %>% filter(pop !="POL_TON") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{ton} for \gls{ihs}, and `r sig_nsl %>% filter(pop == "POL_TON") %>% select(genename) %>% anti_join(., sig_nsl %>% filter(pop !="POL_TON") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}.
 
 
 ```{markdown, echo = FALSE, eval = FALSE}
