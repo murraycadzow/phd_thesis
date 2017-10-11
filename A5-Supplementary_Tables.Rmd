@@ -76,7 +76,7 @@ rm(list=ls())
 
 ## Chapter 3 Tables
 
-```{r}
+```{r, warning = FALSE}
 lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
@@ -98,24 +98,24 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
 ```
 
 
-```{r tdPol, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left", caption = "(\\#tab:lowersigtdPol) Loci that had a Tajima's D in the lower tail that was only found in a Polynesian population")
+```{r tdPol, results = 'asis', warning = FALSE}
+lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% kable(., booktab = TRUE, longtable = TRUE, caption = "(\\#tab:lowersigtdPol) Loci that had a Tajima's D in the lower tail that was only found in a Polynesian population")
 ```
 
-```{r fwhPol, results='asis'}
-lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr)%>%  pander::pandoc.table(., justify = "left", caption = "(\\#tab:lowersigfwhPol) Loci that had a Fay and Wu's H in the lower tail that was only found in a Polynesian population")
+```{r fwhPol, results='asis', warning= FALSE}
+lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr)%>%  kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfwhPol) Loci that had a Fay and Wu's H in the lower tail that was only found in a Polynesian population")
 ```
 
-```{r fldPol, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left", caption = "(\\#tab:lowersigfldPol) Loci that had a Fu and Li's D in the lower tail that was only found in a Polynesian population")
+```{r fldPol, results = 'asis', warning = FALSE}
+lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfldPol) Loci that had a Fu and Li's D in the lower tail that was only found in a Polynesian population")
 ```
 
-```{r flfPol, results = 'asis'}
-lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left", caption = "(\\#tab:lowersigflfPol) Loci that had a Fu and Li's F in the lower tail that was only found in a Polynesian population")
+```{r flfPol, results = 'asis', warning = FALSE}
+lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigflfPol) Loci that had a Fu and Li's F in the lower tail that was only found in a Polynesian population")
 ```
 
 ```{r zePol, results='asis'}
-lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% pander::pandoc.table(., justify = "left", caption = "(\\#tab:lowersigzePol) Loci that had a Zeng's E in the lower tail that was only found in a Polynesian population")
+lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% kable(.,booktab = TRUE, longtable = TRUE, caption = "(\\#tab:lowersigzePol) Loci that had a Zeng's E in the lower tail that was only found in a Polynesian population")
 ```
 
 ## Chapter 4 Tables
@@ -131,13 +131,13 @@ create_gwas_cat_table <-function(){
 
 
 ```{r, results = 'asis'}
-m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, Reference) %>% filter(Category != "Kidney Disease")
+m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, Reference) #%>% filter(Category != "Kidney Disease")
 #colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
 #pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", keep.line.breaks = TRUE)
 
-kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% group_rows("Gout and Urate",1,18)  %>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE)
+kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE) %>% group_rows("Gout and Urate",1,18) %>% group_rows("Kidney Disease",19,26) %>% group_rows("Metabolic Syndrome", 27,30) %>% group_rows("Obesity", 31, 63) %>% group_rows("T2D", 64, 102) #%>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) 
 
-#%>% group_rows("Kidney Disease",19,26) %>% group_rows("Metabolic Syndrome", 27,30) %>% group_rows("Obesity", 31, 63) %>% group_rows("T2D", 64, 102)
+#
 ```
 
 
@@ -191,6 +191,8 @@ bind_rows(list(
   
   bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Obesity'),
   
+  bind_rows(lapply(names(kd[[2]]), function(x){kd[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Kidney Disease'),
+  
   bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$super_prop %>% spread(super, max_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Metabolic Syndrome')
   
 )) %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf('%.2f',.)))%>%  select(stat, Type, everything()) %>% data.frame %>% arrange(stat) %>%  data.frame %>% pander::pandoc.table(., caption = "(\\#tab:proportion) Proportion")#knitr::kable(., caption = "Proportion", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) %>% kableExtra::kable_styling(latex_options = "scale_down")
@@ -210,6 +212,8 @@ bind_rows(list(
   bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = '\\gls{t2d}'),
   
   bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Obesity'),
+  
+  bind_rows(lapply(names(kd[[2]]), function(x){kd[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Kidney Disease'),
   
   bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Metabolic Syndrome')    
   
