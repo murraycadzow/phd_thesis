@@ -423,12 +423,13 @@ for(i in seq_along(td_random)){
 ```
 
 
-```{r, eval = FALSE}
+```{r}
 #exclusivity
 #excl_tab <- bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$exclusivity %>% t() %>% data.frame %>% mutate_all(., funs(replace(., . == 0, NA))) %>% summarise_all(., funs(mean(., na.rm=TRUE), min(., na.rm = TRUE), max(., na.rm = TRUE)))})) %>% summarise_all(funs(min,mean,max)) %>% t %>%data.frame() %>% select(value = 1)  %>% mutate(pop = sapply(row.names(.), function(x){strsplit(x, '_')[[1]][1]}), stat1 = sapply(row.names(.), function(x){strsplit(x, '_')[[1]][2]}), stat2 = sapply(row.names(.), function(x){strsplit(x, '_')[[1]][3]}) ) %>% filter(stat1 == stat2) %>% select(-stat2) %>% spread(stat1, value)
 #saveRDS(excl_tab, 'data/04-excl_tab.RDS')
 excl_tab<-readRDS('data/04-excl_tab.RDS')
-excl_tab
+#excl_tab
+
 # bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$exclusivity %>% t() %>% data.frame %>% summarise_all(., funs(max)) %>% filter(POL == 1)})) 
 # 
 # bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$exclusivity %>% data.frame()%>% mutate(pop = row.names(.))})) %>% t()%>% select(-clust) %>% gather("pop","prop") %>% filter(prop > 0) %>% group_by(pop) %>% summarise(min(prop), quantile(prop, 0.25), mean(prop),sd(prop), median(prop),quantile(prop, 0.75) , max(prop))
@@ -437,7 +438,7 @@ excl_tab
 #excl_tally <- bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$exclusivity  %>% data.frame %>% mutate(super = row.names(.)) %>% gather(cluster,prop, 1:(NCOL(.)-1)) %>%filter(prop == 1) %>%  mutate(iter = x)})) %>% group_by(super) %>% tally()
 #saveRDS(excl_tally, 'data/04-excl_tally.RDS')
 excl_tally <- readRDS('data/04-excl_tally.RDS')
-excl_tally
+#excl_tally
 
 #bind_rows(lapply(seq_along(td_random)[1:10], function(x){td_random[[x]]$exclusivity %>% t() %>% data.frame %>% mutate_all(., funs(replace(., . == 0, NA))) %>% summarise_all(., funs(mean(., na.rm=TRUE), min(., na.rm = TRUE), max(., na.rm = TRUE)))})) %>% summarise_all(funs(min,mean,max)) %>% t %>%data.frame() %>% select(value = 1)  %>% mutate(pop = sapply(row.names(.), function(x){strsplit(x, '_')[[1]][1]}), stat1 = sapply(row.names(.), function(x){strsplit(x, '_')[[1]][2]}), stat2 = sapply(row.names(.), function(x){strsplit(x, '_')[[1]][3]}) ) %>% filter(stat1 == stat2) %>% select(-stat2) %>% spread(stat1, value)
 
