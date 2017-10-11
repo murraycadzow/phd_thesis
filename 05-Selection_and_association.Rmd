@@ -1,8 +1,30 @@
 # Selection and Association Studies
 
+```{r, include=FALSE, warning = FALSE}
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+models <- readRDS('data/Ukbiobank/pheno_models.RDS')
+pheno_models <- bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster,broom::glance(x$model))})) %>% arrange(AIC)
+
+
+load('~/data/ukbiobank_gout_bd_refined2016-04-26.RData')
+fam <- read.table('~/Git_repos/bookdown_thesis/data/Ukbiobank/chr1impv1.fam')
+
+# f.31.0.0 = sex, 1 = male
+# f.48.0.0 = waist
+# f.50.0.0 = height
+# f.21001.0.0 = BMI
+# f.21000.0.0 = ethnicity
+# f.20002.* =  self report illness
+
+ukbio_gout <- bd_refined_gout %>% filter(f.eid %in% fam$V2) %>% select(goutaff, 'age' = f.21003.0.0,"bmi" = f.21001.0.0, 'sex' = f.31.0.0, 'height' = f.50.0.0, 'waist' = f.48.0.0, 'hip' = f.49.0.0, 'eth' = f.21000.0.0, febuxostat, allopurinol, colchicine, sulphinpyrazone, gouthosp, goutwinnard, goutself, gout_winnard_self, gout_self_ult, goutself, goutult ) %>% mutate(waist_height_ratio = waist / height, sex_factor = factor(if_else(sex == 0, "female", "male", missing = NULL)), cc = if_else(goutaff == 1, "case", "control", missing = NULL), waist_hip_ratio = waist / hip) %>% filter(!is.na(goutaff) & eth %in% c(1001,1002,1003)) %>% group_by(cc) 
+```
+
+
 This chapter about using the results of selection analyses to better inform \gls{gwas}
 
-The first section of this chapter has been published 
+The first section of this chapter has been published as part of @Cadzow2017
 
 The UK Biobank provides a unique opportunity
 
@@ -14,7 +36,12 @@ The objectives for this chapter are to:
 
 Selection, vGwAS, GWAS, and Imputation of Polynesian Populations
 
+useful papers:
 
+- @Fay2013
+- @Dudley2012
+
+refer to gwas done by ukbio in all phenotypes and say it looks similar
 
 ## European GWAS, vGWAS and Selection
 
@@ -22,9 +49,63 @@ Part of this work has been published in @Cadzow2017.
 
 This section describes the gout GWAS and vGWAS performed in the UKBiobank data and the comparision with the results from the selection analysis in the 1000 Genomes Project data.
 
+
+UK Biobank approval 12611
+
 ### European Gout GWAS
 
-Prior to conducting the GWAS for gout, phenotypic models were assessed. Logisitic regression was performed and the Akaike information criterion for each model was used for model selection. The covariates used included: age, sex, BMI, waist, waist to height ratio, and waist to hip ratio. Each covariate was significant (P < 0.05) on their own.
+<!-- acr report using unfiltered controls -->
+This GWAS was performed using the interim data release which had genetic information for `r NROW(fam)` individuals. For the GWAS itself, it was limited to be only people who had self reported an ethnic background of British, Irish, or 'any other white background'.
+
+Inclusion criteria were European ethnicity, aged between 40 and 69 years and had genome wide genotypes available. The exclusion criteria used was: mismatch between self-reported sex and genetic sex, genotype quality control failure, relatedness, or either a primary or secondary hospital diagnosis of kidney disease (International Classification of Diseases, Tenth Revision (ICD-10), codes I12, I13, N00-N05, N07, N11, N14, N17–N19, Q61, N25.0, Z49, Z94.0, Z99.2), participants aged 70 years and over, and those with kidney disease, because these are risk factors for secondary gout.
+
+The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)).
+
+_Classifications used_
+
+There were four main classification criteria that were used to define gout cases. Hospital defined gout involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, inluding subcodes). Self-report of gout was defined as reporting having gout at the time of the study interview. Use of \gls{ult} used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukemia or lymphoma (ICD-10 codes C81-C96). The Winnard definition was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine).
+
+
+
+Prior to conducting the GWAS for gout, phenotypic models were assessed using any method of classifying gout. Logisitic regression was performed and the Akaike information criterion (AIC) for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant (P < 0.05) on their own, age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and BMI (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (AIC 22706.05), sex (AIC 21041.80) and BMI (AIC 22001.03).
+
+
+
+```{r, warning = FALSE, eval = FALSE}
+
+bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster,broom::glance(x$model))})) %>% arrange(AIC)
+```
+```{r, results = 'asis'}
+
+broom::tidy(models[[5]]$model) %>% mutate(p.value = format(p.value, scientific = TRUE, digits = 3))%>% kable(., digits = 3, caption = '(\\#tab:phenomodel) Logistic regression for gout adjusted by age, sex, and BMI')
+```
+
+
+```{r, eval = FALSE}
+lapply(c(1,2,4,3,5 ), function(x){broom::tidy(models[[x]]$model)})
+```
+
+
+** UKBiobank participant characteristics **
+
+```{r, results = 'asis'}
+ukbio_gout %>% summarise(percent_male = 1 - sum(sex)/NROW(.), mean_age = mean(age, na.rm = TRUE), mean_bmi = mean(bmi, na.rm = TRUE), n = n(), febuxostat = sum(febuxostat, na.rm = TRUE), allopurinol = sum(allopurinol, na.rm = TRUE), sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), colchicine = sum(colchicine, na.rm = TRUE), hosp = sum(gouthosp, na.rm =TRUE), self = sum(goutself, na.rm=TRUE), winnard = sum(goutwinnard, na.rm = TRUE), ult = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>%  dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE)
+```
+
+
+** Venn Diagram/upset plot ** 
+
+(ref:ukbbupsetplot) An upset plot showing the total sizes (left) and intersections (upper) of the different classifcation criteria.
+
+```{r ukbbupsetplot, fig.width=6.5, fig.cap='(ref:ukbbupsetplot)', fig.asp=1/1.5 }
+
+listInput <- readRDS('data/Ukbiobank/upsetPlotList.RDS')
+UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 )
+```
+
+There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individuals that had any classification of gout and `r ukbio_gout %>% filter(goutaff ==0) %>% NROW()` controls. Of those with any classification of gout, there were `r ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1) %>% NROW()` with a hospital diagnosis, `r ukbio_gout %>% filter(goutaff ==1 & goutult ==1) %>% NROW()` with urate lowering therapy, `r ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1) %>% NROW()` with the Winnard criteria, and `r ukbio_gout %>% filter(goutaff ==1 & goutself ==1) %>% NROW()` with self-reported gout. The intersections between each group can be seen in Figure \@ref(fig:ukbbupsetplot).
+
+** kottgen plot **
 
 
 - GWAS results
@@ -48,6 +129,9 @@ manhattan plot for the all \@ref(fig:manhatAllAgeSex)
 knitr::include_graphics('images/05_selection_and_association/all_age_sex.png')
 ```
 
+```{r}
+
+```
 
 ```{r, engine='block', eval = FALSE, echo = FALSE, include=FALSE }
 For this section I want to compare the results for each of the gwases and see if the same 
