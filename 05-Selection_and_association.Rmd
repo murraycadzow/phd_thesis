@@ -1,9 +1,13 @@
 # Selection and Association Studies
 
-```{r, include=FALSE, warning = FALSE}
+```{r assocLoad, include=FALSE, warning = FALSE}
+source('scripts/Annotate_genes.R')
+library(GenomicRanges)
 library(knitr)
 library(kableExtra)
 library(tidyverse)
+source('scripts/05_ukbb_filteredSnps.R')
+
 models <- readRDS('data/Ukbiobank/pheno_models.RDS')
 pheno_models <- bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster,broom::glance(x$model))})) %>% arrange(AIC)
 
@@ -40,6 +44,11 @@ useful papers:
 
 - @Fay2013
 - @Dudley2012
+
+Improvement gwas through the use of imputation:
+
+- Machini nature papers 2010?
+- HRC panel paper
 
 refer to gwas done by ukbio in all phenotypes and say it looks similar
 
@@ -111,27 +120,80 @@ There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individu
 - GWAS results
 - Heritability explained
 
+To calculate the heritiability explained 10000 contols were randomly selected and 
+
+
+
 #### GWAS results
 
 The top SNPs from the GWAS were:
 
 - hosp
+
+```{r}
+hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(P = format(P, scientific = TRUE)) %>%  kable()
+```
+
+
+```{r}
+dat <- hosp_asb 
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+```
+
+
 - self
+
+There were ```r self_asb %>% filter(P < 1e-8,  nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% tally()``` \gls{snp}s that met the genome-wide significance threshold. 
+
+```{r}
+self_asb %>% filter(P < 1e-8,  nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% dim()# kable()
+```
+
+```{r}
+dat <- self_asb 
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+```
+
+
+
 - self + ULT
+
+```{r}
+dat <- selfult_asb 
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+```
+
+
 - ULT
+
+```{r}
+dat <- ult_asb 
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+```
+
+
 - all
+
+
+```{r}
+dat <- all_asb 
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+```
+
 
 manhattan plot for the all \@ref(fig:manhatAllAgeSex)
 
 (ref:manhatAllAgeSex) _Manhattan plot for Gout GWAS adjusted for age and sex_
 
-```{r manhatAllAgeSex, echo = FALSE, fig.cap='(ref:manhatAllAgeSex)', fig.width=7, fig.asp=1, out.width='80%', fig.align='center'}
+```{r manhatAllAgeSex, echo = FALSE, fig.cap='(ref:manhatAllAgeSex)', fig.width=7, fig.asp=1, out.width= '95%', fig.align='center'}
 knitr::include_graphics('images/05_selection_and_association/all_age_sex.png')
 ```
 
-```{r}
-
+```{r manhatAllAgeSexBmi,echo = FALSE, fig.cap='(ref:manhatAllAgeSexBmi)', fig.width=7, fig.asp=1, out.wdith = '95%', fig.align='center'}
+knitr::include_graphics('images/05_selection_and_association/all_age_sex_bmi.png')
 ```
+
+(ref:manhatAllAgeSexBmi) _Manhattan plot for Gout GWAS adjusted for age, sex and BMI_
 
 ```{r, engine='block', eval = FALSE, echo = FALSE, include=FALSE }
 For this section I want to compare the results for each of the gwases and see if the same 
@@ -151,6 +213,19 @@ here I want to include the results from the heritability analysis across the dif
 ```
 
 10000 controls were randomly selected. The same 10000 samples were then combined with each different gout criteria and heritiability estimates were obtained by first creating the genetic relationship matrix and then the variance of gout 
+
+
+Kottgen refs 10-12 put heritability explained for serum urate at 40-70%. Kottgen reported heritability explained in serum urate loci that were adjusted for age and sex from 0.27 to 0.41.
+
+
+> The heritability estimates (i.e., proportion of variance in gout explained by common inherited genetic variants under an additive model of inheritance) were 0.289 (0.034) for the self-re- port of gout or ULT use definition, 0.283 (0.036) for the self-report of gout definition, 0.282 (0.040) for the Win- nard definition, 0.308 (0.044) for the ULT use definition and 0.236 (0.160) for the hospital diagnosis definition. There were no significant differences between the heritability
+
+
+
+Winnard
+Self
+Self + ULT
+Hospital
 
 
 ### European Gout vGWAS
