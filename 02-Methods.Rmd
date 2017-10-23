@@ -698,6 +698,9 @@ pander::pandoc.table(ce_clinical_table(), caption = ' (\\#tab:clinInfoCE) Clinic
 \elandscape
 \newpage
 
+
+
+
 The clinical info is contained in table \@ref(tab:clinInfoCE) which is printed somewhere
 
 
@@ -712,6 +715,8 @@ ce_pop_table <- ce_populations_table()
 #names(ce_pop_table) <- c("pop","n","Age","Sex (% Male)","BMI","Waist","Percent Diabetes","Percent Gout")
 knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis',align = 'lcrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","% Diabetes","% Gout"), booktabs = TRUE )
 ```
+
+
 
 - about
 - population
@@ -753,10 +758,12 @@ This used table \@ref(tab:refDatasets) for the stuff
 
 Principle components were calculated for all individuals genotyped on the coreExome mircoarray using SmartPCA (EIGENSOFT v6.0.1, see PCA section) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported their ethnicity as unknown.
 
-Principle component 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and PC4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. To determine the boundaries of the population groups, the mean +/- 1 sd for PC2 and 4 were used
+Principle component 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and PC4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. To determine the boundaries of the population groups, the mean +/- 1 sd for PC2 and 4 were used (Figure \@ref(fig:cePCA)).
 
-```{r, fig.cap = '(ref:cePCA) XXX temp plot of PCAs for subject selection', echo = FALSE}
-knitr::include_graphics('images/02_methods/temp_pca_plot.png')
+(ref:cePCA) Principle compenents 2 and 4 for individuals used in the selection analysis.
+
+```{r, fig.cap = '(ref:cePCA)', echo = FALSE}
+knitr::include_graphics('images/02_methods/pca_plot.png')
 ```
 
 
