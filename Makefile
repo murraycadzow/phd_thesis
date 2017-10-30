@@ -1,9 +1,28 @@
 FILES = index.Rmd 01-Introduction.Rmd 02-Methods.Rmd 03-SelectionPipeline.Rmd 04-Clustering.Rmd 05-Selection_and_association.Rmd 06-Conclusion_discussions.Rmd A1-Unimputed_coreExome_anlaysis.Rmd A5-Supplementary_Tables.Rmd references.bib
 
+render_book : compile_book pdf_book
+
 preview_pdf: pdf
 
-pdf_book : $(FILES)
+compile_book : $(FILES)
+	Rscript make_book.R	
+
+pdf_book : compile_book
+	mv _book/Thesis.pdf _book/Thesis_bookdown.pdf
+	sed 's/\\bibliography/\\fontsize{10}{12}\n\\linespread\{1}\\selectfont\n\\\bibliography/' < _book/Thesis.tex | sed 's/\\includegraphics{/\\includegraphics{_bookdown_files\//g' > Thesis.tex
+	#mv _bookdown_files/* .
 	
+	pdflatex Thesis
+	bibtex Thesis
+	makeglossaries Thesis	
+	pdflatex -bib Thesis
+	pdflatex Thesis
+	mv Thesis.pdf _book/Thesis.pdf
+	#cd ../
+	#rm -r Thesis_files
+	xdg-open _book/Thesis.pdf
+
+
 
 preview : $(FILES)	
 	Rscript preview_thesis.R
@@ -23,6 +42,6 @@ pdf : preview
 
 .PHONY : clean
 clean : 
-	@rm -f  Thesis.Rmd Thesis.tex Thesis.log Thesis.lof Thesis.bbl Thesis.toc Thesis.out Thesis.lot Thesis.ist Thesis.glsdefs Thesis.gls Thesis.glo Thesis.glg Thesis.blg Thesis.aux Thesis.alg Thesis.acr Thesis.acn 
-	rm -r _book/ _bookdown_files/
-	rm tmp-*.tex
+	@rm -f  Thesis.Rmd Thesis.tex Thesis.log Thesis.lof Thesis.bbl Thesis.toc Thesis.out Thesis.lot Thesis.ist Thesis.glsdefs Thesis.gls Thesis.glo Thesis.glg Thesis.blg Thesis.aux Thesis.alg Thesis.acr Thesis.acn tmp-*.tex
+	@rm -r _book/ _bookdown_files/
+ 
