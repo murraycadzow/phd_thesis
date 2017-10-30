@@ -48,7 +48,7 @@ done
 ```
 
 
-```{r load data,echo = FALSE, message=FALSE, warning=FALSE}
+```{r load data,echo = FALSE, message=FALSE, warning=FALSE, eval = FALSE}
 library(dplyr)
 library(ggplot2)
 library(pander)
@@ -118,42 +118,30 @@ Exclusion criteria for either group was failure of the UKBioBank genotyping QC, 
 Genetic markers were filtered to remove minor allele frequency < 0.01 and Hardy-Weinberg equillibrium exact test P < 0.000001. The association analysis was adjusted for sex and age. 
 
 
-Genotyped - Controls unfiltered diuretics
-
-There are a total of ```r as.character(genotyped %>% select(fam)  %>% filter(fam == 1) %>% tally())``` people with genotypes
-
-The GWAS were limited to only British, Irish, and "any other white background" ethnicities because there were only ```r as.data.frame(genotyped  %>% filter(!is.na(goutaff) & !(f.21000.0.0 %in% c(1001,1002,1003)) & f.eid %in% all_fam$IID)  %>%  select(f.21000.0.0, goutaff)  %>% group_by(goutaff, f.21000.0.0)  %>%  tally()  %>% summarise(sum(n)))[2,2]``` gout cases from all other ethnicities with genotypes
 
 
+<!-- Genotyped - Controls unfiltered diuretics -->
+
+<!-- There are a total of `r #as.character(genotyped %>% select(fam)  %>% filter(fam == 1) %>% tally())`  people with genotypes -->
+
+<!-- The GWAS were limited to only British, Irish, and "any other white background" ethnicities because there were only `r #as.data.frame(genotyped  %>% filter(!is.na(goutaff) & !(f.21000.0.0 %in% c(1001,1002,1003)) & f.eid %in% all_fam$IID)  %>%  select(f.21000.0.0, goutaff)  %>% group_by(goutaff, f.21000.0.0)  %>%  tally()  %>% summarise(sum(n)))[2,2]` gout cases from all other ethnicities with genotypes -->
 
 
 ## All
 
 
-```{r all_gwas_stats, echo=FALSE}
+```{r all_gwas_stats, echo=FALSE, eval = FALSE}
 gout_cond <- 'all'
 all <-  read_fams(paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/',"chrallimpv1.fam_",gout_cond))
 all_drug_tally <- all[[2]]
 all_summary_table <-  all[[1]]
 
 ```
-For the GWAS based on all gout criteria there were ```r all_summary_table['n',"Gout"]``` cases and ```r all_summary_table['n',"Control"]``` controls
 
-There were:
-  
-- ```r as.character(all_drug_tally$diuretics_cases)``` cases on diuretics, ```r all_drug_tally$diuretics_controls``` were controls
-
-- ```r all_drug_tally$allopurinol_cases``` cases taking allopurinol, ```r all_drug_tally$allopurinol_controls``` were controls
-
-- ```r all_drug_tally$febuxostat_cases``` cases taking febuxostat, ```r all_drug_tally$febuxostat_controls``` were controls
-
-- ```r all_drug_tally$sulphinpyrazone_cases``` cases taking sulphinpyrazone, ```r all_drug_tally$sulphinpyrazone_controls``` were controls
-
-- ```r all_drug_tally$colchicine_cases``` people taking cochicine, ```r all_drug_tally$colchicine_controls``` were controls
 
 Age summary
 
-```{r all_age_summary, echo = FALSE}
+```{r all_age_summary, echo = FALSE, eval = FALSE}
 as.data.frame(genotyped  %>% 
                 select(fam_all, goutaff, f.21003.0.0 , f.31.0.0) %>% 
                 filter(fam_all == 1, !is.na(goutaff), !is.na(f.21003.0.0)) %>% 
@@ -162,7 +150,7 @@ as.data.frame(genotyped  %>%
                 summarise(mean = mean(f.21003.0.0), sd = sd(f.21003.0.0), min = min(f.21003.0.0),median = median(f.21003.0.0), max = max(f.21003.0.0) ), row.names = NULL)
 ```
 all combined age
-```{r all_age_summary1, echo = FALSE}
+```{r all_age_summary1, echo = FALSE, eval = FALSE}
 as.data.frame(genotyped  %>% 
                 select(fam_all, goutaff, f.21003.0.0 , f.31.0.0) %>% 
                 filter(fam_all == 1, !is.na(goutaff), !is.na(f.21003.0.0)) %>% 
@@ -172,7 +160,7 @@ as.data.frame(genotyped  %>%
 
 Sex summary
 
-```{r all_gwas_sex_plot, echo = FALSE, eval=TRUE}
+```{r all_gwas_sex_plot, echo = FALSE, eval=FALSE}
 genotyped  %>% 
   select(goutaff, f.31.0.0, fam_all) %>% 
   filter(!is.na(goutaff), fam_all == 1 ) %>% 
@@ -188,7 +176,7 @@ genotyped  %>%
   ggtitle("All Sex Distribution")
 ```
 
-```{r all_gwas_bmi_plot, echo=FALSE, message=FALSE, warning=FALSE, eval=TRUE}
+```{r all_gwas_bmi_plot, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
 genotyped  %>% 
   select(fam_all, goutaff, f.21001.0.0 , f.31.0.0) %>% 
   filter(fam_all == 1, !is.na(goutaff), !is.na(f.21001.0.0)) %>% 
@@ -203,7 +191,7 @@ genotyped  %>%
 ```
 
 all combined bmi
-```{r all_bmi_summary1, echo = FALSE}
+```{r all_bmi_summary1, echo = FALSE, eval = FALSE}
 as.data.frame(genotyped  %>% 
                 select(fam_all, goutaff, f.21001.0.0 , f.31.0.0) %>% 
                 filter(fam_all == 1, !is.na(goutaff), !is.na(f.21001.0.0)) %>% 
@@ -226,7 +214,7 @@ genotyped  %>%
 ```
 
 all combined waist to height
-```{r all_waist_summary1, echo = FALSE}
+```{r all_waist_summary1, echo = FALSE, eval = FALSE}
 as.data.frame(genotyped  %>% 
                 select(fam_all, goutaff, waist_height_ratio , f.31.0.0) %>% 
                 filter(fam_all == 1, !is.na(goutaff), !is.na(waist_height_ratio)) %>% 
@@ -250,7 +238,7 @@ as.data.frame(genotyped  %>%
 
 
 
-```{r all_summary_table, echo = FALSE, results= 'asis'}
+```{r all_summary_table, echo = FALSE, results= 'asis', eval = FALSE}
 pandoc.table(all_summary_table, caption = 'Summary Table - All')
 ```
 
@@ -260,7 +248,7 @@ Ethnicity in order British, Irish, and Any other white background
 
 ### Kottgen table 1 SNPs - unadjusted
 
-```{r, echo = FALSE, results='asis'}
+```{r, echo = FALSE, results='asis', eval = FALSE}
 gout_cond <- 'all'
 all_kot <- create_kottgen_table1(kottgen_loci =paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/unadjusted/kottgen_results.txt'))
 row.names(all_kot[['sum_table']]) <- NULL
@@ -271,7 +259,7 @@ pandoc.table(as.data.frame(all_kot[['sum_table']][c('SNP','CHR','BP', "grail_gen
 
 ### Kottgen table 1 SNPs - age sex waist and waist to height ratio adjusted
 
-```{r, echo = FALSE, results='asis'}
+```{r, echo = FALSE, results='asis', eval = FALSE}
 gout_cond <- 'all'
 all_kot <- create_kottgen_table1(kottgen_loci =paste0(scratch_dir,"GWAS_all_controls/",control_cond,'/',gout_cond,'/adjusted/kottgen_results.txt'))
 row.names(all_kot[['sum_table']]) <- NULL
