@@ -1,4 +1,5 @@
 book_filename: "Thesis"
+new_session: TRUE
 language:
  ui:
   chapter_name: "Chapter "
