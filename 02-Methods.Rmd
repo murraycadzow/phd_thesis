@@ -96,7 +96,7 @@ SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection 
 
 
 
-```{markdown, eval = FALSE, include = FALSE}
+```{r markdown1, eval = FALSE, include = FALSE}
 Table: (\#tab:seltoolStats) 
 
 
@@ -174,7 +174,7 @@ metsyn_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsp
 gc_urate_gout_GR <-  gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("urate|gout",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 ```
 
-```{markdown, eval = FALSE, include = FALSE}
+```{r markdown2, eval = FALSE, include = FALSE}
 
 ### Selection database creation
 
@@ -435,30 +435,10 @@ java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysisTK.jar \
 	--dbsnp $DBSNP \
 	-o $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf \
 	-nct ${SLURM_JOB_CPUS_PER_NODE}
-
-
-# combine gVCFs
-parallel -j 22 '
-  java -Xmx8g -jar \
-    GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
-    -T CombineGVCFs \
-    -R reference_files/FASTA/hs37d5/hs37d5.fa  \
-    $(find ./ -name \*_{2}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g\") \
-    -o ../combined_gvcf/{1}_{2}.raw.snps.indels.g.vcf \
-    -log ../combined_gvcf/{1}_combine_{2}.log \
-    -L {2}' ::: man015 ::: $(seq 1 22)
-
-# variant call gVCF
-parallel -j 22 '
-java -Xmx32g -jar \
-  GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
- -T GenotypeGVCFs \
- -R reference_files/FASTA/hs37d5/hs37d5.fa \
- $(find ./combined_gvcf -name \*_{1}.raw*.g.vcf | tr "\n" " " |sed "s/ $//g" | sed "s/ / -V /g" |sed "s/^/ -V /g") \
- -o ./variant_called/man001-014_{1}.raw.snps.indels.vcf \
- -log ./variant_called/man001-014_combine_{1}.log \
- -L {1} -nt 20 ' ::: $(seq 1 22)
 ```
+
+The gVCFs were then combined by batch and chromosome using the \gls{gatk} CombineGVCFs module. Once combined the all batch gVCFs were variant called together using the GenotypeGVCF module to create \gls{vcf} files by chromosome.
+
 
 #### Variant Recalibration
 
@@ -467,7 +447,8 @@ java -Xmx48g -jar \
   GATK/nightly-19-11-2016/GenomeAnalysisTK.jar \
   -T VariantRecalibrator \
   -R reference_files/FASTA/hs37d5/hs37d5.fa \
-  $(find ./variant_called/  -name \*vcf | tr '\n' ' ' | sed 's/ $//g' | sed 's/\.\//-input \.\//g') \
+  $(find ./variant_called/  -name \*vcf | tr '\n' ' ' | \
+    sed 's/ $//g' | sed 's/\.\//-input \.\//g') \
   -resource:hapmap,known=false,training=true,truth=true,prior=15.0 \
   reference_files/resource_bundle_dec14/hapmap_3.3.b37.vcf \
   -resource:omni,known=false,traning=true,truth=false,prior=12.0 \
@@ -478,10 +459,10 @@ java -Xmx48g -jar \
   reference_files/resource_bundle_dec14/dbsnp_138.b37.vcf \
   -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -an InbreedingCoeff \
   -mode SNP \
-  -recalFile variant_recal/man001-014.SNP.recal \
-  -tranchesFile variant_recal/man001-014.SNP.tranches \
-  -rscriptFile variant_recal/man001-014.SNP.plots.R \
-  -log variant_recal/man001-014.SNP.log
+  -recalFile variant_recal/man001-015.SNP.recal \
+  -tranchesFile variant_recal/man001-015.SNP.tranches \
+  -rscriptFile variant_recal/man001-015.SNP.plots.R \
+  -log variant_recal/man001-015.SNP.log
 ```
  
 ```{bash, eval = FALSE}
@@ -489,7 +470,8 @@ java -Xmx48g -jar \
   GATK/nightly-19-11-2016/GenomeAnalysisTK.jar \
   -T VariantRecalibrator \
   -R reference_files/FASTA/hs37d5/hs37d5.fa \
-  $(find ./variant_called/  -name \*vcf | tr '\n' ' ' | sed 's/ $//g' | sed 's/\.\//-input \.\//g') \
+  $(find ./variant_called/  -name \*vcf | tr '\n' ' ' | \
+    sed 's/ $//g' | sed 's/\.\//-input \.\//g') \
   --maxGaussians 4 \
   -resource:mills,known=false,training=true,truth=true,prior=12.0 \
   reference_files/resource_bundle_dec14/Mills_and_1000G_gold_standard.indels.b37.vcf \
@@ -497,10 +479,10 @@ java -Xmx48g -jar \
   reference_files/resource_bundle_dec14/dbsnp_138.b37.vcf \
   -an QD -an DP -an FS -an SOR -an ReadPosRankSum -an MQRankSum -an InbreedingCoeff \
   -mode INDEL \
-  -recalFile variant_recal/man001-014.INDEL.recal \
-  -tranchesFile variant_recal/man001-014.INDEL.tranches \
-  -rscriptFile variant_recal/man001-014.INDEL.plots.R \
-  -log variant_recal/man001-014.INDEL.log
+  -recalFile variant_recal/man001-015.INDEL.recal \
+  -tranchesFile variant_recal/man001-015.INDEL.tranches \
+  -rscriptFile variant_recal/man001-015.INDEL.plots.R \
+  -log variant_recal/man001-015.INDEL.log
 ```
  
  Apply re-calibration
@@ -511,15 +493,15 @@ do
     -jar GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
     -T ApplyRecalibration \
     -R  reference_files/FASTA/hs37d5/hs37d5.fa  \
-    -input ./variant_called/man001-014_${i}.raw.snps.indels.vcf  \
+    -input ./variant_called/man001-015_${i}.raw.snps.indels.vcf  \
     -mode SNP  \
-    -recalFile ./variant_recal/man001-014.SNP.recal  \
-    -tranchesFile ./variant_recal/man001-014.SNP.tranches  \
+    -recalFile ./variant_recal/man001-015.SNP.recal  \
+    -tranchesFile ./variant_recal/man001-015.SNP.tranches  \
     -nt 4  \
     -L ${i} \
-    -o ./variant_recal/man001-014_${i}.recal.snp.vcf  \
+    -o ./variant_recal/man001-015_${i}.recal.snp.vcf  \
     --ts_filter_level 99.5  \
-    -log ./variant_recal/man001-014_${i}.snp.applyrecal.log
+    -log ./variant_recal/man001-015_${i}.snp.applyrecal.log
 done
  
 for i in $(seq 1 22)
@@ -528,15 +510,15 @@ do
     -jar GATK/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar \
     -T ApplyRecalibration \
     -R  reference_files/FASTA/hs37d5/hs37d5.fa \
-    -input ./variant_recal/man001-014_${i}.recal.snp.vcf \
+    -input ./variant_recal/man001-015_${i}.recal.snp.vcf \
     -mode INDEL \
-    -recalFile ./variant_recal/man001-014.INDEL.recal \
-    -tranchesFile ./variant_recal/man001-014.INDEL.tranches \
+    -recalFile ./variant_recal/man001-015.INDEL.recal \
+    -tranchesFile ./variant_recal/man001-015.INDEL.tranches \
     -nt 4 \
-    -o ./variant_recal/man001-014_${i}.recal.snp.indel.vcf \
+    -o ./variant_recal/man001-015_${i}.recal.snp.indel.vcf \
     --ts_filter_level 99.0 \
     -L ${i} \
-    -log ./variant_recal/man001-014_${i}.indel.applyrecal.log
+    -log ./variant_recal/man001-015_${i}.indel.applyrecal.log
 done
 ```
 
