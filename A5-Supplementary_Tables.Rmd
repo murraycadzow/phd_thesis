@@ -4,8 +4,10 @@ library(tidyverse)
 library(formattable)
 library(knitr)
 library(kableExtra)
+library(phdFunctions)
+#select <- dplyr::select
 ```
-# Appendix {-}
+# Appendix E
 
 ## Tables
 
@@ -30,12 +32,7 @@ create_sel_stat_table <- function(sel_stat, cap){
 
 ### modify so that the full table comes out
 ```{r, results = 'asis'}
-threedp <- function(num){
-  sprintf('%.3f', num)
-}
-
-
-pander::pandoc.table(chr_summary %>% mutate(mean = sapply(mean, threedp), sd = sapply(sd, threedp), lower_1 = sapply(lower_1, threedp), upper_99 = sapply(upper_99, threedp), median = sapply(median, threedp), min = sapply(min,threedp), max = sapply(max, threedp)) %>% arrange(chrom,pop,stat) %>% head() %>% data.frame(),  caption = '(\\#tab:selStatSummary) Summary of the selection test statistics for all populations and all autosomes', split.tables = 80, style = 'multiline', justify = 'lccrrrrrrr')
+pander::pandoc.table(chr_summary %>% mutate(mean = sapply(mean, three_dp), sd = sapply(sd, three_dp), lower_1 = sapply(lower_1, three_dp), upper_99 = sapply(upper_99, three_dp), median = sapply(median, three_dp), min = sapply(min,three_dp), max = sapply(max, three_dp)) %>% arrange(chrom,pop,stat) %>% head() %>% data.frame(),  caption = '(\\#tab:selStatSummary) Summary of the selection test statistics for all populations and all autosomes', split.tables = 80, style = 'multiline', justify = 'lccrrrrrrr')
 ```
 
 
@@ -99,6 +96,7 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
 
 
 ```{r tdPol, results = 'asis', warning = FALSE}
+select
 lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% kable(., booktab = TRUE, longtable = TRUE, caption = "(\\#tab:lowersigtdPol) Loci that had a Tajima's D in the lower tail that was only found in a Polynesian population")
 ```
 
@@ -158,28 +156,6 @@ names(metsyn) <-  c('mat_d','prop')
 # prop_list[['td_neg']]$exclusivity %>% data.frame%>% mutate(pop = rownames(.)) %>% gather("cluster", "prop", 1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean(prop))
 # 
 # prop_list[['td_neg']]$super_prop %>% data.frame() %>% spread(super, max_prop) 
-
-#prop
-stat_to_short <- function(x){
-  switch(x,
-         Tajima.D = "td",
-         Fay.Wu.H = "fwh",
-         Fu.Li.D = "fld",
-         Fu.Li.F = "flf",
-         Zeng.E = "ze",
-         x
-         )
-}
-
-short_to_latex <- function(x){switch(x, 
-       td = "\\gls{td}",
-       fwh = "\\gls{fwh}",
-       fld = "\\gls{fld}",
-       flf = "\\gls{flf}",
-       ze = "\\gls{ze}",
-       x
-       )
-}
 
 
 bind_rows(list(
