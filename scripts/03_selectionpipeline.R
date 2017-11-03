@@ -10,6 +10,11 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+lower_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS')
+
+
+fdr_low <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_low.2-11-2017.RDS')
+fdr_high <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_high.2-11-2017.RDS')
 
 upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
@@ -19,6 +24,8 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+
+upper_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS')
 
 ## load ihs and nsl data
 ihs_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')

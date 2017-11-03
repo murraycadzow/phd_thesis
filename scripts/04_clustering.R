@@ -69,11 +69,11 @@ four_plot <- function(mat_d_name,statname){
     p1 + ggtitle("A.", paste(statname,"lower tail")),
     
     
-    lower_dat %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("C.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_neg, super_pop_colours, by = 'group' ) %>% .[['colour']]))),
+    lower_dat %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("C.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_neg, super_pop_colours, by = 'group' ) %>% .[['colour']]))) + scale_y_discrete(expand = c(0,0)),
     
     p2 + ggtitle("B.",paste(statname,"upper tail")),
     
-    mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>%  mutate(posid = as.numeric(row.names(.))) %>% gather("pop", "value",2:NCOL(.))%>%  mutate(pop = factor(pop)) %>% mutate(pop = factor(pop, levels(pop)[hr_c_pos$order])) %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("D.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_pos, super_pop_colours, by = 'group' ) %>% .[['colour']])))
+    mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>%  mutate(posid = as.numeric(row.names(.))) %>% gather("pop", "value",2:NCOL(.))%>%  mutate(pop = factor(pop)) %>% mutate(pop = factor(pop, levels(pop)[hr_c_pos$order])) %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("D.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_pos, super_pop_colours, by = 'group' ) %>% .[['colour']]))) + scale_y_discrete(expand = c(0,0))
     , cols = 2) 
 }
 
@@ -138,7 +138,7 @@ ihs_dendro_plot <- function(){
           plot.margin = unit(c(0.1,0.5,0.1,0.5), 'cm'), 
           aspect.ratio = 1, 
           panel.border = element_rect(colour = "black", fill=NA, size= 1)) + 
-    heatmap_col + labs(fill = "Proportion") + guides(fill = guide_colorbar(barwidth = 8, barheight = 0.5))
+    heatmap_col + labs(fill = "Proportion") + guides(fill = guide_colorbar(barwidth = 6, barheight = 0.5, label.hjust = 0.1))
 
   ggarrange(p1, p2, heights = c(1, 2),
             ncol = 1, nrow = 2, align = "v", labels = c("A","B"))
@@ -178,7 +178,7 @@ nsl_dendro_plot <- function(){
           panel.border = element_rect(colour = "black", fill=NA, size= 1)
           ) + 
     heatmap_col + 
-    labs(fill = "Proportion")  + guides(fill = guide_colorbar(barwidth = 8, barheight = 0.5, draw.llim = TRUE, draw.ulim = TRUE ))
+    labs(fill = "Proportion")  + guides(fill = guide_colorbar(barwidth = 6, barheight = 0.5, draw.llim = TRUE, draw.ulim = TRUE , label.hjust = 0.1))
   
   ggarrange(p1, p2, heights = c(1, 2),
             ncol = 1, nrow = 2, align = "v", labels = c("A","B"))
