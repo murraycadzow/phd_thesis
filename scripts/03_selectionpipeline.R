@@ -10,11 +10,9 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
-lower_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS')
+lower_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS') %>% mutate(chrom = paste0('chr',chrom)) %>% select('statname' = stat, everything())
 
 
-fdr_low <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_low.2-11-2017.RDS')
-fdr_high <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_high.2-11-2017.RDS')
 
 upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
@@ -25,7 +23,17 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
-upper_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS')
+upper_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS') %>% mutate(chrom = paste0('chr',chrom)) %>% select('statname' = stat, everything())
+
+## permutation data
+# reorder the lower and upper columns so that the numbers make sense in the tables
+fdr_low <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_low.2-11-2017.RDS') %>% select(stat, pop, lower_per, 'lowerCI' = upper, 'FDR' = med, 'upperCI' = lower, lowest_quant, super_pop)
+
+fdr_high <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_high.2-11-2017.RDS') %>% select(stat, pop, upper_per, 'lowerCI' = lower, 'FDR' = med, 'upperCI' = upper, highest_quant, super_pop)
+
+perm_median <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_median_thresholds.2-11-2017.RDS')
+perm_ci2.5 <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_ci2.5_thresholds.2-11-2017.RDS')
+perm_ci97.5 <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_ci97.5_thresholds.2-11-2017.RDS')
 
 ## load ihs and nsl data
 ihs_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
