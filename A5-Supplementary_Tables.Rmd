@@ -24,10 +24,18 @@ for(p in unique(panel$pop)){
   pops[[p]] <- panel %>% filter(pop == p) %>%  .[["sample"]]
 }
 
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
+
 create_sel_stat_table <- function(sel_stat, cap){
   knitr::kable(chr_summary %>% filter(stat == sel_stat) %>% ungroup() %>%  select(pop, chrom, mean) %>% spread(.,chrom, mean) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), "pop") %>% select(pop, super_pop, 2:23) %>% arrange(super_pop, pop) %>% head(), align = c('l','c',rep('r', 22)), col.names = c("Population", "Super Population", paste0('Chr',1:22)), caption = cap, digits =  3)
 }
 ```
+
+
+```{r}
+gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
 
 
 ### modify so that the full table comes out
@@ -96,7 +104,6 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
 
 
 ```{r tdPol, results = 'asis', warning = FALSE}
-select
 lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% kable(., booktab = TRUE, longtable = TRUE, caption = "(\\#tab:lowersigtdPol) Loci that had a Tajima's D in the lower tail that was only found in a Polynesian population")
 ```
 
