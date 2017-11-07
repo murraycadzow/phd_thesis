@@ -3,6 +3,9 @@
 .RData
 .Ruserdata
 
+# interim chapter files
+*.md
+
 # Latex related files
 Thesis.acn
 Thesis.aux

@@ -57,23 +57,25 @@ The "Thrifty genotype hypothesis" was originally hypothesised by @Neel1962, wher
 
 
 selection in urate/gout
-@Ramos2017
-@Zhang2014
+
+- @Ramos2017 (review) _BCAS3_ and _NACA2_ which was actually identified in Grossman2013 in ASI pop
+- @Zhang2013a _ATXN2_
 
 papers that have used empirical distribution:
--Teshima2006
--Xue2009
--Hider2013 (fwh,fld,flf,td,ihs)
--Joannalagadda2017 (fwh,td,ihs)
--akey2002interrogating (Fst)
--Akey2010 (d~i~ Fst derived stat)
+
+- Teshima2006
+- Xue2009
+- Hider2013 (fwh,fld,flf,td,ihs)
+- Joannalagadda2017 (fwh,td,ihs)
+- akey2002interrogating (Fst)
+- Akey2010 (d~i~ Fst derived stat)
 
 
-Loci associated with T2D have been found to have evidence of having undergone selection [@pickrell2009signals; @voight2006map ?].
+Loci associated with T2D have been found to have evidence of having undergone selection [@pickrell2009signals; @voight2006map; ?].
 
 @Minster2016 with CREBRF found a particular variant that was unique to Samoans that had evidence of having under gone selection
 
-@Zhang2013 had evidence that urate was under selection
+@Zhang2013a had evidence that urate was under selection
 
 
 
@@ -161,8 +163,9 @@ F~ST~
 
 iHS and nSL
 tested gap width to try and bring in SLC2A9 for coreExome data
+<!--
 Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TONDon't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
-
+-->
 
 
 <!--
@@ -492,7 +495,7 @@ To calculate the false discovery rate, 5000 permutations were generated, each ra
 
 
  
-The \gls{fdr} for \gls{ze} was 1.0 for all Polynesian populations in the lower end of the distribution and the 1st percentile of the data fell within the 2nd percentile bin from the permutations. Whereas, for \gls{td} and \gls{fwh} the quantile bin `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(min(lowest_quant))`% with the maximum upper confidence interval being `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(three_dp(max(upperCI)))`.
+The \gls{fdr} for \gls{ze} was 1.0 for all Polynesian populations in the lower end of the distribution and the 1st percentile of the data fell within the 2nd percentile bin from the permutations. Whereas, for \gls{td} and \gls{fwh} the quantile bin was `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(min(lowest_quant))`%, with the maximum upper confidence interval being `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(three_dp(max(upperCI)))`. 
 
 
 
@@ -526,14 +529,33 @@ for(p in sort(unique(upper_sig_stats$pop))){
 td_pop_unique_genes_upper <- bind_cols(a) %>% gather("pop","n")
 rm(a)
 
+
+td_super_pop_means <- global_super_summary %>% filter(stat == 'Tajima.D') %>% mutate(range = max -min)
+gs_td_table <- create_sel_summary_table("Tajima.D")
+
+
+pol_td_t.test <- bind_rows(
+  lapply(c("AFR","AMR", "EAS","EUR","SAS"), function(sp){
+    cbind(SuperPop = sp, 
+          global_summary %>% filter(stat == 'Tajima.D') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop %in% c("POL",sp)) %>% ungroup() %>% mutate(super_pop = as.character(super_pop)) %>% select(super_pop, mean) %>% do(broom::tidy(t.test( mean ~ super_pop, data = .))))
+})) %>% mutate(adjusted_p = p.adjust(p.value, "bonferroni"))
 ```
 
+The results for the genome-wide \gls{td} showed that there were population differences in the distribution of \gls{td} values. The mean \gls{td} for the Polynesian populations were the smallest of the super populations at `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_td_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_td_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_td_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_td_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsTdTable)). The means of the Polynesian populations were lower than all of the other populations except \gls{pel} and \gls{mxl}. The \gls{sas} populations had the highest mean \gls{td} overall at `r global_super_summary %>% filter(super_pop == 'SAS', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'SAS', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`). The \gls{afr} populations were the only populations with the 1st percentile above zero, but also had the smallest overall maximum value of  `r global_super_summary %>% filter(super_pop == 'AFR', stat == 'Tajima.D') %>% .[["max"]] %>% three_dp()`. The \gls{eur} populations had the highest maximum \gls{td} value at  `r global_super_summary %>% filter(super_pop == 'EUR', stat == 'Tajima.D') %>% .[["max"]] %>% three_dp()`. The smallest \gls{td} value of `r gs_td_table %>% filter(min(min) == min) %>% .[['min']] %>% three_dp()` came from the \gls{khv} population of the \gls{eas} super population. The \gls{afr} population had the smallest range (`r td_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['range']] %>% three_dp()`), whereas the \gls{eas} super population had the largest(`r td_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['range']] %>% three_dp()`). The \gls{pol} population had the second largest(`r td_super_pop_means %>% filter(super_pop == 'POL') %>% .[['range']] %>% three_dp()`). A right shifted distribution of \gls{td} can be attributed to using ascertainment bias from a chip, where there is a bais against low frequency markers.
 
-The mean number of windows that met the significance threshold per population for the lower tail was  `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r td_pop_unique_genes_lower %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r td_pop_unique_genes_lower %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r td_pop_unique_genes_lower %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r td_pop_unique_genes_lower %>% summarise(max(n)) %>% round(digits = 0)`.
 
-The mean number of windows per population that met the significance threshold for the upper tail was `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`), with a minimum of `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r td_pop_unique_genes_upper %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r td_pop_unique_genes_upper %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r td_pop_unique_genes_upper %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r td_pop_unique_genes_upper %>% summarise(max(n)) %>% round(digits = 0)`.
 
-in figure \@ref(fig:TajimaDfdr) XXX
+
+
+<!-- better check that the t.test is ok in this way 
+The minimum \gls{td} value for a Polynesian population was `r gs_td_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["min"]] %>% three_dp` and was from `r gs_td_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was `r gs_td_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["max"]] %>% three_dp()` and from `r gs_td_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. The Polynesian mean was significantly different to the other means for the super population using a t-test. The means were \gls{afr}: `r td_super_pop_means %>% filter(super_pop == "AFR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'AFR') %>% .[['p.value']] %>% three_dp()`), \gls{amr}: `r td_super_pop_means %>% filter(super_pop == "AMR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'AMR') %>% .[['p.value']] %>% three_dp()`), \gls{eur}: `r td_super_pop_means %>% filter(super_pop == "EUR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'EUR') %>% .[['p.value']] %>% three_dp()`), \gls{eas}: `r td_super_pop_means %>% filter(super_pop == "EAS") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'EAS') %>% .[['p.value']] %>% three_dp()`), and \gls{sas}: `r td_super_pop_means %>% filter(super_pop == "SAS") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'SAS') %>% .[['p.value']] %>% three_dp()`). 
+-->
+
+The mean number of windows that met the significance threshold per population for the lower tail was  `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r lower_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r td_pop_unique_genes_lower %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r td_pop_unique_genes_lower %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r td_pop_unique_genes_lower %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r td_pop_unique_genes_lower %>% summarise(max(n)) %>% round(digits = 0)`. The \gls{afr} populations had less windows that were significant because their 1st percentiles were above zero. In the upper tail, the mean number of windows per population that met the significance threshold was `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`), with a minimum of `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r upper_sig_stats %>% filter(statname == 'Tajima.D') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r td_pop_unique_genes_upper %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r td_pop_unique_genes_upper %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r td_pop_unique_genes_upper %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r td_pop_unique_genes_upper %>% summarise(max(n)) %>% round(digits = 0)`.
+
+- FDR for Tajimas D is in Figure \@ref(fig:TajimaDfdr)
+- population summary stats in table \@ref(tab:gsTdTable)
+- list of regions unique to Pol populations Table \@ref(tab:lowersigtdPol)
 
 (ref:TajimaDfdr) The False discovery rate for Tajima's D by population from 5000 permutations. The dashed line indicates the 1st percentile from the observed data
 
@@ -542,30 +564,6 @@ include_graphics('images/03_selectionpipeline/Tajima.D_fdr_low.pdf')
 ```
 
 
-
-
-```{r}
-td_super_pop_means <- global_super_summary %>% filter(stat == 'Tajima.D') 
-```
-
-```{r, results='asis'}
-gs_td_table <- create_sel_summary_table("Tajima.D")
-```
-
-
-population summary stats in table \@ref(tab:gsTdTable)
-
-The mean \gls{td} for the Polynesian populations was `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_td_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_td_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_td_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_td_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsTdTable)). The means of the Polynesian populations were lower than all of the other populations except \gls{pel} and \gls{mxl}.
-
-```{r, warning =  FALSE, message = FALSE}
-pol_td_t.test <- bind_rows(
-  lapply(c("AFR","AMR", "EAS","EUR","SAS"), function(sp){
-    cbind(SuperPop = sp, 
-          global_summary %>% filter(stat == 'Tajima.D') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop %in% c("POL",sp)) %>% ungroup() %>% mutate(super_pop = as.character(super_pop)) %>% select(super_pop, mean) %>% do(broom::tidy(t.test( mean ~ super_pop, data = .))))
-})) %>% mutate(adjusted_p = p.adjust(p.value, "bonferroni"))
-```
-
-The minimum \gls{td} value for a Polynesian population was `r gs_td_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["min"]] %>% three_dp` and was from `r gs_td_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was `r gs_td_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["max"]] %>% three_dp()` and from `r gs_td_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. The Polynesian mean was significantly different to the other means for the super population using a t-test. The means were \gls{afr}: `r td_super_pop_means %>% filter(super_pop == "AFR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'AFR') %>% .[['p.value']] %>% three_dp()`), \gls{amr}: `r td_super_pop_means %>% filter(super_pop == "AMR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'AMR') %>% .[['p.value']] %>% three_dp()`), \gls{eur}: `r td_super_pop_means %>% filter(super_pop == "EUR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'EUR') %>% .[['p.value']] %>% three_dp()`), \gls{eas}: `r td_super_pop_means %>% filter(super_pop == "EAS") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'EAS') %>% .[['p.value']] %>% three_dp()`), and \gls{sas}: `r td_super_pop_means %>% filter(super_pop == "SAS") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'SAS') %>% .[['p.value']] %>% three_dp()`). 
 
 ```{r td_ranges, eval = FALSE, include = FALSE}
 #CIM
@@ -680,18 +678,8 @@ paste(lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM',
 ```
 
 
-regions of consistent elevation/depression:
-
-CIM 
-
-NZM
-
-SAM
-
-TON
 
 
-Table \@ref(tab:lowersigtdPol)
 
 
 
@@ -712,26 +700,18 @@ for(p in sort(unique(upper_sig_stats$pop))){
 fwh_pop_unique_genes_upper <- bind_cols(a) %>% gather("pop","n")
 rm(a)
 
-```
-
-
-```{r}
-fwh_super_pop_means <- global_summary %>% filter(stat == 'Fay.Wu.H') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% group_by(super_pop) %>%  summarise(mean = mean(mean))
-```
-
-
-The mean number of windows that met the significance threshold per population for the lower tail was  `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r fwh_pop_unique_genes_lower %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r fwh_pop_unique_genes_lower %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r fwh_pop_unique_genes_lower %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r fwh_pop_unique_genes_lower %>% summarise(max(n)) %>% round(digits = 0)`.
-
-The mean number of windows per population that met the significance threshold for the upper tail was `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`), with a minimum of `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`.
-
-
-
-
-Table \@ref(tab:gsFwhTable)
-
-```{r, results='asis'}
+fwh_super_pop_means <- global_super_summary %>% filter(stat == 'Fay.Wu.H') %>% mutate(range = max - min)
 gs_fwh_table <- create_sel_summary_table("Fay.Wu.H")
 ```
+
+Comparing genome-wide \gls{fwh} revealed that the \gls{pol} super population had the lowest mean (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['mean']] %>% three_dp()`), 1st percentile (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['lower_1']] %>% three_dp()`), median (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['median']] %>% three_dp()`), 99th percentile (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['upper_99']] %>% three_dp()`), and maximum values (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['max']] %>% three_dp()`). 
+Within the \gls{pol} group, the minimum \gls{fwh} value for a Polynesian population was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. \gls{eas} was the second lowest for mean (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['mean']] %>% three_dp()`), 1st percentile (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['lower_1']] %>% three_dp()`), median (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['median']] %>% three_dp()`), and 99th percentile (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['upper_99']] %>% three_dp()`), but had the largest maximum (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['max']] %>% three_dp()`). The \gls{eur} super population had both the smallest minimum and largest range (`r fwh_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['range']] %>% three_dp()`). The \gls{afr} super population were the only group to have a positive mean (`r fwh_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['mean']] %>% three_dp()`), they also had the smallest range and variation (SD `r fwh_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['sd']] %>% three_dp()`).
+
+Looking the number of windows that met the significance threshold of being in the 1st percentile and < 0, the mean number of windows that met this threshold per population for the lower tail was  `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. Of the windows that met the significance threshold, the  mean number of genes intersecting the windows, that were unique to a population was `r fwh_pop_unique_genes_lower %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r fwh_pop_unique_genes_lower %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r fwh_pop_unique_genes_lower %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r fwh_pop_unique_genes_lower %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of windows per population that met the significance threshold of being in the 99th percentile and > 0 was `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`), with a minimum of `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`.
+
+
+- summary stats for each population Table \@ref(tab:gsFwhTable)
+- Genes Unique to Polynesian populations lower tail Table \@ref(tab:lowersigfwhPol)
 
 ```{r, warning =  FALSE, message = FALSE}
 pol_fwh_t.test <- bind_rows(
@@ -741,16 +721,11 @@ pol_fwh_t.test <- bind_rows(
 })) %>% mutate(adjusted_p = p.adjust(p.value, "bonferroni"))
 ```
 
-The mean \gls{fwh} for the Polynesian populations was `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Fay.Wu.H') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_fwh_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fwh_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_fwh_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fwh_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_fwh_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fwh_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_fwh_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fwh_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsFwhTable)).
 
-
-
+<!--
 The Eastern Polynesian population with the minimum \gls{fwh} value of `r gs_fwh_table %>% filter(pop %in% c("CIM","NZM")) %>% filter(min(as.numeric(min)) == as.numeric(min)) %>% .[["min"]] %>% three_dp()` was `r gs_fwh_table %>% filter(pop %in% c("CIM","NZM")) %>% filter(min(min) == min) %>% .[["pop"]]`, however, values for \gls{cim} were overall lower. The Western Polynesian population with the minimum was `r gs_fwh_table %>% filter(pop %in% c("SAM","TON")) %>% filter(min(min) == min) %>% .[["pop"]]`, with a value of `r gs_fwh_table %>% filter(pop %in% c("SAM","TON")) %>% filter(min(min) == min) %>% .[["min"]] %>% three_dp()` and also had the maximum Polynesian \gls{fwh} value of `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["max"]] %>% three_dp()`.  The maximum \gls{fwh} value from the Eastern Polynesian populations was `r gs_fwh_table %>% filter(pop %in% c("CIM","NZM")) %>% filter(max(max) == max) %>% .[["max"]] %>% three_dp()` with `r gs_fwh_table %>% filter(pop %in% c("CIM","NZM")) %>% filter(max(max) == max) %>% .[["pop"]]`. 
 
-
-
-
-The minimum \gls{fwh} value for a Polynesian population was `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["min"]] %>% three_dp()` and was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["max"]] %>% three_dp()` and from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. The Polynesian mean was significantly different to the other means for the super population using a t-test. The means were \gls{afr}: `r fwh_super_pop_means %>% filter(super_pop == "AFR") %>% .[["mean"]] %>% three_dp() ` (P = \num{`r pol_fwh_t.test %>% filter(SuperPop == 'AFR') %>% select(p.value) %>% format(., scientific = TRUE, digits = 3)`}), \gls{amr}: `r fwh_super_pop_means %>% filter(super_pop == "AMR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_fwh_t.test %>% filter(SuperPop == 'AMR') %>% .[['p.value']] %>% three_dp()`), \gls{eur}: `r fwh_super_pop_means %>% filter(super_pop == "EUR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_fwh_t.test %>% filter(SuperPop == 'EUR') %>% .[['p.value']] %>% three_dp()`), \gls{eas}: `r fwh_super_pop_means %>% filter(super_pop == "EAS") %>% .[["mean"]] %>% three_dp() ` (P = \num{`r pol_fwh_t.test %>% filter(SuperPop == 'EAS') %>% select(p.value) %>% format(., scientific = TRUE, digits = 3)`}), and \gls{sas}: `r fwh_super_pop_means %>% filter(super_pop == "SAS") %>% .[["mean"]] %>% three_dp() ` (P = \num{`r pol_fwh_t.test %>% filter(SuperPop == 'SAS') %>% select(p.value) %>% format(., scientific = TRUE, digits = 3)`}). 
+The Polynesian mean was significantly different to the other means for the super population using a t-test. The means were \gls{afr}: `r fwh_super_pop_means %>% filter(super_pop == "AFR") %>% .[["mean"]] %>% three_dp() ` (P = \num{`r pol_fwh_t.test %>% filter(SuperPop == 'AFR') %>% select(p.value) %>% format(., scientific = TRUE, digits = 3)`}), \gls{amr}: `r fwh_super_pop_means %>% filter(super_pop == "AMR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_fwh_t.test %>% filter(SuperPop == 'AMR') %>% .[['p.value']] %>% three_dp()`), \gls{eur}: `r fwh_super_pop_means %>% filter(super_pop == "EUR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_fwh_t.test %>% filter(SuperPop == 'EUR') %>% .[['p.value']] %>% three_dp()`), \gls{eas}: `r fwh_super_pop_means %>% filter(super_pop == "EAS") %>% .[["mean"]] %>% three_dp() ` (P = \num{`r pol_fwh_t.test %>% filter(SuperPop == 'EAS') %>% select(p.value) %>% format(., scientific = TRUE, digits = 3)`}), and \gls{sas}: `r fwh_super_pop_means %>% filter(super_pop == "SAS") %>% .[["mean"]] %>% three_dp() ` (P = \num{`r pol_fwh_t.test %>% filter(SuperPop == 'SAS') %>% select(p.value) %>% format(., scientific = TRUE, digits = 3)`}). -->
 
 
 ```{r, fwh_ranges, eval = FALSE, include = FALSE}
@@ -811,9 +786,7 @@ lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM',
 lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW() # genes only from POL
 ```
 
-Genes Unique to Polynesian populations
 
-Table \@ref(tab:lowersigfwhPol)
 
 #### Fu and Li's D
 
@@ -832,14 +805,10 @@ for(p in sort(unique(upper_sig_stats$pop))){
 fld_pop_unique_genes_upper <- bind_cols(a) %>% gather("pop","n")
 rm(a)
 
-```
+gs_fld_table <- create_sel_summary_table("Fu.Li.D")
+fld_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.D') %>% mutate(range = max - min)
 
 
-```{r}
-fld_super_pop_means <- global_summary %>% filter(stat == 'Fay.Wu.H') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% group_by(super_pop) %>%  summarise(mean = mean(mean))
-```
-
-```{r, warning =  FALSE, message = FALSE}
 pol_fld_t.test <- bind_rows(
   lapply(c("AFR","AMR", "EAS","EUR","SAS"), function(sp){
     cbind(SuperPop = sp, 
@@ -847,15 +816,12 @@ pol_fld_t.test <- bind_rows(
 })) %>% mutate(adjusted_p = p.adjust(p.value, "bonferroni"))
 ```
 
+
+
 The mean number of windows that met the significance threshold per population for the lower tail was  `r lower_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r lower_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r lower_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r lower_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r fld_pop_unique_genes_lower %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r fld_pop_unique_genes_lower %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r fld_pop_unique_genes_lower %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r fld_pop_unique_genes_lower %>% summarise(max(n)) %>% round(digits = 0)`.
 
 The mean number of windows per population that met the significance threshold for the upper tail was `r upper_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r upper_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`), with a minimum of `r upper_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r upper_sig_stats %>% filter(statname == 'Fu.Li.D') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r fld_pop_unique_genes_upper %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r fld_pop_unique_genes_upper %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r fld_pop_unique_genes_upper %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r fld_pop_unique_genes_upper %>% summarise(max(n)) %>% round(digits = 0)`.
 
-
-
-```{r, results='asis'}
-gs_fld_table <- create_sel_summary_table("Fu.Li.D")
-```
 
 The mean \gls{fld} for the Polynesian populations was `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Fu.Li.D') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_fld_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fld_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_fld_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fld_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_fld_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fld_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_fld_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_fld_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsFldTable)).
 
@@ -932,7 +898,7 @@ Table \@ref(tab:lowersigfldPol)
 
 #### Fu and Li's F
 
-```{r, warning=FALSE, message=FALSE}
+```{r flf_main, warning=FALSE, message=FALSE}
 a <- list()
 for(p in sort(unique(lower_sig_stats$pop))){
   a[[p]] <-  lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop == p) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.F', pop != p), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()
@@ -947,18 +913,15 @@ for(p in sort(unique(upper_sig_stats$pop))){
 flf_pop_unique_genes_upper <- bind_cols(a) %>% gather("pop","n")
 rm(a)
 
+
+gs_flf_table <- create_sel_summary_table("Fu.Li.F")
+flf_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.F') 
 ```
 
 
 The mean number of windows that met the significance threshold per population for the lower tail was  `r lower_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r lower_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`) with a minimum of `r lower_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r lower_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r flf_pop_unique_genes_lower %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r flf_pop_unique_genes_lower %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r flf_pop_unique_genes_lower %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r flf_pop_unique_genes_lower %>% summarise(max(n)) %>% round(digits = 0)`.
 
 The mean number of windows per population that met the significance threshold for the upper tail was `r upper_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r upper_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(sd(n)) %>% round(digits = 0)`), with a minimum of `r upper_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(min(n)) %>% round(digits = 0)` and a maximum of `r upper_sig_stats %>% filter(statname == 'Fu.Li.F') %>% group_by(pop) %>% tally() %>% summarise(max(n)) %>% round(digits = 0)`. The mean number of genes that were unique to a population was `r flf_pop_unique_genes_upper %>% summarise(mean(n)) %>% round(digits = 0)` (SD = `r flf_pop_unique_genes_upper %>% summarise(sd(n)) %>% round(digits = 0)`) and minimum of `r flf_pop_unique_genes_upper %>% summarise(min(n)) %>% round(digits = 0)` and maximum of `r flf_pop_unique_genes_upper %>% summarise(max(n)) %>% round(digits = 0)`.
-
-
-
-```{r, results='asis'}
-gs_flf_table <- create_sel_summary_table("Fu.Li.F")
-```
 
 
 The mean \gls{flf} for the Polynesian populations was `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Fu.Li.F') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_flf_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_flf_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_flf_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_flf_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_flf_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_flf_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_flf_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_flf_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsFlfTable)).
@@ -1030,13 +993,26 @@ Table \@ref(tab:lowersigflfPol)
 
 #### Zeng's E
 
-```{r, results='asis'}
+```{r, results='asis', warning=FALSE}
+a <- list()
+for(p in sort(unique(lower_sig_stats$pop))){
+  a[[p]] <-  lower_sig_stats %>% filter(statname == 'Zeng.E', pop == p) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Zeng.E', pop != p), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()
+}
+ze_pop_unique_genes_lower <- bind_cols(a) %>% gather("pop","n")
+rm(a)
+
+a <- list()
+for(p in sort(unique(upper_sig_stats$pop))){
+  a[[p]] <-  upper_sig_stats %>% filter(statname == 'Zeng.E', pop == p) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Zeng.E', pop != p), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()
+}
+ze_pop_unique_genes_upper <- bind_cols(a) %>% gather("pop","n")
+rm(a)
+
 gs_ze_table <- create_sel_summary_table("Zeng.E")
+ze_super_pop_means <- global_super_summary %>% filter(stat == 'Zeng.E') 
 ```
 
 The mean \gls{ze} for the Polynesian populations was `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Zeng.E') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_ze_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_ze_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_ze_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_ze_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_ze_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_ze_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_ze_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_ze_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsZeTable)).
-
-
 
 The mean \gls{ze} was greater than two for all populations, except \gls{afr} populations where the means ranged from `r gs_ze_table %>% filter(super_pop == 'AFR') %>% summarise(three_dp(min(mean)))` to `r gs_ze_table %>% filter(super_pop == 'AFR') %>% summarise(three_dp(max(mean)))` (Table \@ref(tab:gsZeTable)).
 
@@ -1052,24 +1028,6 @@ In order to have the minimum \gls{fdr} for the \gls{pol} populations from the gr
 The 99th percentile for the four Polynesian populations had an estimated \gls{fdr} maximum of `r fdr_high_tab %>% filter(stat == 'Zeng.E', pop %in% poly_pop) %>% filter(max(FDR) == FDR) %>% mutate(a = paste0(three_dp(FDR), ' (95% CI ', three_dp(lowerCI),' - ', three_dp(upperCI), ')')) %>% .[['a']] ` and minimum of `r fdr_high_tab %>% filter(stat == 'Zeng.E', pop %in% poly_pop) %>% filter(min(FDR) == FDR) %>% mutate(a = paste0(three_dp(FDR), ' (95% CI ', three_dp(lowerCI),' - ', three_dp(upperCI), ')')) %>% .[['a']] ` and was conservatively equivalent to the `r fdr_high_tab %>% filter(stat == 'Zeng.E', pop %in% poly_pop) %>% summarise(round_dp(min(highest_quant), 2))`th percentile from the permutations. 
 
 
-
-```{r, warning=FALSE, message=FALSE}
-a <- list()
-for(p in sort(unique(lower_sig_stats$pop))){
-  a[[p]] <-  lower_sig_stats %>% filter(statname == 'Zeng.E', pop == p) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Zeng.E', pop != p), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()
-}
-ze_pop_unique_genes_lower <- bind_cols(a) %>% gather("pop","n")
-rm(a)
-
-a <- list()
-for(p in sort(unique(upper_sig_stats$pop))){
-  a[[p]] <-  upper_sig_stats %>% filter(statname == 'Zeng.E', pop == p) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Zeng.E', pop != p), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()
-}
-ze_pop_unique_genes_upper <- bind_cols(a) %>% gather("pop","n")
-rm(a)
-
-```
-
 When ranked based on the median \gls{ze}, the \gls{eas} populations had the highest means, followed by the \gls{pol} populations.
 Table \@ref(tab:gsZeTable)
 
@@ -1081,9 +1039,6 @@ The mean number of windows per population that met the significance threshold fo
 
 
 
-```{r, eval = FALSE}
-gs_ze_table <- global_summary %>% ungroup%>% filter(stat == 'Zeng.E') %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%   data.frame()
-```
 
 
 ```{r ze_ranges, eval = FALSE, include = FALSE}
@@ -1625,7 +1580,7 @@ In the lower tail there were  `r lower_sig_stats %>% filter(statname == 'Tajima.
 \Gls{cim} also had the most independent consecutive regions for \gls{td} and \gls{fwh} out of the Polynesian populations.
 
 
-```{r, fig.cap='(ref:cimFANCM)', eval= TRUE, message = FALSE, fig.height = 4, fig.wdith = 4}
+```{r, fig.cap='(ref:cimFANCM)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cahce = TRUE}
 g = "FANCM"
 #retrieve information of the gene of interest
 
@@ -1635,7 +1590,7 @@ ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_CIM', genename 
 ```
 
 
-```{r, fig.cap='(ref:cimRGS3)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4}
+```{r, fig.cap='(ref:cimRGS3)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "RGS3"
 #retrieve information of the gene of interest
 
@@ -1763,7 +1718,7 @@ were there any genes that were significant from the gene lists and related to th
 > from the multi stat plot it looks like THADA could be interesting
 
 THADA Plot
-```{r, fig.cap='(ref:cimTHADA)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:cimTHADA)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "THADA"
 #retrieve information of the gene of interest
 
@@ -1815,7 +1770,7 @@ From the upper tail, there were fewer genes overall that intersected windows tha
 - 2 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
 - 1 stats: `r upper_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
 
-```{r, fig.cap='(ref:nzmDNAH6)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:nzmDNAH6)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "DNAH6"
 #retrieve information of the gene of interest
 
@@ -1825,7 +1780,7 @@ ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_NZM', genename 
 ```
 
 
-```{r, fig.cap='(ref:nzmRGS3)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:nzmRGS3)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache =TRUE}
 g = "RGS3"
 #retrieve information of the gene of interest
 
@@ -1834,7 +1789,7 @@ wh <- range(wh, ignore.strand = TRUE)
 ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_NZM', genename == g)%>% mutate(pop = 'NZM', statname = case_when(statid == 21 ~ "nSL", statid == 27 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., lower_sig_stats %>% filter(pop == 'NZM', SYMBOL == g) %>% select(contains("chrom"), statname, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'top'), ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")) + ggtitle(g)
 ```
 
-```{r, fig.cap='(ref:nzmSUPT3H)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:nzmSUPT3H)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cahce = TRUE}
 g = "SUPT3H"
 #retrieve information of the gene of interest
 
@@ -1909,7 +1864,7 @@ For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname =
 > from the multi stat plot DNAH10 looks like it could be interesting
 
 DNAH10 Plot
-```{r, fig.cap='(ref:nzmDNAH10)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:nzmDNAH10)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "DNAH10"
 #retrieve information of the gene of interest
 
@@ -1940,7 +1895,7 @@ lower
 - 2 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
 - 1 stats: `r lower_sig_stats %>% filter(pop %in% c('SAM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
 
-```{r, fig.cap='(ref:samCNTNAP5)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:samCNTNAP5)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "CNTNAP5"
 #retrieve information of the gene of interest
 
@@ -1950,7 +1905,7 @@ ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_SAM', genename 
 ```
 
 
-```{r, fig.cap='(ref:samSPAG16)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:samSPAG16)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "SPAG16"
 #retrieve information of the gene of interest
 
@@ -1959,7 +1914,7 @@ wh <- range(wh, ignore.strand = TRUE)
 ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_SAM', genename == g)%>% mutate(pop = 'SAM', statname = case_when(statid == 21 ~ "nSL", statid == 27 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., lower_sig_stats %>% filter(pop == 'SAM', SYMBOL == g) %>% select(contains("chrom"), statname, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'top'), ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")) + ggtitle(g)
 ```
 
-```{r, fig.cap='(ref:samSPECC1)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:samSPECC1)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "SPECC1"
 #retrieve information of the gene of interest
 
@@ -1968,7 +1923,7 @@ wh <- range(wh, ignore.strand = TRUE)
 ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_SAM', genename == g)%>% mutate(pop = 'SAM', statname = case_when(statid == 21 ~ "nSL", statid == 27 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., lower_sig_stats %>% filter(pop == 'SAM', SYMBOL == g) %>% select(contains("chrom"), statname, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'top'), ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")) + ggtitle(g)
 ```
 
-```{r, fig.cap='(ref:samSUPT3H)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:samSUPT3H)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "SUPT3H"
 #retrieve information of the gene of interest
 
@@ -2030,7 +1985,7 @@ For the \gls{sam} population there were `r lower_sig_stats %>% filter(statname =
 > from the multiplot it looks like CREB1 could be interesting
 
 CREB1 Plot
-```{r, fig.cap='(ref:samCREB1)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:samCREB1)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "CREB1"
 #retrieve information of the gene of interest
 
@@ -2057,7 +2012,7 @@ lower
 - 2 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
 - 1 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
 
-```{r, fig.cap='(ref:tonCENPP)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:tonCENPP)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "CENPP"
 #retrieve information of the gene of interest
 
@@ -2067,7 +2022,7 @@ ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_TON', genename 
 ```
 
 
-```{r, fig.cap='(ref:tonSH3RF1)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:tonSH3RF1)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "SH3RF1"
 #retrieve information of the gene of interest
 
@@ -2076,7 +2031,7 @@ wh <- range(wh, ignore.strand = TRUE)
 ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_TON', genename == g)%>% mutate(pop = 'TON', statname = case_when(statid == 21 ~ "nSL", statid == 27 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., lower_sig_stats %>% filter(pop == 'TON', SYMBOL == g) %>% select(contains("chrom"), statname, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'top'), ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")) + ggtitle(g)
 ```
 
-```{r, fig.cap='(ref:tonSUPT3H)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:tonSUPT3H)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "SUPT3H"
 #retrieve information of the gene of interest
 
@@ -2113,7 +2068,7 @@ From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r 
 > from the multi stat plot it looks like NRXN3 and THADA could be interenting
 
 NRXN3 Plot
-```{r, fig.cap='(ref:tonNRXN3)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:tonNRXN3)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = "NRXN3"
 #retrieve information of the gene of interest
 
@@ -2123,7 +2078,7 @@ ggbio::tracks(bind_rows(sig_ihs, sig_nsl) %>% filter(pop == 'POL_TON', genename 
 ```
 
 THADA Plot
-```{r, fig.cap='(ref:tonTHADA)', eval= TRUE, message = FALSE}
+```{r, fig.cap='(ref:tonTHADA)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 g = 'THADA'
 #retrieve information of the gene of interest
 
@@ -2220,3 +2175,14 @@ possibly usefule papers
 - Detecting ancient positive selection in humans using extended lineage sorting - Peyregne2017
 - A New Test for Detecting Recent Positive Selection that is Free from the Confounding Impacts of Demography - Li2010
 - Understanding rare and common diseases in the context of human evolution - Quintana-Murci2016
+
+
+<!--
+gene lists
+metabolic - covered already
+immune - innate: crohns, bohcets, coeliac
+immune - adaptive: t1d, RA, MS, graves, hushimotosis
+cancer
+pyschicatric: SZ
+neurological: AD, PD
+-->
