@@ -47,13 +47,16 @@ create_sel_summary_table <- function(s){
 ## load ihs and nsl data
 ihs_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
 sig_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_clus-14-7-2017.RDS')
+sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS')
 ihs_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
 nsl_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
+sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS')
 sig_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_clus-14-7-2017.RDS')
+
 nsl_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
 
 #100kb window 10kb slide pairwise fst
-pol_fst <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome.17-10-2017.RDS')
+pol_fst <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3.14-11-2017.RDS')
 
 # load xpehh
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD"))
