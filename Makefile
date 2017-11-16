@@ -9,7 +9,7 @@ compile_book : $(FILES)
 
 pdf_book : compile_book
 	mv _book/Thesis.pdf _book/Thesis_bookdown.pdf
-	sed 's/\\bibliography/\\fontsize{10}{12}\n\\linespread\{1}\\selectfont\n\\\bibliography/' < _book/Thesis.tex | sed 's/\\includegraphics{/\\includegraphics{_bookdown_files\//g' > Thesis.tex
+	sed 's/\\includegraphics{/\\includegraphics{_bookdown_files\//g'< _book/Thesis.tex  > Thesis.tex
 	#mv _bookdown_files/* .
 	cp -r images	_bookdown_files
 	pdflatex Thesis
@@ -42,6 +42,6 @@ pdf : preview
 
 .PHONY : clean
 clean : 
-	@rm -f  Thesis.Rmd Thesis.tex Thesis.log Thesis.lof Thesis.bbl Thesis.toc Thesis.out Thesis.lot Thesis.ist Thesis.glsdefs Thesis.gls Thesis.glo Thesis.glg Thesis.blg Thesis.aux Thesis.alg Thesis.acr Thesis.acn tmp-*.tex
+	@rm -f  Thesis.Rmd Thesis.md Thesis.rds Thesis.tex Thesis.log Thesis.lof Thesis.bbl Thesis.toc Thesis.out Thesis.lot Thesis.ist Thesis.glsdefs Thesis.gls Thesis.glo Thesis.glg Thesis.blg Thesis.aux Thesis.alg Thesis.acr Thesis.acn tmp-*.tex
 	@rm -r _book/ _bookdown_files/
  
