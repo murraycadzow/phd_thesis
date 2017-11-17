@@ -90,9 +90,7 @@ The ancestral allele was used as had been annotated from the 1000 Genomes Phase 
 
 SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Each population was filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of _p_ < 10^-6^. Markers were converted into ancestral or derived by comparing alleles to the homo sapiens ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
 
-\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014] with a critical percent threshold of 99% to designate significance.
-
-
+\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014] with a critical percent threshold of 99% to designate significance. Markers with an \gls{ihs} or \gls{nsl} value that was determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R, where nearby \gls{snp}s were assigned the same group identifier. The search radius used was 200 kb and the minimum number of points for a cluster was one. Cluster regions were created by taking both the minimum and maximum position for each group identifier, population and chromosome.
 
 
 
@@ -532,6 +530,15 @@ Variant annotation of \gls{vcf} files was performed using snpEff vXXX [@snpeff] 
 
 ### Pathway Analysis
 
+
+Panther http://pantherdb.org
+
+version 13.0 (released 2017-11-12)
+
+for population lists used the "Functional classification viewed as pie chart" selected biological process and exported the results as a table
+
+Analysis Type: PANTHER Overrepresentation Test (release 20170413)
+- annotation set = pnather GO-slim biological process
 
 ## Datasets
 
