@@ -186,75 +186,58 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 #### PCA - eigenstrat
 ```{r eigenstrat code, engine='bash', eval = FALSE}
-dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/
+dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/PCA/indiv_pops
 #combine the chromosomes
-bcftools concat \
-  -O z \
-  -o combined_super_all.vcf.gz \
-  --threads 10 \
-  $(ls $dir/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz |\
-  sort -t r -k12n)
+bcftools concat -O v -o - --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) | bcftools view -O z -o NZ_1KGP_allchr.vcf.gz -s $(grep -v 'NAD\|WPN\|EPN' ../../../data/nz_1kgp.panel | cut -f1 | tr '\n' ',') --force-samples -
 
 #find the independent markers
-plink2 \
-  --vcf combined_super_all.vcf.gz \
-  --maf 0.1 \
-  --indep-pairwise 50 5 0.2 \
-  --out combined_super_all
+plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz --maf 0.1 --indep-pairwise 50 5 0.2 --out NZ_1KGP_allchr
 
 touch cases.txt
 
-plink2 \
-  --vcf combined_super_all.vcf.gz \
-  --extract combined_super_all.prune.in \
-  --recode \
-  --out combined_super_all_indep \
-  --make-pheno cases.txt '*'
+plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz --extract NZ_1KGP_allchr.prune.in --recode --out NZ_1KGP_allchr_indep --make-pheno cases.txt '*'
 
 # create the eigenstrat file
-echo -e "genotype: combined_super_all_indep.ped\nsnpname:\
-combined_super_all_indep.map\nindivname: \
-combined_super_all_indep.ped\noutputformat: \
+echo -e "genotype: NZ_1KGP_allchr_indep.ped\nsnpname: \
+NZ_1KGP_allchr_indep.map\nindivname: \
+NZ_1KGP_allchr_indep.ped\noutputformat: \
 EIGENSTRAT\ngenotypeoutname: \
-combined_super_all_indep.eigenstratgeno\nsnpoutname: \
-combined_super_all_indep.snp\nindivoutname: \
-combined_super_all_indep.ind\nfamilynames: \
+NZ_1KGP_allchr_indep.eigenstratgeno\nsnpoutname: \
+NZ_1KGP_allchr_indep.snp\nindivoutname: \
+NZ_1KGP_allchr_indep.ind\nfamilynames: \
 NO" > par.PED.EIGENSTRAT
 
 convertf -p par.PED.EIGENSTRAT > eigen.log
 smartpca.perl \
-  -i combined_super_all_indep.eigenstratgeno \
-  -a combined_super_all_indep.snp \
-  -b combined_super_all_indep.ind  \
-  -o combined_super_all_indep_eigen.pca \
-  -p  combined_super_all_indep_eigen \
-  -e combined_super_all_indep_eigen.eval \
-  -l combined_all_indep_eigen.log \
+  -i NZ_1KGP_allchr_indep.eigenstratgeno \
+  -a NZ_1KGP_allchr_indep.snp \
+  -b NZ_1KGP_allchr_indep.ind  \
+  -o NZ_1KGP_allchr_indep_eigen.pca \
+  -p NZ_1KGP_allchr_indep_eigen \
+  -e NZ_1KGP_allchr_indep_eigen.eval \
+  -l NZ_1KGP_allchr_indep_eigen.log \
   -m 0
 ```
 
 #### admixture analysis
 ```{r admixture k, engine = 'bash', eval = FALSE}
-dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection
+dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/admixture$
 
-bcftools concat -O z -o combined_super_all.vcf.gz \
---threads 10 \
-$(ls $dir/NZ_coreExome_1kgp/data/dbload/fixed_vcf/combined/combined_super_chr*vcf.gz |\
-sort -t r -k12n)
+bcftools concat -O v -o - --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) | bcftools view -O z -o NZ_1KGP_allchr.vcf.gz -s $(grep -v 'NAD\|WPN\|EPN' ../../data/nz_1kgp.panel | cut -f1 | tr '\n' ',') --force-samples - 
 
-plink2 \
-  --vcf combined_super_all.vcf.gz \
+plink1.9b4.9 \
+  --vcf NZ_1KGP_allchr.vcf.gz \
   --indep-pairwise 50 10 0.1 \
-  --out combined_super_all_admix
+  --out NZ_1KGP_allchr_admix
 
-plink2 \
-  --vcf combined_super_all.vcf.gz \
-  --make-bed --extract combined_super_all_admix.prune.in \
-  --out core_exome_admix
+plink1.9b4.9 \
+  --vcf NZ_1KGP_allchr.vcf.gz \
+  --make-bed --extract NZ_1KGP_allchr_admix.prune.in \
+  --out NZ_1KGP_allchr_admix
   
 for K in $(seq 1 15)
 do 
-  admixture -s 123456 --cv core_exome_admix.bed $K -j20 | tee log${K}.out
+  admixture -s 123456 --cv NZ_1KGP_allchr_admix.bed $K -j20 | tee log${K}.out
 done
 
 grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
@@ -908,3 +891,32 @@ do
 done
 ```
 
+Principle components for the merged 1000 Genomes Project data and the New Zealand samples showed in the first two components that the \gls{afr}, \gls{eur}, \gls{sas} super populations all formed separate groupings. \gls{eas} and \gls{pol} were extrememly similar in PC1 but the \gls{pol} populations were spread with PC2, with the majority of the spread being accounted for by the Eastern Polynesian populations whereas the Western Polynesian populations had a tight grouping at -0.025 on PC2, slightly below the \gls{eas} group. This can be observed when PC6 is used to separate the Polynesian populations (Figure \@ref(fig:polPCA))
+
+(ref:allpopPCA) Principle components 1 and 2 for all populations, coloured by super population grouping.
+
+```{r allpopPCA, fig.cap = '(ref:allpopPCA)', echo = FALSE}
+panel <- read.table('~/data/NZ_coreExome_1kgp/nz_1kgp.panel', header = TRUE, stringsAsFactors = FALSE)
+eigen <- read.table('~/data/NZ_coreExome_1kgp/PCA/indiv_pops/NZ_1KGP_allchr_indep_eigen.pca.evec', stringsAsFactors = FALSE)
+
+eigen <- eigen %>% select("sample" = V1, everything()) %>% left_join(., panel, by = 'sample') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+names(eigen)[2:11] <- paste0("PC",1:10)
+eigen %>%  ggplot(., aes(x = PC1, y = PC2, colour = super_pop)) + geom_point() + theme_bw()  + guides(colour  = guide_legend(title = "Super Population"))
+```
+
+(ref:eurPCA) Principle components 1 and 2 for populations of the European Super Population.
+
+```{r eurPca, fig.cap = '(ref:eurPca)', echo = FALSE}
+#eigen %>%  filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, colour = pop)) + geom_point() + theme_bw() + guides(colour  = guide_legend(title = "Population"))
+
+eigen %>%  filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(EUR = '#00BFC4')) + guides(shape  = guide_legend(title = "Population")) + scale_shape_manual(values = c(CEU = 0, NZC = 1, GBR = 2, IBS = 3, FIN = 4, TSI = 5))
+```
+
+(ref:polPCA)  Principle components 2 and 6 for the Polynesian populations
+
+```{r polPCA, fig.cap = '(ref:polPCA)', echo = FALSE}
+eigen %>%  filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(POL = '#619CFF')) + scale_shape_manual(values = c("CIM" = 0,"NZM" = 1, "TON" = 2, "SAM" = 3)) + guides(size = FALSE)
+```
+
+
+There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPca)), this indicated that the use of chip versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations where split into Eastern and Western Polynesian sub-groups with PC6 (Figure \@ref(fig:polPCA))
