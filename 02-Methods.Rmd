@@ -81,7 +81,7 @@ shapeit2 \
 
 #### PopGenome {#popgenomeMethods}
 
-The PopGenome (v2.2.3, @Pfeifer2014) package for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. The selection statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than 4 segregating sites were filtered out and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each population was used to create a significance threshold. The lower threshold was the 1st percentile and less than zero. The upper significance threshold was the 99th percentile and greater than zero. The greater or less than zero condition was to enable the interpretation of the selection statistic results.
+The PopGenome (v2.2.3, @Pfeifer2014) package for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than 4 segregating sites were filtered out and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each population was used to create a significance threshold. The lower threshold was the 1st percentile and less than zero. The upper significance threshold was the 99th percentile and greater than zero. The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results.
 
 The ancestral allele was used as had been annotated from the 1000 Genomes Phase 3 \gls{vcf} file where possible for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf} and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population was set to be that of the Ancestor sample.
 
@@ -215,7 +215,7 @@ plink2 \
 echo -e "genotype: combined_super_all_indep.ped\nsnpname:\
 combined_super_all_indep.map\nindivname: \
 combined_super_all_indep.ped\noutputformat: \
-EIGENSTRAT\ngenotypeoutputname: \
+EIGENSTRAT\ngenotypeoutname: \
 combined_super_all_indep.eigenstratgeno\nsnpoutname: \
 combined_super_all_indep.snp\nindivoutname: \
 combined_super_all_indep.ind\nfamilynames: \
@@ -244,7 +244,7 @@ sort -t r -k12n)
 
 plink2 \
   --vcf combined_super_all.vcf.gz \
-  --indep-pairwise 50 5 0.1 \
+  --indep-pairwise 50 10 0.1 \
   --out combined_super_all_admix
 
 plink2 \
