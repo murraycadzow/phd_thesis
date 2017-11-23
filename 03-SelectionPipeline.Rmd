@@ -61,6 +61,7 @@ selection in urate/gout
 
 - @Ramos2017 (review) _BCAS3_ and _NACA2_ which was actually identified in Grossman2013 in ASI pop
 - @Zhang2013a _ATXN2_
+- jha2015 rs589691?
 
 papers that have used empirical distribution:
 
@@ -334,7 +335,7 @@ Individual populations - CIM/NZM/SAM/TON/NZC
 
 
 
-## Selection and Neutrality Statistic
+## Selection and Neutrality Statistics
 
 
 ### Intra
@@ -1385,7 +1386,7 @@ xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filte
 # all genes in the metabolic lists that have both significanct results in nsl/ihs and xpehh for Pol popululations
 # calculate the mean number of sig SNPs for EP and WP by gene then look at the diff
 xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
-  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value < 0) %>% 
+  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% 
   filter(genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL, kd_GR$SYMBOL)) %>% 
   select(pop = pop1,pop2, genename) %>% distinct() %>% 
   group_by(pop, genename)%>% 
@@ -1412,7 +1413,7 @@ xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>%
 # all genes that have both significanct results in nsl/ihs and xpehh for Pol popululations
 # calculate the mean number of sig SNPs for EP and WP by gene then look at the diff
 xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
-  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value < 0) %>% 
+  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% 
   select(pop = pop1,pop2, genename) %>% distinct() %>% filter(genename == 'COL22A1') %>%   group_by(pop, genename)%>% 
   tally() %>% 
   mutate(ep = ifelse(pop %in% c("CIM","NZM"), TRUE, FALSE)) %>% 
@@ -1433,7 +1434,7 @@ xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>%
 # calculate the mean number of sig SNPs for EP and WP by gene then look at the diff
 xpehh %>%  
   select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
-  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value < 0) %>% 
+  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% 
   select(pop = pop1,pop2, genename) %>% 
   distinct() %>% 
   group_by(pop, genename)%>% tally() %>% 
@@ -1453,7 +1454,7 @@ COL22A1 (https://www.ncbi.nlm.nih.gov/pubmed/20222955), which is has been associ
 ```{r}
 xpehh %>%  
   select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
-  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value < 0) %>% 
+  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% 
   filter(genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
   select(pop = pop1,pop2, genename) %>% 
   distinct() %>% 
@@ -1495,7 +1496,7 @@ Eastern Polynesian populations
 ```{r}
 xpehh %>%  
   select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
-  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value < 0) %>% 
+  filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% 
   filter(genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
   select(pop = pop1,pop2, genename) %>% 
   distinct() %>% 
@@ -1588,7 +1589,7 @@ The general format that I want for this section is to get:
 
 ### Polynesian super population
 
-```{r}
+```{r polDiseaseGenesTab}
 bind_rows(
 lower_sig_stats %>% select(SYMBOL, pop) %>% filter(pop %in% poly_pop) %>% 
   mutate(
@@ -1620,8 +1621,64 @@ bind_rows(
     kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
     metsyn = ifelse(SYMBOL %in% metsyn_GR$SYMBOL, TRUE, FALSE)
     ) %>% select(SYMBOL, pop, urate, obesity, t2d, kd, metsyn) %>% distinct() %>% group_by(pop) %>% summarise(urate = sum(urate), obesity = sum(obesity), t2d = sum(t2d), kd = sum(kd), metsyn = sum(metsyn)) %>% mutate(type = 'combined')
-) %>% kable(., col.names = c('Population','Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = 'Number of Genes with evidence of possible positive selection in Polynesians')
+) %>% kable(., col.names = c('Population','Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = '(\\#tab:polDiseaseGenesTab) Number of Genes with evidence of possible positive selection in Polynesians')
 ```
+
+```{r}
+extract_sig <- function(popname){
+  bind_rows(sig_ihs, sig_nsl) %>% mutate(pop  = substring(pop, 5,8)) %>% select(pop, 'SYMBOL' = genename) %>% bind_rows(., lower_sig_stats %>% select(pop, SYMBOL)) %>% filter(pop == popname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
+}
+
+
+
+extract_sig_super <- function(superpopname){
+  bind_rows(sig_ihs, sig_nsl) %>% select(superpop, 'SYMBOL' = genename) %>% bind_rows(., lower_sig_stats %>% left_join(., panel %>% select(pop, "superpop" = super_pop) %>% distinct(), by = 'pop')%>%  select(superpop, SYMBOL)) %>% filter(superpop == superpopname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
+}
+
+UpSetR::upset(fromList(list(CIM = extract_sig("CIM"), 
+                            NZM = extract_sig("NZM"), 
+                            SAM = extract_sig("SAM"), 
+                            TON = extract_sig("TON"))),
+                             order.by = "freq", nset = 4, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5)
+```
+
+```{r svgcimupset, eval = FALSE}
+svg('images/03_selectionpipeline/poly_upset.svg')
+UpSetR::upset(fromList(list(CIM = extract_sig("CIM"), 
+                            NZM = extract_sig("NZM"), 
+                            SAM = extract_sig("SAM"), 
+                            TON = extract_sig("TON"))),
+                             order.by = "freq", nset = 4, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5)
+dev.off()
+```
+
+
+```{r}
+#load the pathways tables from panther
+panther <- list()
+for (file in list.files(path = 'data/Panther/')){
+  panther[[file]] <- read.delim(paste0('data/Panther/',file), header = FALSE, stringsAsFactors = FALSE)
+}
+
+```
+
+
+```{r}
+p <- panel %>% mutate(pop2 = paste0(super_pop,'_',pop)) %>% select(pop,pop2) %>% filter(!pop %in% c('WPN','EPN','POL','NAD')) %>% distinct()
+pop_genes <- lapply(p$pop, extract_sig)
+names(pop_genes) <- p$pop2
+
+superpop_genes <- lapply(c('AFR','AMR','EUR','EAS', 'SAS','POL'), extract_sig_super)
+names(superpop_genes) <- c('AFR','AMR','EUR','EAS', 'SAS','POL')
+
+UpSetR::upset(fromList(superpop_genes),
+                             order.by = "freq", nset = length(names(superpop_genes)), number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5)
+```
+
+
+
+
+
 
 
 Markers that had a significant \gls{ihs} 
@@ -1659,9 +1716,35 @@ lower_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>
 
 
 
+The previously reported PPARGC1A and CREBRF
 
 
 
+PPARGC1A had significant \gls{ihs} 
+NZM = rs12650562, rs1873532
+ACB = rs1873532
+SAM = rs1873532, rs4235308
+TON = rs1873532, rs4235308
+
+\gls{nsl}
+
+nzm = rs13122003, rs6821591, rs12650562, rs1873532
+sam = rs13122003, rs6821591, rs1873532, rs4235308
+ton = rs13122003, rs2279525, rs1873532, rs4235308, rs7656250
+msl = rs885395
+lwk = rs4235308
+mxl = rs2970870
+pel = rs2970870
+
+in the 1st percentile there were no windows for PPARGC1A
+
+the 99th percentile had
+
+fld windows for NZM, SAM, and TON
+
+CREBRF
+
+no polynesian populations had any windows, 1st or 99th
 
 
 ```{r markdown3, echo = FALSE, eval = FALSE}
@@ -1689,7 +1772,7 @@ With the populations that made up the \gls{pol} super population there were `r l
 ```
 
 
-A complete list of all of the significant genes for the Polynesian populatoins from the lower tail can be found in tables \@ref(tab:lowersigtdPol), \@ref(tab:lowersigfwhPol), \@ref(tab:lowersigfldPol), \@ref(tab:lowersigflfPol), and \@ref(tab:lowersigzePol)
+A complete list of all of the significant genes for the Polynesian populations from the lower tail can be found in tables \@ref(tab:lowersigtdPol), \@ref(tab:lowersigfwhPol), \@ref(tab:lowersigfldPol), \@ref(tab:lowersigflfPol), and \@ref(tab:lowersigzePol)
 
 
 ```{r}
@@ -1753,18 +1836,13 @@ bind_rows(ton_obesity_sig, ton_urate_sig, ton_t2d_sig, ton_metsyn_sig, ton_kd_si
 
 ### Cook Island Maori
 
-From all of the intra population
 
+> BLK was previously identified in Jha2015 and had sig TD and ihs in CIM. The east asians have both td and ihs, and sam/ton just have td. BLK is associated with Systemic lupus erythematosus (SLE) in Asian populations Delgado-Vega2012
 
-- There were `r bind_rows(cim_urate_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(urate_goutGR$SYMBOL))` urate genes
-- There were `r bind_rows(cim_obesity_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(obesity_GR$SYMBOL))` obesity genes
-- There were `r bind_rows(cim_t2d_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(t2d_GR$SYMBOL))` \gls{t2d} genes
-- There were `r bind_rows(cim_kd_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(kd_GR$SYMBOL))` kidney disease genes
-- There were `r bind_rows(cim_metsyn_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(metsyn_GR$SYMBOL))` metsyn genes
 
 (ref:CIMupset) Upset plot showing the number of \gls{cim} genes that met a significance threshold across statistics.
 
-```{r CIMupset, fig.caption = '(ref:CIMupset)'}
+```{r CIMupset, fig.cap = '(ref:CIMupset)'}
 UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
@@ -1772,8 +1850,22 @@ UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'CI
                             `Zeng's E` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
                             iHS = sig_ihs %>% filter(pop == 'POL_CIM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
                             nSL =sig_nsl %>% filter(pop == 'POL_CIM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
-              order.by = "freq", nset = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5)
+              order.by = "freq", nset = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5, nintersects = NA)
 ```
+
+```{r upsetcimsvg, include = FALSE, eval = FALSE}
+svg(filename = 'images/03_selectionpipeline/cim_upset.svg')
+  UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'CIM', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            iHS = sig_ihs %>% filter(pop == 'POL_CIM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
+                            nSL =sig_nsl %>% filter(pop == 'POL_CIM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
+              order.by = "freq", nset = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5)
+  dev.off()
+```
+
 
 
 ```{r, results = 'asis', eval = FALSE}
@@ -1804,6 +1896,24 @@ The \gls{cim} population had similar numbers of windows that were significant in
 In the lower tail there were  `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes for \gls{td},  `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` for \gls{fwh},  `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` for \gls{fld},  `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` for \gls{flf}, and  `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` for \gls{ze}, that intersected windows that met the significance threshold. There were only two genes - _FANCM_ and _RGS3_ - that had windows that met the significance threshold for each of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. There were `r lower_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% arrange(desc(n)) %>% filter(n == 4) %>% NROW()` genes that met the threshold in four of the selection statistics, `r lower_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% arrange(desc(n)) %>% filter(n == 3) %>% NROW()`  in three selection statistics, `r lower_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% arrange(desc(n)) %>% filter(n == 2) %>% NROW()` in two selection statistives, and `r lower_sig_stats %>% filter(pop == 'CIM') %>% select(-contains("chrom"), -pop) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% arrange(desc(n)) %>% filter(n == 1) %>% NROW()` with only one selection statistic meeting the threshold for the lower tail.
 
 \Gls{cim} also had the most independent consecutive regions for \gls{td} and \gls{fwh} out of the Polynesian populations.
+
+
+The largest \gls{ihs} values came from C11orf65, LINC00276, CPQ, SNAP25-AS1
+
+The largest \gls{nsl} values came from ADAM29, SLC35F2, PGR, and MIR146A
+
+The smallest values for \gls{td} came from an eight window consecutive region at `r lower_sig_stats %>% left_join(., lower_sig_stats_binned) %>% filter(pop == 'CIM',statname == 'Tajima.D') %>% arrange(value) %>% head(n=20) %>% filter(chrom == 'chr22') %>% GRanges() %>% GenomicRanges::reduce() %>% data.frame() %>% mutate(window = paste0(seqnames,':',start,'-',end)) %>% .[['window']]` which covered the following genes TTC38, GTSE1-AS1, GTSE1, CDPF1, PKDREJ, and PPARA.    
+
+
+The largest region of Fay and Wu's H of windows in the 0.1 percentile was at `lower_sig_stats %>% left_join(., lower_sig_stats_binned) %>% filter(pop == 'CIM',statname == 'Fay.Wu.H', quant == 0.1) %>% arrange(value) %>% GRanges() %>% GenomicRanges::reduce() %>% data.frame() %>% mutate(window = paste0(seqnames,':',start,'-',end)) %>% arrange(desc(width)) %>% .[['window']] %>% .[1]` and was 80kb wide. In this region was ADH4, ADH5, PCNAP1, and LOC100507053.
+
+The smallest five \gls{fld} values came from windows that covered TCTN1, HVCN1, DOCK5, DNAH10, CALML4, CLN6, ATP1A1, ATP1A1-AS1, ZNF704, and EFCAB5.
+
+\gls{flf} with the smallest values came from windows that covered TCTN1, HVCN1, DOCK5, ATP1A1-AS1, ATP1A1, and ZNF704
+
+\gls{ze} had ZNF704, LYST, SH3RF1, UQCRC1 from the smallest valued windows. From the 0.1 percentile there was a significant result for the KEGG pathway analysis
+
+
 
 
 ```{r cimSigRegions, eval = FALSE}
@@ -1839,6 +1949,26 @@ Panther
 - nsl main processes: "Cellular process", "metabolic process"
 - all main processes: "Cellular process", "metabolic process"
 - all overrepresentation test: nothing
+
+
+Functional classification of genes with markers that were significant for \gls{ihs} or \gls{nsl}, or genes that fell within the windows of the 1st percentile and had a value less than 0 for the frequency spectrum based statistics was done using PantherDB. Only \gls{td} had the main biological process as "Binding", and the second as "Catalytic activity". All other statistics each had "Cellular process" and "Metabolic process" as their first and second largest categories. There were no biological processes that were overrepresented from the gene list of all genes with possible positive selection.
+
+
+
+```{r}
+cim_0.1_genes_lower <- lower_sig_stats %>% left_join(., lower_sig_stats_binned, by = c('chrom','chrom_start','chrom_end','statname', 'pop')) %>% filter(quant == 0.1, pop == 'CIM') %>% select(statname, SYMBOL) %>% distinct() %>% group_by(statname) %>%  tally()
+
+cim_0.1_stats_lower <- lower_sig_stats %>% left_join(., lower_sig_stats_binned, by = c('chrom','chrom_start','chrom_end','statname', 'pop')) %>% filter(quant == 0.1, pop == 'CIM') %>% group_by(statname) %>%  tally()
+
+cim_99.9_genes_upper <- upper_sig_stats %>% left_join(., upper_sig_stats_binned, by = c('chrom','chrom_start','chrom_end','statname', 'pop')) %>% filter(quant == 99.9, pop == 'CIM') %>% select(statname, SYMBOL) %>% distinct() %>% group_by(statname) %>%  tally()
+
+cim_99.9_stats_upper <- upper_sig_stats %>% left_join(., upper_sig_stats_binned, by = c('chrom','chrom_start','chrom_end','statname', 'pop')) %>% filter(quant == 99.9, pop == 'CIM') %>% group_by(statname) %>%  tally()
+```
+> Genes in the 0.1 percentile for the sfs based stats
+
+The 0.1 percentile had a total of `r cim_0.1_stats_lower %>% filter(statname == 'Tajima.D') %>% .[['n']]` regions and `r cim_0.1_genes_lower %>% filter(statname == 'Tajima.D') %>% .[['n']]` genes for \gls{td}. 
+
+
 
 
 ```{r, fig.cap='(ref:cimFANCM)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4}
@@ -1885,6 +2015,9 @@ There were fewer genes that intersected the windows that met the threshold for s
 - fwh most pop specific
 - flf most regions
 - ze most regions
+
+Looking specifically at the genes that were associated with gout and other metabolic diseases, of the \gls{pol} populations, the \gls{cim} population had the fewest genes that were associated with gout and urate that showed possible evidence of positive selection. This was true also for obesity, \gls{t2d}, kidney disease, and metabolic syndrome associated genes (Table \@ref(tab:polDiseaseGenesTab).
+
 
 
 ```{r, eval = FALSE}
@@ -2037,10 +2170,10 @@ Panther
 
 The \gls{nzm} population had the largest number of genes intersecting windows that met the lower tail significance threshold that were only reported in a single population for \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} out of the Polynesian populations.
 
+(ref:upsetNZM) NZM Upset Plot
 
 
-
-```{r upsetNzm, fig.caption = 'NZM Upset Plot'}
+```{r upsetNzm, fig.cap = '(ref:upsetNZM'}
 UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
@@ -2050,7 +2183,18 @@ UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'NZ
                             nSL =sig_nsl %>% filter(pop == 'POL_NZM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
               order.by = "freq", nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.5, vjust = 0.5 )
 ```
-
+```{r, include = FALSE}
+svg(filename = 'images/03_selectionpipeline/nzm_upset.svg')
+  UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'NZM', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            iHS = sig_ihs %>% filter(pop == 'POL_NZM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
+                            nSL =sig_nsl %>% filter(pop == 'POL_NZM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
+              order.by = "freq", nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.5, vjust = 0.5 )
+  dev.off()
+```
 
 There were `r lower_sig_stats %>% filter(pop == 'NZM') %>% select(SYMBOL) %>% distinct() %>% anti_join(.,bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(pop !="NZM") %>% select(SYMBOL), by = "SYMBOL") %>% NROW()` genes that were had windows that intersected the lower tail significance threshold and `r upper_sig_stats %>% filter(pop == 'NZM') %>% select(SYMBOL) %>% distinct() %>% anti_join(.,bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(pop !="NZM") %>% select(SYMBOL), by = "SYMBOL") %>% NROW()` for the upper tail in at least one selection statistic and were not found in any of the other populations.
 
@@ -2152,13 +2296,13 @@ bind_rows(nzm_urate_sig)
 
 
 ```{r}
-xpehh %>%  filter(genename %in% urate_goutGR$SYMBOL, pop1 == 'NZM', xpehh_value < 0) %>% select(genename, pop1, pop2) %>% group_by(pop1, pop2, genename) %>% tally() %>% arrange(genename, pop2)
+xpehh %>%  filter(genename %in% urate_goutGR$SYMBOL, pop1 == 'NZM', xpehh_value > 0) %>% select(genename, pop1, pop2) %>% group_by(pop1, pop2, genename) %>% tally() %>% arrange(genename, pop2)
 consec_lower_regions %>% filter(pop == 'NZM', SYMBOL %in% urate_goutGR$SYMBOL)
 ```
 
-_BCAS3_ had regions of consecutively depressed \gls{td} and \gls{flf} scores. It also had windows from \gls{fwh} and \gls{fld} that were significant, there were no \gls{ihs} or \gls{nsl} \gls{snp}s that reached significance, however, there were \gls{snp}s that were significant for \gls{xpehh} for the \gls{nzm} haplotype against \gls{beb}, \gls{ceu}, and \gls{gbr}. _INHBC_ had regions of consecutively depresed \gls{ze}. 
+_BCAS3_ had regions of consecutively depressed \gls{td} and \gls{flf} scores. It also had windows from \gls{fwh} and \gls{fld} that were significant, there were no \gls{ihs} or \gls{nsl} \gls{snp}s that reached significance. _INHBC_ had regions of consecutively depresed \gls{ze}. 
 
-
+With \gls{xpehh}
 
 ```{r, eval = FALSE}
 bind_rows(sig_ihs %>% mutate(statname = 'ihs'), sig_nsl %>% mutate(statname = 'nsl')) %>% filter(pop == 'POL_NZM', genename %in% urate_goutGR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
@@ -2208,6 +2352,8 @@ For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname =
 
 > from the multi stat plot DNAH10 looks like it could be interesting
 
+DNAH10 has prior evidence of selection @Jha2015 and is associated with visceral adipose tissue adjusted for body mass index in caucasian populations Fox2012
+
 DNAH10 Plot
 ```{r, fig.cap='(ref:nzmDNAH10)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4}
 # g = "DNAH10"
@@ -2222,6 +2368,11 @@ knitr::include_graphics('images/03_selectionpipeline/nzmDNAH10.png')
 ```
 
 DNAH10 has the 
+
+
+
+
+
 
 ### Samoan
 
@@ -2270,7 +2421,9 @@ Panther
 
 There were `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes that intersected the windows that met the significance threshold in the lower tail for \gls{td}. For \gls{fwh}, there were `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, \gls{fld} had `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, \gls{flf} had `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, and \gls{ze} had `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`. \gls{sam} had the most (XXX) independent consecutive regions of the Polynesian populations for \gls{fld}.
 
-```{r upsetSam, fig.caption = 'SAM Upset Plot'}
+(ref:upsetSAM) Upset plot of number of genes that were signigicant between  statistics for \gls{sam}
+
+```{r upsetSam, fig.cap = '(ref:upsetSAM)'}
 UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
@@ -2281,6 +2434,18 @@ UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'SA
               order.by = "freq", nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5 )
 ```
 
+```{r, include = FALSE}
+svg(filename = 'images/03_selectionpipeline/sam_upset.svg')
+  UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            iHS = sig_ihs %>% filter(pop == 'POL_SAM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
+                            nSL =sig_nsl %>% filter(pop == 'POL_SAM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
+              order.by = "freq", nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5 )
+  dev.off()
+```
 
 CNTNAP5, SPAG16, SPECC1, SUPT3H had all 5 selection stats
 
@@ -2406,6 +2571,16 @@ CREB1 Plot
 knitr::include_graphics('images/03_selectionpipeline/samCREB1.png')
 ```
 
+
+Enrichr using the 0.1 percentile
+
+TD has 3 significant pathway hits
+
+FLD ahad 39 pathways
+FLF had 48 pathways
+
+ihs > 3.89, significant pathway for ABC transporters
+
 ### Tongan
 
 ```{r TonSigRegions, eval = FALSE}
@@ -2445,6 +2620,10 @@ Panther
     - cell-cell signalling FE=4.09 P 1.18e-7
         - cell communication FE = 1.88 P 1.33e-4
 
+Functional classification using PantherDB for the significant windows from the 1st percentile for the frequency spectrum selection and neutrality tests, and the significant \gls{ihs} and \gls{nsl} each individually, had the main biological process classification as "cellular process" and the second main classification as 'metabolic process'. Combining all the significant genes from any
+
+The PantherDB overrepresentation test using the panther GO-slim biological process annotation dataset found three significant gene-ontology terms that were overrepresented. The first was for level 1 cell adhesion, level 2 biological adhesion with a fold-enrichment of 6.02 (Bonferroni adjusted P = 4.63x10-11). The second was level 1 cell-cell signalling with fold-enrichment of 4.09 (Bonferroni adjusted P = 1.18x10-7) and the third was the level 2 of this term, cell communication, with a fold-enrichment of 1.88 (Bonferroni adjusted P = 1.33x10-4).
+
 From all of the intra population
 
 - There were `r bind_rows(ton_urate_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(urate_goutGR$SYMBOL))` urate genes
@@ -2461,8 +2640,9 @@ lower
 - 2 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()`
 - 1 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()`
 
+(ref:upsetTON) TON Upset Plot
 
-```{r upsetTon, fig.caption = 'TON Upset Plot'}
+```{r upsetTon, fig.cap = '(ref:upsetTON)'}
 UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
                             `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
@@ -2474,6 +2654,18 @@ UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'TO
 ```
 
 
+```{r, include = FALSE}
+svg(filename = 'images/03_selectionpipeline/ton_upset.svg')
+UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
+                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
+                            iHS = sig_ihs %>% filter(pop == 'POL_TON', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
+                            nSL =sig_nsl %>% filter(pop == 'POL_TON', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
+              order.by = "freq", nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5)
+dev.off()
+```
 
 ```{r, fig.cap='(ref:toNRXN3)', eval= TRUE, message = FALSE, fig.height = 4, fig.width = 4, cache = TRUE}
 # g = "NRXN3"
@@ -2578,6 +2770,14 @@ knitr::include_graphics('images/03_selectionpipeline/tonTHADA.png')
 ```
 
 
+Enrichr using 0.1 percentile
+
+FLD 1 pathway significant - olfactory transduction
+FLF 1 pathway significant - olfactory transduction
+
+ihs > 3.89, tpye 1 diabetes melitus was top hit but P = 0.079
+nsl > 3.89 insulin resistance and axon guidance were both significant
+
 ```{r, echo = FALSE, eval = FALSE}
 _Tajima's D_
 
@@ -2639,7 +2839,7 @@ window size meant that snps that snps not in the window might not even be near t
 
 
 limitations of using the chip data versus imputed data
-- ascertainment bias of snps on the chip
+- ascertainment bias of snps on the chip \cite{nielsen2007recent}
 - number of snps was low compared to other analysis - that were either in seq data or used hapmap
 - imputation from the chip might not work well given the polys aren't (unconfirmed) well represented in the reference panel
 - phasing of haplotypes doesn't have polynesian haplotypes in the panel
@@ -2667,7 +2867,7 @@ CREBRF
 PPARGC1A
 
 - @Cadzow2016 did not manage to replicate the findings of Myles2011
-- 
+- many other snps, some in highish LD
 
 
 possibly useful papers
@@ -2686,6 +2886,8 @@ possibly useful papers
 - Admixture, Population Structure, and F-Statistics - Peter2016
 - Population History and Natural Selection Shape Patterns of Genetic Variation in 132 Genes - akey2004population
 - Determinants of genetic diversity - Ellegren2016
+- Reconstituting the Frequency Spectrum of Ascertained Single-Nucleotide Polymorphism Data - Nielsen2004
+- Correcting for ascertainment biases when analyzing SNP data: applications to the estimation of linkage disequilibrium - Nielsen2003
 
 <!--
 gene lists
