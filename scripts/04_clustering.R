@@ -69,11 +69,11 @@ four_plot <- function(mat_d_name,statname){
     p1 + ggtitle("A.", paste(statname,"lower tail")),
     
     
-    lower_dat %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("C.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_neg, super_pop_colours, by = 'group' ) %>% .[['colour']]))) + scale_y_discrete(expand = c(0,0)),
+    lower_dat %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("C.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_neg, super_pop_colours, by = 'group' ) %>% .[['colour']]))) + scale_y_continuous(expand = c(0,0)),
     
     p2 + ggtitle("B.",paste(statname,"upper tail")),
     
-    mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>%  mutate(posid = as.numeric(row.names(.))) %>% gather("pop", "value",2:NCOL(.))%>%  mutate(pop = factor(pop)) %>% mutate(pop = factor(pop, levels(pop)[hr_c_pos$order])) %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("D.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_pos, super_pop_colours, by = 'group' ) %>% .[['colour']]))) + scale_y_discrete(expand = c(0,0))
+    mat_d_list[[paste0(mat_d_name,'_pos')]] %>% select(-contains('chrom')) %>%  mutate(posid = as.numeric(row.names(.))) %>% gather("pop", "value",2:NCOL(.))%>%  mutate(pop = factor(pop)) %>% mutate(pop = factor(pop, levels(pop)[hr_c_pos$order])) %>% ggplot(., aes(x = pop, y = posid)) + geom_tile(aes(fill = value)) + heatmap_col + theme_bw() + theme_heat + ggtitle("D.") + theme(axis.text.x=element_text(colour = as.character(left_join(labs_pos, super_pop_colours, by = 'group' ) %>% .[['colour']]))) + scale_y_continuous(expand = c(0,0))
     , cols = 2) 
 }
 
