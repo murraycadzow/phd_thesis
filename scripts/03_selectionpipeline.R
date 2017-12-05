@@ -1,4 +1,8 @@
 panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
+markers <- read.table('~/data/NZ_coreExome_1kgp/nz_1kg_markers.txt', stringsAsFactors = FALSE, header = FALSE)
+names(markers) <- c("chrom","chrom_start","marker","ref","alt")
+gwas_cat <- read.delim('~/data/gwas_catalog//gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv', header=TRUE, stringsAsFactors = FALSE, sep='\t')
+
 
 # load the significant data
 ## frequency based
@@ -73,3 +77,60 @@ load('~/data/gwas_catalog/zhang_and_extra_18-11-2017.RData') # brings in objects
 # made from Thesis/selectionpipeline/consec_regions.R
 consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-17-10-2017.RDS')
 consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-17-10-2017.RDS')
+
+
+
+plot_gene <- function(p, g){
+  wh <- genesymbol[g]
+  wh <- range(wh, ignore.strand = TRUE)
+  
+  stats_plot<- bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == p, genename == g)%>% mutate(pop = p, statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., lower_sig_stats %>% filter(pop == p, SYMBOL == g) %>% select(contains("chrom"), statname, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'bottom')
+  #ggbio::fixed(stats_plot) <- TRUE
+  
+  
+  gene_plot <- ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")
+  #ggbio::fixed(gene_plot) <- TRUE
+  hasAxis(gene_plot) <- TRUE
+  ggbio::tracks( gene_plot, stats_plot ) + ggtitle(g)
+}
+
+
+kegg <- list()
+list.files('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', include.dirs = FALSE, pattern = '*.txt')
+for(file in list.files('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', include.dirs = FALSE, pattern = '*.txt')){
+  kegg[[file]] <- read.delim(paste0('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', file), header = TRUE, stringsAsFactors = FALSE)
+  
+}
+
+kegg_sig <-list()
+kegg_sig <- lapply(names(kegg), function(n){kegg[[n]] %>% filter(Adjusted.P.value < 0.05) %>% arrange(Adjusted.P.value) %>% mutate(filename = n)} )
+names(kegg_sig) <- names(kegg)
+kegg_sig<- bind_rows(kegg_sig) %>% mutate(stat = lapply(filename, function(fn){strsplit(fn, '_')[[1]][2]})) %>% mutate(stat = substring(stat, 1, nchar(stat)-4), pop = substring(filename, 1,3)) %>% select(-filename)
+
+# for use with fst data where the pop is "POP1_POP2"
+# will return the populations so that the pops are aligned to the specified pop2
+popswitch <- function(p, pop2){
+  p1 <- substring(p,1,3)
+  p2 <- substring(p,5,8)
+  if(p2 == pop2){
+    return(paste0(p1,p2))
+  } else{
+    return(paste0(p2,p1))
+  }
+}
+
+
+# for a given population pull out the genes that intersected a significant window from the intra-population statistics
+extract_sig <- function(popname){
+  bind_rows(sig_ihs_val, sig_nsl_val) %>% select(pop, 'SYMBOL' = genename) %>% bind_rows(., lower_sig_stats %>% select(pop, SYMBOL)) %>% filter(pop == popname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
+}
+
+# for a given super population pull out the genes that intersected a significant window from the intra-population statistics
+extract_sig_super <- function(superpopname){
+  bind_rows(sig_ihs_val, sig_nsl_val) %>% 
+    select(superpop, 'SYMBOL' = genename) %>% 
+    bind_rows(., lower_sig_stats %>%
+                left_join(., panel %>% select(pop, "superpop" = super_pop) %>% distinct(), by = 'pop')%>% 
+                select(superpop, SYMBOL)) %>% 
+    filter(superpop == superpopname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
+}
