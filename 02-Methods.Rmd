@@ -3,7 +3,7 @@
 library(tidyverse)
 library(pander)
 source("scripts/methods_tables.R")
-
+panel <- read.table('~/data/NZ_coreExome_1kgp/nz_1kgp.panel', header = TRUE, stringsAsFactors = FALSE)
 ```
 
 ```{r, echo = FALSE, inlcude = FALSE}
@@ -90,7 +90,9 @@ The ancestral allele was used as had been annotated from the 1000 Genomes Phase 
 
 SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Each population was filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of _p_ < 10^-6^. Markers were converted into ancestral or derived by comparing alleles to the homo sapiens ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
 
-\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014] with a critical percent threshold of 99% to designate significance. Markers with an \gls{ihs} or \gls{nsl} value that was determined to be significant using a significance threshold of 1% were clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R, where nearby \gls{snp}s were assigned the same group identifier. The search radius used was 200 kb and the minimum number of points for a cluster was one. Cluster regions were created by taking both the minimum and maximum position for each group identifier, population and chromosome.
+\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014] with a critical percent threshold of 99% to designate significance. Markers with an \gls{ihs} or \gls{nsl} value were determined to be significant using a cutoff of  less than |2.6| which was approximately the most extreme 1% of values.
+
+Significant markers were also clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R, where nearby \gls{snp}s were assigned the same group identifier. The search radius used was 200 kb and the minimum number of points for a cluster was one. Cluster regions were created by taking both the minimum and maximum position for each group identifier, population and chromosome.
 
 
 
@@ -188,14 +190,29 @@ Custom Views were created to join the supplemental tables to the main tables.
 ```{r eigenstrat code, engine='bash', eval = FALSE}
 dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/PCA/indiv_pops
 #combine the chromosomes
-bcftools concat -O v -o - --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) | bcftools view -O z -o NZ_1KGP_allchr.vcf.gz -s $(grep -v 'NAD\|WPN\|EPN' ../../../data/nz_1kgp.panel | cut -f1 | tr '\n' ',') --force-samples -
+bcftools concat \
+  -O v \
+  -o - 
+  --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) |\
+bcftools view \
+  -O z \
+  -o NZ_1KGP_allchr.vcf.gz \
+  -s $(grep -v 'NAD\|WPN\|EPN' ../../../data/nz_1kgp.panel | cut -f1 | tr '\n' ',') \
+  --force-samples -
 
 #find the independent markers
-plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz --maf 0.1 --indep-pairwise 50 5 0.2 --out NZ_1KGP_allchr
+plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz \
+  --maf 0.1 \
+  --indep-pairwise 50 5 0.2 \
+  --out NZ_1KGP_allchr
 
 touch cases.txt
 
-plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz --extract NZ_1KGP_allchr.prune.in --recode --out NZ_1KGP_allchr_indep --make-pheno cases.txt '*'
+plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz \
+  --extract NZ_1KGP_allchr.prune.in \
+  --recode \
+  --out NZ_1KGP_allchr_indep \
+  --make-pheno cases.txt '*'
 
 # create the eigenstrat file
 echo -e "genotype: NZ_1KGP_allchr_indep.ped\nsnpname: \
@@ -223,7 +240,15 @@ smartpca.perl \
 ```{r admixture k, engine = 'bash', eval = FALSE}
 dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/admixture$
 
-bcftools concat -O v -o - --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) | bcftools view -O z -o NZ_1KGP_allchr.vcf.gz -s $(grep -v 'NAD\|WPN\|EPN' ../../data/nz_1kgp.panel | cut -f1 | tr '\n' ',') --force-samples - 
+bcftools concat \
+  -O v \
+  -o - \
+  --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) |\
+bcftools view \
+  -O z \
+  -o NZ_1KGP_allchr.vcf.gz \
+  -s $(grep -v 'NAD\|WPN\|EPN' ../../data/nz_1kgp.panel | cut -f1 | tr '\n' ',') \
+  --force-samples - 
 
 plink1.9b4.9 \
   --vcf NZ_1KGP_allchr.vcf.gz \
@@ -242,6 +267,93 @@ done
 
 grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 ```
+
+
+```{r, echo = FALSE}
+k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE)
+ggplot(k_cv, aes(x = V1, y = V2)) + geom_line() + geom_point() + labs(x = 'K',y = 'Cross Validation Error') + geom_point(data = k_cv %>% filter(min(V2) == V2), aes(x = V1, y = V2),color = 'red', shape = 4, size = 4, inherit.aes = FALSE) + theme_bw()
+```
+
+The cross validation of K from 1 to 15 resulted in K = 11 having the minimum cross validation error.
+
+```{bash, eval = FALSE}
+# to project 1000 genomes onto the Polynesians
+
+#create reference population
+#remove AMR and POL (and NZC) pops
+cat ~/Murray/Thesis_backup/NZ_coreExome_1kgp/nz_1kgp.panel |\
+grep -v 'POL\|AMR\|NZC' |\
+awk '{if(NR > 1){print $1,$1}}' > 1kg_ref.list
+
+plink1.9b4.9 --bfile NZ_1KGP_allchr_admix \
+  --make-bed \
+  --keep 1kg_ref.list \
+  --out reference \
+  --keep-allele-order
+
+# create 'study population'
+cat ~/Murray/Thesis_backup/NZ_coreExome_1kgp/nz_1kgp.panel |\
+grep  'AMR\|NZC\|CIM\|TON\|NZM\|SAM' |\
+awk '{if(NR > 1){print $1,$1}}' > pol_amr_nzc.list
+
+plink1.9b4.9 --bfile NZ_1KGP_allchr_admix \
+  --make-bed \
+  --keep pol_amr_nzc.list \
+  --out study \
+  --keep-allele-order
+
+# check bim files are identical
+diff -s reference.bim study.bim
+
+# select best K from CV testing
+parallel -j 11 'admixture -s 123456 --cv  reference.bed {} -j10 | tee log{}.out ' ::: $(seq 1 15)
+
+admixture -s 123456 -B reference.bed 9
+# create study input P
+cp reference.9.P study.9.P.in
+
+admixture -s 123456 -P study.bed 9
+```
+
+```{r admixDataProjection, echo = FALSE}
+ref <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/reference_bootstrap.9.Q')
+ref_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/reference.fam', header = FALSE)
+names(ref_fam) <- c('FID','sample','PID','MID','SEX','AFF')
+ref_fam <- left_join(ref_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
+
+study <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.9.Q')
+study_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.fam', header = FALSE)
+names(study_fam) <- c('FID','sample','PID','MID','SEX','AFF')
+study_fam <- left_join(study_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
+```
+
+```{r, echo = FALSE}
+k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE)
+ggplot(k_cv, aes(x = V1, y = V2)) + geom_line() + geom_point() + labs(x = 'K',y = 'Cross Validation Error') + geom_point(data = k_cv %>% filter(min(V2) == V2), aes(x = V1, y = V2),color = 'red', shape = 4, size = 4, inherit.aes = FALSE) + theme_bw()
+```
+
+```{r, echo = FALSE}
+# barplot of the reference proportions
+cbind(ref_fam, ref) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(super_sample = paste0(super_pop,'_',sample), facet_pop = paste(super_pop, pop)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V)) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 6) + theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
+
+```
+
+
+```{r, echo = FALSE}
+# admixed pops that were projected onto
+#removed NZC for to make nice
+cbind(study_fam, study) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(super_sample = paste0(super_pop,'_',sample), super_pop = factor(super_pop, levels = c("AMR", "POL","EUR"), ordered = TRUE)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V)) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 4) +theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
+```
+
+
+- V1 and V4 were EAS mostly
+- V2 and V5 were AFR
+- V7 was JPT
+- V6 and V8 were EUR
+- V9 was SAS
+
+
+
 
 ### GWAS
 
@@ -523,6 +635,22 @@ for population lists used the "Functional classification viewed as pie chart" se
 Analysis Type: PANTHER Overrepresentation Test (release 20170413)
 - annotation set = pnather GO-slim biological process
 
+Enrichr
+
+used enrichr [@Chen2013b; @Kuleshov2016] http://amp.pharm.mssm.edu/Enrichr/, specifically the pathway enrichment KEGG2016 table
+
+the p-value is computed from the Fisher exact test which is a proportion test that assumes a binomial distribution and independence for probability of any gene belonging to any set
+
+adjusted p-value: or q-value is an adjusted p-value using the Benjamini-Hochberg method for correction for multiple hypotheses testing
+
+z-score: the rank based ranking is derived from running the Fisher exact test for many random gene sets in order to compute a mean rank and standard deviation from the expected rank for each term in the gene-set library and finally calculating a z-score to assess the deviation from the expected rank
+
+combined score is computed by taking the log of the p-value from the Fisher exact test and multiplying that by the z-score of the deviation from the expected rank (c = log(p) * z)
+
+
+significance was set as an adjusted p-value < 0.05
+
+
 ## Datasets
 
 ### 1000 Genomes Project Phase 3
@@ -685,7 +813,7 @@ Pandoc version
 ```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE}
 ce_pop_table <- ce_populations_table()
 #names(ce_pop_table) <- c("pop","n","Age","Sex (% Male)","BMI","Waist","Percent Diabetes","Percent Gout")
-knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis',align = 'lcrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","% Diabetes","% Gout"), booktabs = TRUE )
+knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis',align = 'lcrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","Diabetes (%)","Gout (%)", "Kidney Disease (%)","Heart Problems (%)"), booktabs = TRUE )
 ```
 
 
@@ -896,7 +1024,7 @@ Principle components for the merged 1000 Genomes Project data and the New Zealan
 (ref:allpopPCA) Principle components 1 and 2 for all populations, coloured by super population grouping.
 
 ```{r allpopPCA, fig.cap = '(ref:allpopPCA)', echo = FALSE}
-panel <- read.table('~/data/NZ_coreExome_1kgp/nz_1kgp.panel', header = TRUE, stringsAsFactors = FALSE)
+
 eigen <- read.table('~/data/NZ_coreExome_1kgp/PCA/indiv_pops/NZ_1KGP_allchr_indep_eigen.pca.evec', stringsAsFactors = FALSE)
 
 eigen <- eigen %>% select("sample" = V1, everything()) %>% left_join(., panel, by = 'sample') %>% filter(!pop %in% c('WPN','EPN','NAD'))
@@ -920,3 +1048,7 @@ eigen %>%  filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape 
 
 
 There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPca)), this indicated that the use of chip versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations where split into Eastern and Western Polynesian sub-groups with PC6 (Figure \@ref(fig:polPCA))
+
+
+
+
