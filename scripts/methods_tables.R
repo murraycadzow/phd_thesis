@@ -33,6 +33,7 @@ ce_clinical_table <- function() {
               n_diabetes = sum(DIABETES == 2, na.rm=TRUE),
               n_gout= NROW(GOUT),
               n_kidney = sum(KIDNEY==2, na.rm=TRUE),
+              n_heart = sum(HEART == 2, na.rm = TRUE),
               n_Fatty_liver = sum(FATTYLIVER, na.rm=TRUE),
               #percentMale = signif(sum(SEX == 1)/NROW(SEX),digits = 2) * 100,
               meanBP = paste0(round(mean(SYSTOLIC,na.rm=TRUE), 1),'/',round(mean(DIASTOLIC, na.rm=TRUE),1))) %>% ungroup() %>% 
@@ -62,7 +63,9 @@ ce_populations_table <- function() {
             BMI = paste0(formattable(mean(BMI, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(BMI, na.rm = TRUE),digits = 2, format = 'f'),")"),
             Waist = paste0(formattable(mean(WAIST, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(WAIST, na.rm=TRUE),digits = 2, format ='f'), ")"),
             `Diabetes (%)` = formattable(sum(DIABETES == 2, na.rm=TRUE) / NROW(DIABETES) * 100, digits = 2, format = 'f') ,
-            `Gout (%)` = formattable(sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)  * 100, digits = 2, format = 'f')
+            `Gout (%)` = formattable(sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)  * 100, digits = 2, format = 'f'),
+      `Kidney (%)` = formattable(sum(KIDNEY == 2, na.rm=TRUE) / NROW(KIDNEY)  * 100, digits = 2, format = 'f'),
+      `Heart (%)` = formattable(sum(HEART == 2, na.rm=TRUE) / NROW(HEART)  * 100, digits = 2, format = 'f')
     )
   return(tab)
   
