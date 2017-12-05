@@ -66,7 +66,7 @@ include paragraph about maori and pacific health in general in new zealand - don
 
 -->
 
-New Zealand M$\bar{a}$ori and Pacific Islanders in New Zealand over the past decade been reporting a decrease in overall health [@MinistryofHealth2016]. Fruit and vegetable intake, and physical activity has also been reported as decreasing, all the while there has been an increase in obesity where there was an adjusted rate ratio for obesity of 1.7 for  M$\bar{a}$ori vs non- M$\bar{a}$ori, and 2.4 for Pacific vs non-Pacific [@MinistryofHealth2016]. The rate of increase in \gls{bmi} for Pacific Islanders was five times that of the rest of the world, and fasting plasma glucose was three to four times higher over the 1980-2008 period [@Hawley2015]. The health disparities are captured in the New Zealand statistics where M$\bar{a}$ori have a mortality rate of 1.8 that of non-M$\bar{a}$ori with the rates of obesity and diabetes of particular note with the M$\bar{a}$ standarised rate of 40.6, five times higher than non-M$\bar{a}$ori of 8.1 [@MinistryofHealth2012].
+New Zealand M$\bar{a}$ori and Pacific Islanders in New Zealand over the past decade been reporting a decrease in overall health [@MinistryofHealth2016]. Fruit and vegetable intake, and physical activity has also been reported as decreasing, all the while there has been an increase in obesity where there was an adjusted rate ratio for obesity of 1.7 for  M$\bar{a}$ori vs non- M$\bar{a}$ori, and 2.4 for Pacific vs non-Pacific [@MinistryofHealth2016]. The rate of increase in \gls{bmi} for Pacific Islanders was five times that of the rest of the world, and fasting plasma glucose was three to four times higher over the 1980-2008 period [@Hawley2015]. The health disparities are captured in the New Zealand statistics where M$\bar{a}$ori have a mortality rate of 1.8 that of non-M$\bar{a}$ori with the rates of obesity and diabetes of particular note with the M$\bar{a}$ori standarised rate of 40.6, five times higher than non-M$\bar{a}$ori of 8.1 [@MinistryofHealth2012].
 
 New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013]. Polynesian populations share a common genetic ancestry with East Asia however, there are Polynesian specific variants associated with increased risk to gout and elevated serum urate [@Phipps-Green2010; @Hollis-Moffatt2012]. Serum urate has been associated with metabolic disorders [@Choi2007;@Choi2007b] and genes involved with complex diseases such as \gls{t2d}, gout, and other metabolic related disorders have shown evidence for selection [@Zhang2013a; @pickrell2009signals;@Hancock2008]. 
 
@@ -142,6 +142,7 @@ multiplot(gene_dendros(gene_data = mat_d_list[['td_chr']]) + ggtitle("Tajima's D
 
 ```{r wholechrfst, fig.cap="(ref:wholechrfst)"}
 create_fst_dendro() + ggtitle(expression("Whole Chromosome F"["ST"]))
+ggsave(last_plot(), file = 'images/04_clustering/fst_dendro.png')
 ```
 
 
@@ -452,12 +453,14 @@ The Polynesian populations were clustered together with a high proportion of sha
 
 ```{r ihsclust, fig.cap='(ref:ihsclust)', echo = FALSE, fig.asp = 1}
 ihs_dendro_plot()
+ggsave(last_plot(), file = 'images/04_clustering/ihs_dendros.png')
 ```
 
 (ref:ihsclust) _\gls{ihs} Clustering_ A. Dendrogram from hierarchical clustering based on proportion of significant \gls{ihs} regions shared between populations Coloured by super population. B. Heatmap showing the proportion of significant \gls{ihs} regions shared. The population of the axis is A in the calculation = (A $\cap$ B)/ A. Axes have been ordered according to the hierarchical clustering. 
 
 ```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE, fig.asp= 1 }
 nsl_dendro_plot()
+ggsave(last_plot(), file = 'images/04_clustering/nsl_dendros.png')
 ```
 
 (ref:nslclust) _\gls{nsl} Clustering_ A. Dendrogram from hierarchical clustering based on proportion of significant \gls{nsl} regions shared between populations. Coloured by super population. B. Heatmap showing the proportion of significant \gls{nsl} regions shared. The population of the axis is A the calculation = (A $\cap$ B)/ A. Axes have been ordered according to the hierarchical clustering.
@@ -539,6 +542,12 @@ multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajim
           gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
           gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
   cols = 2)
+ggsave(multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+  cols = 2), file = 'images/04_clustering/urate_dendros.png')
 ```
 
 
@@ -646,6 +655,12 @@ multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Ta
           gene_dendros(gene_data = obesity$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
           gene_dendros(gene_data = obesity$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
    cols = 2)
+ggsave(multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = obesity$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = obesity$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = obesity$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = obesity$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2), file = 'images/04_clustering/obesity_dendros.png')
 ```
 
 (ref:obesitydendros) _Obesity Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(obesity_GR$SYMBOL))` loci associated with obesity. Coloured by super population.
@@ -661,6 +676,12 @@ multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima
           gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
           gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
    cols = 2)
+ggsave(multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2), file = 'images/04_clustering/t2d_dendros.png')
 ```
 
 The GWAS catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}, this was represented by `r nrow(t2d$mat_d$Tajima.D)` windows. Except for \gls{fld}, clustering of the \gls{t2d} associated genes grouped the individual populations into their super population groups. For all clustering the \gls{amr} populations were split, with \gls{clm} and \gls{pur} grouped with the \gls{eur} populations for \gls{td}, \gls{fwh}, and \gls{ze} (Figure \@ref(fig:t2ddendros)). The \gls{pol} populations were assigned two exclusive groups through the cutree method that created an Eastern/Western Polynesian split for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. \gls{fld} had the Eastern Polynesian populations with the \gls{eur} populations. \gls{fwh} and \gls{ze} had a similar pattern to the groupings of the whole chromosome F~ST~ clustering.
@@ -718,6 +739,12 @@ multiplot(gene_dendros(gene_data = kd$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima'
           gene_dendros(gene_data = kd$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
           gene_dendros(gene_data = kd$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
    cols = 2)
+ggsave(multiplot(gene_dendros(gene_data = kd$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = kd$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = kd$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = kd$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = kd$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2), file = 'images/04_clustering/kd_dendros.png')
 ```
 
 The GWAS catalog had `r length(unique(kd_GR$SYMBOL))` genes associated with kidney disease, this was represented by `r nrow(kd$mat_d$Tajima.D)` windows. The clustering of the kidney disease associated genes grouped the individual populations into their super population groups for \gls{afr} and \gls{sas} using \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Populations from \gls{pol} and \gls{eas} were clustered into separate clusters with  \gls{td} and \gls{flf} but were clustered together for \gls{fwh} and \gls{ze} (Figure \@ref(fig:kidneydendros)). No populations were entirely grouped into their super populations with \gls{fld}. \gls{td} clustered populations from \gls{afr}, \gls{eas}, \gls{pol}, and \gls{sas} into super population specific and exclusive clusters.
@@ -773,6 +800,12 @@ multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Taj
           gene_dendros(gene_data = metsyn$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
           gene_dendros(gene_data = metsyn$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
    cols = 2)
+ggsave(multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = metsyn$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          gene_dendros(gene_data = metsyn$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = metsyn$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = metsyn$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2), file = 'images/04_clustering/metsyn_dendros.png')
 ```
 
 The GWAS catalog had `r length(unique(metsyn_GR$SYMBOL))` genes associated with metabolic syndrome, this was represented by `r nrow(metsyn$mat_d$Tajima.D)` windows. The clustering of the metabolic syndrome associated genes grouped individual populations into their super population groups for \gls{td} and \gls{fwh} (Figure \@ref(fig:metsyndendros)). For \gls{flf}, the Polynesian populations were assigned two exclusive clusters that followed the Eastern/Western Polynesian split. \Gls{ze} clustered the individual populations, except for \gls{pel}, into their super populations. \gls{fld} separated the Polynesian populations into a separate group but did not distinguish the other populations into their super populations. The Polynesian populations were grouped into entirely exclusive clusters for all stats.
