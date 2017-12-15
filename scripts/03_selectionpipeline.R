@@ -75,9 +75,8 @@ load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called 
 load('~/data/gwas_catalog/zhang_and_extra_18-11-2017.RData') # brings in objects called malaria_GR, zhang_immune_GR, neurological_GR, psychiatric_GR
 
 # made from Thesis/selectionpipeline/consec_regions.R
-consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-17-10-2017.RDS')
-consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-17-10-2017.RDS')
-
+consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-17-10-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-17-10-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
 
 
 plot_gene <- function(p, g){
@@ -120,17 +119,25 @@ popswitch <- function(p, pop2){
 }
 
 
-# for a given population pull out the genes that intersected a significant window from the intra-population statistics
+# for a given population pull out the genes that had haplotypic significant results AND intersected a significant window from the intra-population statistics
 extract_sig <- function(popname){
-  bind_rows(sig_ihs_val, sig_nsl_val) %>% select(pop, 'SYMBOL' = genename) %>% bind_rows(., lower_sig_stats %>% select(pop, SYMBOL)) %>% filter(pop == popname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
+  bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == popname) %>% select(pop, 'SYMBOL' = genename) %>% inner_join(., bind_rows(., lower_sig_stats %>% filter(pop == popname) %>% select(pop, SYMBOL)), by = c("SYMBOL","pop")) %>% filter(pop == popname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
 }
 
 # for a given super population pull out the genes that intersected a significant window from the intra-population statistics
+# only uses genes that have both haplotypic AND SFS
 extract_sig_super <- function(superpopname){
   bind_rows(sig_ihs_val, sig_nsl_val) %>% 
-    select(superpop, 'SYMBOL' = genename) %>% 
-    bind_rows(., lower_sig_stats %>%
+    select(pop, superpop, 'SYMBOL' = genename) %>% 
+    filter(superpop == superpopname) %>% 
+    inner_join(., lower_sig_stats %>%
                 left_join(., panel %>% select(pop, "superpop" = super_pop) %>% distinct(), by = 'pop')%>% 
-                select(superpop, SYMBOL)) %>% 
-    filter(superpop == superpopname, !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
+                select(superpop, SYMBOL, pop) %>% filter(superpop == superpopname), by = c('pop','superpop', "SYMBOL")) %>% 
+    filter(!is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
 }
+
+
+#Calculate the genome wide DHS regions using a threshold of at least 60 cell lines having a score > 400
+dhs_clusters <- readr::read_delim('~/data/UCSC_DNase1HypersensitivityClusters/hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeRegDnaseClustered/wgEncodeRegDnaseClusteredV3.bed.gz', delim = '\t', col_names = c("chrom","chromStart","chromEnd","name","score","sourceCount","sourceIds","sourceScores")) %>% data.frame()
+dhs_regions <- dhs_clusters %>% filter(sourceCount > 60 & score > 400) %>% GRanges()
+
