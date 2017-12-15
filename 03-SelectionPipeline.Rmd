@@ -28,10 +28,6 @@ Part of this work was originally published in @Cadzow2016 but I have updated the
 
 ## Introduction
 
-
-
-
-
 Much of the early work in looking at selection was focused at the gene level [@Wright1951;@Fisher] and the methods that were developed were intended for few loci, or limited sequence from a single region [@ref;@ref;@ref]. This was largely due to the high cost and limited availability of whole genome chip or sequence data. It wasn't until after the completion of the human genome project in 2001 and the advent of 'next generation sequencing' where the cost of full genome data rapidly dropped and there became an abundance of whole genome sequence data [@ref]. There were a few large efforts to characterise human variation, the first main project was the HapMap project [@Hapmap2005], which was followed on by the 1000 Genomes Project [@1KGP2010; @1KGP2012; @1KGP2015snp]. Alongside these variation projects were a few projects that aimed to focus on the diversity of humans, this was the Human Genome Diversity Project [@Cann2002; @Rosenburg2002], and later the Simons Genome Diversity Project [@Mallick2016].
 
 One of the methods to still use the selection and neutrality tests with the genome-wide data was to use the empirical distribution [@Teshima2006; @Clarke?]
@@ -107,7 +103,7 @@ Hyperuricemia is has two main components over production of urate, or under excr
 
 Under excretion is the main cause of hyperuricemia, caused by either increased reabsorption or decreased secretion. The ATP powered transporter ABCG2 is responsible for excretion of urate in the gut. There are Polynesian specific variants that lead to a reduction of function in ABCG2.
 
-The kidneys are the organ where the majority of secretion and excretion of urate is performed. In the proximal tuble, on the apical membrane, the urate transporters of URAT1, OAT4, and SLC2A9 reabsorb urate, whereas ABCC4, NPT4, and NPT1 are responsible for secretion. On the basolateral membrane, OAT1-3, increase intracellular uric acid, but SLC2A9 moves uric acid from intracellular to extracellular. 
+The kidneys are the organ where the majority of secretion and excretion of urate is performed. In the proximal tuble, on the apical membrane, the urate transporters of URAT1, OAT4, and SLC2A9 reabsorb urate, whereas ABCC4, NPT4, and NPT1 are responsible for secretion. On the basolateral membrane, OAT1-3, increase intracellular uric acid, but SLC2A9 moves uric acid from intracellular to extracellular [@ref]. 
 
 Gout is an immune response to the uric acid crystals that are formed from the precipitation of urate from the blood. Hyperuricemia is a prerequisite for the formation of these crystals.
 
@@ -119,8 +115,6 @@ The prevalence of HU in Polynesia is also higher, with it are the higher prevale
 
 <!--
 motivation: seemed to be little in the way of calculating stats genome wide and wasn't sure how sensitive these stats were to snp density
-
-
 
 This chapter is about trying to first of all establish how sensitive the various statistics were to window/slide variation
 
@@ -170,135 +164,10 @@ The selection statistics were calculated for individuals populations using a com
 <!--
 Similar to @Pybus2014, @Rafajlovic2014 and @Carlson2005 a trade off between increasing the number of \gls{snp}s per window and adequate resolution was made and the window size of 100 kb and slide of 10 kb was chosen.
 -->
-The R package PopGenome v2.2.3 [@Pfeifer2014] was used to calculate the site-frequency spectrum statistics \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, \gls{ze}, and F~ST~ over non-overlapping windows of 10 kb (see section \@ref(popgenomeMethods) for further details). The empirical distribution for each population was used to create an upper and  a lower significance threshold. The lower threshold was the 1st percentile and less than zero. The upper significance threshold was the 99th percentile and greater than zero. The greater or less than zero condition was to enable the interpretation of the selection statistic results. Contiguous regions of score reduction or elevation were created using a rolling window approach, whereby a condition of 7 or more windows out of 10 consecutive 10 kb windows were required to have met a significance threshold in the same tail of the distribution.
+The R package PopGenome v2.2.3 [@Pfeifer2014] was used to calculate the site-frequency spectrum statistics \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, \gls{ze}, and F~ST~ over non-overlapping windows of 10 kb (see section \@ref(popgenomeMethods) for further details). The empirical distribution for each population was used to create an upper and  a lower significance threshold. The lower threshold was the 1st percentile and less than zero. The upper significance threshold was the 99th percentile and greater than zero. The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results. Contiguous regions of score reduction or elevation were created using a rolling window approach, whereby a condition of 7 or more windows out of 10 consecutive 10 kb windows were required to have met a significance threshold in the same tail of the distribution.
 
 The calculation of \gls{ihs}, \gls{nsl}, and \gls{xpehh} were calculated and normalised using selscan v1.1.0b [@Szpiech2014] as part of the selectionTools 1.1 [@Cadzow2014] pipeline as detailed in \@ref(selectionTools). The default setting were used which was a maximum gap extension of 200 kb. Significance was defined as the most extreme 1% of values after normalisation using frequency bins of 0.05.
 
-<!--
-## SelectionTools pipeline
-
-for the selection pipeline we need to split into populations
-
-```{r, engine = 'bash', eval = FALSE}
-# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
-# make a combined panel file
-cut -f1-3 /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/integrated_call_samples_v3.20130502.ALL.panel |\
-cat - NZ_coreExome/*panel > nz_1kgp.panel
-
-mkdir Indiv_pops
-
-parallel '
-  bcftools view \
-    -s $(grep {1} nz_1kgp.panel |\
-      cut -f 1 |\
-      tr "\n" "," |\
-      sed "s/,$//g") \
-    -O z \
-    -o Indiv_pops/{1}.chr{2}.phased.vcf.gz NZ_1KGP.chr{2}.phased.sample_updated.vcf.gz
-  ' ::: $(cut -f 2 nz_1kgp.panel |grep -v "pop" | sort |uniq) ::: $(seq 1 22)
-```
-
-Break into super populations to analyse the Polynesians (NZM,CIM,TON,SAM) - make sure to exclude the NZC from the EUR super pop and also exclude the admixed NZM (NAD), Eastern Polynesians (EPN), and Western Polynesians (WPN).
-
-```{r, engine = 'bash', eval = FALSE}
-# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
-mkdir Super_pops
-
-parallel '
-  bcftools view \
-    -s $(grep {1} nz_1kgp.panel |\
-      grep -v "NAD\|EPN\|NZC\|WPN" |\
-      cut -f 1 |\
-      tr "\n" "," |\
-      sed "s/,$//g") \
-    -O z \
-    -o Super_pops/{1}.chr{2}.phased.vcf.gz NZ_1KGP.chr{2}.phased.sample_updated.vcf.gz
-  ' ::: $(cut -f 3 nz_1kgp.panel |grep -v "pop" | sort |uniq) ::: $(seq 1 22)
-```
-
-Now send to NeSI pan cluster for the selectionTools pipeline to take place
-
-Individual populations are first run through selectionTools with iHS, nSL, and XP-EHH calculated later
-
-```{r, engine = 'bash', eval = FALSE}
-# on nesi
-mkdir -p /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/{Indiv_pops,Indiv_pops_results}
-
-# locally
-parallel '
-  scp {} murray.cadzow@login.uoa.nesi.org.nz:~/uoo00008/NZ_1KGP_unimputed/Indiv_pops/ 
-  ' ::: $(ls /media/xsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Indiv_pops/*gz)
-
-# on nesi
-# working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops
-
-# find all the vcfs and use the first prefix to use as the population code
-for p in $(ls * | cut -d'.' -f1 | sort | uniq)
-do 
-  sbatch ../unimputed_selection_pipeline.sl $p ; sleep 2; 
-done
-```
-
-Then run run_selscan.sl and run_nsl_selscan on each population results file
-```{r, engine = 'bash', eval = FALSE}
-# on nesi
-# working dir: Indiv_pops_results
-for p in $(find ./[A-Z]* -type d | grep -v xpehh | sed 's/\.\///g')
-do 
-  cd $p 
-  sbatch -J ihs_$p ../../run_selscan.sl $p
-  sbatch -J nsl_$p ../../run_nsl_selscan.sl $p
-  cd ../
-  sleep 5
-done
-```
-
-```{r, engine = 'bash', eval = FALSE}
-# on nesi
-# working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops_results
-# individual pops
-for p1 in CIM NZC NZM SAM TON
-do
-  for p2 in ACB ASW BEB CDX CEU CHB CHS CIM CLM EPN ESN FIN GBR GIH GWD IBS ITU JPT KHV LWK MSL MXL NAD NZC NZM PEL PJL PUR SAM STU TON TSI WPN YRI
-  do
-    if [[ $p1 != $p2 ]]
-    then
-      echo $p1 $p2
-      sbatch ../run_xpehh.sl $p1 $p2
-      sleep 5
-    fi
-  done
-done
-
-
-for p1 in EPN NAD WPN
-do
-  for p2 in ACB ASW BEB CDX CEU CHB CHS CIM CLM EPN ESN FIN GBR GIH GWD IBS ITU JPT KHV LWK MSL MXL NAD NZC NZM PEL PJL PUR SAM STU TON TSI WPN YRI
-  do
-    if [[ $p1 != $p2 ]]
-    then
-      echo $p1 $p2
-      sbatch ../run_xpehh.sl $p1 $p2
-      sleep 5
-    fi
-  done
-done
-
-
-
-
-# super pops
-for p in EUR EAS SAS AMR AFR
-do
-  sbatch ../run_xpehh.sl POL $p
-  sleep 5
-done
-
-# Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
-rm -r NAD_{WPN,EPN}
-rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
-```
--->
 
 ## Results
 <!--
@@ -310,10 +179,11 @@ Individual populations - CIM/NZM/SAM/TON/NZC
 
 ### Intra-population Selection and Neutrality Statistics
 
-
+#### Comparison with prior publications
 The results from the lower tail for the SFS statistics were compared to regions and genes identified in @Hider2013 for \gls{eas} and @Jonnalagadda2017 for \gls{sas}
 
 <!--
+NEED TO RELOOK AT THE HAPLOTYPIC RESULTS 15/12/2017
 results are from ~/Git_repos/Thesis/selectionpipeline/prior_pubs_comparison_SFS_results.Rmd
 
 
@@ -448,11 +318,28 @@ For the frequency spectrum based intra population statistics of \gls{td}, \gls{f
 
 each population had a different distribution of values
 
-the super populations had similar min, mean, sd, median, max for the stats
+The super populations had similar summary statistics for measures of center and spread.
+
 
 
 ```{r numSigWindows}
-lower_sig_stats %>% 
+# add on ihs/nsl
+ihs_nsl_sum_tab <- sig_ihs_val %>% 
+  group_by(pop) %>% 
+  tally() %>% 
+  select(pop, n_ihs_snps = n) %>% 
+  left_join(., sig_nsl_val %>% 
+              group_by(pop) %>% 
+              tally() %>% 
+              select(pop, n_nsl_snps = n) , by = 'pop') %>% 
+  left_join(., sig_ihs_val %>% 
+              select(pop, chrom, chrom_start, chrom_end) %>% 
+              inner_join(., sig_nsl_val %>% 
+                           select(pop, chrom, chrom_start, chrom_end), by = c('pop','chrom','chrom_start','chrom_end') ) %>% 
+              group_by(pop) %>% 
+              tally(), by = "pop") 
+
+all_sfs_windows_table <- lower_sig_stats %>% 
   mutate(statname = paste0(statname,"_lo")) %>%  
   select(contains('chrom'), pop,statname) %>% 
   distinct() %>% 
@@ -470,10 +357,12 @@ lower_sig_stats %>%
               select(pop, super_pop) %>% 
               distinct(), by = 'pop') %>% 
   arrange(super_pop) %>%
-  select(-super_pop) %>%  
-  knitr::kable(., caption = "(\\#tab:numSigWindows) Number of significant windows by selection stat", booktabs = TRUE, format = 'latex', col.names = c("Population",rep(c("\\gls{fwh}", "\\gls{fld}","\\gls{flf}","\\gls{td}","\\gls{ze}"), 2)), escape = FALSE) %>%
+  select(-super_pop)
+
+left_join(all_sfs_windows_table, ihs_nsl_sum_tab %>% select(-n), by = 'pop') %>%
+ knitr::kable(., caption = "(\\#tab:numSigWindows) Number of significant windows/markers by selection stat", booktabs = TRUE, format = 'latex', col.names = c("Population",rep(c("\\gls{fwh}", "\\gls{fld}","\\gls{flf}","\\gls{td}","\\gls{ze}"), 2), 'iHS SNPs', 'nSL SNPs'), escape = FALSE) %>%
   kableExtra::kable_styling(latex_options = 'scale_down') %>%
-  kableExtra::add_header_above(., c("", "Lower Tail" = 5, "Upper Tail" = 5)) %>% 
+  kableExtra::add_header_above(., c("", "Lower Tail" = 5, "Upper Tail" = 5), "", "") %>% 
   kableExtra::group_rows("AFR", 1, 7) %>% 
   kableExtra::group_rows("AMR", 8, 11) %>% 
   kableExtra::group_rows("EAS", 12, 16) %>% 
@@ -483,7 +372,7 @@ lower_sig_stats %>%
 ```
 
 
-False discovery rate
+#### False discovery rate
 
 ```{r fdr}
 fdr_low_tab <- fdr_low %>% 
@@ -515,20 +404,12 @@ fdr_low_tab %>%
 
 To calculate the false discovery rate, 5000 permutations were generated, each randomly shuffling the genotypes of markers by marker position (i.e shuffling rows only). For each permutation by statistic, the values for quantiles 'bins' ranging from 0.01 to 0.1% at 0.01 increments,  0.1 to 1% at 0.1% increments, 1 to 5% at 1% increments, and 10% for both tails of the distribution. The permutations were then combined and the median and 95% confidence intervals were calculated for each of the quantile 'bins'. The enrichment for each quantile bin was then calculated by comparing the number of windows that were observed in the data compared to the number expected from the permutations. \Gls{fdr} was then estimated by using the value for the 1st or 99th percentile and finding the nearest quantile bin using the median, that was either larger for the lower tail, or smaller for the upper tail and taking the inverse of enrichment for the bin (Table \@ref(tab:fdrpol)). This estimate will be conservative compared to the true \gls{fdr}.
 
-
- 
 The \gls{fdr} for \gls{ze} was 1.0 for all Polynesian populations in the lower end of the distribution and the 1st percentile of the data fell within the 2nd percentile bin from the permutations. Whereas, for \gls{td} and \gls{fwh} the quantile bin was `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(min(lowest_quant))`%, with the maximum upper confidence interval being `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(three_dp(max(upperCI)))`. 
-
-
 
 
 <!--
 table for each stat that give global mins/means/sd/max for each population
 -->
-
-
-
-
 
 #### Tajima's D
 
@@ -588,10 +469,6 @@ pol_td_t.test <- bind_rows(
 ```
 
 The results for the genome-wide \gls{td} showed that there were population differences in the distribution of \gls{td} values. The mean \gls{td} for the Polynesian populations were the smallest of the super populations at `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with  `r gs_td_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_td_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_td_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_td_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsTdTable)). The means of the Polynesian populations were lower than all of the other populations except \gls{pel} and \gls{mxl}. The \gls{sas} populations had the highest mean \gls{td} overall at `r global_super_summary %>% filter(super_pop == 'SAS', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()`  (SD `r global_super_summary %>% filter(super_pop == 'SAS', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`). The \gls{afr} populations were the only populations with the 1st percentile above zero, but also had the smallest overall maximum value of  `r global_super_summary %>% filter(super_pop == 'AFR', stat == 'Tajima.D') %>% .[["max"]] %>% three_dp()`. The \gls{eur} populations had the highest maximum \gls{td} value at  `r global_super_summary %>% filter(super_pop == 'EUR', stat == 'Tajima.D') %>% .[["max"]] %>% three_dp()`. The smallest \gls{td} value of `r gs_td_table %>% filter(min(min) == min) %>% .[['min']] %>% three_dp()` came from the \gls{khv} population of the \gls{eas} super population. The \gls{afr} population had the smallest range (`r td_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['range']] %>% three_dp()`), whereas the \gls{eas} super population had the largest (`r td_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['range']] %>% three_dp()`). The \gls{pol} population had the second largest (`r td_super_pop_means %>% filter(super_pop == 'POL') %>% .[['range']] %>% three_dp()`). A right shifted distribution of \gls{td} can be attributed to using ascertainment bias from a chip, where there is a bias against low frequency markers.
-
-
-
-
 
 <!-- better check that the t.test is ok in this way 
 The minimum \gls{td} value for a Polynesian population was `r gs_td_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["min"]] %>% three_dp` and was from `r gs_td_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was `r gs_td_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["max"]] %>% three_dp()` and from `r gs_td_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. The Polynesian mean was significantly different to the other means for the super population using a t-test. The means were \gls{afr}: `r td_super_pop_means %>% filter(super_pop == "AFR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'AFR') %>% .[['p.value']] %>% three_dp()`), \gls{amr}: `r td_super_pop_means %>% filter(super_pop == "AMR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'AMR') %>% .[['p.value']] %>% three_dp()`), \gls{eur}: `r td_super_pop_means %>% filter(super_pop == "EUR") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'EUR') %>% .[['p.value']] %>% three_dp()`), \gls{eas}: `r td_super_pop_means %>% filter(super_pop == "EAS") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'EAS') %>% .[['p.value']] %>% three_dp()`), and \gls{sas}: `r td_super_pop_means %>% filter(super_pop == "SAS") %>% .[["mean"]] %>% three_dp() ` (P = `r pol_td_t.test %>% filter(SuperPop == 'SAS') %>% .[['p.value']] %>% three_dp()`). 
@@ -1147,22 +1024,7 @@ lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','T
 
 #### iHS and nSL
 
-```{r}
-ihs_nsl_sum_tab <- sig_ihs_val %>% 
-  group_by(pop) %>% 
-  tally() %>% 
-  select(pop, n_ihs_snps = n) %>% 
-  left_join(., sig_nsl_val %>% 
-              group_by(pop) %>% 
-              tally() %>% 
-              select(pop, n_nsl_snps = n) , by = 'pop') %>% 
-  left_join(., sig_ihs_val %>% 
-              select(pop, chrom, chrom_start, chrom_end) %>% 
-              inner_join(., sig_nsl_val %>% 
-                           select(pop, chrom, chrom_start, chrom_end), by = c('pop','chrom','chrom_start','chrom_end') ) %>% 
-              group_by(pop) %>% 
-              tally(), by = "pop") 
-
+```{r, eval = FALSE}
 ihs_nsl_sum_tab %>% 
   mutate(pop = substr(pop, 5,7)) %>% 
   kable(., booktabs = TRUE,
@@ -1203,12 +1065,12 @@ Between significant \gls{snp}s for \gls{ihs} and \gls{nsl} there was a mean of `
 
 
 
-NEED TO UPDATE
-- poly ihs had the least number of snps but not too diff from CHS
-- snps:cluster was ~4.4 for poly, compared to most others of 3.5
-- nsl had less snps, pol had more clusters
-- nsl eas and pol had similar number of snps, the ratio isn't as different
-- more clusters indicates 
+<!-- NEED TO UPDATE -->
+<!-- - poly ihs had the least number of snps but not too diff from CHS -->
+<!-- - snps:cluster was ~4.4 for poly, compared to most others of 3.5 -->
+<!-- - nsl had less snps, pol had more clusters -->
+<!-- - nsl eas and pol had similar number of snps, the ratio isn't as different -->
+<!-- - more clusters indicates  -->
 
 ```{r, include = FALSE, eval = FALSE}
 # calculate mean number of snps, total number of clusters, and mean width of clusters by
@@ -1233,7 +1095,7 @@ sig_ihs_val %>% anti_join(., sig_ihs_val %>% filter(!pop %in% c('SAM', 'TON')), 
 
 
 Gout/urate specific:
-```{r}
+```{r, eval = FALSE}
 # number of ihs snps by gout gene by population
 sig_ihs_val %>% 
   filter(genename %in% urate_goutGR$SYMBOL) %>% 
@@ -1253,7 +1115,7 @@ sig_ihs_val %>%
   # kableExtra::group_rows("SAS", 27,31) %>% kable_styling(latex_options = c("scale_down"))
 ```
 
-```{r}
+```{r, eval = FALSE}
 # number of nsl snps by gout gene by poplation
 sig_nsl_val %>% 
   filter(genename %in% urate_goutGR$SYMBOL) %>% 
@@ -1285,16 +1147,9 @@ ihs
 - total snps significant
 - mean per population
 
-```{r}
-
-```
-
-
-
 nsl
 - total snps significant
 - mean per population
-
 
 
 difference between ihs and nsl:
@@ -1341,7 +1196,7 @@ bind_rows(sig_ihs_val %>%
 
 #### Summary of Intra
 
-```{r}
+```{r, eval = FALSE}
 lower_sig_stats %>% 
   filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.Li.F', 'Fu.Li.D'), pop %in% c('CIM','NZM','SAM','TON')) %>% 
   select(pop,statname ,SYMBOL) %>% 
@@ -1370,7 +1225,7 @@ lower_sig_stats %>% filter(SYMBOL %in% c(urate_goutGR$SYMBOL, obesity_GR$SYMBOL,
 
 Out of all the genes from urate/obesity/t2d/kd/metsyn, _MAP2K5_ has a significant result for a stat in all 4 populations. _APOA5_ and _BUD13_ in all except \gls{nzm}, _PRKAG2_ and _IDE_ in only \gls{sam} and \gls{ton}. _BDNF_ and _FNDC3B_ were only significant in \gls{sam}, and _CAMK2B_ in only \gls{ton} 
 
-```{r}
+```{r, eval = FALSE}
 upper_sig_stats %>% 
   filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.Li.F', 'Fu.Li.D'), pop %in% c('CIM','NZM','SAM','TON')) %>% 
   select(pop,statname ,SYMBOL) %>% 
@@ -1625,6 +1480,7 @@ xpehh %>%
 ```
 > Genes associated with gout/metsyn/t2d/obesity/kd with significant hit in ihs/nsl in only pol pops
 
+<!--
 XXX CHECK XXX
 
 When using the significant loci of \gls{ihs} and \gls{nsl} as a filter on the significant xpehh loci, there were 2 genes that had a significant ihs or nsl value in only Polynesian populations populations that were also significant for XPEHH with Polynesian populations. These genes were _ATP8B2_ and _IFNGR1_.
@@ -1634,8 +1490,8 @@ The \gls{t2d} associated gene, _ATP8B2_, had 4 markers that were significant: rs
 _IFNGR1_ was from the obesity associated gene list, and only the \gls{nzm} population had both a significant \gls{ihs} and \gls{nsl}, and significant \gls{xpehh}. There were two markers that were significant for \gls{xpehh} with \gls{nzm} and \gls{asw}, rs1887415 and rs9376267.
 
 XXXXX
-
-```{r, eval = TRUE}
+-->
+```{r, eval = FALSE}
 bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(genename %in%  c("ADCY9", "CCNJL","EYA2","LY86","PSMD6","TP53INP1")) %>% select(pop, genename, statid, statvalue) %>% arrange(genename)
 ```
 
@@ -3543,4 +3399,131 @@ immune - adaptive: t1d, RA, MS, graves, hushimotosis
 cancer
 pyschicatric: SZ
 neurological: AD, PD
+-->
+
+
+<!--
+## SelectionTools pipeline
+
+for the selection pipeline we need to split into populations
+
+```{r, engine = 'bash', eval = FALSE}
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
+# make a combined panel file
+cut -f1-3 /Volumes/BiocArchive/archive/merrimanlab/reference_files/VCF/1000Genomes_vcf_files/Phase3_March2017/integrated_call_samples_v3.20130502.ALL.panel |\
+cat - NZ_coreExome/*panel > nz_1kgp.panel
+
+mkdir Indiv_pops
+
+parallel '
+  bcftools view \
+    -s $(grep {1} nz_1kgp.panel |\
+      cut -f 1 |\
+      tr "\n" "," |\
+      sed "s/,$//g") \
+    -O z \
+    -o Indiv_pops/{1}.chr{2}.phased.vcf.gz NZ_1KGP.chr{2}.phased.sample_updated.vcf.gz
+  ' ::: $(cut -f 2 nz_1kgp.panel |grep -v "pop" | sort |uniq) ::: $(seq 1 22)
+```
+
+Break into super populations to analyse the Polynesians (NZM,CIM,TON,SAM) - make sure to exclude the NZC from the EUR super pop and also exclude the admixed NZM (NAD), Eastern Polynesians (EPN), and Western Polynesians (WPN).
+
+```{r, engine = 'bash', eval = FALSE}
+# working dir: /Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/
+mkdir Super_pops
+
+parallel '
+  bcftools view \
+    -s $(grep {1} nz_1kgp.panel |\
+      grep -v "NAD\|EPN\|NZC\|WPN" |\
+      cut -f 1 |\
+      tr "\n" "," |\
+      sed "s/,$//g") \
+    -O z \
+    -o Super_pops/{1}.chr{2}.phased.vcf.gz NZ_1KGP.chr{2}.phased.sample_updated.vcf.gz
+  ' ::: $(cut -f 3 nz_1kgp.panel |grep -v "pop" | sort |uniq) ::: $(seq 1 22)
+```
+
+Now send to NeSI pan cluster for the selectionTools pipeline to take place
+
+Individual populations are first run through selectionTools with iHS, nSL, and XP-EHH calculated later
+
+```{r, engine = 'bash', eval = FALSE}
+# on nesi
+mkdir -p /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/{Indiv_pops,Indiv_pops_results}
+
+# locally
+parallel '
+  scp {} murray.cadzow@login.uoa.nesi.org.nz:~/uoo00008/NZ_1KGP_unimputed/Indiv_pops/ 
+  ' ::: $(ls /media/xsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/Indiv_pops/*gz)
+
+# on nesi
+# working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops
+
+# find all the vcfs and use the first prefix to use as the population code
+for p in $(ls * | cut -d'.' -f1 | sort | uniq)
+do 
+  sbatch ../unimputed_selection_pipeline.sl $p ; sleep 2; 
+done
+```
+
+Then run run_selscan.sl and run_nsl_selscan on each population results file
+```{r, engine = 'bash', eval = FALSE}
+# on nesi
+# working dir: Indiv_pops_results
+for p in $(find ./[A-Z]* -type d | grep -v xpehh | sed 's/\.\///g')
+do 
+  cd $p 
+  sbatch -J ihs_$p ../../run_selscan.sl $p
+  sbatch -J nsl_$p ../../run_nsl_selscan.sl $p
+  cd ../
+  sleep 5
+done
+```
+
+```{r, engine = 'bash', eval = FALSE}
+# on nesi
+# working dir: /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops_results
+# individual pops
+for p1 in CIM NZC NZM SAM TON
+do
+  for p2 in ACB ASW BEB CDX CEU CHB CHS CIM CLM EPN ESN FIN GBR GIH GWD IBS ITU JPT KHV LWK MSL MXL NAD NZC NZM PEL PJL PUR SAM STU TON TSI WPN YRI
+  do
+    if [[ $p1 != $p2 ]]
+    then
+      echo $p1 $p2
+      sbatch ../run_xpehh.sl $p1 $p2
+      sleep 5
+    fi
+  done
+done
+
+
+for p1 in EPN NAD WPN
+do
+  for p2 in ACB ASW BEB CDX CEU CHB CHS CIM CLM EPN ESN FIN GBR GIH GWD IBS ITU JPT KHV LWK MSL MXL NAD NZC NZM PEL PJL PUR SAM STU TON TSI WPN YRI
+  do
+    if [[ $p1 != $p2 ]]
+    then
+      echo $p1 $p2
+      sbatch ../run_xpehh.sl $p1 $p2
+      sleep 5
+    fi
+  done
+done
+
+
+
+
+# super pops
+for p in EUR EAS SAS AMR AFR
+do
+  sbatch ../run_xpehh.sl POL $p
+  sleep 5
+done
+
+# Don't actually want the comparisons between NAD and EPN or WPN, or the ones for EPN/WPN with NZM/CIM/SAM/TON
+rm -r NAD_{WPN,EPN}
+rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
+```
 -->
