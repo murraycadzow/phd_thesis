@@ -108,7 +108,7 @@ create_fst_dendro <- function(){
 
 ihs_dendro_plot <- function(){
   # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
-  mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-6-7-2017.RDS')
+  mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-15-12-2017.RDS')
   clus_c <- hclust(dist(t(mat_ihs), method="euclidean"), method = "complete")
   clus_r <- hclust(dist(mat_ihs, method="euclidean"), method = "complete")
   mat_ihs <- mat_ihs[clus_r$order,clus_c$order]
@@ -147,7 +147,7 @@ ihs_dendro_plot <- function(){
 
 nsl_dendro_plot <- function(){
   # data from rnotebooks/CoreExome/coreExome_1kg_ihs_nsl_clustering.Rmd
-  mat_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clustered_dist_mat-6-7-2017.RDS')
+  mat_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clustered_dist_mat-15-12-2017.RDS')
   clus_c <- hclust(dist(t(mat_nsl), method="euclidean"), method = "complete")
   clus_r <- hclust(dist(mat_nsl, method="euclidean"), method = "complete")
   mat_nsl <- mat_nsl[clus_r$order,clus_c$order]

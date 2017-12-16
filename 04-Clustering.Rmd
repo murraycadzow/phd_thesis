@@ -4,8 +4,15 @@
 the upper_sig_stats and  lower_sig_stats have a window size of 100 kb so therefore the genes that it says are in those windows might not apply to the 10 kb windows used for the clustering
 
 -->
+!!!!!!!!!!!!!!!!!!!!!!!
 
+!!!!!!!!!!!!!!!!!!!!!!!
 
+NEED TO UPDATE THE iHS/nSL CLUSTERS AS THE THRESHOLD WAS INCORRECT
+
+!!!!!!!!!!!!!!!!!!!!!!!
+
+!!!!!!!!!!!!!!!!!!!!!!!
 ```{r, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(knitr)
@@ -399,8 +406,8 @@ In the upper tail there were a total of `r create_windowSummaryTable() %>% filte
 ### Hierarchical Clustering of Selected Haplotypic Regions
 
 ```{r load_ihs_clus}
-mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-6-7-2017.RDS')
-clus_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
+mat_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clustered_dist_mat-15-12-2017.RDS')
+clus_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-15-12-2017.RDS')
 gr_ihs <- GenomicRanges::GRanges(as.data.frame(clus_ihs))
 ```
 
@@ -468,8 +475,8 @@ ggsave(last_plot(), file = 'images/04_clustering/nsl_dendros.png')
 <!-- nSL -->
 
 ```{r load_nsl_clus}
-mat_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clustered_dist_mat-6-7-2017.RDS')
-clus_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
+mat_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clustered_dist_mat-15-12-2017.RDS')
+clus_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-15-12-2017.RDS')
 gr_nsl <- GenomicRanges::GRanges(as.data.frame(clus_nsl))
 ```
 
@@ -535,7 +542,7 @@ Clustering on other diseases such as pd, macular degeneration, alzhimers and col
 
 (ref:goutdendros) _Urate and Gout Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(urate_goutGR$SYMBOL))` loci associated with urate and gout. Coloured by super population.
 
-```{r goutdendros, fig.cap='(ref:goutdendros)', fig.height=7}
+```{r goutdendros, fig.cap='(ref:goutdendros)', fig.height=7, message=FALSE}
 multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -648,7 +655,7 @@ flf did ok
 -->
 ```
   
-```{r obesitydendros, fig.cap='(ref:obesitydendros)', fig.height=7}
+```{r obesitydendros, fig.cap='(ref:obesitydendros)', fig.height=7, message = FALSE}
 multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = obesity$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = obesity$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -669,7 +676,7 @@ ggsave(multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggti
 
 (ref:t2ddendros) _Type 2 Diabetes Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(t2d_GR$SYMBOL))` loci associated with \gls{t2d}. Coloured by super population.
 
-```{r t2ddendros, fig.cap='(ref:t2ddendros)', fig.height=7}
+```{r t2ddendros, fig.cap='(ref:t2ddendros)', fig.height=7, message = FALSE}
 multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -732,7 +739,7 @@ fld not bad for all except POL
 
 (ref:kidneydendros) _Kidney Disease Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(kd_GR$SYMBOL))` loci associated with kidney disease. Coloured by super population.
 
-```{r kidneydendros, fig.cap='(ref:kidneydendros)', fig.height=7}
+```{r kidneydendros, fig.cap='(ref:kidneydendros)', fig.height=7, message = FALSE}
 multiplot(gene_dendros(gene_data = kd$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = kd$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = kd$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -793,7 +800,7 @@ has all stats
 
 (ref:metsyndendros) _Metabolic Syndrome Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(metsyn_GR$SYMBOL))` loci associated with metabolic syndrome. Coloured by super population.
 
-```{r metsyndendros, fig.cap='(ref:metsyndendros)', fig.height=7}
+```{r metsyndendros, fig.cap='(ref:metsyndendros)', fig.height=7, message = FALSE}
 multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = metsyn$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           gene_dendros(gene_data = metsyn$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
