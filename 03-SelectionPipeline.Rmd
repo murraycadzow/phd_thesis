@@ -318,7 +318,7 @@ For the frequency spectrum based intra population statistics of \gls{td}, \gls{f
 
 each population had a different distribution of values
 
-The super populations had similar summary statistics for measures of center and spread.
+The super populations had similar summary statistics for measures of centre and spread.
 
 
 
@@ -1948,7 +1948,7 @@ _Consecutive regions_
 
 Looking at regions of consecutively depressed score regions that also had either a significant \gls{ihs} or \gls{nsl} marker in them, there was a total of five regions that met this criteria. For \gls{td},  there was two regions, the first, a 290 kb region at chr2:24215002-24505001 covered _FAM228B_ and had a single significant marker for both \gls{ihs} and \gls{nsl}. The second,  was 470 kb at chr11:68105002-68575001, and included _LRP5_ and had a single significant marker for \gls{ihs}. \gls{flf} also had a region that covered LRP5 but at chr11:68085002-68355001 and was 270 kb long. For both \gls{flf} and \gls{fld}, there was a 250 kb region at chr16:3545002-3795001 that covered _DNASE1_ with a single marker for \gls{ihs} and \gls{nsl}, and also _TRAP1_ with two markers each for \gls{ihs} and \gls{nsl}. \gls{fwh} had a single 250 kb region that covered MYT1L at chr2:2015002-2265001 and had four significant markers for \gls{ihs} and three for \gls{nsl}. 
 
-There were three regions of consecutively depressed score that intersected obesity associated genes. There was a 240 kb region at chr3:52375002-52615001 that intersected _NT5DC2_ and _PBRM1_ for \gls{fld}. The 250 kb region of chr16:3545002-3795001 intersected  _NLRC3_ for both \gls{fld} and \gls{flf}. And the 310 kb region of chr12:124195002-124505001 intersected _DNAH10_, _ZNF664_, and _CCDC92._ for \gls{flf}. There was a single 280 kb region that intersected the metabolic syndrome associated gene of EDC4 at chr16:67835002-68115001 for \gls{td}. None of the regions that were had consecutively drepressed score that intersected genes associated with urate, \gls{t2d}, or kidney disease.
+There were three regions of consecutively depressed score that intersected obesity associated genes. There was a 240 kb region at chr3:52375002-52615001 that intersected _NT5DC2_ and _PBRM1_ for \gls{fld}. The 250 kb region of chr16:3545002-3795001 intersected  _NLRC3_ for both \gls{fld} and \gls{flf}. And the 310 kb region of chr12:124195002-124505001 intersected _DNAH10_, _ZNF664_, and _CCDC92._ for \gls{flf}. There was a single 280 kb region that intersected the metabolic syndrome associated gene of EDC4 at chr16:67835002-68115001 for \gls{td}. None of the regions that were had consecutively depressed score that intersected genes associated with urate, \gls{t2d}, or kidney disease.
 
 haplotypic results intersecting regions
 ```{r, eval = FALSE}
@@ -2290,7 +2290,7 @@ The \gls{nzm} population had the largest number of genes intersecting windows fr
 <!-- - all overrepresentation test: cellular component movement FE=4.47, P = 4.86e-2 -->
 <!--     - anatomical structure morphogenesis FE=3.94 P = 2.88e-2 -->
 
-The gene set over representation analysis using PantherDB had 'cellular component movement' with a fold-enrichment of 4.47 (P = 0.0486) and 'anatomical structure morphogeneis' with fold enrichment of 3.94 (P = 0.0288), as the only significant annotations, when all genes that met a threshold were used. 
+The gene set over representation analysis using PantherDB had 'cellular component movement' with a fold-enrichment of 4.47 (P = 0.0486) and 'anatomical structure morphogenesis' with fold enrichment of 3.94 (P = 0.0288), as the only significant annotations, when all genes that met a threshold were used. 
 
 Kegg
 
@@ -2666,26 +2666,30 @@ There were `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM
 
 
 Consectutive regions
+There were no consecutively depressed score regoins that intersected with genes associated with urate, obesity, \gls{t2d}, kidney disease, or metabolic syndrome. Regions of consecutive depressed score that also had significant makres for \gls{ihs} or \gls{nsl} in \gls{sam} covered three regions of the genome across two statistics. \gls{td} had two regions, the first was 400 kb at chr4:170025002-170425001 and had a single significant marker for \gls{ihs} in _NEK1_. The second region was 300 kb in length and was found at chr10:76685002-76985001. It had two markers that were significant  for \gls{ihs} and three for \gls{nsl} in _KAT6B_, two markers each for \gls{ihs} and \gls{nsl} at _SAMD8_, and two markers each fro \gls{ihs} and \gls{nsl} for DUSP13. \gls{flf} had a single 200 kb region at chr1:26465002-26665001 that had a single significant marker for \gls{nsl} in _CNKSR1_, and two markers for \gls{ihs} and three for \gls{nsl} in _AIM1L._
 
-no urate, obesity, t2d, kd, or metsyn
 
-haplotypic results intersecting regions
+<!-- no urate, obesity, t2d, kd, or metsyn -->
+
+<!-- haplotypic results intersecting regions -->
 ```{r, eval = FALSE}
 # find ihs/nsl intersecting the regions of consecutively depressed score
 consec_lower_regions %>% filter( pop == 'SAM') %>% inner_join(., bind_rows(sig_ihs_val, sig_nsl_val) %>% select(SYMBOL = genename, everything()), by = c('pop','SYMBOL')) %>% select(-contains('gene'))
 ```
 
-- td
-    - chr4:170025002-170425001 w=400000
-        - NEK1 ihs
-    - chr10:76685002-76985001 w=300000
-        - KAT6B 2x ihs, 3x nsl
-        - SAMD8 2x ihs, 2x nsl
-        - DUSP13 2x ihs, 2x nsl
-- flf
-    - chr1:26465002-26665001 w=200000
-        - CNKSR1 nsl
-        - AIM1L 2 x ihs, 3x nsl
+<!-- - td -->
+<!--     - chr4:170025002-170425001 w=400000 -->
+<!--         - NEK1 ihs -->
+<!--     - chr10:76685002-76985001 w=300000 -->
+<!--         - KAT6B 2x ihs, 3x nsl -->
+<!--         - SAMD8 2x ihs, 2x nsl -->
+<!--         - DUSP13 2x ihs, 2x nsl -->
+<!-- - flf -->
+<!--     - chr1:26465002-26665001 w=200000 -->
+<!--         - CNKSR1 nsl -->
+<!--         - AIM1L 2 x ihs, 3x nsl -->
+
+
 
 (ref:upsetSAM) Upset plot of number of genes that were significant between  statistics for \gls{sam}
 
@@ -2876,30 +2880,36 @@ lower
 
 Consectutive regions
 
-no urate, t2d, kd, or metsyn
+There were no consecutively depressed score regions that instersected genes asscociated with urate, \gls{t2d}, kidney disease, or metabolic syndrome. There was one region that intersected the obesity associated gene _CCR3_ for \gls{td} and was 260 kb in length at chr3:46035002-46295001. There were three regions with consecutively depressed score that also had significant markers for \gls{ihs} or \gls{nsl} in \gls{ton}. \gls{td} had two regions. The first similar to \gls{sam}, was at chr10:76685002-76985001 and spanned 300 kb and had three significant markers for \gls{ihs} and four for \gls{nsl} in _KAT6B_, three markers for both \gls{ihs} and \gls{nsl} in _SAMD8_, and two markers each for \gls{ihs} and \gls{nsl} in _DUSP13._ The second region at chr17:56125002-56415001 was 290 kb and had a single significant marker for \gls{ihs} in both EPX and LPO. \gls{flf} had a slightly shifted region that also covered _EPX_ and _LPO_, but also included a _RNF43_, all there genes had a single significant marker each for \gls{ihs}. The region was at chr17:56205002-56455001 and was 250 kb in length.
 
-obesity
-td chr3:46035002-46295001 w=260000 CCR3 
 
-haplotypic results intersecting regions
+
+<!-- no urate, t2d, kd, or metsyn -->
+
+<!-- obesity -->
+<!-- td chr3:46035002-46295001 w=260000 CCR3  -->
+
+<!-- haplotypic results intersecting regions -->
 ```{r, eval = FALSE}
 # find ihs/nsl intersecting the regions of consecutively depressed score
 consec_lower_regions %>% filter( pop == 'TON') %>% inner_join(., bind_rows(sig_ihs_val, sig_nsl_val) %>% select(SYMBOL = genename, everything()), by = c('pop','SYMBOL')) %>% select(-contains('gene'))
 ```
 
--td
-    - chr10:76685002-76985001 w=300000
-        - KAT6B 3x ihs, 4x nsl
-        - SAMD8 3x ihs, 3x nsl
-        - DUSP13 2x ihs, 2x nsl
-    - chr17:56125002-56415001 w=290000
-        - EPX ihs
-        - LPO ihs
-- flf
-    - chr17 56205002 56455001 250000
-        - EPX ihs
-        - LPO ihs
-        - RNF43 ihs
+<!-- -td -->
+<!--     - chr10:76685002-76985001 w=300000 -->
+<!--         - KAT6B 3x ihs, 4x nsl -->
+<!--         - SAMD8 3x ihs, 3x nsl -->
+<!--         - DUSP13 2x ihs, 2x nsl -->
+<!--     - chr17:56125002-56415001 w=290000 -->
+<!--         - EPX ihs -->
+<!--         - LPO ihs -->
+<!-- - flf -->
+<!--     - chr17 56205002 56455001 250000 -->
+<!--         - EPX ihs -->
+<!--         - LPO ihs -->
+<!--         - RNF43 ihs -->
+
+
 
 (ref:upsetTON) TON Upset Plot
 
