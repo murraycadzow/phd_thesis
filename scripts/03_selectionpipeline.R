@@ -49,16 +49,14 @@ create_sel_summary_table <- function(s){
 }
 
 ## load ihs and nsl data
-#ihs_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
-#sig_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_clus-14-7-2017.RDS')
+ihs_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-15-12-2017.RDS')
+ihs_clus <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_clus-15-12-2017.RDS')
 sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
 
-
-
-#ihs_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-14-7-2017.RDS')
-#nsl_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
+nsl_clus_regions <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-15-12-2017.RDS')
+nsl_clus <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_clus-15-12-2017.RDS')
 sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS')  %>% filter(abs(statvalue) > 2.6 )
-#sig_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_clus-14-7-2017.RDS')
+
 
 #nsl_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
 
@@ -75,25 +73,33 @@ load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called 
 load('~/data/gwas_catalog/zhang_and_extra_18-11-2017.RData') # brings in objects called malaria_GR, zhang_immune_GR, neurological_GR, psychiatric_GR
 
 # made from Thesis/selectionpipeline/consec_regions.R
-consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-17-10-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
-consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-17-10-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-15-12-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+# this is incorrect
+consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-15-12-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
 
 
 plot_gene <- function(p, g){
   wh <- genesymbol[g]
   wh <- range(wh, ignore.strand = TRUE)
-  
+  wh_df <- data.frame(wh)
   stats_plot<- bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == p, genename == g)%>% mutate(pop = p, statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., lower_sig_stats %>% filter(pop == p, SYMBOL == g) %>% select(contains("chrom"), statname, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'bottom')
   #ggbio::fixed(stats_plot) <- TRUE
   
+  marker_plot <- markers %>% mutate(chrom = paste0('chr', chrom), chrom_end = chrom_start +1) %>% filter(chrom %in% wh_df$seqnames, chrom_start >= wh_df$start -5000, chrom_start <= wh_df$end + 5000) %>% GRanges() %>%  ggbio::autoplot(. ) + theme(legend.position = 'none')
   
   gene_plot <- ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")
   #ggbio::fixed(gene_plot) <- TRUE
   hasAxis(gene_plot) <- TRUE
-  ggbio::tracks( gene_plot, stats_plot ) + ggtitle(g)
+  ggbio::tracks(marker_plot, gene_plot, stats_plot ) + ggtitle(g)
 }
 
+#load the pathways tables from panther
+panther <- list()
+for (file in list.files(path = 'data/Panther/')){
+  panther[[file]] <- read.delim(paste0('data/Panther/',file), header = FALSE, stringsAsFactors = FALSE) %>% mutate(file  = file, pop = substring(file, 1, 3))
+}
 
+# load the kegg pathways analysis
 kegg <- list()
 list.files('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', include.dirs = FALSE, pattern = '*.txt')
 for(file in list.files('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', include.dirs = FALSE, pattern = '*.txt')){
@@ -131,8 +137,8 @@ extract_sig_super <- function(superpopname){
     select(pop, superpop, 'SYMBOL' = genename) %>% 
     filter(superpop == superpopname) %>% 
     inner_join(., lower_sig_stats %>%
-                left_join(., panel %>% select(pop, "superpop" = super_pop) %>% distinct(), by = 'pop')%>% 
-                select(superpop, SYMBOL, pop) %>% filter(superpop == superpopname), by = c('pop','superpop', "SYMBOL")) %>% 
+                 left_join(., panel %>% select(pop, "superpop" = super_pop) %>% distinct(), by = 'pop')%>% 
+                 select(superpop, SYMBOL, pop) %>% filter(superpop == superpopname), by = c('pop','superpop', "SYMBOL")) %>% 
     filter(!is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique()
 }
 
