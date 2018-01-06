@@ -1,4 +1,4 @@
-panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
+panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE) %>% filter(!pop %in% c('NAD','WPN','POL','EPN'))
 markers <- read.table('~/data/NZ_coreExome_1kgp/nz_1kg_markers.txt', stringsAsFactors = FALSE, header = FALSE)
 names(markers) <- c("chrom","chrom_start","marker","ref","alt")
 gwas_cat <- read.delim('~/data/gwas_catalog//gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv', header=TRUE, stringsAsFactors = FALSE, sep='\t')
@@ -61,7 +61,8 @@ sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_g
 #nsl_clus <-readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-14-7-2017.RDS')
 
 #100kb window 10kb slide pairwise fst
-pol_fst <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3.14-11-2017.RDS')
+# FST can't be negative. This keeps NAs
+pol_fst <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3.14-11-2017.RDS') %>% mutate_at(.vars = vars(-contains('chrom')), function(x){ifelse(x > 0, x, 0)})
 
 # load xpehh
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
