@@ -63,6 +63,7 @@ sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_g
 #100kb window 10kb slide pairwise fst
 # FST can't be negative. This keeps NAs
 pol_fst <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3.14-11-2017.RDS') %>% mutate_at(.vars = vars(-contains('chrom')), function(x){ifelse(x > 0, x, 0)})
+pol_fst_99 <- pol_fst %>%  gather('pop', "fst", -contains('chrom')) %>% group_by(pop) %>% filter(fst > quantile(fst, 0.99, na.rm = TRUE))
 
 # load xpehh
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
