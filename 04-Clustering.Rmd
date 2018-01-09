@@ -1,4 +1,4 @@
-# Clustering of Selection Statistics
+# Clustering of Selection Statistics {#clustering}
 
 <!--
 the upper_sig_stats and  lower_sig_stats have a window size of 100 kb so therefore the genes that it says are in those windows might not apply to the 10 kb windows used for the clustering
@@ -143,7 +143,7 @@ multiplot(gene_dendros(gene_data = mat_d_list[['td_chr']]) + ggtitle("Tajima's D
 
 \FloatBarrier
 
-#### F~ST~
+#### F~ST~ {#wholeFst}
 
 (ref:wholechrfst) _F~ST~_ Hierarchical clustering on chromosomal F~ST~ using Euclidean distance and complete linkage. Coloured by super population.
 
