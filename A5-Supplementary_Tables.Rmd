@@ -109,12 +109,12 @@ create_sel_stat_table <- function(sel_stat, cap){
 ```
 
 ```{r superGlobalSummary, echo = FALSE}
-global_super_summary %T>% {write.csv(global_super_summary, file = '~/Git_repos/bookdown_thesis/Appendices/03-global-super-summary.csv', row.names = FALSE, quote = FALSE) } %>% head(0) %>%  kable(., caption ='(\\#tab:superGlobalSummary)', digits = 3, booktabs =TRUE) %>% footnote(general = "Electronic supplement: Appendices/03-global-super-summary.csv")
+global_super_summary %T>% {write.csv(global_super_summary, file = '~/Git_repos/bookdown_thesis/Appendices/03-global-super-summary.csv', row.names = FALSE, quote = FALSE) } %>% head(0) %>%  kable(., caption ='(\\#tab:superGlobalSummary) Global Super Population Summary Table', digits = 3, booktabs =TRUE) %>% footnote(general = "Electronic supplement: Appendices/03-global-super-summary.csv")
 ```
 
 
 ```{r, echo = FALSE}
-global_summary  %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(stat, super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>% arrange(stat,super_pop, pop) %>%  data.frame() %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-gsTable.csv', row.names = FALSE, quote = FALSE)} %>% head(0) %>% kable(., caption = '(\\#tab:gsTable)', format = 'latex', booktabs = TRUE) %>% footnote(general = "Appendices/03-gsTable.csv")
+global_summary  %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(stat, super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>% arrange(stat,super_pop, pop) %>%  data.frame() %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-gsTable.csv', row.names = FALSE, quote = FALSE)} %>% head(0) %>% kable(., caption = '(\\#tab:gsTable) Global Summary Table', format = 'latex', booktabs = TRUE) %>% footnote(general = "Appendices/03-gsTable.csv")
 ```
 
 
@@ -141,10 +141,26 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
 
 ```{r intrasfsPol}
 # create a table of all of the loci that had windows in the 1st percentile and < 0 in value
-lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chrom, statname, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(statname, chr) %>% select(statname, everything(), -chr) %>% filter(!is.na(SYMBOL)) %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-intrasfsPol.csv', row.names = FALSE, quote = TRUE)} %>% head(0) %>% kable(., caption = '(\\#tab:intrasfsPol) ', booktabs = TRUE, format = 'latex') %>% footnote(general = "Electronic Supplement: Appendices/03-intrasfsPol.csv", escape = FALSE)
+lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chrom, statname, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(statname, chr) %>% select(statname, everything(), -chr) %>% filter(!is.na(SYMBOL)) %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-intrasfsPol.csv', row.names = FALSE, quote = TRUE)} %>% head(0) %>% kable(., caption = '(\\#tab:intrasfsPol) All genes that had a window in the 1st percentile and value < 0 from a Polynesian population', booktabs = TRUE, format = 'latex') %>% footnote(general = "Electronic Supplement: Appendices/03-intrasfsPol.csv", escape = FALSE)
 ```
 
+```{r}
+sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
+sig_ihs_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, iHS = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-ihs-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:ihsPolgenes)') %>% kableExtra::footnote("Appendices/03-ihs-Pol.csv", threeparttable = TRUE)
+rm(sig_ihs_val)
+```
 
+```{r}
+sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
+sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, nSL = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-nsl-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:nslPolgenes)') %>% kableExtra::footnote("Appendices/03-nsl-Pol.csv", threeparttable = TRUE)
+rm(sig_nsl_val)
+```
+
+```{r, eval = FALSE}
+xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
+
+rm(xpehh)
+```
 
 
 ```{r tdPol, results = 'asis', warning = FALSE, eval = FALSE}
