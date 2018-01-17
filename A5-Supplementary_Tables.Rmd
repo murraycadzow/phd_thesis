@@ -1,5 +1,6 @@
 ```{r, messages = FALSE, warning=FALSE, include=FALSE}
 #knitr::opts_knit$set(root.dir = '/home/murraycadzow/data/NZ_coreExome_1kgp/' )
+knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(formattable)
 library(knitr)
@@ -9,13 +10,84 @@ library(phdFunctions)
 ```
 # Appendix E
 
-## Tables
+## Electronic Supplements
 
-This is a test sentence to find out if table \@ref(tab:meanSegSitesTable) is referenceable and a really long table is \@ref(tab:selStatSummary)
-<!--
 
--->
+
+```{r, eval = FALSE, echo = FALSE}
+gs_td_table <- create_sel_summary_table("Tajima.D")
+gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+```{r, eval = FALSE}
+gs_fwh_table <-create_sel_summary_table("Fay.Wu.H")
+
+gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+
+```{r, eval = FALSE}
+gs_fld_table <- create_sel_summary_table("Fu.Li.D")
+
+gs_fld_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+```{r, eval = FALSE}
+gs_flf_table <- create_sel_summary_table("Fu.Li.F")
+
+gs_flf_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFlfTable) \\gls{flf} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+```{r, eval = FALSE}
+gs_ze_table <- create_sel_summary_table("Zeng.E")
+
+gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsZeTable) \\gls{ze} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+
+
+```{r, results = 'asis', eval = FALSE}
+# modify so that the full table comes out
+pander::pandoc.table(chr_summary %>% mutate(mean = sapply(mean, three_dp), sd = sapply(sd, three_dp), lower_1 = sapply(lower_1, three_dp), upper_99 = sapply(upper_99, three_dp), median = sapply(median, three_dp), min = sapply(min,three_dp), max = sapply(max, three_dp)) %>% arrange(chrom,pop,stat) %>% head() %>% data.frame(),  caption = '(\\#tab:selStatSummary) Summary of the selection test statistics for all populations and all autosomes', split.tables = 80, style = 'multiline', justify = 'lccrrrrrrr')
+```
+
+
+
+```{r meanSegSitesTable, results='asis', echo = FALSE, eval=FALSE}
+create_sel_stat_table("n.segregating.sites", "Mean Number of Segregating Sites")
+```
+
+<!-- Tajimas D Table -->
+```{r meanTDtable, results='asis', echo = FALSE, eval = FALSE}
+create_sel_stat_table("Tajima.D", "Mean Tajima's D")
+```
+
+<!-- Fay and Wu's H Table -->
+```{r meanFWHtable, results='asis', echo = FALSE, eval = FALSE}
+create_sel_stat_table("Fay.Wu.H", "Mean Fay and Wu's H")
+```
+
+<!-- Fu and Li D Table -->
+```{r meanFLDtable, results='asis', echo = FALSE, eval = FALSE}
+create_sel_stat_table("Fu.Li.D","Mean Fu and Li D")
+```
+
+<!-- Fu and Li F Table -->
+```{r, results='asis', echo = FALSE, eval = FALSE}
+create_sel_stat_table("Fu.Li.F","Mean Fu and Li F")
+```
+
+<!--Zeng E Table -->
+```{r, results='asis', echo = FALSE, eval = FALSE}
+create_sel_stat_table("Zeng.E", "Mean Zeng E")
+```
+
 ```{r}
+rm(list=ls())
+```
+
+
+```{r, echo = FALSE}
 # This is created by coreExome_100kb_windows_intra_filtered.Rmd
 chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS")
 pops <- list()
@@ -25,6 +97,7 @@ for(p in unique(panel$pop)){
 }
 
 global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
+global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
 
 create_sel_summary_table <- function(s){
 global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
@@ -35,88 +108,22 @@ create_sel_stat_table <- function(sel_stat, cap){
 }
 ```
 
-
-```{r}
-gs_td_table <- create_sel_summary_table("Tajima.D")
-
-gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-```{r}
-gs_fwh_table <-create_sel_summary_table("Fay.Wu.H")
-
-gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```{r superGlobalSummary, echo = FALSE}
+global_super_summary %T>% {write.csv(global_super_summary, file = '~/Git_repos/bookdown_thesis/Appendices/03-global-super-summary.csv', row.names = FALSE, quote = FALSE) } %>% head(0) %>%  kable(., caption ='(\\#tab:superGlobalSummary)', digits = 3, booktabs =TRUE) %>% footnote(general = "Electronic supplement: Appendices/03-global-super-summary.csv")
 ```
 
 
-```{r}
-gs_fld_table <- create_sel_summary_table("Fu.Li.D")
-
-gs_fld_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-```{r}
-gs_flf_table <- create_sel_summary_table("Fu.Li.F")
-
-gs_flf_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFlfTable) \\gls{flf} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-```{r}
-gs_ze_table <- create_sel_summary_table("Zeng.E")
-
-gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsZeTable) \\gls{ze} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```{r, echo = FALSE}
+global_summary  %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(stat, super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>% arrange(stat,super_pop, pop) %>%  data.frame() %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-gsTable.csv', row.names = FALSE, quote = FALSE)} %>% head(0) %>% kable(., caption = '(\\#tab:gsTable)', format = 'latex', booktabs = TRUE) %>% footnote(general = "Appendices/03-gsTable.csv")
 ```
 
 
-### modify so that the full table comes out
-```{r, results = 'asis', eval = FALSE}
-pander::pandoc.table(chr_summary %>% mutate(mean = sapply(mean, three_dp), sd = sapply(sd, three_dp), lower_1 = sapply(lower_1, three_dp), upper_99 = sapply(upper_99, three_dp), median = sapply(median, three_dp), min = sapply(min,three_dp), max = sapply(max, three_dp)) %>% arrange(chrom,pop,stat) %>% head() %>% data.frame(),  caption = '(\\#tab:selStatSummary) Summary of the selection test statistics for all populations and all autosomes', split.tables = 80, style = 'multiline', justify = 'lccrrrrrrr')
-```
-
-
-
-```{r meanSegSitesTable, results='asis', echo = FALSE, eval=FALSE}
-create_sel_stat_table("n.segregating.sites", "Mean Number of Segregating Sites")
-```
-
-Tajimas D Table
-```{r meanTDtable, results='asis', echo = FALSE, eval = FALSE}
-create_sel_stat_table("Tajima.D", "Mean Tajima's D")
-```
-
-Fay and Wu's H Table
-```{r meanFWHtable, results='asis', echo = FALSE, eval = FALSE}
-create_sel_stat_table("Fay.Wu.H", "Mean Fay and Wu's H")
-```
-
-Fu and Li D Table
-```{r meanFLDtable, results='asis', echo = FALSE, eval = FALSE}
-create_sel_stat_table("Fu.Li.D","Mean Fu and Li D")
-```
-
-Fu and Li F Table
-```{r, results='asis', echo = FALSE, eval = FALSE}
-create_sel_stat_table("Fu.Li.F","Mean Fu and Li F")
-```
-
-Zeng E Table
-```{r, results='asis', echo = FALSE, eval = FALSE}
-create_sel_stat_table("Zeng.E", "Mean Zeng E")
-```
-
-```{r}
-rm(list=ls())
-```
-\clearpage
-
-## Chapter 3 Tables
-
-```{r, warning = FALSE}
+```{r, warning =TRUE}
 lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
-      lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
+      lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
@@ -125,32 +132,39 @@ upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/1
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(
     lapply(names(upper_sig_stats[[y]]), function(x){
-      upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
+      upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
 
 ```
 
-Truncated to be just 6 lines for the tables of all loci
-
-```{r tdPol, results = 'asis', warning = FALSE}
-lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% head() %>% kable(., booktab = TRUE, longtable = TRUE, caption = "(\\#tab:lowersigtdPol) Loci that had a Tajima's D in the lower tail that was only found in a Polynesian population")
+```{r intrasfsPol}
+# create a table of all of the loci that had windows in the 1st percentile and < 0 in value
+lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chrom, statname, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(statname, chr) %>% select(statname, everything(), -chr) %>% filter(!is.na(SYMBOL)) %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-intrasfsPol.csv', row.names = FALSE, quote = TRUE)} %>% head(0) %>% kable(., caption = '(\\#tab:intrasfsPol) ', booktabs = TRUE, format = 'latex') %>% footnote(general = "Electronic Supplement: Appendices/03-intrasfsPol.csv", escape = FALSE)
 ```
 
-```{r fwhPol, results='asis', warning= FALSE}
-lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr)%>% head() %>%  kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfwhPol) Loci that had a Fay and Wu's H in the lower tail that was only found in a Polynesian population")
+
+
+
+```{r tdPol, results = 'asis', warning = FALSE, eval = FALSE}
+# write table to csv file and create just the header of the table in the pdf
+lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Tajima.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %T>%  {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03_tdPol.csv', row.names = FALSE, quote = TRUE)} %>% head(0) %>%  kable(., booktabs = TRUE, caption = "(\\#tab:lowersigtdPol) Loci that had a Tajima's D in the lower tail that was only found in a Polynesian population", format = 'latex') %>% footnote(general = "Electronic Supplement: Appendices/03\\\\_tdPol.csv", escape = FALSE)
 ```
 
-```{r fldPol, results = 'asis', warning = FALSE}
-lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% head() %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfldPol) Loci that had a Fu and Li's D in the lower tail that was only found in a Polynesian population")
+```{r fwhPol, results='asis', warning= FALSE, echo = FALSE, eval = FALSE}
+lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr)%>%  write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03_fwhPol.csv', row.names = FALSE, quote = TRUE) # %>%  kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfwhPol) Loci that had a Fay and Wu's H in the lower tail that was only found in a Polynesian population")
 ```
 
-```{r flfPol, results = 'asis', warning = FALSE}
+```{r fldPol, results = 'asis', warning = FALSE, echo = FALSE, eval = FALSE}
+lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03_fldPol.csv', row.names = FALSE, quote = TRUE) # %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfldPol) Loci that had a Fu and Li's D in the lower tail that was only found in a Polynesian population")
+```
+
+```{r flfPol, results = 'asis', warning = FALSE, echo = FALSE, eval = FALSE}
 lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% head() %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigflfPol) Loci that had a Fu and Li's F in the lower tail that was only found in a Polynesian population")
 ```
 
-```{r zePol, results='asis'}
+```{r zePol, results='asis', eval = FALSE}
 lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Zeng.E', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>%head() %>%  kable(.,booktab = TRUE, longtable = TRUE, caption = "(\\#tab:lowersigzePol) Loci that had a Zeng's E in the lower tail that was only found in a Polynesian population")
 ```
 
@@ -233,9 +247,4 @@ bind_rows(list(
   
   
 )) %>% select(stat, Type, everything())  %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf("%.2f",.))) %>% arrange(Type) %>%  data.frame %>% pander::pandoc.table(., caption = "(\\#tab:exclusivity) Exclusivity")#knitr::kable(., caption = "Exclusivity", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) 
-
-
-
-
-
 ```
