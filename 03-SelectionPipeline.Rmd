@@ -116,7 +116,7 @@ Bigman2010 has a custom Tajima's D that is created to be similar to iHS in terms
 
 The selection of individuals, and preliminary data preparation for the selection data set is detailed in Section \@ref(selectionDataset). It consisted of combining 500 individuals (100 per population) from the Genetics of Gout in Aotearoa study, who had been genoypted on the Illumina CoreExome v24 mircoarray with 2504 individuals from the 1000 Genomes Project. 
 
-The selection and neutrality statistics were calculated for individuals populations using a combination of two main software packages, PopGenome in R, and selectionTools v1.1. PopGenome was used to calculate the intra population frequency spectrum based tests for selection and neutrality. Haplotypic stats of \gls{ihs}, \gls{nsl}, and \gls{xpehh} were calculated using the selectionTools pipeline with significance set as being the 99th percentile for the absolute normalised score. Frequency based statistics were also generated such as \gls{daf} and F~ST~.
+<!-- The selection and neutrality statistics were calculated for individuals populations using a combination of two main software packages, PopGenome in R, and selectionTools v1.1. PopGenome was used to calculate the intra population frequency spectrum based tests for selection and neutrality. Haplotypic stats of \gls{ihs}, \gls{nsl}, and \gls{xpehh} were calculated using the selectionTools pipeline with significance set as being the 99th percentile for the absolute normalised score. Frequency based statistics were also generated such as \gls{daf} and F~ST~. -->
 
 ### Calculation of Selection and Neutrality Statistics
 
@@ -131,7 +131,7 @@ The calculation of \gls{ihs}, \gls{nsl}, and \gls{xpehh} were calculated and nor
 
 ### Pathway enrichment analysis
 
-Pathway enrichment analysis was performed by taking genes that intersected the 1st percentile windows for the \gls{sfs} based statistics that also had a value < 0, or genes that had a significant marker for \gls{ihs} or \gls{nsl} and inputting them into enrichr ^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016] and then exporting the KEGG 2016 pathway table. 
+Pathway enrichment analysis was performed by taking genes that intersected the 1st percentile windows for the \gls{sfs} based statistics that also had a value < 0, or genes that had a significant marker for \gls{ihs} or \gls{nsl} and inputting them into Enrichr ^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016] and then exporting the KEGG 2016 pathway table. 
 
 (ref:enrichraccess) http://amp.pharm.mssm.edu/Enrichr/, accessed 22 November 2017
 
@@ -153,12 +153,9 @@ fdr_high_tab <- fdr_high %>%
 
 > This paragraph needs to do a brief overview and general talk about how there was an overall pattern for the SFS stats and link out to the stat specific stuff
 
-Results will be split into two themes, the first will be regions of the genome that show evidence of selection in the Polynesian populations, the second will be focusing specifically on selection of urate and associated loci in Polynesian populations.
+Results will be split into two themes, the first will be regions of the genome that show evidence of selection in the Polynesian populations, the second will be focusing specifically on selection of urate and associated loci in Polynesian populations. For reporting there will be a focus on the 1st percentile/lower tail for the intra-population statistics as this is the distribution end that can correspond with positive selection.
 
-Both \gls{ihs} and the related \gls{nsl} were calculated and significance determined after normalising and taking the 1% most extreme. The markers having been identified as significant were then clustered using the DBSCAN package in R. For more details refer to Section \@ref(selectionTools). This was done to identify regions that contained multiple significant \gls{snp}s.
-
-
-For the frequency spectrum based intra population statistics of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} there were population specific distributions. There was similarity however between the populations within a super population. The Polynesian populations in general had a left shifted distribution and had the lowest means, medians, and 1st percentiles compared to the other super population groups (Table \@ref(tab:superGlobalSummary)). This observation was the basis of the investigation that formed chapter \@ref(clustering). 
+For the frequency spectrum based intra population statistics of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} there were population specific distributions. There was similarity however between the populations within a super population. The Polynesian populations in general had a left shifted distribution and had the lowest means, medians, and 1st percentiles compared to the other super population groups (Table \@ref(tab:superGlobalSummary)). This observation was the basis of the investigation that formed Chapter \@ref(clustering). 
 
 
 - fdr plots in appendix
@@ -221,17 +218,17 @@ ihs_nsl_clus_tab <- left_join(ihs_clus %>% filter(statid == 26) %>% select(pop,C
   
 ihs_nsl_clus_tab <- ihs_nsl_clus_tab %>% left_join(., ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% mutate(pop = paste0(super_pop,'_',pop), by = 'pop'), by = 'pop')  %>% select(-super_pop) %>% select(pop, n_ihs_snps, n_nsl_snps, n, n_ihs_clus, n_nsl_clus)
 
-ihs_nsl_clus_tab %>% 
-  mutate(pop = substr(pop, 5,7)) %>% 
-  kable(., booktabs = TRUE,
-        col.names = c("Population", "iHS SNPs (n)", "nSL SNPs (n)", "Both (n)", "iHS Clusters (n)", 'nSL Clusters (n)'), 
-        caption = '(\\#tab:iHSnSLClusSum) Number of significant SNPs and clustered regions for iHS and nSL by population.') %>%
-  kableExtra::group_rows("AFR", 1, 7) %>% 
-  kableExtra::group_rows("AMR", 8, 11) %>% 
-  kableExtra::group_rows("EAS", 12, 16) %>% 
-  kableExtra::group_rows("EUR", 17, 22) %>% 
-  kableExtra::group_rows("POL", 23, 26) %>% 
-  kableExtra::group_rows("SAS", 27,31)
+# ihs_nsl_clus_tab %>% 
+#   mutate(pop = substr(pop, 5,7)) %>% 
+#   kable(., booktabs = TRUE,
+#         col.names = c("Population", "iHS SNPs (n)", "nSL SNPs (n)", "Both (n)", "iHS Clusters (n)", 'nSL Clusters (n)'), 
+#         caption = '(\\#tab:iHSnSLClusSum) Number of significant SNPs and clustered regions for iHS and nSL by population.') %>%
+#   kableExtra::group_rows("AFR", 1, 7) %>% 
+#   kableExtra::group_rows("AMR", 8, 11) %>% 
+#   kableExtra::group_rows("EAS", 12, 16) %>% 
+#   kableExtra::group_rows("EUR", 17, 22) %>% 
+#   kableExtra::group_rows("POL", 23, 26) %>% 
+#   kableExtra::group_rows("SAS", 27,31)
 
 # add on number that were shared
 #add on number of single snp clusters?
@@ -250,16 +247,16 @@ fdr_low_tab %>%
   mutate_at(vars(contains('.x'), contains('.y')), funs(three_dp)) %>%
   mutate(fdr_low = paste0(FDR.x, " (", lowerCI.x,', ', upperCI.x,')'), fdr_high = paste0(FDR.y, " (", lowerCI.y,', ', upperCI.y,')')) %>%
   select(pop, lowest_quant, fdr_low, highest_quant, fdr_high) %>%
-  kable(., col.names = c("Population","Percentile", "FDR (95% CI)", "Percentile", "FDR (95% CI)"), caption = "(\\#tab:fdrpol) False discovery rate for windowed frequency based statistics by population.", booktabs = TRUE, format = 'latex') %>% 
+  kable(., col.names = c("Population","Percentile", "FDR (95% CI)", "Percentile", "FDR (95% CI)"), caption = "(\\#tab:fdrpol) False discovery rate for windowed frequency based statistics by population.", booktabs = TRUE, format = 'latex') %>%
   kableExtra::add_header_above(., c("","Lower tail" = 2, "Upper tail" = 2) ) %>% 
   kableExtra::group_rows("Fay and Wu's H",1, 4) %>%
   kableExtra::group_rows("Fu and Li's D", 5, 8) %>%
   kableExtra::group_rows("Fu and Li's F", 9, 12) %>%
   kableExtra::group_rows("Tajima's D", 13, 16) %>%
   kableExtra::group_rows("Zeng's E", 17, 20) %>%
-  kableExtra::footnote(general = "Percentile is the more conservative FDR quantile bin of the permuted data that was equivalent to either the 1st (lower tail) or 99th (upper tail) percentile in the observed data" )
+  kableExtra::footnote("Percentile is the more conservative FDR quantile bin of the permuted data that was equivalent to either the 1st (lower tail) or 99th (upper tail) percentile in the observed data", general_title = "", threeparttable = TRUE )
 ```
-The \glsdesc{fdr} was calculated for \gls{td}, \gls{fld}, \gls{flf}, \gls{fwh}, and \gls{ze}. To calculate the \gls{fdr}, 5000 permutations were generated, each randomly shuffling the genotypes of markers by marker position (i.e shuffling rows only). For each permutation by statistic, the values for quantiles 'bins' ranging from 0.01 to 0.1% at 0.01 increments,  0.1 to 1% at 0.1% increments, 1 to 5% at 1% increments, and 10% for both tails of the distribution. The permutations were then combined and the median and 95% confidence intervals calculated for each of the quantile 'bins'. The enrichment for each quantile bin was then calculated by comparing the number of windows that were observed in the data compared to the number expected from the permutations. \Gls{fdr} was then estimated by using the value for the 1st or 99th percentile and finding the nearest conservative quantile bin using the median, that was either larger for the lower tail, or smaller for the upper tail and taking the inverse of enrichment for the bin (Table \@ref(tab:fdrpol)). This estimate will be conservative compared to the true \gls{fdr}.
+In order to control for false positives the \gls{fdr} was calculated for \gls{td}, \gls{fld}, \gls{flf}, \gls{fwh}, and \gls{ze}. To calculate the \gls{fdr}, 5000 permutations were generated, each randomly shuffling the genotypes of markers by marker position (i.e. shuffling rows only). For each permutation by statistic, the values for quantiles 'bins' ranging from 0.01 to 0.1% at 0.01 increments,  0.1 to 1% at 0.1% increments, 1 to 5% at 1% increments, and 10% for both tails of the distribution. The permutations were then combined and the median and 95% confidence intervals calculated for each of the quantile 'bins'. The enrichment for each quantile bin was then calculated by comparing the number of windows that were observed in the data compared to the number expected from the permutations. \Gls{fdr} was then estimated by using the value for the 1st or 99th percentile and finding the nearest conservative quantile bin using the median, that was either larger for the lower tail, or smaller for the upper tail and taking the inverse of enrichment for the bin (Table \@ref(tab:fdrpol)). This estimate will be conservative compared to the true \gls{fdr}.
 
 The \gls{fdr} for \gls{ze} was 1.0 for all Polynesian populations in the lower end of the distribution and the 1st percentile of the data fell within the 2nd percentile bin from the permutations. Whereas, for \gls{td} and \gls{fwh} the quantile bin was `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(min(lowest_quant))`%, with the maximum upper confidence interval being `r fdr_low_tab %>%filter(stat %in% c('Tajima.D','Fay.Wu.H')) %>% summarise(three_dp(max(upperCI)))`. For the purpose of reporting on individual statistics, a threshold of 0.1 was applied, to reduce the expected false positive rate to be less than 1 in 10 on average. \Gls{fld}, \gls{fld}, and \gls{ze} all had an \gls{fdr} above this threshold for the Polynesian populations and will be reported on only as additional evidence when they overlap with other results or were a region of consecutively depressed score.
 
@@ -480,7 +477,7 @@ kable(., format = 'latex', booktab = TRUE, caption = '(\\#tab:xpehhSummary) Numb
   kableExtra::group_rows("EUR", 17,22) %>% 
   kableExtra::group_rows("POL",23, 26)%>% 
   kableExtra::group_rows("SAS", 27, 31) %>% 
-  kableExtra::add_footnote(., threeparttable = TRUE, label = 'Numbers in parentheses are the percent of markers with significant XP-EHH also significant in iHS and percent of markers significant in nSL for the column population.')
+  kableExtra::footnote('Numbers in parentheses are the percent of markers with significant XP-EHH also significant in iHS and percent of markers significant in nSL for the column population.', threeparttable = TRUE)
 
 xpehh_ihs_per <- xpehh_summary %>% mutate(cim_ihs_per = CIM_ihs/CIM *100, nzm_ihs_per = NZM_ihs/NZM*100, sam_ihs_per = SAM_ihs/SAM*100, ton_ihs_per = TON_ihs/TON*100 ) %>% select(pop2, contains('per'))
 xpehh_nsl_per <- xpehh_summary %>% mutate(cim_nsl_per = CIM_nsl/CIM *100, nzm_nsl_per = NZM_nsl/NZM*100, sam_nsl_per = SAM_nsl/SAM*100, ton_nsl_per = TON_nsl/TON*100 ) %>% select(pop2, contains('per'))
@@ -530,9 +527,6 @@ xpehh %>% group_by(pop1, pop2, genename) %>% tally() %>% arrange(genename) %>% g
 #look at the number of urate genes that were significant for the polynesian populations
 xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% urate_goutGR$SYMBOL) %>% group_by(pop1,pop2, genename) %>%tally() %>% spread(pop1, n, fill = "") %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = "pop2" ) %>% select(super_pop, everything()) %>% arrange(genename,super_pop,pop2) %>% kable(., caption = 'urate genes significant in Polynesians', longtable =  TRUE)
 ```
-
-
-
 
 ```{r, eval = FALSE, include = FALSE}
 # DOESN'T WORK THE WAY I WANT IT TO
@@ -659,7 +653,9 @@ The general format that I want for this section is to get:
 
 There were numerous genes that were associated with urate and co-morbidities, with a large number having at least a single window or \gls{snp} meeting a threshold for a single statistic. Genes reported were selected based on having a significant haplotypic result in multiple Polynesian populations, or having multiple statistics meeting the significance threshold in at least a single Polynesian population. Another criteria was the locus only having the main significant result in Polynesian populations, with minimal signal in other populations, i.e. multiple significant markers in Polynesian populations and one or two in other populations.
 
-In this subsection results will be presented first for those that were in common between all Polynesian populations and the sub-groups of East and West Polynesia. Following this the results for individual Polynesian populations will be presented.
+In this subsection results will be presented first for those that were in common between all Polynesian populations and the sub-groups of East and West Polynesia. Following this the results for individual Polynesian populations will be presented. 
+
+> A complete table of all genes that had results meeting the various thresholds for the various statistics used can be found in tables \@ref(tab:intrasfsPol).
 
 ```{r, eval = FALSE}
 lower_sig_stats %>% filter(pop %in% poly_pop) %>% select(pop, SYMBOL) %>% bind_rows(., bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop %in% poly_pop) %>% select(pop, "SYMBOL"= genename)) %>% distinct() %>% NROW()
@@ -703,22 +699,24 @@ sfs_windows_table <- bind_rows(lapply(c("Tajima.D","Fay.Wu.H","Fu.Li.D","Fu.Li.F
 
 ```
 
-As shown in table \@ref(tab:sfsWindowsTable), there were similar numbers of genes that intersected the windows that met the significance threshold in either distribution tail between the Polynesian populations of \gls{cim}, \gls{nzm}, \gls{sam}, and \gls{ton}. 
+Each Polynesian population had a similar number of windows in the 1st percentile, except for the Western Polynesian populations with \gls{ze} where they had up to ~50% less (table \@ref(tab:sfsWindowsTable).
+The Eastern Polynesian populations tended to have more independent non-consecutive regions and number of genes that were intersected by windows than the Western Polynesian populations. However, this did not translate into a higher number of genes that were significant in only a single population. There were similar numbers of genes that intersected the windows that met the significance threshold in either distribution tail between the Polynesian populations of \gls{cim}, \gls{nzm}, \gls{sam}, and \gls{ton}. 
 
 ```{r sfsWindowsTable}
 sfs_windows_table %>% 
   select(-tail.x, -tail.y, -stat.x, -stat.y) %>% 
-  knitr::kable(., format = 'latex', col.names = c("Pop",rep(c("Windows","Num. Regions","Num. Genes","Num. Pop. Genes"),2)), booktab = TRUE, caption = "(\\#tab:sfsWindowsTable) Number of significant regions and genes in Polynesian populations") %>% 
-  kableExtra::kable_styling(latex_options = 'scale_down') %>%
+  knitr::kable(., format = 'latex', col.names = c("Pop",rep(c("Windows","Regions (n)","Genes (n)","Pop. Genes (n)"),2)), booktabs = TRUE, caption = "(\\#tab:sfsWindowsTable) Number of significant regions and genes in Polynesian populations for the intra population SFS statistics.") %>% 
+ # kableExtra::kable_styling(latex_options = 'scale_down') %>%
   kableExtra::add_header_above(., c("" ,"Lower Tail" = 4,"Upper Tail" = 4)) %>% 
   kableExtra::group_rows("Tajima's D", 1,4) %>%
   kableExtra::group_rows("Fay and Wu's H",5 ,8) %>%
   kableExtra::group_rows("Fu and Li's D", 9, 12) %>%
   kableExtra::group_rows("Fu and Li's F", 13, 16) %>%
-  kableExtra::group_rows("Zeng's E", 17, 20)
+  kableExtra::group_rows("Zeng's E", 17, 20) %>% 
+  kableExtra::footnote(c("Regions is the number of independent non-consecutive regions the significant windows form. Genes is the number of unique genes that the significant windows intersected. Pop. Genes is the number of genes that had significant windows intesect in only that particular population."), threeparttable = TRUE, general_title = "")
 ```
 
-#### Polynesian super population
+#### Polynesian Super Population
 
 
 
@@ -818,29 +816,19 @@ ton_kd_sig <- create_gene_table("TON", kd_GR$SYMBOL)
 ton_metsyn_sig <- create_gene_table("TON", metsyn_GR$SYMBOL)
 ```
 
-The number of genes that had at least one marker that was significant in the haplotypic tests, and one window that intersected the same gene that was in the 1st percentile for a frequency based statistic and were shared between all of the Polynesian populations was `r length(intersect(intersect(extract_sig("CIM"), extract_sig("NZM")), intersect(extract_sig("SAM"), extract_sig("TON"))))` (Figure \@ref(fig:polyUpset)). The number of genes in common between the Eastern Polynesian populations was `r length(intersect(extract_sig("CIM"), extract_sig("NZM")))`. There was about 30% more genes for the same criteria in the Western Polynesians, with `r length(intersect(extract_sig("SAM"), extract_sig("TON")))` genes. Between the individual Polynesian populations, roughly one third of the genes that were significant in a population were not in common with the other Polynesian populations. The \gls{nzm} population had the most genes (395) that were not shared with any of the other Polynesian populations. 
-
 Out of all the genes that met significance, the Polynesian super population had the fewest genes unique to a super population (Figure \@ref(fig:superUpset)). There were 117 genes that only had evidence of selection in Polynesian populations, and 12 genes that had evidence in all super populations.
 
-There was no signal of selection for the previously reported 'thrifty genes' of _PPARGC1A_ by @Myles2011, and _CREBRF_ by @Minster2016. There were no markers or windows that met the significance thresholds for any of the neutrality and selection statistics. This was consistent with the results of @Cadzow2016 for _PPARGC1A_. The two identified \gls{snp}s for \gls{bmi} in Samoans at _CREBRF_, rs12513649 and rs373863828 were both absent from the CoreExome chip. While there was no selection signal from \gls{ihs} or \gls{nsl} at _CREBRF_, downstream at chr5:172,800,000-173,000,000 there were four markers for \gls{sam} and seven for \gls{ton} that were significant for \gls{ihs}. At the same location for \gls{nsl} there were six significant markers for \gls{sam} and seven for \gls{ton}. There other populations from the \gls{eas} super populatoin had fewer significant markers for both \gls{ihs} and \gls{nsl}. The significant markers at this location in \gls{sam} were consistent with supplementary figure 8 from @Minster2016 and were intergenic and also intersected the long intergenic non-coding RNA _CTB-164N12.1_.
-
-A complete list of all of the significant genes for the Polynesian populations from the lower tail can be found in tables \@ref(tab:lowersigtdPol), \@ref(tab:lowersigfwhPol), \@ref(tab:lowersigfldPol), \@ref(tab:lowersigflfPol), and \@ref(tab:lowersigzePol).
-
-> need ihs/nsl/xpehh table in supplementary
-
-(ref:polyUpset) Upset plot showing the number of genes that have evidence from \gls{ihs} or \gls{nsl}, and any of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, or \gls{ze}, in the four Polynesian populations.
-
-```{r polyUpset, fig.cap = '(ref:polyUpset)'}
-# show the intersection of the genes that were deemed significant between the different polynesian populations
-UpSetR::upset(fromList(list(CIM = extract_sig("CIM"), 
-                            NZM = extract_sig("NZM"), 
-                            SAM = extract_sig("SAM"), 
-                            TON = extract_sig("TON"))),
-                             order.by = "freq", nset = 4, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5, nintersects = NA)
-```
+The number of genes that had at least one marker that was significant in the haplotypic tests, and one window that intersected the same gene that was in the 1st percentile for a frequency based statistic and were shared between all of the Polynesian populations was `r length(intersect(intersect(extract_sig("CIM"), extract_sig("NZM")), intersect(extract_sig("SAM"), extract_sig("TON"))))` (Figure \@ref(fig:polyUpset)). The number of genes in common between the Eastern Polynesian populations was `r length(intersect(extract_sig("CIM"), extract_sig("NZM")))`. There was about 30% more genes for the same criteria in the Western Polynesians, with `r length(intersect(extract_sig("SAM"), extract_sig("TON")))` genes. Between the individual Polynesian populations, roughly one third of the genes that were significant in a population were not in common with the other Polynesian populations. The \gls{nzm} population had the most genes (395) that were not shared with any of the other Polynesian populations. 
 
 
-(ref:superUpset) Upset plot showing the intersections of genes that had both haplotypic and SFS evidence at the individual population level and were then pooled into their super population group.
+
+There was no signal of selection for the previously reported 'thrifty genes' of _PPARGC1A_ and _CREBRF_ [@Myles2011; @Minster2016]. There were no markers or windows that met the significance thresholds for any of the neutrality and selection statistics. This was consistent with the results of @Cadzow2016 for _PPARGC1A_. The two identified \gls{snp}s for \gls{bmi} in Samoans at _CREBRF_, rs12513649 and rs373863828 were both absent from the CoreExome chip. While there was no selection signal from \gls{ihs} or \gls{nsl} at _CREBRF_, downstream at chr5:172,800,000-173,000,000 there were four markers for \gls{sam} and seven for \gls{ton} that were significant for \gls{ihs}. At the same location for \gls{nsl} there were six significant markers for \gls{sam} and seven for \gls{ton}. There other populations from the \gls{eas} super population had fewer significant markers for both \gls{ihs} and \gls{nsl}. The significant markers at this location in \gls{sam} were consistent with supplementary figure 8 from @Minster201, were intergenic, and intersected the long intergenic non-coding RNA, _CTB-164N12.1_.
+
+A complete list of all of the genes that had windows in the 1st percentile and values < 0 for the Polynesian populations can be found in table \@ref(tab:intrasfsPol). A complete list of genes that had significant \gls{ihs} or \gls{nsl} in Polynesian populations can be found in tables \@ref(tab:ihsPolgenes) and \@ref(tab:nslPolgenes).
+
+> need xpehh table in supplementary
+
+(ref:superUpset) Upset plot showing the intersections of genes that had both intra-population haplotypic and \gls{sfs} evidence at the individual population level and were then pooled into their super population group.
 
 ```{r superUpset, fig.cap = '(ref:superUpset)', eval = TRUE}
 
@@ -858,11 +846,25 @@ UpSetR::upset(fromList(superpop_genes),
 rm(p)
 ```
 
+(ref:polyUpset) Upset plot showing the number of genes that have evidence from \gls{ihs} or \gls{nsl}, and met the lower threshold from any of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, or \gls{ze}, in the four Polynesian populations.
+
+```{r polyUpset, fig.cap = '(ref:polyUpset)'}
+# show the intersection of the genes that were deemed significant between the different polynesian populations
+UpSetR::upset(fromList(list(CIM = extract_sig("CIM"), 
+                            NZM = extract_sig("NZM"), 
+                            SAM = extract_sig("SAM"), 
+                            TON = extract_sig("TON"))),
+                             order.by = "freq", nset = 4, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5, nintersects = NA)
+```
+
+
+
+
 There were `r sig_ihs_val %>% anti_join(., sig_ihs_val %>% filter(!pop %in% poly_pop), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4) %>% NROW()` genes that all Polynesian populations and no other super populations had at least one \gls{snp} with a significant \gls{ihs} marker, and there were `r sig_ihs_val %>% anti_join(., sig_ihs_val %>% filter(!pop %in% poly_pop), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter(n > 0) %>% NROW()` genes that at least one Polynesian population and no other super populations had. The Eastern Polynesian populations had `r sig_ihs_val %>% anti_join(., sig_ihs_val %>% filter(!(pop %in% c("SAM","TON"))), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter(n > 0) %>% NROW()` genes, similarly, the Western Polynesian populations had `r sig_ihs_val %>% anti_join(., sig_ihs_val %>% filter( !(pop %in% c("CIM","NZM"))), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter(n > 0) %>% NROW()` genes. This compared to the significant \gls{nsl} markers where there were `r sig_nsl_val %>% anti_join(., sig_nsl_val %>% filter(!pop %in% poly_pop), by = c('genename'))  %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4) %>% NROW()` genes, that had at least one significant marker, and were found in only all four Polynesian populations. Within only Eastern Polynesian populations, there were `r sig_nsl_val %>% anti_join(., sig_nsl_val %>% filter(!pop %in% c("SAM","TON")), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter(n > 0) %>% NROW()` genes that had a significant marker, and within the Western Polynesian populations, there were `r sig_nsl_val %>% anti_join(., sig_nsl_val %>% filter(!pop %in% c("CIM","NZM")), by = c('genename')) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter(n > 0) %>% NROW()` genes only significant in that group. When the intersection of Polynesian specific genes for both \gls{ihs} and \gls{nsl} was compared, the number of genes in common was `r inner_join(sig_ihs_val %>% anti_join(., sig_ihs_val %>% filter(!pop %in% poly_pop), by = c('genename')) %>% filter(pop %in% poly_pop) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4), sig_nsl_val %>% anti_join(., sig_nsl_val %>% filter(!pop %in% poly_pop), by = c('genename')) %>% filter(pop %in% poly_pop) %>% select(pop, genename) %>% distinct() %>% group_by(genename) %>% tally() %>% filter( n == 4), by = 'genename') %>% NROW()` that had at least one \gls{snp} in only the four Polynesian populations. These were _GRIP1_ and _LINC00661_. 
 
-Figure \@ref(fig:intraSelGenes) shows the genes associated with urate, gout and related diseases that had a significant marker with either \gls{ihs} or \gls{nsl} and also had a significant window from a site-frequency spectrum based statistic in at least one Polynesian population. There are only 12 genes that met this criteria. The \gls{t2d} associcated gene, _PTPRD_, was the only gene that met the mentioned criteria that had significant markers from all Polynesian populations in \gls{ihs}. The obesity associated genes of _GRID1_, _FHIT_, and _ERBB4_, all had windows from \gls{fwh} that were significant in all Polynesian populations. _ERBB4_ also had significant windows for all Polynesin populations for \gls{td}.
+Figure \@ref(fig:intraSelGenes) shows the genes associated with urate, gout and related diseases that had a significant marker with either \gls{ihs} or \gls{nsl} and also had a significant window from a site-frequency spectrum based statistic in at least one Polynesian population. There are only 12 genes that met this criteria. The \gls{t2d} associated gene, _PTPRD_, was the only gene that met the mentioned criteria that had significant markers from all Polynesian populations in \gls{ihs}. The obesity associated genes of _GRID1_, _FHIT_, and _ERBB4_, all had windows from \gls{fwh} that were significant in all Polynesian populations. _ERBB4_ also had significant windows for all Polynesian populations for \gls{td}.
 
-(ref:intraSelGenes) Genes associated with urate, gout, obesity, \gls{t2d}, kidney disease, and metabolic syndrome having both significance in intra-population SFS and haplotypic based methods in at least one Polynesian population. Numbers inside boxes indicate the number of significant windows \gls{sfs} or \gls{snp}s (haplotypic methods) for the population. 
+(ref:intraSelGenes) Genes associated with urate, gout, obesity, \gls{t2d}, kidney disease, and metabolic syndrome having both significance in intra-population SFS and haplotypic based methods in at least one Polynesian population. Numbers inside boxes indicate the number of significant windows (\gls{sfs} methods) or \gls{snp}s (haplotypic methods) for the population. 
 
 ```{r intraSelGenes, fig.cap = '(ref:intraSelGenes)', fig.width=7.5}
 # genes that have at least one poly population with significance in both haplotypic and sfs stats
@@ -886,15 +888,15 @@ bind_rows(ton_obesity_sig, ton_urate_sig, ton_t2d_sig, ton_metsyn_sig, ton_kd_si
   filter(!is.na(n)) %>% ggplot(., aes(x = pop, y = SYMBOL))  + geom_tile(aes(colour = pop, fill = pop)) + theme_bw() + facet_grid(~statname) + geom_text(inherit.aes = TRUE, aes(label = n)) + theme(panel.grid = element_blank(), axis.text.x = element_text(angle = 90, vjust = 0.5), legend.position = 'bottom') + xlab('Population') + scale_fill_discrete(name = "Population") + guides(colour = FALSE) + scale_y_discrete(expand = c(0,0)) + scale_x_discrete(expand = c(0,0)) 
 ```
 
-Pathway terms from the pathway enrichment analysis using the Enrichr KEGG2016 table showed there was minimal overlap in the terms that were significant between the the Polynesian populations. 
+Pathway terms from the pathway enrichment analysis using the Enrichr KEGG2016 table showed there was minimal overlap in the terms that were significant between the the Polynesian populations (Table \@ref(tab:keggPath)). There was more pathways in common between the Easteran Polynesian populations than the Western Polynesian populations.
 
 ```{r keggPath, results = 'asis'}
-kegg_sig %>% filter(Adjusted.P.value < 0.05) %>% select(Term, pop ) %>% mutate(pop = toupper(pop) ,yes = "Yes") %>% distinct() %>% spread(pop, yes, "") %>% mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% select( term2, everything()) %>% kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant in Polynesian populations in Enrichr KEGG2016 pathway enrichment analysis')
+kegg_sig %>% filter(Adjusted.P.value < 0.05) %>% select(Term, pop ) %>% mutate(pop = toupper(pop) ,yes = "Yes") %>% distinct() %>% spread(pop, yes, "") %>% mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% select( term2, everything()) %>% kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant in Polynesian populations in Enrichr KEGG2016 pathway enrichment analysis') %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(latex_options = 'scale_down')
 ```
 
 ##### Regions of haplotypic selection
 
-The Polynesian populations had the least number of significant \gls{snp}s for both \gls{ihs} and \gls{nsl} (Table \@ref(tab:iHSnSLClusSum)). The number of clusters followed the same trend as the number of significant \gls{snp}s in that there were both more \gls{snp}s and clusters for \gls{ihs} than for \gls{nsl}. The minimum number of \gls{snp}s that had a significant \gls{ihs} was `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n) %>% .[['n']]` and was from the \gls{`r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n) %>% .[['pop']] %>% tolower()`} population. For \gls{nsl} this was also \gls{`r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n)  %>% .[['pop']] %>% tolower`} with `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n) %>% .[['n']]` \gls{snp}s. The maximum number of \gls{snp}s was for \gls{`r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['pop']] %>% tolower()`} with `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['n']]` for \gls{ihs} and \gls{`r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['pop']] %>% tolower()`} with `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['n']]` \gls{snp}s. The mean number of significant \gls{snp}s for \gls{ihs} was `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(mean(n), 1))` (SD  `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(sd(n), 1))`) and `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(mean(n), 1))`  (SD `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(sd(n), 1))`) for \gls{nsl} (Table \@ref(tab:iHSnSLClusSum)). The Polynesian populations had a mean of `r sig_ihs_val %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'POL') %>% .[['mn']] %>% sprintf("%.0f",.)` SNPs with a \gls{ihs} value that was significant. Compared to  `r sig_nsl_val %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'POL') %>% .[['mn']] %>% sprintf("%.0f",.)` for \gls{nsl}. Between significant \gls{snp}s for \gls{ihs} and \gls{nsl} there was a mean of `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'POL') %>% summarise(round_dp(mean(n), 1))` \gls{snp}s in common for the \gls{pol} populations, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'EAS') %>% summarise(round_dp(mean(n), 1))` for \gls{eas}, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'AFR') %>% summarise(round_dp(mean(n), 1))` \gls{afr}, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'EUR') %>% summarise(round_dp(mean(n), 1))` for \gls{eur}, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'AMR') %>% summarise(round_dp(mean(n), 1))` for \gls{amr}, and `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'SAS') %>% summarise(round_dp(mean(n), 1))` from \gls{sas}.
+The Polynesian populations had the least number of significant \gls{snp}s for both \gls{ihs} and \gls{nsl} (Table \@ref(tab:numSigWindows)). The minimum number of \gls{snp}s that had a significant \gls{ihs} was `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n) %>% .[['n']]` and was from the \gls{`r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n) %>% .[['pop']] %>% tolower()`} population. For \gls{nsl} this was also \gls{`r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n)  %>% .[['pop']] %>% tolower`} with `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(min(n) == n) %>% .[['n']]` \gls{snp}s. The maximum number of \gls{snp}s was for \gls{`r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['pop']] %>% tolower()`} with `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['n']]` for \gls{ihs} and \gls{`r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['pop']] %>% tolower()`} with `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% filter(max(n) == n) %>% .[['n']]` \gls{snp}s. The mean number of significant \gls{snp}s for \gls{ihs} was `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(mean(n), 1))` (SD  `r sig_ihs_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(sd(n), 1))`) and `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(mean(n), 1))`  (SD `r sig_nsl_val %>% group_by(pop) %>% tally() %>% ungroup() %>% summarise(round_dp(sd(n), 1))`) for \gls{nsl} (Table \@ref(tab:iHSnSLClusSum)). The Polynesian populations had a mean of `r sig_ihs_val %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'POL') %>% .[['mn']] %>% sprintf("%.0f",.)` SNPs with a \gls{ihs} value that was significant. Compared to  `r sig_nsl_val %>% group_by(pop,superpop) %>% tally() %>% group_by(superpop) %>% summarise(mn = mean(n)) %>% filter(superpop == 'POL') %>% .[['mn']] %>% sprintf("%.0f",.)` for \gls{nsl}. Between significant \gls{snp}s for \gls{ihs} and \gls{nsl} there was a mean of `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'POL') %>% summarise(round_dp(mean(n), 1))` \gls{snp}s in common for the \gls{pol} populations, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'EAS') %>% summarise(round_dp(mean(n), 1))` for \gls{eas}, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'AFR') %>% summarise(round_dp(mean(n), 1))` \gls{afr}, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'EUR') %>% summarise(round_dp(mean(n), 1))` for \gls{eur}, `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'AMR') %>% summarise(round_dp(mean(n), 1))` for \gls{amr}, and `r ihs_nsl_sum_tab %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% filter(super_pop == 'SAS') %>% summarise(round_dp(mean(n), 1))` from \gls{sas}.
 
 ```{r nSharedHaplo, eval = TRUE}
 join_ihs_nsl <- function(p1, p2){
@@ -916,31 +918,27 @@ rm(p)
 
 On average there were `r n_shared_haplo %>% filter(!p2 %in% poly_pop) %>% summarise(mean(ihs)) %>% round(., 1)` \gls{snp}s in common between the Polynesian populations and the other populations for \gls{ihs} and `r n_shared_haplo %>% filter(!p2 %in% poly_pop) %>% summarise(mean(nsl)) %>% round(., 1)` \gls{snp}s for \gls{nsl}. Whereas, there was a higher number of significant \gls{snp}s in common between the Polynesian populations with a mean of `r n_shared_haplo %>% filter(p2 %in% poly_pop, p1 != p2) %>% summarise(mean(ihs)) %>% round(., 1)` for \gls{ihs} and `r n_shared_haplo %>% filter(p2 %in% poly_pop, p1 != p2) %>% summarise(mean(nsl)) %>% round(., 1)` for \gls{nsl} (Table \@ref(tab:nSharedHaplo)). The Eastern/Western Polynesian split was also evident with there being a 2-4 fold difference in the number of \gls{snp}s in common between the Eastern and Western Polynesian populations for both \gls{ihs} and \gls{nsl}.
 
-
-##### XPEHH
+- genes that had at least 20 populations with significant markers in all polynesian populations
+- 28 genes that had at least 20 populations with significant markers in only Eastern Polynesian populations 
+- 49 genes that had at least 20 populations with significant markers for \gls{xpehh} in only Western Polynesian populations 
 
 ```{r, eval = FALSE}
 xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, 0)%>% arrange(genename) %>% mutate(rs = AFR + AMR + EAS + EUR + POL + SAS) %>% filter(rs >=20) %>% kable(., caption = 'Number of populations by super population, with significant xpehh for urate/gout associated genes', booktabs = TRUE)
 ```
 
-genes that had at least 20 populations with significant markers in all polynesian populations
-```{r}
+
+```{r eval = FALSE}
+#all poly pops
 xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, 0)%>% arrange(genename) %>% mutate(rs = AFR + AMR + EAS + EUR + POL + SAS) %>% filter(rs >=20) %>% select(pop1, genename, rs) %>% group_by(genename) %>% tally() %>% filter( n == 4, !is.na(genename)) %>% pull(genename)
 
-```
-
-28 genes that had at least 20 populations with significant markers in only Eastern Polynesian populations 
-```{r}
+#ep poly
 xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, 0)%>% arrange(genename) %>% mutate(rs = AFR + AMR + EAS + EUR + POL + SAS) %>% filter(rs >=20) %>% select(pop1, genename, rs) %>% spread(pop1, rs) %>% filter(!is.na(CIM), !is.na(NZM), is.na(SAM), is.na(TON)) %>% pull(genename)
 
-```
-
-
-49 genes that had at least 20 populations with significant markers for \gls{xpehh} in only Western Polynesian populations 
-```{r}
+#wp poly
 xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, 0)%>% arrange(genename) %>% mutate(rs = AFR + AMR + EAS + EUR + POL + SAS) %>% filter(rs >=20) %>% select(pop1, genename, rs) %>% spread(pop1, rs) %>% filter(is.na(CIM), is.na(NZM), !is.na(SAM), !is.na(TON)) %>% pull(genename)
-
 ```
+
+
 
 ```{r}
 xpehh %>%  
@@ -972,7 +970,7 @@ pol_fst_99 %>% separate(pop, c('pop1','pop2'), '_' ) %>% filter(pop1 %in% poly_p
 
 
 
-##### NOTES
+<!-- ##### NOTES -->
 
 <!-- PPARGC1A -->
 
@@ -1329,7 +1327,7 @@ For the \gls{cim} population there were `r lower_sig_stats %>% filter(statname =
 
 
 
-were there any genes that were significant from the gene lists and related to the thrifty gene hypothesis?
+<!-- were there any genes that were significant from the gene lists and related to the thrifty gene hypothesis? -->
 
 
 #### New Zealand Maori
@@ -1358,25 +1356,27 @@ The pathway gene-set enrichment analysis from Enrichr on the KEGG 2016 pathways 
 
 From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{nzm} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. Looking at the genes represented by the most extreme 100 \gls{ihs} and \gls{nsl} markers there were 30 genes for \gls{ihs}, and 40 genes for \gls{nsl}. There were 12 genes in common between the two sets. _CTNNA3_ had five markers in the top 100 for \gls{ihs}, and was also the gene for \gls{nzm} that had the most overall significant markers for both \gls{ihs} and \gls{nsl}. 
 
-##### Consecutive regions
-
-The regions of consecutive depressed score from the 1st percentile of windows  that also contained markers with a significant \gls{ihs} or \gls{nsl} value covered three regions of the genome for \gls{nzm}. Two of the regions were for \gls{td}, the first was 270kb at chr2:24215002-24485001, and similar to the region in \gls{cim}. It had a single significant marker for \gls{ihs} in each of _MFSD2B_, _FKBP1B_, and _FAM228B_. The second \gls{td} region was 260 kb at chr4:106555002-106815001 and had a single significant marker for \gls{nsl} in _INTS12_, and a single marker for both \gls{ihs} and \gls{nsl} in _SH3RF1._ There was an overlapping region between \gls{fld} and \gls{flf} that had five significant markers in _TTN-AS1_ for both \gls{ihs} and \gls{nsl}. The 340 kb region for \gls{fld} at chr2:179325002-179665001 contained the 200 kb region for \gls{flf} at chr2:179395002-179595001.
-
-There were no consecutive regions that intersected with genes associated with urate, kidney disease, or \gls{t2d}. There were 2 regions that intersected obesity associated loci; for \gls{td} a 320 kb region at chr16:67145002-67465001 contained _KCTD19_, and for \gls{flf} 220 kb at chr16:3555002-3775001 contained _NLRC3_. _EDC4_ which is associated with metabolic syndrome had slightly differing regions that covered it. \gls{td} was 330 kb from chr16:67775002-68105001, \gls{fld} was 260 kb from chr16:67785002-68045001, and \gls{flf} was 320 kb from chr16:67775002-68095001.
-
-
-There were four genes that had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1st percentile from four or more statistics from \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. These genes were _CTNNA3_, _RAD51AP2_, _SUPT3H_, and _VSNL1_.
-
-
 40 genes that had at least 20 populations with significant markers for \gls{xpehh} in only NZM from the polynesian populations 
 ```{r}
 xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, 0)%>% arrange(genename) %>% mutate(rs = AFR + AMR + EAS + EUR + POL + SAS) %>% filter(rs >=20) %>% select(pop1, genename, rs) %>% spread(pop1, rs) %>% filter(is.na(CIM),!is.na(NZM), is.na(SAM), is.na(TON)) %>% pull(genename)
 
 ```
 
+##### Consecutive regions
+
+The regions of consecutive depressed score from the 1st percentile of windows  that also contained markers with a significant \gls{ihs} or \gls{nsl} value covered three regions of the genome for \gls{nzm}. Two of the regions were for \gls{td}, the first was 270kb at chr2:24215002-24485001, and similar to the region in \gls{cim}. It had a single significant marker for \gls{ihs} in each of _MFSD2B_, _FKBP1B_, and _FAM228B_. The second \gls{td} region was 260 kb at chr4:106555002-106815001 and had a single significant marker for \gls{nsl} in _INTS12_, and a single marker for both \gls{ihs} and \gls{nsl} in _SH3RF1_. Another region, a 340 kb region for \gls{fld} at chr2:179325002-179665001 contained a 200 kb region for \gls{flf} at chr2:179395002-179595001. This region also had five significant markers in _TTN-AS1_ for both \gls{ihs} and \gls{nsl}
+
+No consecutive regions intersected with genes associated with urate, kidney disease, or \gls{t2d}. There were 2 regions that intersected obesity associated loci; for \gls{td} a 320 kb region at chr16:67145002-67465001 contained _KCTD19_, and for \gls{flf} 220 kb at chr16:3555002-3775001 contained _NLRC3_. _EDC4_ which is associated with metabolic syndrome had slightly differing regions that covered it. \gls{td} was 330 kb from chr16:67775002-68105001, \gls{fld} was 260 kb from chr16:67785002-68045001, and \gls{flf} was 320 kb from chr16:67775002-68095001.
+
+
+The four genes, _CTNNA3_, _RAD51AP2_, _SUPT3H_, and _VSNL1_, had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1st percentile from four or more statistics from \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}.
+
+
+
+
 ##### FST
 
-##### Notes
+<!-- ##### Notes -->
 ```{r, eval = FALSE}
 p <- "NZM"
 
@@ -1606,7 +1606,7 @@ For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname =
 
 There were no significant results after adjusting for multiple testing when performing the over representation analysis using PantherDB on all genes that had met a significance threshold for any of the intra population selection and neutrality statistics. For all of the intra-population statistics, the main biological functional classification was "cellular process".
 
-There were only two pathways that were significant for the gene-set pathway enrichment analysis using Enrichr. The pathway term "ABC transporters"" was significant for gene lists from both \gls{fld} (adjusted P = 0.0190) with 8 of 44 genes and \gls{ihs} (adjusted P = 0.0128) with 9 of 44 genes. The second pathway that was significant was "long-term potentiation" and that was from the \gls{nsl} gene list (adjusted P = 0.0213) with 9 of 66 genes.
+Only two pathways that were significant for the gene-set pathway enrichment analysis using Enrichr. The pathway term "ABC transporters" was significant for gene lists from both \gls{fld} (adjusted P = 0.0190) with 8 of 44 genes and \gls{ihs} (adjusted P = 0.0128) with 9 of 44 genes. The second pathway that was significant was "long-term potentiation" and that was from the \gls{nsl} gene list (adjusted P = 0.0213) with 9 of 66 genes.
 
 
 ##### Haplotypic
@@ -1678,7 +1678,6 @@ bind_rows(bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM')%>% select
 ```
 
 
-There were `r lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes that intersected the windows that met the significance threshold in the lower tail for \gls{td}. For \gls{fwh}, there were `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, \gls{fld} had `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, \gls{flf} had `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`, and \gls{ze} had `r lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()`.
 
 <!-- no urate, obesity, t2d, kd, or metsyn -->
 
@@ -1906,7 +1905,7 @@ There were no consecutively depressed score regions that intersected genes assoc
 ##### FST
 
 
-##### Notes
+<!-- ##### Notes -->
 
 <!-- - TD main processes: "cellular process", "metabolic process" -->
 <!-- - FWD main processes: "cellular process", "metabolic process" -->
@@ -2096,7 +2095,7 @@ filterGenes <- c("ABHD6","ALPK2","APEH","ASAP1","AUH","BIN1","BRD2","C2","C2orf7
 <!-- - on multiple gene lists -->
 <!-- - prioritised haplotypic results -->
 
-In order to establish if there was evidence of selection in genes associated with urate and diseases with \gls{hu} as a comorbidity, loci that associated with these conditions were extracted from the gwas catalog (as per Section \@ref(diseaselist), see Table \@ref(tab:gwascatref) for references for each trait) and neutrality and selection statistics that intersected these loci were collated. Table \@ref(tab:polDiseaseGenesTab) shows the break down of th number of different statistics by population that met the significance thresholds for the \gls{sfs} based statistcs, the haplotype based statistics, and the overlap between the two different base methods. The \gls{cim} had the least number of genes of the Polynesian populations that had a significant result out of the genes that were associated with urate.  the  They also had the least number of genes with significance for obesity, \gls{t2d}, kidney disease, or metabolic syndrome when haplotypic and frequency spectrum methods were combined. The Western Polynesian populations had twice the number of genes associated with kidney disease, when looking at both haplotypic and frequency spectrum methods. The \gls{nzm} population had the highest number of genes associated with obesity and \gls{t2d} that had a significant value in any of the intra-population haplotypic and frequency spectrum methods.
+In order to establish if there was evidence of selection in genes associated with urate and diseases with \gls{hu} as a co-morbidity, loci that associated with these conditions were extracted from the gwas catalog (as per Section \@ref(diseaselist), see Table \@ref(tab:gwascatref) for references for each trait) and neutrality and selection statistics that intersected these loci were collated. Table \@ref(tab:polDiseaseGenesTab) shows the break down of the number of different statistics by population that met the significance thresholds for the \gls{sfs} based statistics, the haplotype based statistics, and the overlap between the two different base methods. The \gls{cim} had the least number of genes of the Polynesian populations that had a significant result out of the genes that were associated with urate. They also had the least number of genes with significance for obesity, \gls{t2d}, kidney disease, or metabolic syndrome when haplotypic and frequency spectrum methods were combined. The Western Polynesian populations had twice the number of genes associated with kidney disease, when looking at both haplotypic and frequency spectrum methods. The \gls{nzm} population had the highest number of genes associated with obesity and \gls{t2d} that had a significant value in any of the intra-population haplotypic and frequency spectrum methods.
 
 ```{r polDiseaseGenesTab}
 bind_rows(
@@ -2349,7 +2348,7 @@ From the obesity associated genes,  _ERBB4_ had the most number of statistics, a
 
 _FHIT_ and _GRID_ both had multiple windows for \gls{fwh} that were in the 1st percentile. _FHIT_ also had \gls{snp}s in both \gls{nzm} and \gls{ton} that were significant for \gls{ihs} and \gls{nsl}. \gls{ton} and \gls{nzm} both had five windows in the 1st percentile for \gls{fwh} that intersected _FHIT_. _GRID_ had markers that were significant in only \gls{nsl} and only in the Western Polynesian populations. Both \gls{sam} and\gls{ton} had windows in the 1st percentile for \gls{fwh} that intersected with _GRID1_.
 
-For all Polynesian populations there were multiple windows that intersected _DNAH10_. There were regions of consecutive depressed \gls{td} score for \gls{sam}, \gls{ton}, and \gls{cim} that intersected _DNAH10_. \gls{cim} also had consecutively depressed score regions for \gls{fld} and \gls{flf} at this locus. The main region was actually the upstream region ranging from _TCTN2_ to _DNAH10_. _ATP6V0A2_ was in the middle and where this signal was focussed. For \gls{nzm} _DNAH10_ had significant windows for each of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. \gls{cim} was the same but without \gls{ze}. \gls{cim} had one marker each that was significant for \gls{xpehh} with \gls{acb} and \gls{lwk}, and 11 markers with \gls{gwd}. \gls{nzm} had three markers that were sigificant for \gls{xpehh} with \gls{gwd}. The Western Polynesian populations did not have the multiple statistic signal. 
+For all Polynesian populations there were multiple windows that intersected _DNAH10_. There were regions of consecutive depressed \gls{td} score for \gls{sam}, \gls{ton}, and \gls{cim} that intersected _DNAH10_. \gls{cim} also had consecutively depressed score regions for \gls{fld} and \gls{flf} at this locus. The main region was actually the upstream region ranging from _TCTN2_ to _DNAH10_. _ATP6V0A2_ was in the middle and where this signal was focussed. For \gls{nzm} _DNAH10_ had significant windows for each of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. \gls{cim} was the same but without \gls{ze}. \gls{cim} had one marker each that was significant for \gls{xpehh} with \gls{acb} and \gls{lwk}, and 11 markers with \gls{gwd}. \gls{nzm} had three markers that were significant for \gls{xpehh} with \gls{gwd}. The Western Polynesian populations did not have the multiple statistic signal. 
 
 
 
@@ -2632,7 +2631,7 @@ ton APOA5 1 markers
 
 
 
-For genes that were associated with metabolic syndrome defined from the gwas catalo, in the Eastern Polynesian populations there was a region of consecutive score depression for \gls{td} that intersected _EDC4_ at chr16	67835002	68115001 for \gls{cim}, and chr16:67775002-68105001 for\gls{nzm} \gls{nzm} also had similar regions for \gls{fld} (chr16:67785002-68045001) and \gls{flf} (chr16:67775002-68095001).
+For genes that were associated with metabolic syndrome defined from the gwas catalog, in the Eastern Polynesian populations there was a region of consecutive score depression for \gls{td} that intersected _EDC4_ at chr16	67835002	68115001 for \gls{cim}, and chr16:67775002-68105001 for\gls{nzm} \gls{nzm} also had similar regions for \gls{fld} (chr16:67785002-68045001) and \gls{flf} (chr16:67775002-68095001).
 
 ```{r metsynTab}
 g <- metsyn_GR$SYMBOL
@@ -2913,7 +2912,7 @@ consec_lower_regions %>% filter(SYMBOL %in% zhang_immune_GR$SYMBOL, pop %in% pol
 rm(res)
 ```
 
-There were no regions fo consecutively depressed score that also had significant markers for \gls{ihs} or \gls{nsl}
+There were no regions of consecutively depressed score that also had significant markers for \gls{ihs} or \gls{nsl}
 
 ```{r zhangImmuneTab}
 g <- zhang_immune_GR$SYMBOL
@@ -3050,7 +3049,7 @@ There was also evidence of selection in loci that were associated with malaria a
 
 limitations of using the chip data versus imputed data
 
-There were some techicnical limitations of the study that influenced the results obtained. The use of a \gls{snp} chip meant that there was an ascertainment bias built into the markers observed [@nielsen2007recent]. The quality control process for the CoreExome \gls{snp} chip also has a bias against singletons and low minor allele frequency \gls{snp}s [@Guo2014]. The effect of this was seen in the right shifting of the distributions of the intra-population frequency based statistics of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, all of which make use of low frequency or singleton variants in their calculations. This shift was not observed in \gls{fwh} which compared the ratio of high frequency derived and ancestral allele variants with the intermediate frequency variants. Another limitation arising throught the use of the CoreExome chip was the total number of markers that made were used. There were `r NROW(markers)` markers for biallelic \gls{snp}s. This was less than the other projects such as the Hapmap project, and considerably less than the sequence data that the 1000 Genomes Project used.
+There were some technical limitations of the study that influenced the results obtained. The use of a \gls{snp} chip meant that there was an ascertainment bias built into the markers observed [@nielsen2007recent]. The quality control process for the CoreExome \gls{snp} chip also has a bias against singletons and low minor allele frequency \gls{snp}s [@Guo2014]. The effect of this was seen in the right shifting of the distributions of the intra-population frequency based statistics of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, all of which make use of low frequency or singleton variants in their calculations. This shift was not observed in \gls{fwh} which compared the ratio of high frequency derived and ancestral allele variants with the intermediate frequency variants. Another limitation arising through the use of the CoreExome chip was the total number of markers that made were used. There were `r NROW(markers)` markers for bi-allelic \gls{snp}s. This was less than the other projects such as the Hapmap project, and considerably less than the sequence data that the 1000 Genomes Project used.
 
 
 The shift in the distributions due to having chip data for the selection tests that rely on frequency spectrum is seen here. Mostly the African populations have shifted so far to the right with \gls{td} that the first percentile is > 0. 
@@ -3078,7 +3077,7 @@ There was also a higher likelihood of a longer gene being reported as significan
 - only looking at positive selection
 
 
-- The use of the gwas catalog - the gwases are largely conducted in European populations so might miss some population specific variants/genes (eg Diabetes and Mexicans?)
+- The use of the gwas catalog - the gwases are largely conducted in European populations so might miss some population specific variants/genes (e.g. Diabetes and Mexicans?)
 
 One of the limitations of using the gwas catalog is that there is a heavy over representation of genes that are associated to disease in Europeans due to the overall bias to \gls{gwas} research being conducted in European populations [@Haga2010; @Popejoy2016]. This can mean that population specific associations are missed [@Weissglas-Volkov2013; @Minster2016]. Genes that are associated with a condition can also be missed if they do not reach genome-wide significance in a \gls{gwas} but in a candidate gene approach are significant. For example, XXX has been shown to be associated with malaria, however at a genome wide level it is not significant.
 
@@ -3144,7 +3143,7 @@ SH2B3-ATXN2 has snps associated with urate, and other diseases (rs3184504, rs476
 
 Refer to malaria section of results
 
-Response to infectious challenge is a key mechanism that has been thought of as a selective pressure. Malarial infection provided a possible challenge to which urate may have been subjected to selective pressure as such provided a viable candidate due to the involvement of urate with maralarial resistance. Six loci that were associated with malaria and identified from the \gls{gwas} catalog were investigated for having signals of selection. Three of these genes did have evidence of selection in the Polynesian populations. Two loci that had evidence had also been identified as being associated with obesity and \gls{t2d}. _ABO_ and _ATP24_ did not have strong evidence, and it came from only \gls{ihs}. _DDC_ on the other hand had comparatively strong haplotypic evidence in the Eastern Polynesian populations. The \gls{nzm} had significant \gls{xpehh} results with every other non-Polynesian population and had six significant markers for \gls{ihs}, three of which were in the top 400 most extreme scores. 
+Response to infectious challenge is a key mechanism that has been thought of as a selective pressure. Malarial infection provided a possible challenge to which urate may have been subjected to selective pressure as such provided a viable candidate due to the involvement of urate with malarial resistance. Six loci that were associated with malaria and identified from the \gls{gwas} catalog were investigated for having signals of selection. Three of these genes did have evidence of selection in the Polynesian populations. Two loci that had evidence had also been identified as being associated with obesity and \gls{t2d}. _ABO_ and _ATP24_ did not have strong evidence, and it came from only \gls{ihs}. _DDC_ on the other hand had comparatively strong haplotypic evidence in the Eastern Polynesian populations. The \gls{nzm} had significant \gls{xpehh} results with every other non-Polynesian population and had six significant markers for \gls{ihs}, three of which were in the top 400 most extreme scores. 
 
 rs1966839 was in near perfect \gls{ld} with the malaria associated intronic variant rs1451375 [@Jallow2009]
 
