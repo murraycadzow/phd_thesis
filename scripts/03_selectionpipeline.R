@@ -10,7 +10,7 @@ lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/
 lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
   lower_sig_stats[[y]] <- bind_rows(
     lapply(names(lower_sig_stats[[y]]), function(x){
-      lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
+      lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
@@ -22,7 +22,7 @@ upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/1
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
   upper_sig_stats[[y]] <- bind_rows(
     lapply(names(upper_sig_stats[[y]]), function(x){
-      upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
+      upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
 })) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
