@@ -722,8 +722,7 @@ sfs_windows_table %>%
 
 ```{r}
 # create table for superDiseaseGenesTab
-superDiseaseGenesTab <- bind_rows(
-  lower_sig_stats %>% select(SYMBOL, pop) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% 
+superSFSdisease <- lower_sig_stats %>% select(SYMBOL, pop) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% 
     mutate(
       urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
       obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
@@ -732,11 +731,9 @@ superDiseaseGenesTab <- bind_rows(
       metsyn = ifelse(SYMBOL %in% metsyn_GR$SYMBOL, TRUE, FALSE)
     ) %>% 
     select(SYMBOL, pop, super_pop, urate, obesity, t2d, kd, metsyn) %>% 
-    distinct() %>% 
-    group_by(pop, super_pop) %>% 
-    summarise(urate = sum(urate), obesity = sum(obesity), t2d = sum(t2d), kd = sum(kd), metsyn = sum(metsyn)) %>% 
-    mutate(type = "SFS") %>% arrange(super_pop),
-  bind_rows(sig_ihs_val, sig_nsl_val) %>% 
+    distinct() %>% filter(urate + obesity + t2d + kd + metsyn > 0)
+
+superHaploDisease <- bind_rows(sig_ihs_val, sig_nsl_val) %>% 
     select(pop, 'SYMBOL' = genename) %>% 
     left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% 
     mutate(
@@ -747,15 +744,22 @@ superDiseaseGenesTab <- bind_rows(
       metsyn = ifelse(SYMBOL %in% metsyn_GR$SYMBOL, TRUE, FALSE)
     ) %>% 
     select(SYMBOL, pop, super_pop, urate, obesity, t2d, kd, metsyn) %>% 
-    distinct() %>% 
+    distinct() %>% filter(urate + obesity + t2d + kd + metsyn > 0)
+
+superDiseaseGenesTab <- bind_rows(
+   superSFSdisease%>% 
+    group_by(pop, super_pop) %>% 
+    summarise(urate = sum(urate), obesity = sum(obesity), t2d = sum(t2d), kd = sum(kd), metsyn = sum(metsyn)) %>% 
+    mutate(type = "SFS") %>% arrange(super_pop),
+  superHaploDisease %>% 
     group_by(pop, super_pop) %>% 
     summarise(urate = sum(urate), obesity = sum(obesity), t2d = sum(t2d), kd = sum(kd), metsyn = sum(metsyn)) %>% 
     mutate(type = 'Haplotype') %>% arrange(super_pop),
   
-  bind_rows(
+  inner_join(
     bind_rows(sig_ihs_val, sig_nsl_val) %>% 
       select(pop, 'SYMBOL' = genename),
-    lower_sig_stats %>% select(SYMBOL, pop)
+    lower_sig_stats %>% select(SYMBOL, pop), by = c('SYMBOL','pop')
   ) %>% 
     left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>%
     mutate(
@@ -769,7 +773,7 @@ superDiseaseGenesTab <- bind_rows(
     distinct() %>% 
     group_by(pop, super_pop) %>%
     summarise(urate = sum(urate), obesity = sum(obesity), t2d = sum(t2d), kd = sum(kd), metsyn = sum(metsyn)) %>% 
-    mutate(type = 'combined') %>% arrange(super_pop)
+    mutate(type = 'Combined') %>% arrange(super_pop)
 )
 
 
@@ -891,7 +895,7 @@ bind_rows(ton_obesity_sig, ton_urate_sig, ton_t2d_sig, ton_metsyn_sig, ton_kd_si
 Pathway terms from the pathway enrichment analysis using the Enrichr KEGG2016 table showed there was minimal overlap in the terms that were significant between the the Polynesian populations (Table \@ref(tab:keggPath)). There was more pathways in common between the Easteran Polynesian populations than the Western Polynesian populations.
 
 ```{r keggPath, results = 'asis'}
-kegg_sig %>% filter(Adjusted.P.value < 0.05) %>% select(Term, pop ) %>% mutate(pop = toupper(pop) ,yes = "Yes") %>% distinct() %>% spread(pop, yes, "") %>% mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% select( term2, everything()) %>% kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant in Polynesian populations in Enrichr KEGG2016 pathway enrichment analysis') %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(latex_options = 'scale_down')
+kegg_sig %>% filter(Adjusted.P.value < 0.05) %>% select(Term, pop ) %>% mutate(pop = toupper(pop) ,yes = "Yes") %>% distinct() %>% spread(pop, yes, "") %>% mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% select( term2, everything()) %>% kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant in Polynesian populations in Enrichr KEGG2016 pathway enrichment analysis', longtable = TRUE) %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(latex_options = 'repeat_header')
 ```
 
 ##### Regions of haplotypic selection
@@ -2095,9 +2099,9 @@ filterGenes <- c("ABHD6","ALPK2","APEH","ASAP1","AUH","BIN1","BRD2","C2","C2orf7
 <!-- - on multiple gene lists -->
 <!-- - prioritised haplotypic results -->
 
-In order to establish if there was evidence of selection in genes associated with urate and diseases with \gls{hu} as a co-morbidity, loci that associated with these conditions were extracted from the gwas catalog (as per Section \@ref(diseaselist), see Table \@ref(tab:gwascatref) for references for each trait) and neutrality and selection statistics that intersected these loci were collated. Table \@ref(tab:polDiseaseGenesTab) shows the break down of the number of different statistics by population that met the significance thresholds for the \gls{sfs} based statistics, the haplotype based statistics, and the overlap between the two different base methods. The \gls{cim} had the least number of genes of the Polynesian populations that had a significant result out of the genes that were associated with urate. They also had the least number of genes with significance for obesity, \gls{t2d}, kidney disease, or metabolic syndrome when haplotypic and frequency spectrum methods were combined. The Western Polynesian populations had twice the number of genes associated with kidney disease, when looking at both haplotypic and frequency spectrum methods. The \gls{nzm} population had the highest number of genes associated with obesity and \gls{t2d} that had a significant value in any of the intra-population haplotypic and frequency spectrum methods.
+In order to establish if there was evidence of selection in genes associated with urate and diseases with \gls{hu} as a co-morbidity, loci that associated with these conditions were extracted from the gwas catalog (as per Section \@ref(diseaselist), see Table \@ref(tab:gwascatref) for references for each trait) and neutrality and selection statistics that intersected these loci were collated. Table \@ref(tab:superDiseaseGenesTab) shows the break down of the number of different statistics by population that met the significance thresholds for the \gls{sfs} based statistics, the haplotype based statistics, and the overlap between the two different base methods. The \gls{cim} had the least number of genes of the Polynesian populations that had a significant result out of the genes that were associated with urate. They also had the least number of genes with significance for obesity, \gls{t2d}, kidney disease, or metabolic syndrome when haplotypic and frequency spectrum methods were combined. The Western Polynesian populations had twice the number of genes associated with kidney disease, when looking at both haplotypic and frequency spectrum methods. The \gls{nzm} population had the highest number of genes associated with obesity and \gls{t2d} that had a significant value in any of the intra-population haplotypic and frequency spectrum methods.
 
-```{r polDiseaseGenesTab}
+```{r polDiseaseGenesTab, eval = FALSE}
 bind_rows(
 lower_sig_stats %>% select(SYMBOL, pop) %>% filter(pop %in% poly_pop) %>% 
   mutate(
@@ -2150,11 +2154,17 @@ bind_rows(
   kable(., col.names = c('Population','Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = '(\\#tab:polDiseaseGenesTab) Number of Genes with evidence of possible positive selection in Polynesians', booktabs = TRUE)
 ```
 
+```{r superDiseaseGenesTab}
+superDiseaseGenesTab %>% 
+  kable(., col.names = c('Population',"Super Pop",'Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = '(\\#tab:superDiseaseGenesTab) Number of Genes with evidence of possible positive selection in Super populations from intra-population tests.', format ='latex', booktab = TRUE, longtable = TRUE) %>% kable_styling(latex_options = 'repeat_header') %>% add_footnote(c("Combined is the number of genes that had both SFS and haplotypic evidence."))
+```
 
-#### Urate
+
+#### Urate and Gout
 ```{r}
 g <- urate_goutGR$SYMBOL
-xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% g) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, "") %>% rename(pop = pop1) %>% full_join(., sig_ihs_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(ihs = n) %>% full_join(., sig_nsl_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(nsl = n) %>%full_join(., lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% g)%>% select(-contains('chrom')) %>% group_by(pop, SYMBOL, statname) %>% tally() %>% spread(statname, n), by = c('pop', 'genename' = 'SYMBOL') ) %>% arrange(genename) %>% mutate_all(., function(x){replace(x, is.na(x), "")}) %>%  kable(., caption = '(\\#tab:uratePol) All urate/gout genes', col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay & Wu's H", "Fu & Li's D"," Fu & Li's F", "Tajima's D"," Zeng's E"), booktabs = TRUE, format ='latex') %>% kableExtra::row_spec(0, angle = 65)# %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+uratePol <- xpehh %>%  select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% g) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, "") %>% rename(pop = pop1) %>% full_join(., sig_ihs_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(ihs = n) %>% full_join(., sig_nsl_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(nsl = n) %>%full_join(., lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% g)%>% select(-contains('chrom')) %>% group_by(pop, SYMBOL, statname) %>% tally() %>% spread(statname, n), by = c('pop', 'genename' = 'SYMBOL') ) %>% arrange(genename)
+uratePol %>% mutate_all(., function(x){replace(x, is.na(x), "")}) %>%  kable(., caption = '(\\#tab:uratePol) All urate/gout genes', col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay & Wu's H", "Fu & Li's D"," Fu & Li's F", "Tajima's D"," Zeng's E"), booktabs = TRUE, format ='latex') %>% kableExtra::row_spec(0, angle = 90)# %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 rm(g)
 ```
 
@@ -2162,19 +2172,15 @@ rm(g)
 lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% urate_goutGR$SYMBOL) %>% select(pop, SYMBOL, statname) %>% distinct()%>% spread(statname, statname, "") %>% arrange(SYMBOL)
 ```
 
-> intro
 
-Table \@ref(tab:polDiseaseGenesTab) showed that the Western Polynesian populations of \gls{sam} and \gls{ton} had a higher number of genes associated with urate than the Eastern Polynesian populations of \gls{cim} and \gls{nzm}. The Eastern Polynesian populations had no loci that met the significance threshold from the haplotypic methods of \gls{ihs} and \gls{nsl}. The two main effect loci for serum urate, _SLC2A9_ and _ABCG2_ both had limited evidence of selection. _SLC2A9_ did not have any values for \gls{ihs} or \gls{nsl} because of an extended region of no recombination leading to a large gap in the reference genome which caused the \gls{ehh} calculation to be terminated. There was evidence with \gls{fld} and \gls{flf} which both had windows from _SLC2A9_ in the 1st percentile from \gls{ton}. This was also observed with the \gls{eas} populations of \gls{chb} and \gls{jpt}. There was a 120kb region of consecutively low score for both \gls{fld} with \gls{ton}, \gls{chb}, and \gls{jpt}. This same region was also found in \gls{flf} for \gls{ton}.
+The `r urate_goutGR$SYMBOL %>% unique() %>% length()` loci identified through \gls{gwas} as being associated with urate and gout only had a small proportion with any evidence of possible selection.
+In the Polynesian populations, from the intra-population neutrality and selection statistics, there were 10 genes that had some evidence. However, there were only three genes with haplotypic evidence, and only one gene (_PRKAG2_) that had both haplotypic and \gls{sfs} based evidence. The Western Polynesian populations were the only Polynesian populations to have haplotypic based evidence. Overall, the Polynesian populations did not have more urate genes with evidence than the other populations (Table \@ref(tab:superDiseaseTab)).
 
-For Polynesian populations, _ABCG2_ only had  significant results from \gls{ihs} and \gls{nsl} at the same marker (rs2622626) for \gls{ton}. With \gls{ihs} the \gls{sas} populations of \gls{gih} and \gls{itu} also had significant values for rs2622626. For \gls{nsl}, along with \gls{gih}, and \gls{itu}, the other non-Polynesian populations that had a significant value was the \gls{eas} population \gls{jpt}, and the \gls{afr} population of \gls{yri}. There were no Polynesian populations with values in the 1st percentile for the frequency based statistics, and only \gls{esn} had windows that met the threshold for \gls{fwh}. 
+The two main effect loci for serum urate, _SLC2A9_ and _ABCG2_ both had limited evidence of selection. _SLC2A9_ did not have any values for \gls{ihs} or \gls{nsl} because of an extended region of no recombination leading to a large gap in the reference genome which caused the \gls{ehh} calculation to be terminated. There was evidence with \gls{fld} and \gls{flf} which both had windows from _SLC2A9_ in the 1st percentile from \gls{ton}. This was also observed with the \gls{eas} populations of \gls{chb} and \gls{jpt}. For Polynesian populations, _ABCG2_ only had  significant results from \gls{ihs} and \gls{nsl} at the same marker (rs2622626) for \gls{ton}. With \gls{ihs} the \gls{sas} populations of \gls{gih} and \gls{itu} also had significant values for rs2622626. For \gls{nsl}, along with \gls{gih}, and \gls{itu}, the other non-Polynesian populations that had a significant value was the \gls{eas} population \gls{jpt}, and the \gls{afr} population of \gls{yri}. There were no Polynesian populations with values in the 1st percentile for the frequency based statistics, and only \gls{esn} had windows that met the threshold for \gls{fwh}. The only other transporter that was associated with urate that had a window meeting the significance threshold in Polynesian populations was _SLC16A9_ in \gls{ton} for \gls{fld}.
 
-The only other transporter that was associated with urate that had a window meeting the significance threshold in Polynesian populations was _SLC16A9_ in \gls{ton} for \gls{fld}.
+Table \@ref(tab:uratePol) shows all urate and gout associated genes that had any evidence of possible selection in the Polynesian populations. Some genes of interest included _IGF1R_ and _RREB1_ which both had significant markers with \gls{xpehh} between nearly all Polynesian populations and many of the other populations excepting those in the \gls{sas} super population. _RREB1_ is also associated with \gls{t2d}. _BCAS3_ had multiple windows that met the lower threshold for \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{td} in the Polynesian populations but did not have any significant markers for the haplotypic tests of selection. There were no regions of consectutive score depression in the Polynesian populations that intersected the urate and gout loci.
 
-The majority of loci associated with urate that showed possible evidence of selection were not urate transporters but instead involved in multiple biological processes. There were four loci that had consecutively low scores in at least one statistic in at least one Polynesian population. These were _ATXN2_, _BAZ1B_, _BCAS3_, and _INHBC_. There were four other loci, _IGFR_, _NFAT5_, _PRKAG2_, and _RREB1_, that had met the threshold but not over a large consecutive region in at least a single Polynesian population. _ATXN2_ had a consecutively low score for \gls{fld} and \gls{flf} in \gls{sam} and also \gls{chb}. Windows in the 1st percentile for \gls{ze} came from \gls{cim}, \gls{nzm}, and \gls{sam}. _BAZ1B_ had consecutively low scores for \gls{td} for \gls{ton} covering 130kb, this same region was seen in the \gls{clm}, \gls{itu}, \gls{pel}, and \gls{stu} populations. Windows for the 1st percentile of \gls{td} were also from \gls{nzm}, \gls{sam}, and \gls{ton}.
 
-_BCAS3_ had 17 populations across multiple statistics that had consecutively low score regions. For \gls{fwh} there was \gls{cim} whereas \gls{flf} had \gls{nzm}. \gls{td} also had \gls{nzm}, along with all of the \gls{amr}, \gls{eas}, and \gls{sas} populations. Each of the Polynesian populations had windows in the 1st percentile for \gls{fwh} and \gls{flf}. For \gls{fld} and \gls{td} the \gls{cim} and \gls{nzm} populations both had windows in the 1st percentile whereas of the Western Polynesian populations, \gls{ton} had windows for \gls{fld}, and \gls{sam} had windows for \gls{td}. Only \gls{nzm} from the Polynesian populations had a region of consecutively low score for \gls{ze} with _INHBC_.
-
-The remaining four loci that didn't have consecutively low score regions. For a urate associated locus, _IGFR_ had the most markers that were significant for a haplotypic test for the Polynesian populations. There were five markers for \gls{nsl} in the \gls{ton} population that were significant. \gls{sam} had a single marker and it was different to the significant markers in \gls{ton}. _NFAT5_ had windows for \gls{nzm} from both \gls{td} and \gls{flf}. _PRKAG2_ had windows from \gls{ton} for both \gls{fld} and \gls{flf}, and \gls{sam} for \gls{fld} and \gls{nsl}. _RREB1_ had windows from \gls{cim}, \gls{nzm}, and \gls{ton} for \gls{td}, and only \gls{nzm} and \gls{sam} for \gls{flf}.
 
 ```{r ihsUrate, eval = FALSE}
 # Gout specific
@@ -3320,10 +3326,6 @@ rm -r {EPN,WPN}_{NZM,CIM,SAM,TON}
 
 <!-- ## UNUSED CODE -->
 
-```{r superDiseaseGenesTab}
-superDiseaseGenesTab %>% 
-  kable(., col.names = c('Population',"Super Pop",'Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = '(\\#tab:superDiseaseGenesTab) Number of Genes with evidence of possible positive selection in Super populations', format ='latex', booktab = TRUE) %>% kableExtra::kable_styling(latex_options = 'scale_down')
-```
 
 
 ```{r, include = FALSE, eval = FALSE}
