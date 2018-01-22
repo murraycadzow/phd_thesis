@@ -52,7 +52,7 @@ ce_populations_table <- function() {
   # % diabetes
   load('data/ce_selected_ids_27-4-2017.Rdata')
   gout_phenotypes <- read_delim('data/gout_phenotypes.txt', delim='\t')
-  si <- bind_rows(lapply(names(selected_ids), function(x){selected_ids[[x]]$pop <- x; return(selected_ids[[x]])}))
+  si <- bind_rows(lapply(names(selected_ids), function(x){selected_ids[[x]]$pop <- x; return(selected_ids[[x]])})) %>% filter(!pop %in% c('WPN','EPN','NAD'))
   tab <- gout_phenotypes %>% 
     select(SUBJECT, BMICALC,BMI, GOUT, ACRGOUTAFFSTAT, DIABETES, AGECOL,SEX, HEART,KIDNEY, FATTYLIVER,WEIGHT,HEIGHT,WAIST,SYSTOLIC,DIASTOLIC,ETHCLASS) %>% 
     inner_join(., si, "SUBJECT") %>% arrange(pop) %>% 
@@ -62,10 +62,10 @@ ce_populations_table <- function() {
       `Sex (% Male)` = formattable(sum(SEX == 1, na.rm = TRUE) / sum(SEX %in% c(1,2), na.rm =TRUE) * 100, digits = 2, format = 'f'),
             BMI = paste0(formattable(mean(BMI, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(BMI, na.rm = TRUE),digits = 2, format = 'f'),")"),
             Waist = paste0(formattable(mean(WAIST, na.rm=TRUE),digits = 2, format = 'f'), " (", formattable(sd(WAIST, na.rm=TRUE),digits = 2, format ='f'), ")"),
-            `Diabetes (%)` = formattable(sum(DIABETES == 2, na.rm=TRUE) / NROW(DIABETES) * 100, digits = 2, format = 'f') ,
-            `Gout (%)` = formattable(sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)  * 100, digits = 2, format = 'f'),
-      `Kidney (%)` = formattable(sum(KIDNEY == 2, na.rm=TRUE) / NROW(KIDNEY)  * 100, digits = 2, format = 'f'),
-      `Heart (%)` = formattable(sum(HEART == 2, na.rm=TRUE) / NROW(HEART)  * 100, digits = 2, format = 'f')
+            `Diabetes (%)` = formattable(sum(DIABETES == 2, na.rm=TRUE) / NROW(DIABETES) * 100, digits = 1, format = 'f') ,
+            `Gout (%)` = formattable(sum(GOUT == 2, na.rm=TRUE) / NROW(GOUT)  * 100, digits = 1, format = 'f'),
+      `Kidney (%)` = formattable(sum(KIDNEY == 2, na.rm=TRUE) / NROW(KIDNEY)  * 100, digits = 1, format = 'f'),
+      `Heart (%)` = formattable(sum(HEART == 2, na.rm=TRUE) / NROW(HEART)  * 100, digits = 1, format = 'f')
     )
   return(tab)
   
