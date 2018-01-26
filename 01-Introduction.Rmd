@@ -267,6 +267,7 @@ A nice little summary of some of the stats http://citeseerx.ist.psu.edu/viewdoc/
 
 In contrast to Fay and Wu's H and Tajima's D, which compares either high or low frequency variants with intermediate frequency variants, Zeng's E compares the low and high frequency variants [@Zeng2006]. After a selective sweep, the lower frequency variants are expected to 'bounce back' faster than the higher frequency variants. The E test is not sensitive to population subdivision. A negative vaue for E is indicative of a selective sweep, but a rapid population expansion 
 
+@Ferretti2017 explains how to interpret in the the form of trees
 
 ### Fu and Li's D and F
 
@@ -296,6 +297,18 @@ F can be thought of as the normalised difference between the average number of s
 
 Uric acid is a by product of purine metabolism. 
 Inflammatory response is triggered when the monosodium urate crystals interact with the innate and adaptive immune response and result in the generation of IL-1 @Rock2013
+
+
+<!-- papers that have used empirical distribution: -->
+
+<!-- There is precedent in using the empirical distribution to determine significance, instead of relying purely on the numerical value of the statistic being used. This approach however does need to acknowledge false positives, and also that true selection signals may be lost in the noise. The empirical distribution approach has been used for multiple studies [@ref; @ref; @ref]. -->
+
+<!-- - Teshima2006 -->
+<!-- - Xue2009 -->
+<!-- - Hider2013 (fwh,fld,flf,td,ihs) -->
+<!-- - Joannalagadda2017 (fwh,td,ihs) -->
+<!-- - akey2002interrogating (Fst) -->
+<!-- - Akey2010 (d~i~ Fst derived stat) -->
 
 
 <!--

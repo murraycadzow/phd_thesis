@@ -38,12 +38,16 @@ The objectives for this chapter are to:
 - Investigate if there is a correlation between selection statistics and variance GWAS
 - Implement a 'meta-analysis' of selection statistics, GWAS, and vGWAS results
 
-Selection, vGwAS, GWAS, and Imputation of Polynesian Populations
+Selection, vGWAS, GWAS, and Imputation of Polynesian Populations
 
 useful papers:
 
 - @Fay2013
 - @Dudley2012
+
+prioritisation of variants from gwas
+- @Hou2013
+- maybe @Kindt2013
 
 Improvement gwas through the use of imputation:
 
@@ -189,7 +193,7 @@ manhattan plot for the all \@ref(fig:manhatAllAgeSex)
 knitr::include_graphics('images/05_selection_and_association/all_age_sex.png')
 ```
 
-```{r manhatAllAgeSexBmi,echo = FALSE, fig.cap='(ref:manhatAllAgeSexBmi)', fig.width=7, fig.asp=1, out.wdith = '95%', fig.align='center'}
+```{r manhatAllAgeSexBmi,echo = FALSE, fig.cap='(ref:manhatAllAgeSexBmi)', fig.width=10, fig.asp=1, out.width = '95%', fig.align='center', out.extra='angle=90'}
 knitr::include_graphics('images/05_selection_and_association/all_age_sex_bmi.png')
 ```
 
@@ -254,4 +258,11 @@ Hospital
 ###
 
 ## Polynesian GWAS and Selection
+
+
+
+## Discussion
+
+- Concepts, estimation and interpretation of SNPbased heritability - Yang2016
+- Identifying genetic variants that affect viability in large cohorts - Mostafavi2017
 

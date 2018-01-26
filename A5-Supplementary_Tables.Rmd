@@ -146,19 +146,22 @@ lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chro
 
 ```{r}
 sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
-sig_ihs_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, iHS = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-ihs-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:ihsPolgenes)') %>% kableExtra::footnote("Appendices/03-ihs-Pol.csv", threeparttable = TRUE)
+sig_ihs_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, iHS = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-ihs-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:ihsPolgenes) All genes that had a significant iHS value in Polynesian populations.') %>% kableExtra::footnote("Appendices/03-ihs-Pol.csv", threeparttable = TRUE)
 rm(sig_ihs_val)
 ```
 
 ```{r}
 sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
-sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, nSL = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-nsl-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:nslPolgenes)') %>% kableExtra::footnote("Appendices/03-nsl-Pol.csv", threeparttable = TRUE)
+sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, nSL = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-nsl-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:nslPolgenes) All genes that had a significant nSL value in Polynesian populations.') %>% kableExtra::footnote("Appendices/03-nsl-Pol.csv", threeparttable = TRUE)
 rm(sig_nsl_val)
 ```
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
-
+xpehh %>% filter(!is.na(genename) & genename != "")%>% select(Pop1 = pop1,Pop2 = pop2, chrom, chrom_start, chrom_end,XPEHH = xpehh_value, Genename = genename)  %>% arrange(chrom, chrom_start, Pop1, Pop2) %T>% 
+  {
+  #write.csv(., file = "Appendices/03-xpehh-Pol.csv", row.names = FALSE, quote = FALSE)
+  }  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:xpehhPolgenes) All genes that had a significant XP-EHH value in Polynesian populations.') %>% kableExtra::footnote("Appendices/03-xpehh-Pol.csv", threeparttable = TRUE)
 rm(xpehh)
 ```
 

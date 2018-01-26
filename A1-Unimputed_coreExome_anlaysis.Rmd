@@ -1,11 +1,13 @@
 # (APPENDIX) Appendix {-}
 
+# Appendix A
+
 ```{r, messages = FALSE, warning=FALSE, include=FALSE}
 #knitr::opts_knit$set(root.dir = '/home/murraycadzow/data/NZ_coreExome_1kgp/' )
 library(tidyverse)
 library(formattable)
 ```
-# Appendix A
+
 Unimputed CoreExome analysis
 
 ## QC of genotypes
@@ -337,4 +339,47 @@ done
 ### Database creation and loading
 
 
+### Window and slide deciding
 
+The effect of window and slide size was investigated using windows sizes ranging from 30 kb through to 150 kb (Figure \@ref(fig:windowSizes)), and slide sizes ranging from 3 kb through to 35 kb, using the \gls{gbr} and \gls{nzc} populations. The general trend was as window size increased the entire distribution was shifted to the right and also widened.
+
+<!--
+This is at least covered for TD in the R notebook
+
+window slide was equal to the window size for each size tested.
+
+The rough results are that because of the density of the SNPs on the chip the windows tested 1,5,10,30,50,100 KB for 1,5,10 there is not a great number of SNPs per window. 
+
+The 1 kb window provides a very large number of windows with no snps present and when plotted looks like there is much fewer windows than the 5kb
+
+
+the window size of 30kb starts to offer a 
+
+table: summary of n segreating sites by window size
+-->
+
+```{r,echo= FALSE }
+test_windows <- data.frame(
+  Window = c(30,30,50,50,100,100,150,150),
+  Slide = c(3,10,5,10,10,25,10,35) )
+
+```
+
+
+
+
+
+table: 
+
+```{r, results = 'asis'}
+#pop: 1 = GBR, 2 = NZC 
+
+summary_results <- readRDS('~/data/NZ_coreExome_1kgp/popgenome_window_tests_filtered_3ns_summary-19-7-2017.RDS')
+#summary_results %>% ungroup()%>% mutate(pop = ifelse(pop == 1, "GBR", "NZC"), range = max - min) %>% group_by(pop) %>% mutate_at(vars(c('mean', 'sd', 'lower_1', 'upper_99', 'median', 'min', 'max','range')), funs(round(., digits = 3))) %>% ungroup()  %>% left_join(., test_windows %>% mutate(ws = as.numeric(rownames(.))), by = 'ws') %>% select(stat, Window, Slide, pop, min, lower_1, median, mean, sd, upper_99, max, range) %>% data.frame #%>%  pander::pandoc.table(.)
+```
+
+(ref:windowSizes) Effect of window size on selection statistics using a slide 10 kb. The vertical grey line indicates the the chosen window size of 100 kb.
+
+```{r windowSizes, fig.cap = '(ref:windowSizes)'}
+summary_results %>% mutate(range = max - min)%>% mutate_at(vars(c('mean', 'sd', 'lower_1', 'upper_99', 'median', 'min', 'max', 'range')), funs(round(., digits = 3))) %>% ungroup() %>% mutate(pop = ifelse(pop == 1, "GBR", "NZC")) %>% left_join(., test_windows %>% mutate(ws = as.numeric(rownames(.))), by = 'ws') %>% select(stat, Window, Slide, pop, min, lower_1, median, mean, sd, upper_99, max, range) %>% gather("sumStat", 'value', 5:NCOL(.))%>% filter(Slide == 10) %>% ggplot(., aes(x = Window, y = value, by = pop, colour = sumStat )) + geom_line()  + geom_vline(xintercept = 100, colour = "grey") + facet_wrap(~stat, scales = 'free_y') + theme_bw()
+```

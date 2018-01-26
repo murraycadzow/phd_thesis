@@ -11,8 +11,13 @@ was gout/urate and other diseases under selection?
 - chip data
 - imputation
 - phasing
+    - polynesians aren't in the 1kgp reference haplotypes
 - filters
     - QC filters
     - HWE
     - MAF
     
+    
+One of the limitations of using the gwas catalog is for gene associations
+- bias of the populations
+- genes that are involved might not be genome wide significant therefore missed

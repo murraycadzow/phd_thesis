@@ -2,6 +2,7 @@
 ```{r, echo = FALSE, message = FALSE, warning= FALSE}
 library(tidyverse)
 library(pander)
+library(kableExtra)
 source("scripts/methods_tables.R")
 panel <- read.table('~/data/NZ_coreExome_1kgp/nz_1kgp.panel', header = TRUE, stringsAsFactors = FALSE)
 ```
@@ -602,11 +603,6 @@ pander::pandoc.table(ce_clinical_table(), caption = ' (\\#tab:clinInfoCE) Clinic
 \newpage
 
 
-
-
-The clinical info is contained in table \@ref(tab:clinInfoCE) which is printed somewhere
-
-
 ```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE, eval = FALSE}
 #knitr::kable(ce_populations_table(), longtable = TRUE, format = 'pandoc', booktabs = TRUE , caption = 'Clinical information for New Zealand Populations in selection analysis')
 ```
@@ -616,7 +612,7 @@ The clinical info is contained in table \@ref(tab:clinInfoCE) which is printed s
 ```{r, echo = FALSE, results = 'asis', message = FALSE, warning=FALSE}
 ce_pop_table <- ce_populations_table()
 #names(ce_pop_table) <- c("pop","n","Age","Sex (% Male)","BMI","Waist","Percent Diabetes","Percent Gout")
-knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis',align = 'lcrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","Diabetes (%)","Gout (%)", "Kidney Disease (%)","Heart Problems (%)"), booktabs = TRUE )
+knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis',align = 'lcrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","Diabetes (%)","Gout (%)", "Kidney Disease (%)","Heart Problems (%)"), booktabs = TRUE, format = 'latex' ) %>% kable_styling(latex_options = 'scale_down') 
 ```
 
 Analysis groups were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc} and unenriching for gout. To unenrich for gout, population specific prevalence based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton} were used and individuals were randomly sampled. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained.
