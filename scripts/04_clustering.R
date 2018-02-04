@@ -3,8 +3,8 @@ library(ggdendro)
 library(scales)
 library(ggpubr)
 
-
-
+poly_pop <- c('CIM','NZM','TON','SAM')
+panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
 ###
 # made in clustering/coreExome_1kg_popgenome_clustering_100kb_filtered_3ns.Rmd
 mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-31-8-2017.RDS')
@@ -13,7 +13,31 @@ clus_r_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_
 clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_c_list-31-8-2017.RDS')
 ###
 
-panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsFactors = FALSE)
+## load global summary info
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
+global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
+
+create_sel_summary_table <- function(s){
+  global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
+}
+
+create_sel_summary_table <- function(s){
+  global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
+}
+
+gs_td_table <- create_sel_summary_table('Tajima.D')
+gs_fwh_table <- create_sel_summary_table('Fay.Wu.H')
+gs_fld_table <- create_sel_summary_table('Fu.Li.D')
+gs_flf_table <- create_sel_summary_table('Fu.Lu.F')
+gs_ze_table <- create_sel_summary_table('Zeng.E')
+
+td_super_pop_means <- global_super_summary %>% filter(stat == 'Tajima.D') %>% mutate(range = max - min)
+fwh_super_pop_means <- global_super_summary %>% filter(stat == 'Fay.Wu.H') %>% mutate(range = max - min)
+fld_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.D') %>% mutate(range = max - min)
+flf_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.F') %>% mutate(range = max - min)
+ze_super_pop_means <- global_super_summary %>% filter(stat == 'Zeng.E') %>% mutate(range = max - min)
+
+
 
 heatmap_col <- scale_fill_gradient(low = "white", high = "steelblue", guide = 'colourbar', breaks = c(0.0, 0.25, 0.5, 0.75, 1.0 ), limits = c(0,1))
 
