@@ -3,8 +3,11 @@
 library(tidyverse)
 library(pander)
 library(kableExtra)
+library(phdFunctions)
 source("scripts/methods_tables.R")
 panel <- read.table('~/data/NZ_coreExome_1kgp/nz_1kgp.panel', header = TRUE, stringsAsFactors = FALSE)
+markers <- read.table('~/data/NZ_coreExome_1kgp/nz_1kg_markers.txt', stringsAsFactors = FALSE, header = FALSE)
+names(markers) <- c("chrom","chrom_start","marker","ref","alt")
 ```
 
 ```{r, echo = FALSE, inlcude = FALSE}
@@ -367,7 +370,7 @@ Uk Biobank GWAS
 
 #### Heritability Analysis
 
-The \gls{gcta} v1.26.0 [@gctaref] was used to calculate the proportion of heritability explained. A genetic relationship matrix was calculated 
+The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011a] was used to calculate the proportion of heritability explained. A genetic relationship matrix was calculated 
 
 
 ```{r, engine='bash', eval=FALSE}
@@ -538,7 +541,7 @@ The Infinium CoreExome-24 beadchip is a genotyping platform available from Illum
 
 Heterozygosity and depression of genetic variation was also checked for outliers.
 
-
+`r  lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>%  mean() %>% round_dp(., 0)` = density of markers used
 
 Relatedness between individuals was assessed through inheritance by state using Plink2 (v1.9b3.32) and a pedigree of created to 
 Duplicates and first degree relations were excluded.
