@@ -49,13 +49,15 @@ srun python ~/.local/bin/selection_pipeline \
 module unload Python/3.5.0-intel-2015a 
 module load Python/2.7.9-intel-2015a
 
-srun python /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline/haps_interpolate.py \
+PIPELINE_DIR=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline
+RESOURCE_DIR=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles
+srun python $PIPELINE_DIR/haps_interpolate.py \
 --haps results/${POP}_aachanged.haps \
 --output ${POP}_genetic_dist.haps \
---genetic-map /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles/genetic_maps/genetic_map_chr${i}_combined_b37.txt \
+--genetic-map $RESOURCE_DIR/genetic_maps/genetic_map_chr${i}_combined_b37.txt \
 --physical-position-output ${POP}_genetic_dist.pos
 
-srun python /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline/haps_to_selscan.py \
+srun python $PIPELINE_DIR/haps_to_selscan.py \
 --haps ${POP}_genetic_dist.haps \
 --pos ${POP}_genetic_dist.pos \
 --output ${POP}_${i}_selscan \
@@ -259,15 +261,23 @@ DIR=$SLURM_SUBMIT_DIR
 
 module load Python/2.7.8-goolf-1.5.14
 
+PIPELINE_DIR=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline
 
-srun tar -C $TMP_DIR -xzf $DIR/${POP1}/${POP1}.chr${i}.tar.gz $POP1/${POP1}_${i}_selscan.selscanhaps $POP1/${POP1}_${i}_selscan.selscanmap
+srun tar -C $TMP_DIR -xzf \
+  $DIR/${POP1}/${POP1}.chr${i}.tar.gz \
+  $POP1/${POP1}_${i}_selscan.selscanhaps \
+  $POP1/${POP1}_${i}_selscan.selscanmap
 
 #need selscan file for POP
-srun tar -C $TMP_DIR -xzf $DIR/${POP2}/${POP2}.chr${i}.tar.gz $POP2/${POP2}_${i}_selscan.selscanhaps $POP2/${POP2}_${i}_selscan.selscanmap
+srun tar -C $TMP_DIR -xzf \
+  $DIR/${POP2}/${POP2}.chr${i}.tar.gz \
+  $POP2/${POP2}_${i}_selscan.selscanhaps \
+  $POP2/${POP2}_${i}_selscan.selscanmap
 #merge selscan files
 mkdir $TMP_DIR/${POP1}_${POP2}
 
-cd $TMP_DIR/${POP1}_${POP2} && srun python /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline/selscan_to_selscan_xpehh.py \
+cd $TMP_DIR/${POP1}_${POP2} && \
+    srun python $PIPELINE_DIR/selscan_to_selscan_xpehh.py \
 --pop1-prefix $TMP_DIR/$POP1/${POP1}_${i}_selscan \
 --pop1-name ${POP1} \
 --pop2-prefix $TMP_DIR/$POP2/${POP2}_${i}_selscan \
@@ -277,7 +287,8 @@ cd $TMP_DIR/${POP1}_${POP2} && srun python /home/murray.cadzow/uoo00008/Merriman
   
   ls $TMP_DIR/*
   
-  #srun tar -C $TMP_DIR -xzf ${POP1}_${POP2}.tar.gz ${POP1}_${POP2}/*${i}.xpehh* ${POP1}_${POP2}/*${i}.*.xp*
+  #srun tar -C $TMP_DIR -xzf ${POP1}_${POP2}.tar.gz \
+    ${POP1}_${POP2}/*${i}.xpehh* ${POP1}_${POP2}/*${i}.*.xp*
   cd $TMP_DIR && srun ~/uoo00008/selscan/src/selscan \
 --xpehh \
 --hap ${POP1}_${POP2}/${POP1}_${i}.matches_${POP2}.xpehh_selscanhaps \
@@ -372,10 +383,24 @@ done
 # combine vcfs, run snpEff and create panel files
 parallel 'bgzip {} && tabix -f -p vcf {}.gz ' ::: $(ls */*vcf)
 mkdir combined
-parallel -j 6 'bcftools merge $(ls chr{}/*gz| grep "AMR\|AFR\|EUR\|EAS\|SAS\|POL") | bgzip -c > combined/combined_super_chr{}.vcf.gz' ::: $(seq 1 22)
-parallel -j 6 'bcftools merge $(ls chr{}/*gz | grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL\|EPN\|WPN") | bgzip -c > combined/combined_chr{}.vcf.gz' ::: $(seq 1 22)
-parallel -j 16 'java -jar ~/Murray/src/snpEff4.2/snpEff/snpEff.jar -c ~/Murray/src/snpEff4.2/snpEff/snpEff.config -v GRCh37.75 -strict -stats chr{2}/{1}{2}.html chr{2}/{1}{2}_fixed.vcf.gz | bgzip -c > chr{2}/{1}{2}_fixed_ann.vcf.gz ' ::: $(ls chr22/*gz | sed 's/chr22\///g' |cut -d'2' -f1) ::: $(seq 1 22)
-for pop in $(basename -a -s 1_fixed.vcf.gz chr1/*fixed.vcf.gz); do zcat chr1/${pop}1_fixed.vcf.gz | head -100 | grep '^#CHR' |cut -f10- | tr '\t' '\n' | awk '{print $1"\t"$1}' > ${pop}.panel ; done
+parallel -j 6 'bcftools merge $(ls chr{}/*gz| grep "AMR\|AFR\|EUR\|EAS\|SAS\|POL") |\
+  bgzip -c > combined/combined_super_chr{}.vcf.gz' ::: $(seq 1 22)
+parallel -j 6 'bcftools merge $(ls chr{}/*gz | grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL\|EPN\|WPN") |\
+  bgzip -c > combined/combined_chr{}.vcf.gz' ::: $(seq 1 22)
+parallel -j 16 'java -jar ~/Murray/src/snpEff4.2/snpEff/snpEff.jar \
+    -c ~/Murray/src/snpEff4.2/snpEff/snpEff.config \
+    -v GRCh37.75 \
+    -strict \
+    -stats chr{2}/{1}{2}.html chr{2}/{1}{2}_fixed.vcf.gz |\
+    bgzip -c > chr{2}/{1}{2}_fixed_ann.vcf.gz ' ::: $(ls chr22/*gz |\
+    sed 's/chr22\///g' |cut -d'2' -f1) ::: $(seq 1 22)
+for pop in $(basename -a -s 1_fixed.vcf.gz chr1/*fixed.vcf.gz)
+do 
+  zcat chr1/${pop}1_fixed.vcf.gz |\
+  head -100 | grep '^#CHR' |\
+  cut -f10- | tr '\t' '\n' |\
+  awk '{print $1"\t"$1}' > ${pop}.panel
+done
 
 # calculate Fst
 parallel -j 10 '
@@ -383,7 +408,10 @@ for p1 in POL
 do
     for p2 in AFR AMR EUR EAS SAS
     do
-        vcftools --gzvcf combined/combined_super_chr{}.vcf.gz --weir-fst-pop ${p1}.panel --weir-fst-pop ${p2}.panel  --fst-window-size 1000000 --fst-window-step 1000 --out ../fst/chr{}/${p1}_${p2}_{}
+        vcftools --gzvcf combined/combined_super_chr{}.vcf.gz \
+          --weir-fst-pop ${p1}.panel --weir-fst-pop ${p2}.panel  \
+          --fst-window-size 1000000 --fst-window-step 1000 \
+          --out ../fst/chr{}/${p1}_${p2}_{}
     done
 done
 ' ::: $(seq 1 22)
@@ -395,14 +423,20 @@ do
     do
        if [[ $p1 != $p2 ]]
            then
-               vcftools --gzvcf combined/combined_chr{}.vcf.gz --weir-fst-pop ${p1}.panel --weir-fst-pop ${p2}.panel  --fst-window-size 1000000 --fst-window-step 1000 --out ../fst/chr{}/${p1}_${p2}_{}
+               vcftools --gzvcf combined/combined_chr{}.vcf.gz \
+                  --weir-fst-pop ${p1}.panel --weir-fst-pop ${p2}.panel  \
+                  --fst-window-size 1000000 --fst-window-step 1000 \
+                  --out ../fst/chr{}/${p1}_${p2}_{}
        fi
     done
 done
 ' ::: $(seq 1 22)
 
 # generate kaks files
-parallel 'zgrep -i "^#\|synonymous\|missense" {} > $(echo {}| cut -d'/' -f1)/$(basename -s .vcf.gz {}).txt ; python3.4 /Volumes/BiocArchive/staff_groups/merrimanlab/Merriman_Documents/Murray/SelectionPipeline/selectionTools-dev/extrascripts/kaks.py $(echo {}| cut -d'/' -f1)/$(basename -s .vcf.gz {}).txt > $(echo {} | cut -d'/' -f1)/$(basename -s .vcf.gz {}).kaks ' ::: $(ls chr*/*ann.vcf.gz)
+parallel 'zgrep -i "^#\|synonymous\|missense" {} > $(echo {}|\ 
+    cut -d'/' -f1)/$(basename -s .vcf.gz {}).txt ; python3.4 /Volumes/userdata/staff_groups/merrimanlab/Merriman_Documents/Murray/SelectionPipeline/selectionTools-dev/extrascripts/kaks.py \
+    $(echo {}| cut -d'/' -f1)/$(basename -s .vcf.gz {}).txt > $(echo {} |\
+    cut -d'/' -f1)/$(basename -s .vcf.gz {}).kaks ' ::: $(ls chr*/*ann.vcf.gz)
 
 # move and rename the kaks files
 cd $results_dir/
@@ -413,8 +447,10 @@ for i in $(seq 1 22);do rename ${i}_fixed_ann ${i} $(ls kaks/chr${i}/*) ; done
 cd $results_dir/ihs
 for pop in $(ls chr1/*out | cut -d'/' -f2 | cut -d'_' -f1 | sort -u)
 do 
-    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
-    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
+    ~/Murray/src/selscan/bin/linux/norm --ihs \
+        --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
+    ~/Murray/src/selscan/bin/linux/norm \
+        --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
 done
 
 # rename the ihs files to remove the underscore
@@ -431,8 +467,10 @@ done
 cd $results_dir/nsl
 for pop in $(ls chr1/*out | cut -d'/' -f2 | cut -d'_' -f1 | sort -u) 
 do 
-    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
-    ~/Murray/src/selscan/bin/linux/norm --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
+    ~/Murray/src/selscan/bin/linux/norm --ihs \
+        --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
+    ~/Murray/src/selscan/bin/linux/norm --ihs \
+        --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
 done
 
 # rename and move the nsl files
@@ -453,8 +491,10 @@ do
     do
         if [[ $p1 != $p2 ]]
         then
-            ~/Murray/src/selscan/bin/linux/norm --xpehh --files chr*/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}.log
-            ~/Murray/src/selscan/bin/linux/norm --xpehh --files chr*/gap1mb/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}_gap1mb.log
+            ~/Murray/src/selscan/bin/linux/norm --xpehh \
+                --files chr*/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}.log
+            ~/Murray/src/selscan/bin/linux/norm --xpehh \
+                --files chr*/gap1mb/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}_gap1mb.log
         fi
     done
 done
