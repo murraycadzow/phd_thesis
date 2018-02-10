@@ -230,7 +230,7 @@ ihs_nsl_clus_tab <- ihs_nsl_clus_tab %>% left_join(., ihs_nsl_sum_tab %>% left_j
 ```
 
 
-### False discovery rate of windowed statistics
+### False discovery rate of windowed statistics {#fdrresults}
 
 ```{r fdrpol}
  
@@ -3150,7 +3150,9 @@ rs1966839	0.49	0.316	0.607	0.016	0.495	NA	0.698	0.988	0.76	0.76	1.0", header = T
 ```
 
 
-(ref:ldDDCnzm) Linkage disequilibrium of \gls{ihs} significant SNPs (rs2060762, rs11238131, rs3807558, rs2329371, and rs1966839) in \gls{nzm} at the _DDC_ locus with malaria (rs1451375), BMI, (rs10499694), and blood metabolite ratios (rs7809234).
+(ref:ldDDCnzm) Linkage disequilibrium of \gls{ihs} significant SNPs 
+
+<!-- (rs2060762, rs11238131, rs3807558, rs2329371, and rs1966839) in \gls{nzm} at the _DDC_ locus with malaria (rs1451375), BMI, (rs10499694), and blood metabolite ratios (rs7809234). -->
 
 ```{r ldDDCnzm, fig.caption= '(ref:ldDDCnzm)', eval = TRUE}
 knitr::include_graphics('images/03_selectionpipeline/LDplot_EAS_DDC_nzm_ihs_extras.png')
@@ -3265,7 +3267,7 @@ Three of the four loci that had possible evidence of selection and were associat
 
 <!-- The malarial resistance gene _HBB_ (identified in [@Currat2002; @Ohasi2004]) was not identified as having evidence of selection -->
 
-#### Study Limitations
+#### Study Limitations {#chap3limit}
 
 There were some technical limitations of the study that influenced the results obtained. The use of a \gls{snp} chip meant that there was an ascertainment bias built into the markers observed [@nielsen2007recent]. The quality control process for the CoreExome \gls{snp} chip also has a bias against singletons and low minor allele frequency \gls{snp}s [@Guo2014]. The effect of this was seen in the right shifting of the distributions of the intra-population frequency based statistics of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, all of which make use of low frequency or singleton variants in their calculations. This shift was not observed in \gls{fwh} which compared the ratio of high frequency derived and ancestral allele variants with the intermediate frequency variants. The shift was seen in \gls{td} however in the African populations being shifted to the right so much that the first percentile for many was above zero. The intermediate and high frequency variants being over represented compared to the actual situation and will also have had an impact on the haplotypic stats due to haplotypes that have low-frequency variants being altered.
 
