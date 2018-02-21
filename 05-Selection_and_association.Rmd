@@ -7,7 +7,7 @@ library(knitr)
 library(kableExtra)
 library(tidyverse)
 source('scripts/05_ukbb_filteredSnps.R')
-
+knitr::opts_chunk$set(echo = FALSE)
 models <- readRDS('data/Ukbiobank/pheno_models.RDS')
 pheno_models <- bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster,broom::glance(x$model))})) %>% arrange(AIC)
 
@@ -33,12 +33,12 @@ The first section of this chapter has been published as part of @Cadzow2017
 The UK Biobank provides a unique opportunity
 
 objectives:
-The objectives for this chapter are to:
-- Determine the improvement (if any) of genotype imputation in Polynesians from incorporating Polynesian haplotypes into the imputatation reference panel
-- Investigate if there is a correlation between selection statistics and variance GWAS
-- Implement a 'meta-analysis' of selection statistics, GWAS, and vGWAS results
+- Investigate the performance of gout definitions on association studies
+- Investigate the use of association studies in conjunction with selection analyses
 
-Selection, vGWAS, GWAS, and Imputation of Polynesian Populations
+
+
+Selection, GWAS, and Imputation of Polynesian Populations
 
 useful papers:
 
@@ -56,7 +56,7 @@ Improvement gwas through the use of imputation:
 
 refer to gwas done by ukbio in all phenotypes and say it looks similar
 
-## European GWAS, vGWAS and Selection
+## Performance of gout definitions
 
 Part of this work has been published in @Cadzow2017.
 
@@ -68,19 +68,17 @@ UK Biobank approval 12611
 ### European Gout GWAS
 
 <!-- acr report using unfiltered controls -->
-This GWAS was performed using the interim data release which had genetic information for `r NROW(fam)` individuals. For the GWAS itself, it was limited to be only people who had self reported an ethnic background of British, Irish, or 'any other white background'.
+This \gls{gwas} was performed using the interim data release from the UK Biobank (approval number 12611) downloaded November 2015. Therewas genetic information for `r NROW(fam)` individuals. For the \gls{gwas} itself, it was limited to be only people who had self reported an ethnic background of British, Irish, or 'any other white background'.
 
 Inclusion criteria were European ethnicity, aged between 40 and 69 years and had genome wide genotypes available. The exclusion criteria used was: mismatch between self-reported sex and genetic sex, genotype quality control failure, relatedness, or either a primary or secondary hospital diagnosis of kidney disease (International Classification of Diseases, Tenth Revision (ICD-10), codes I12, I13, N00-N05, N07, N11, N14, N17–N19, Q61, N25.0, Z49, Z94.0, Z99.2), participants aged 70 years and over, and those with kidney disease, because these are risk factors for secondary gout.
 
-The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)).
 
 _Classifications used_
 
-There were four main classification criteria that were used to define gout cases. Hospital defined gout involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, inluding subcodes). Self-report of gout was defined as reporting having gout at the time of the study interview. Use of \gls{ult} used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukemia or lymphoma (ICD-10 codes C81-C96). The Winnard definition was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine).
+There were four main classification criteria that were used to define gout cases. Hospital defined gout involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, inluding subcodes). Self-report of gout was defined as reporting having gout at the time of the study interview. Use of \gls{ult} used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukemia or lymphoma (ICD-10 codes C81-C96). The Winnard definition was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
 
 
-
-Prior to conducting the GWAS for gout, phenotypic models were assessed using any method of classifying gout. Logisitic regression was performed and the Akaike information criterion (AIC) for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant (P < 0.05) on their own, age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and BMI (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (AIC 22706.05), sex (AIC 21041.80) and BMI (AIC 22001.03).
+Prior to conducting the \gls{gwas} for gout, phenotypic models were assessed using any method of classifying gout. Logisitic regression was performed and the Akaike information criterion (AIC) for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant (P < 0.05) on their own, age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (AIC 22706.05), sex (AIC 21041.80) and \gls{bmi} (AIC 22001.03). Based on the AIC for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown by affection status is in Table \@ref(tab:ukbbclin).
 
 
 
@@ -88,7 +86,8 @@ Prior to conducting the GWAS for gout, phenotypic models were assessed using any
 
 bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster,broom::glance(x$model))})) %>% arrange(AIC)
 ```
-```{r, results = 'asis'}
+
+```{r, results = 'asis', eval = FALSE}
 
 broom::tidy(models[[5]]$model) %>% mutate(p.value = format(p.value, scientific = TRUE, digits = 3))%>% kable(., digits = 3, caption = '(\\#tab:phenomodel) Logistic regression for gout adjusted by age, sex, and BMI')
 ```
@@ -102,7 +101,7 @@ lapply(c(1,2,4,3,5 ), function(x){broom::tidy(models[[x]]$model)})
 ** UKBiobank participant characteristics **
 
 ```{r, results = 'asis'}
-ukbio_gout %>% summarise(percent_male = 1 - sum(sex)/NROW(.), mean_age = mean(age, na.rm = TRUE), mean_bmi = mean(bmi, na.rm = TRUE), n = n(), febuxostat = sum(febuxostat, na.rm = TRUE), allopurinol = sum(allopurinol, na.rm = TRUE), sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), colchicine = sum(colchicine, na.rm = TRUE), hosp = sum(gouthosp, na.rm =TRUE), self = sum(goutself, na.rm=TRUE), winnard = sum(goutwinnard, na.rm = TRUE), ult = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>%  dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE)
+ukbio_gout %>% summarise(n = n(), percent_male = 1 - sum(sex)/NROW(.), mean_age = mean(age, na.rm = TRUE), mean_bmi = mean(bmi, na.rm = TRUE),  febuxostat = sum(febuxostat, na.rm = TRUE), allopurinol = sum(allopurinol, na.rm = TRUE), sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), colchicine = sum(colchicine, na.rm = TRUE), hosp = sum(gouthosp, na.rm =TRUE), self = sum(goutself, na.rm=TRUE), winnard = sum(goutwinnard, na.rm = TRUE), ult = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>%  dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants.")
 ```
 
 
@@ -116,21 +115,23 @@ listInput <- readRDS('data/Ukbiobank/upsetPlotList.RDS')
 UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 )
 ```
 
-There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individuals that had any classification of gout and `r ukbio_gout %>% filter(goutaff ==0) %>% NROW()` controls. Of those with any classification of gout, there were `r ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1) %>% NROW()` with a hospital diagnosis, `r ukbio_gout %>% filter(goutaff ==1 & goutult ==1) %>% NROW()` with urate lowering therapy, `r ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1) %>% NROW()` with the Winnard criteria, and `r ukbio_gout %>% filter(goutaff ==1 & goutself ==1) %>% NROW()` with self-reported gout. The intersections between each group can be seen in Figure \@ref(fig:ukbbupsetplot).
+There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individuals that had any classification of gout and `r ukbio_gout %>% filter(goutaff ==0) %>% NROW()` controls. Of those with any classification of gout, there were `r ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1) %>% NROW()` with a hospital diagnosis, `r ukbio_gout %>% filter(goutaff ==1 & goutult ==1) %>% NROW()` with urate lowering therapy, `r ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1) %>% NROW()` with the Winnard criteria, and `r ukbio_gout %>% filter(goutaff ==1 & goutself ==1) %>% NROW()` with self-reported gout. The overlaps in classification between each group can be seen in Figure \@ref(fig:ukbbupsetplot). There was considerable overlap between the self-report, urate lowering therapy, and winnard classifications with 1242 individuals meeting all three classifications.
 
-** kottgen plot **
 
+
+\gls{gwas} were performed using plink1.9b [@plink] for each gout classification and 
 
 - GWAS results
 - Heritability explained
 
-To calculate the heritiability explained 10000 contols were randomly selected and 
 
 
+** kottgen plot **
 
 #### GWAS results
 
 The top SNPs from the GWAS were:
+
 
 - hosp
 
@@ -216,49 +217,43 @@ ALL GROUP: the most significant snps are from ABCG2. SLC2A9 also features highly
 here I want to include the results from the heritability analysis across the different criteria
 ```
 
-10000 controls were randomly selected. The same 10000 samples were then combined with each different gout criteria and heritiability estimates were obtained by first creating the genetic relationship matrix and then the variance of gout 
-
-
-Kottgen refs 10-12 put heritability explained for serum urate at 40-70%. Kottgen reported heritability explained in serum urate loci that were adjusted for age and sex from 0.27 to 0.41.
-
-
-> The heritability estimates (i.e., proportion of variance in gout explained by common inherited genetic variants under an additive model of inheritance) were 0.289 (0.034) for the self-re- port of gout or ULT use definition, 0.283 (0.036) for the self-report of gout definition, 0.282 (0.040) for the Win- nard definition, 0.308 (0.044) for the ULT use definition and 0.236 (0.160) for the hospital diagnosis definition. There were no significant differences between the heritability
+To see if there was a difference between gout classifications in the genetic component of the variance explained by an additive model in gout, heritability estimates were calculated for each gout classification. To do this, 10000 controls were randomly selected and were used with each different gout criteria and heritiability estimates for each chromosome were calculated using GCTA 1.26.0 [@ref]. The heritibility estimates were 0.289 (SE 0.034) for the self-report of gout or ULT use definition, 0.283 (SE 0.036) for the self-report of gout definition, 0.282 (SE 0.040) for the Winnard definition, 0.308 (SE 0.044) for the ULT use definition and 0.236 (SE 0.160) for the hospital diagnosis definition. There were no statistically significant differences between the heritability estimates of any of the different classifications. The heritability estimates were similar to estimates of genetic variance of serum urate [@Kottgen2013]
 
 
 
-Winnard
-Self
-Self + ULT
-Hospital
+
+<!-- Kottgen refs 10-12 put heritability explained for serum urate at 40-70%.  Kottgen reported heritability explained in serum urate loci that were adjusted for age and sex from 0.27 to 0.41. -->
 
 
-### European Gout vGWAS
-- vGWAS results
 
 ### European selection 
 - EUR/GBR/CEU selection results
 
 
 
-### 
 
 
-## Imputation of Polynesian Populations Genomes
-
-### Creation of a Polynesian imputation reference panel
-
-#### Low coverage
-
-
-
-
-##### 
-
-
-###
 
 ## Polynesian GWAS and Selection
 
+
+A \gls{gwas} was also performed for individuals with Polynesian ancestry. Gout affection was determined by the American college of rheumatology criteria [@ref], or a doctor diagnosis, or enrolled in a gout drug trial. All participants were older than 18. 
+
+The \gls{gwas} was adjusted for age, sex, and the first ten principle components calculated from XXX ancestry informative markers.
+
+The \gls{gwas} was conducted by Dr Tanya Major, a member of the Merriman Lab group.
+
+
+Filtered for hwe < 1e-6 and maf > 0.01
+
+
+```{r}
+polyGout <- read.table('~/data/PolyGwas/polynesian_gout_CoreExome24v1.0-1_rsIDconverted.assoc.logistic.tab', header = TRUE, stringsAsFactors = FALSE)
+```
+
+```{r}
+polyGout %>% filter(TEST == "ADD", P < 0.05) %>% qqman::manhattan(., ylim= c(0,10))
+```
 
 
 ## Discussion
@@ -266,3 +261,95 @@ Hospital
 - Concepts, estimation and interpretation of SNPbased heritability - Yang2016
 - Identifying genetic variants that affect viability in large cohorts - Mostafavi2017
 
+
+### Heritability explained
+
+The heritability explained under an additive model for gout was similar to that which was reported for serum urate by @Kottgen2013. There were no statistically significant differences between the classificiations. This could come down to the number of cases for each classification 
+
+<!-- TANYA -->
+<!-- How I did the Polynesian GWAS(s): -->
+<!-- Run from: -->
+<!-- /Volumes/userdata/staff_users/tanyaflynn/ShortCuts/murray_working_dir/coreExome/Batch_Merge/Merged_Merriman_Brown_Matsuo/PlusStrand_Merge -->
+<!-- File Set-Ups -->
+<!-- QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_rsIDconverted -->
+<!--     - merged QC batches 1 to 7, matt brown's samples & the czech samples -->
+<!--     - excluded duplicate samples -->
+<!-- polynesian_gout-affection.pheno -->
+<!--     - gout either ACR criteria or GP diagnosed / in a gout drug trial (only 119 not ACR) -->
+<!--     - excluded unknown gout status, non-polynesian (either self-report or PCA mismatch), and people <18 years old -->
+<!-- QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygout.cov -->
+<!--     - sex, age, and PCAs 1-10 (PCAs calculated in full genotype group) -->
+<!-- east-poly_list.txt -->
+<!--     - anyone self-reporting east polynesian with a PCA labelled east polynesian or general polynesian (not west) -->
+<!-- west-poly_list.txt -->
+<!--     - anyone self-reporting west polynesian with a PCA labelled west polynesian or general polynesian (not east) -->
+<!--     - accidentally used the wrong column for this & excluded Pukapukan & Niuean samples due to their unique clustering -->
+<!--         - this list has 772 people, the updated list has 939 (have not updated analysis yet) -->
+<!-- Polynesian Gout - actual command run -->
+<!-- plink2 \ -->
+<!--   --bfile QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_rsIDconverted \ -->
+<!--   --pheno polynesian_gout-affection.pheno \ -->
+<!--   --logistic \ -->
+<!--   --ci 0.95 \ -->
+<!--   --covar QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygout.cov \ -->
+<!--   --covar-name Sex,Age,PCA1,PCA2,PCA3,PCA4,PCA5,PCA6,PCA7,PCA8,PCA9,PCA10 \ -->
+<!--   --hardy \ -->
+<!--   --hwe 1e-6 \ -->
+<!--   --freq case-control \ -->
+<!--   --maf 0.01 \ -->
+<!--   --geno 0.38 \ # to remove the extra czech sample only SNPs -->
+<!--   --allow-no-sex \ -->
+<!--   --out ../new_polyGWAS/polynesian_gout_CoreExome24v1.0-1_rsIDconverted -->
+<!-- East Polynesian Gout - actual command run -->
+<!-- plink2 \ -->
+<!--   --bfile QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_rsIDconverted \ -->
+<!--   --pheno polynesian_gout-affection.pheno \ -->
+<!--   --keep east-poly_list.txt \ -->
+<!--   --logistic \ -->
+<!--   --ci 0.95 \ -->
+<!--   --covar QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygout.cov \ -->
+<!--   --covar-name Sex,Age,PCA1,PCA2,PCA3,PCA4,PCA5,PCA6,PCA7,PCA8,PCA9,PCA10 \ -->
+<!--   --hardy \ -->
+<!--   --hwe 1e-6 \ -->
+<!--   --freq case-control \ -->
+<!--   --maf 0.01 \ -->
+<!--   --geno 0.38 \ # to remove the extra czech sample only SNPs -->
+<!--   --allow-no-sex \ -->
+<!--   --out ../new_polyGWAS/east-polynesian_gout_CoreExome24v1.0-1_rsIDconverted -->
+<!-- West Polynesian Gout - actual command run -->
+<!-- plink2 \ -->
+<!--   --bfile QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_rsIDconverted \ -->
+<!--   --pheno polynesian_gout-affection.pheno \ -->
+<!--   --keep west-poly_list.txt \ -->
+<!--   --logistic \ -->
+<!--   --ci 0.95 \ -->
+<!--   --covar QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygout.cov \ -->
+<!--   --covar-name Sex,Age,PCA1,PCA2,PCA3,PCA4,PCA5,PCA6,PCA7,PCA8,PCA9,PCA10 \ -->
+<!--   --hardy \ -->
+<!--   --hwe 1e-6 \ -->
+<!--   --freq case-control \ -->
+<!--   --maf 0.01 \ -->
+<!--   --geno 0.38 \ # to remove the extra czech sample only SNPs -->
+<!--   --allow-no-sex \ -->
+<!--   --out ../new_polyGWAS/west-polynesian_gout_CoreExome24v1.0-1_rsIDconverted -->
+<!-- ## results files were moved to poly_gwas2017 folder at some point -->
+<!-- ###### -->
+<!-- Polynesian Urate GWAS: -->
+<!-- Run in: -->
+<!-- /Volumes/userdata/staff_users/tanyaflynn/ShortCuts/murray_working_dir/coreExome/Batch_Merge/Merged_Merriman_Brown_Matsuo/ -->
+<!-- plink2 \ -->
+<!--   --bed QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff.bed -->
+<!--   --bim QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_correctAff.bim -->
+<!--   --fam QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polyurateAff.fam -->
+<!--   --keep Polynesian_Controls.txt # identical set to controls used in gout regression -->
+<!--   --linear -->
+<!--   --ci 0.95 -->
+<!--   --covar QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygout.cov -->
+<!--   --covar-name Sex,Age,PCA1,PCA2,PCA3,PCA4,PCA5,PCA6,PCA7,PCA8,PCA9,PCA10 -->
+<!--   --hardy -->
+<!--   --hwe 1e-6 -->
+<!--   --freq -->
+<!--   --maf 0.01 -->
+<!--   --geno 0.38 -->
+<!--   --allow-no-sex -->
+<!--   --out ../../poly_gwas2017/PolyUrate_CoreExome24v1.0-1_NZ-MB-HM_Gout -->
