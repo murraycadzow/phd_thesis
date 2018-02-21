@@ -193,6 +193,9 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 
 #### PCA - eigenstrat
+
+The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@ref]. All chomosomes were combined into a single \gls{vcf} file and then the independent markers were found by using a sliding window to remove markers that had an R^2^ > 0.2 in windows of 50 kbp and a slide of 5 markers. 
+
 ```{r eigenstrat code, engine='bash', eval = FALSE}
 dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/PCA/indiv_pops
 #combine the chromosomes
@@ -242,9 +245,11 @@ smartpca.perl \
   -m 0
 ```
 
-#### admixture analysis
+#### Admixture analysis {#admixture}
+
+Admixture analysis was performed using ADMIXTURE v1.3.0 [@ref]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with an R^2^ of more that 0.1. This was done using plink v1.9b4.9. Following this cross validation was performed to find the best value of K, for K 1 to 15. K = 11 had the lowest cross-validation error
 ```{r admixture k, engine = 'bash', eval = FALSE}
-dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/admixture$
+dir=/Volumes/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/analysis/admixture
 
 bcftools concat \
   -O v \
@@ -275,10 +280,12 @@ grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 ```
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap='(ref:cv)'}
 k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE)
 ggplot(k_cv, aes(x = V1, y = V2)) + geom_line() + geom_point() + labs(x = 'K',y = 'Cross Validation Error') + geom_point(data = k_cv %>% filter(min(V2) == V2), aes(x = V1, y = V2),color = 'red', shape = 4, size = 4, inherit.aes = FALSE) + theme_bw()
 ```
+
+(ref:cv) Admixture cross-validation error for different values of K.
 
 The cross validation of K from 1 to 15 resulted in K = 11 having the minimum cross validation error.
 
@@ -338,18 +345,20 @@ k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', 
 ggplot(k_cv, aes(x = V1, y = V2)) + geom_line() + geom_point() + labs(x = 'K',y = 'Cross Validation Error') + geom_point(data = k_cv %>% filter(min(V2) == V2), aes(x = V1, y = V2),color = 'red', shape = 4, size = 4, inherit.aes = FALSE) + theme_bw()
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap='(ref:cvproj)'}
 # barplot of the reference proportions
 cbind(ref_fam, ref) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(super_sample = paste0(super_pop,'_',sample), facet_pop = paste(super_pop, pop)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V)) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 6) + theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
 
 ```
 
+(ref:cvproj) Admixture cross-validation error for different K values from projecting components from 1000 Genomes Project populations of AFR, EAS, EUR, and SAS
 
 ```{r, echo = FALSE}
 # admixed pops that were projected onto
 #removed NZC for to make nice
 cbind(study_fam, study) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(super_sample = paste0(super_pop,'_',sample), super_pop = factor(super_pop, levels = c("AMR", "POL","EUR"), ordered = TRUE)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V)) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 4) +theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
 ```
+
 
 
 - V1 and V4 were EAS mostly
@@ -433,14 +442,14 @@ Variant annotation of \gls{vcf} files was performed using snpEff vXXX [@snpeff] 
 ### Pathway Analysis
 
 
-Panther http://pantherdb.org
+<!-- Panther http://pantherdb.org -->
 
-version 13.0 (released 2017-11-12)
+<!-- version 13.0 (released 2017-11-12) -->
 
-for population lists used the "Functional classification viewed as pie chart" selected biological process and exported the results as a table
+<!-- for population lists used the "Functional classification viewed as pie chart" selected biological process and exported the results as a table -->
 
-Analysis Type: PANTHER Overrepresentation Test (release 20170413)
-- annotation set = pnather GO-slim biological process
+<!-- Analysis Type: PANTHER Overrepresentation Test (release 20170413) -->
+<!-- - annotation set = pnather GO-slim biological process -->
 
 Enrichr 
 
