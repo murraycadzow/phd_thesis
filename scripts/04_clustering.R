@@ -259,6 +259,11 @@ gene_dendros <- function(gene_data){
                        aes(label=label, x=x, y=y, colour=labs$group, angle = 90, vjust = 0.5, hjust = 1.1), size = 3)  + theme_dendro() + theme(legend.position = 'none') + coord_cartesian(ylim = c(ddata_x$segments %>% filter(x == xend) %>% summarise(min = min(yend) - (max(y)), max = max(y)) %>% t()))
   return(p1)
 }
+
+# genes that are pretty much only in Poly
+pol_tail_filter <- function(mat_d_name, pol_min, all_max){
+create_sums(mat_d_name) %>% filter(POLsum >= pol_min & ALLsum <= all_max)%>% mutate(chrom = paste0('chr', chrom)) %>%select(1:3) %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% txdb_gene_annotate() %>% as_tibble() %>% filter(!is.na(SYMBOL))
+}
 # 
 # hr_c <- hclust(dist(t(mat_d_list[[paste0('td','_neg')]][,-1:-4]), method="euclidean"), method = "complete")
 # hr_r <- hclust(dist((mat_d_list[[paste0('td','_neg')]][,-1:-4]), method="euclidean"), method = "complete")
