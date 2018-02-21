@@ -7,42 +7,14 @@ library(knitr)
 library(kableExtra)
 library(phdFunctions)
 #select <- dplyr::select
+
+
 ```
 # Appendix E
 
 ## Electronic Supplements
 
 
-
-```{r, eval = FALSE, echo = FALSE}
-gs_td_table <- create_sel_summary_table("Tajima.D")
-gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-```{r, eval = FALSE}
-gs_fwh_table <-create_sel_summary_table("Fay.Wu.H")
-
-gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-
-```{r, eval = FALSE}
-gs_fld_table <- create_sel_summary_table("Fu.Li.D")
-
-gs_fld_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-```{r, eval = FALSE}
-gs_flf_table <- create_sel_summary_table("Fu.Li.F")
-
-gs_flf_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFlfTable) \\gls{flf} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-```{r, eval = FALSE}
-gs_ze_table <- create_sel_summary_table("Zeng.E")
-
-gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsZeTable) \\gls{ze} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
 
 
 
@@ -82,9 +54,6 @@ create_sel_stat_table("Fu.Li.F","Mean Fu and Li F")
 create_sel_stat_table("Zeng.E", "Mean Zeng E")
 ```
 
-```{r}
-rm(list=ls())
-```
 
 
 ```{r, echo = FALSE}
@@ -97,19 +66,7 @@ for(p in unique(panel$pop)){
 }
 
 global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
-global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
 
-create_sel_summary_table <- function(s){
-global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
-}
-  
-create_sel_stat_table <- function(sel_stat, cap){
-  knitr::kable(chr_summary %>% filter(stat == sel_stat) %>% ungroup() %>%  select(pop, chrom, mean) %>% spread(.,chrom, mean) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), "pop") %>% select(pop, super_pop, 2:23) %>% arrange(super_pop, pop) %>% head(), align = c('l','c',rep('r', 22)), col.names = c("Population", "Super Population", paste0('Chr',1:22)), caption = cap, digits =  3)
-}
-```
-
-```{r superGlobalSummary, echo = FALSE}
-global_super_summary %T>% {write.csv(global_super_summary, file = '~/Git_repos/bookdown_thesis/Appendices/03-global-super-summary.csv', row.names = FALSE, quote = FALSE) } %>% head(0) %>%  kable(., caption ='(\\#tab:superGlobalSummary) Global Super Population Summary Table', digits = 3, booktabs =TRUE) %>% footnote(general = "Electronic supplement: Appendices/03-global-super-summary.csv")
 ```
 
 
@@ -196,6 +153,13 @@ create_gwas_cat_table <-function(){
   return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
 }
 
+create_sel_summary_table <- function(s){
+global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
+}
+  
+create_sel_stat_table <- function(sel_stat, cap){
+  knitr::kable(chr_summary %>% filter(stat == sel_stat) %>% ungroup() %>%  select(pop, chrom, mean) %>% spread(.,chrom, mean) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), "pop") %>% select(pop, super_pop, 2:23) %>% arrange(super_pop, pop) %>% head(), align = c('l','c',rep('r', 22)), col.names = c("Population", "Super Population", paste0('Chr',1:22)), caption = cap, digits =  3)
+}
 ```
 
 
@@ -209,6 +173,20 @@ kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#t
 #
 ```
 
+```{r, echo = FALSE}
+# This is created by coreExome_100kb_windows_intra_filtered.Rmd
+chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS")
+pops <- list()
+panel <- read.delim('/home/murraycadzow/data/NZ_coreExome_1kgp/nz_1kgp.panel', stringsAsFactors = FALSE)
+for(p in unique(panel$pop)){
+  pops[[p]] <- panel %>% filter(pop == p) %>%  .[["sample"]]
+}
+
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
+global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
+
+
+```
 
 ```{r chap4data}
 prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
@@ -221,6 +199,38 @@ names(obesity) <-  c('mat_d','prop')
 names(metsyn) <-  c('mat_d','prop')
 
 ```
+
+
+```{r gsTdTable, eval = TRUE, echo = FALSE}
+gs_td_table <- create_sel_summary_table("Tajima.D")
+gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+```{r, eval = TRUE, echo = FALSE}
+gs_fwh_table <-create_sel_summary_table("Fay.Wu.H")
+
+gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+
+```{r, eval = TRUE, echo = FALSE}
+gs_fld_table <- create_sel_summary_table("Fu.Li.D")
+
+gs_fld_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+```{r, eval = TRUE, echo = FALSE}
+gs_flf_table <- create_sel_summary_table("Fu.Li.F")
+
+gs_flf_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFlfTable) \\gls{flf} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
+```{r, eval = TRUE, echo = FALSE}
+gs_ze_table <- create_sel_summary_table("Zeng.E")
+
+gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsZeTable) \\gls{ze} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
+```
+
 
 
 ```{r proportion, results ='asis'}
