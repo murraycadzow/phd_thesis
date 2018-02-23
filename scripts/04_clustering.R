@@ -17,6 +17,17 @@ clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_
 global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
 global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
 
+## load fst
+#100kb window 10kb slide pairwise fst
+# FST can't be negative. This keeps NAs
+pol_fst <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3.14-11-2017.RDS') %>% mutate_at(.vars = vars(-contains('chrom')), function(x){ifelse(x > 0, x, 0)})
+pol_fst_99 <- pol_fst %>%  gather('pop', "fst", -contains('chrom')) %>% group_by(pop) %>% filter(fst > quantile(fst, 0.99, na.rm = TRUE))
+#source('~/Git_repos/bookdown_thesis/scripts/Annotate_genes.R')
+#pol_fst_99genes <- txdb_gene_annotate(pol_fst_99 %>% mutate(chrom = paste0('chr',chrom)) %>% dplyr::select(contains("chrom")) %>% GenomicRanges::GRanges())
+pol_fst_99genes <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3_99per_genes.25-1-2018.RDS") 
+
+
+
 create_sel_summary_table <- function(s){
   global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
 }
@@ -264,6 +275,10 @@ gene_dendros <- function(gene_data){
 pol_tail_filter <- function(mat_d_name, pol_min, all_max){
 create_sums(mat_d_name) %>% filter(POLsum >= pol_min & ALLsum <= all_max)%>% mutate(chrom = paste0('chr', chrom)) %>%select(1:3) %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% txdb_gene_annotate() %>% as_tibble() %>% filter(!is.na(SYMBOL))
 }
+
+
+
+
 # 
 # hr_c <- hclust(dist(t(mat_d_list[[paste0('td','_neg')]][,-1:-4]), method="euclidean"), method = "complete")
 # hr_r <- hclust(dist((mat_d_list[[paste0('td','_neg')]][,-1:-4]), method="euclidean"), method = "complete")
