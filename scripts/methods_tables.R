@@ -27,7 +27,7 @@ ce_clinical_table <- function() {
     filter(!is.na(GOUT), !is.na(SEX), ETHCLASS %in% c(1,2,3)) %>% # should I ensure Gout and sex are complete?
     group_by(ETHCLASS,GOUT) %>% 
     summarise(Age = paste0(round(mean(AGECOL, na.rm=TRUE),2)," (", round(sd(AGECOL, na.rm=TRUE),2),")"),
-              Sex = round(sum(SEX ==1, na.rm = TRUE)/ sum(SEX %in% c(1,2), na.rm =TRUE),2),
+              Sex = round(sum(SEX ==1, na.rm = TRUE)/ sum(SEX %in% c(1,2), na.rm =TRUE) * 100,2),
               BMI = paste0(round(mean(BMI, na.rm=TRUE),2), " (", round(sd(BMI, na.rm = TRUE),2),")"),
               Waist = paste0(round(mean(WAIST, na.rm=TRUE),2), " (", round(sd(WAIST, na.rm=TRUE),2), ")"),
               n_diabetes = sum(DIABETES == 2, na.rm=TRUE),
@@ -37,9 +37,8 @@ ce_clinical_table <- function() {
               n_Fatty_liver = sum(FATTYLIVER, na.rm=TRUE),
               #percentMale = signif(sum(SEX == 1)/NROW(SEX),digits = 2) * 100,
               meanBP = paste0(round(mean(SYSTOLIC,na.rm=TRUE), 1),'/',round(mean(DIASTOLIC, na.rm=TRUE),1))) %>% ungroup() %>% 
-    mutate(GOUT = ifelse(GOUT == 2, "Gout", "Control"), ETHCLASS = unlist(lapply(ETHCLASS, function(x){switch(x, "1"={return("EP")}, "2" ={return("WP")}, "3" = {return("CAU")})}))) %>% t() 
-  colnames(tab) <- c(1,2,3,4,5,6)
- return(tab)
+    mutate(GOUT = ifelse(GOUT == 2, "Gout", "Control"), ETHCLASS = unlist(lapply(ETHCLASS, function(x){switch(x, "1"={return("EP")}, "2" ={return("WP")}, "3" = {return("CAU")})}))) %>% unite(category, c("ETHCLASS","GOUT"), sep = '_') %>% gather("var","value", -category) %>% spread(category, value) %>% mutate(var = c('Mean age (SD)', "Mean BMI (SD)", "Mean BP","Diabetes (n)", "Fatty liver (n)", "n", "Heart disease (n)", "Kidney disease (n)", "Sex (% male)", "Mean Waist cm (SD)"))
+ return(tab[c(6,9,4,5,7,8,1:3,10),])
 }
 
 
