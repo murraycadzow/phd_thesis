@@ -13,7 +13,7 @@ pheno_models <- bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster
 
 
 load('~/data/ukbiobank_gout_bd_refined2016-04-26.RData')
-fam <- read.table('~/Git_repos/bookdown_thesis/data/Ukbiobank/chr1impv1.fam')
+fam <- read.table('~/Git_repos/bookdown_thesis/data/Ukbiobank/chr1impv1.fam', stringsAsFactors = FALSE)
 
 # f.31.0.0 = sex, 1 = male
 # f.48.0.0 = waist
@@ -124,19 +124,59 @@ There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individu
 - GWAS results
 - Heritability explained
 
+```{r}
+kot_t1 <- read.csv("~/data/kottgen_table1.csv", header = TRUE, stringsAsFactors = FALSE)
+uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% separate(file, c("file","CHR"), sep = ':') %>% mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" ))%>%  mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% stringi::stri_sub(9)) %>% left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
+```
+
+
+```{r, fig.height=7}
+
+flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770152", "rs7193778", "rs164009", "rs653178","rs2078267", "rs478607", "rs12498742")
+uk_kot_t1 %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
+bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) ) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "a","b")) %>% filter(gout != 'all') %>%  ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
+  geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) 
+```
 
 
 ** kottgen plot **
+
+
+
 
 #### GWAS results
 
 The top SNPs from the GWAS were:
 
+number of significant snps
+
+- hosp `r hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
+- self `r self_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
+- ult `r ult_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
+- self ult `selfult_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
+- winnard `r winnard_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
+
+(ref:Overlap) Overlap of markers that reached at nominal genomw-wide significance between the different gout classifications.
+
+```{r ukOverlap, fig.cap = '(ref:ukOverlap)'}
+listInput <- list(hosp = hosp_asb %>% filter(P < 1e-5, nchar(A1) ==1 ) %>% pull(SNP),
+                  self = self_asb %>% filter(P < 1e-5, nchar(A1) ==1 ) %>% pull(SNP),
+                  ult = ult_asb %>% filter(P < 1e-5, nchar(A1) ==1 ) %>% pull(SNP),
+                  selfult = selfult_asb %>% filter(P < 1e-5, nchar(A1) ==1 ) %>% pull(SNP),
+                  winnard = winnard_asb %>% filter(P < 1e-5, nchar(A1) ==1 ) %>% pull(SNP)
+                  )
+
+UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, nintersects = NA )
+```
+
+
+
+
 
 - hosp
 
 ```{r}
-hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(P = format(P, scientific = TRUE)) %>%  kable()
+hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>%  kable()
 ```
 
 
@@ -256,7 +296,13 @@ polyGout %>% filter(TEST == "ADD", P < 0.05) %>% qqman::manhattan(., ylim= c(0,1
 ```
 
 
-## Discussion
+```{r}
+polyGout %>% filter(TEST == "ADD", P < 1e-5)
+```
+
+There two markers that met the threshold for genome-wide significance, rs2725215 and rs2231142. Two other markers reached the nominal significance threshold, rs2728108 and rs11034401.
+
+## Chapter Discussion
 
 - Concepts, estimation and interpretation of SNPbased heritability - Yang2016
 - Identifying genetic variants that affect viability in large cohorts - Mostafavi2017
