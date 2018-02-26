@@ -26,7 +26,7 @@ pol_fst_99 <- pol_fst %>%  gather('pop', "fst", -contains('chrom')) %>% group_by
 #pol_fst_99genes <- txdb_gene_annotate(pol_fst_99 %>% mutate(chrom = paste0('chr',chrom)) %>% dplyr::select(contains("chrom")) %>% GenomicRanges::GRanges())
 pol_fst_99genes <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_poly_chr_fst_popgenome_ns3_99per_genes.25-1-2018.RDS") 
 
-
+marker_loc <- readRDS('~/data/NZ_coreExome_1kgp/snpEff_Annotated/snpeff_terms.RDS') %>% select(chrom = V1, pos = V2, snp = V3, ref = V4, alt = V5, eff )
 
 create_sel_summary_table <- function(s){
   global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
