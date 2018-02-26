@@ -600,6 +600,18 @@ number of snps used for selection
 (http://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_human_core_exome_beadchip.pdf, accessed 16 Jan 2017)
 ```
 
+
+```{r, echo = FALSE}
+marker_loc <- readRDS('~/data/NZ_coreExome_1kgp/snpEff_Annotated/snpeff_terms.RDS') %>% select(chrom = V1, pos = V2, snp = V3, ref = V4, alt = V5, eff )
+
+
+left_join(markers, marker_loc, by = c("chrom" = "chrom", "chrom_start" = "pos", "marker" = "snp", "ref","alt")) %>% arrange(chrom, chrom_start) %>% group_by(eff) %>% tally() %>% rename("Effect Annotation" = eff)%>% kable(caption = "(\\#tab:CEmarkerTypes) Number of each type of marker annotation from snpEff v4.2 of the CoreExome markers used for the selection analysis.")
+#subsetByOverlaps(marker_loc %>% mutate(start = pos, end = pos+1)%>% GRanges(),create_sums('td_neg') %>% filter(POLsum == ALLsum) %>% select(1:3) %>% GRanges()) %>% data.frame() %>% group_by(eff) %>% tally()
+
+```
+
+
+
 Clinical Information
 
 
@@ -629,13 +641,6 @@ knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical i
 ```
 
 Analysis groups were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc} and unenriching for gout. To unenrich for gout, population specific prevalence based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton} were used and individuals were randomly sampled. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained.
-
-- about
-- population
-- markers
-- density
-
-Table \@ref(tab:cePopTable) shows the break down of 
 
 
 
