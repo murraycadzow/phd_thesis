@@ -101,7 +101,7 @@ Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, an
 
 Pathway enrichment analysis was performed by taking genes that intersected the clustered \gls{ihs} and \gls{nsl} regions inputting them into Enrichr ^[http://amp.pharm.mssm.edu/Enrichr/ accessed 26 February 2018] [@Chen2013b; @Kuleshov2016] and exporting the KEGG 2016 pathway table. 
 
-(ref:enrichraccess) http://amp.pharm.mssm.edu/Enrichr/, accessed 26 Februray 2018
+
 
 ### Disease-associated genes
 
@@ -192,7 +192,7 @@ stat_markerLoc <-function(stat){
 IRanges::subsetByOverlaps(marker_loc %>% mutate(start = pos, end = pos+1)%>% GenomicRanges::GRanges(),create_sums(paste0(stat,'_neg')) %>% filter(POLsum == ALLsum) %>% select(1:3) %>% GenomicRanges::GRanges()) %>% data.frame() %>% group_by(eff) %>% tally() %>% full_join(., IRanges::subsetByOverlaps(marker_loc %>% mutate(start = pos, end = pos+1)%>% GenomicRanges::GRanges(),create_sums(paste0(stat,'_pos')) %>% filter(POLsum == ALLsum) %>% select(1:3) %>% GenomicRanges::GRanges()) %>% data.frame() %>% group_by(eff) %>% tally(), by = 'eff') %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% select(Effect = eff, firstper = n.x, ninetyninthper = n.y)
 }
 
-stat_markerLoc("td") %>% full_join(., stat_markerLoc("fwh"),by = 'Effect', suffix =  c("_td","_fwh")) %>% full_join(., stat_markerLoc("fld"),by = 'Effect') %>% full_join(., stat_markerLoc("flf"),by = 'Effect', suffix =  c("_fld","_flf")) %>% full_join(., stat_markerLoc("ze"),by = 'Effect') %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% kable( caption = '(\\#tab:perMarkerLoc) Number of markers by annotation type that were in the 1st or 99th percentiles for Polynesian populations for the intrapopulation frequency spectrum selection and neutrality statistics.', col.names = c("Effect", rep(c("1st percentile", "99th percentile" ), 5)), format = 'latex', booktabs = TRUE) %>% add_header_above(c("","Tajima's D" =2, "Fay and Wu's H" = 2, "Fu and Li's D" = 2, "Fu and Lu's F" = 2, "Zeng's E" = 2)) %>% kable_styling(latex_options = "scale_down") %>% landscape()
+stat_markerLoc("td") %>% full_join(., stat_markerLoc("fwh"),by = 'Effect', suffix =  c("_td","_fwh")) %>% full_join(., stat_markerLoc("fld"),by = 'Effect') %>% full_join(., stat_markerLoc("flf"),by = 'Effect', suffix =  c("_fld","_flf")) %>% full_join(., stat_markerLoc("ze"),by = 'Effect') %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the 1st or 99th percentiles for Polynesian populations for the intrapopulation frequency spectrum selection and neutrality statistics.', col.names = c("Effect", rep(c("1st percentile", "99th percentile" ), 5)), format = 'latex', booktabs = TRUE) %>% add_header_above(c("","Tajima's D" =2, "Fay and Wu's H" = 2, "Fu and Li's D" = 2, "Fu and Lu's F" = 2, "Zeng's E" = 2)) %>% kable_styling(latex_options = "scale_down") %>% landscape()
 ```
 
 
@@ -514,6 +514,8 @@ mat_ihs %>% data.frame() %>% mutate(rn = row.names(.)) %>% select(rn, everything
 
 ```
 
+#### \gls{ihs}
+
 For the \gls{ihs} significant regions, the populations with the least regions shared between were \gls{cim} and \gls{clm}, with `r sprintf("%.1f",mat_ihs['POL_CIM','AMR_CLM'] *100)`%  shared. The populations that had the largest proportion of region shared was \gls{nzc} and \gls{ceu} with `r sprintf("%.1f",mat_ihs['EAS_CHB','EAS_CHS'] *100)`% shared. Looking specifically at the proportion of regions shared between Polynesian populations, for the Eastern Polynesians there was \gls{nzm} with `r (mat_ihs[rownames(mat_ihs) == "POL_CIM", colnames(mat_ihs) == "POL_NZM"] * 100) %>% sprintf('%.1f',.)`% of regions shared with \gls{cim}, and \gls{cim} shared `r (mat_ihs[rownames(mat_ihs) == "POL_NZM", colnames(mat_ihs) == "POL_CIM"] * 100) %>% sprintf('%.1f',.)`% of regions with \gls{nzm}. In the Western Polynesian populations, \gls{sam} shared `r (mat_ihs[rownames(mat_ihs) == "POL_TON", colnames(mat_ihs) == "POL_SAM"] * 100) %>% sprintf('%.1f',.)`% of regions with \gls{ton}, but \gls{ton}  shared `r (mat_ihs[rownames(mat_ihs) == "POL_SAM", colnames(mat_ihs) == "POL_TON"] * 100) %>% sprintf('%.1f',.)`% of regions with \gls{sam}. Out of all the significant \gls{ihs} regions for Polynesian populations, only  `r (sum(GenomicRanges::width(GenomicRanges::reduce(GenomicRanges::intersect(GenomicRanges::intersect(gr_ihs[gr_ihs$pop == 'POL_CIM'], gr_ihs[gr_ihs$pop == "POL_NZM"]), GenomicRanges::intersect(gr_ihs[gr_ihs$pop == 'POL_SAM'], gr_ihs[gr_ihs$pop == "POL_TON"])))))/sum(GenomicRanges::width(GenomicRanges::reduce(gr_ihs[gr_ihs$pop %in% c("POL_NZM", "POL_CIM", "POL_SAM","POL_TON")]))) * 100) %>% sprintf('%.1f',.)`% were in common across all Polynesian populations. The Eastern Polynesians accounted for `r (sum(GenomicRanges::width(GenomicRanges::reduce(gr_ihs[gr_ihs$pop %in% c("POL_NZM","POL_CIM")])))/sum(GenomicRanges::width(GenomicRanges::reduce(gr_ihs[gr_ihs$pop %in% c("POL_NZM", "POL_CIM", "POL_SAM","POL_TON")]))) *100) %>% sprintf('%.1f',.)`% of the regions from all of the Polynesian populations while the Western Polynesian populations made up `r (sum(GenomicRanges::width(GenomicRanges::reduce(gr_ihs[gr_ihs$pop %in% c("POL_SAM","POL_TON")])))/sum(GenomicRanges::width(GenomicRanges::reduce(gr_ihs[gr_ihs$pop %in% c("POL_NZM", "POL_CIM", "POL_SAM","POL_TON")]))) * 100) %>% sprintf('%.1f',.)`%.
 
 
@@ -569,14 +571,8 @@ ihs_dendro_plot()
 
 
 
+#### \gls{nsl}
 
-
-```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE, fig.asp= 1 }
-nsl_dendro_plot()
-#ggsave(last_plot(), file = 'images/04_clustering/nsl_dendros.png')
-```
-
-(ref:nslclust) _\gls{nsl} Clustering_ A. Dendrogram from hierarchical clustering based on proportion of significant \gls{nsl} regions shared between populations. Coloured by super population. B. Heatmap showing the proportion of significant \gls{nsl} regions shared. The population of the axis is A the calculation = (A $\cap$ B)/ A. Axes have been ordered according to the hierarchical clustering.
 
 <!-- nSL -->
 
@@ -616,6 +612,12 @@ GenomicRanges::intersect(gr_nsl[gr_nsl$pop == "POL_NZM"], gr_nsl[gr_nsl$pop == "
 GenomicRanges::intersect(gr_nsl[gr_nsl$pop == "POL_SAM"], gr_nsl[gr_nsl$pop == "POL_TON"], ignore.strand = TRUE ) %>% data.frame() %>% mutate(seqnames = paste0('chr',seqnames)) %>% GenomicRanges::GRanges() %>% txdb_gene_annotate()%>% filter(!is.na(SYMBOL)) %>% pull(SYMBOL) %>% unique() %>% cat(sep = '\n')
 ```
 
+```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE, fig.asp= 1 }
+nsl_dendro_plot()
+#ggsave(last_plot(), file = 'images/04_clustering/nsl_dendros.png')
+```
+
+(ref:nslclust) _\gls{nsl} Clustering_ A. Dendrogram from hierarchical clustering based on proportion of significant \gls{nsl} regions shared between populations. Coloured by super population. B. Heatmap showing the proportion of significant \gls{nsl} regions shared. The population of the axis is A the calculation = (A $\cap$ B)/ A. Axes have been ordered according to the hierarchical clustering.
 
 
 
@@ -1175,6 +1177,8 @@ over50per2 <- readRDS('data/04-over50per2.RDS')
 
 <!-- why does the Eur never produce a max prop of 1?-->
 
+#### Random windows
+
 It is possible that obtaining the population groupings using the extremes was due to chance, to assess this, 10,000 iterations of random resampling of 2500 windows per population was undertaken and then clustered. This was done so that the extreme tail clustering could be compared to the random windows in to see if the extreme window clustering performed better in exclusivity and proportion of super population clustering than by drawing windows at random. The maximum proportion of populations being clustered into their designated super population was then calculated when the tree was cut to have six groups (K = 6), one for each super population. The mean proportion of populations grouped into their super population was less than 0.5 for all super populations with an overall mean of 0.282 (Table \@ref(tab:randtab)). Other values of K were also tested for K = 9, and K = 11. They both had higher mean exclusivities (K = 9: 0.367, K = 11: 0.424) than K = 6, due to more possible individual clusters. The extra values of K were selected based on the cross-validation tests (section \@ref(admixture)). The rest of the section will report on K = 6.
 
 Not a single random draw grouped the all individual populations into all of their respective super populations. Only the populations of the \gls{afr} and \gls{eur} super populations did not each get fully grouped into a cluster. Grouping at least 50% of a super population was at best `r round(rand_tab %>% summarise(max = max(prop50)), digits = 0) %>% pull(max) %>% num_to_word()`% of the draws but for the larger super populations (\gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas}) it was on average `r round(rand_tab %>% filter(!super %in% c('POL','AMR'))%>% summarise(mean = mean(prop50)), digits = 0) %>% pull(mean) %>% num_to_word(.)`% of the draws. There were only `r over50per %>% NROW() %>% num_to_word()` iterations that had all super populations each having half or more of their individual populations assigned the same group. The mean exclusivity of the random draws was low, ranging from `r min(excl_tab$mean) %>% sprintf('%.2f', .)` to `r max(excl_tab$mean) %>% sprintf('%.2f', .)` and there were no iterations in which the Polynesian populations were all grouped together as a Polynesian exclusive cluster.
@@ -1209,6 +1213,8 @@ bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$pop_clust_prop
 
 #bind_rows(lapply(td_random, function(x){ x %>% spread('super', 'max_prop')})) %>% mutate(rn = as.numeric(rownames(.)), exp_prop = rowSums(.)/6) %>% filter(EUR > .5) %>% arrange(exp_prop)
 ```
+
+#### Random genes
 
 In order to assess if the clustering from gene lists was specific to the disease associated genes used, lists of random genes were created and then clustered. Random gene lists were generated consisting of either 25 or 100 genes, 100 times each, and median centred based on the population for \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. Hierarchical clustering was then performed on the windows that intersected genes from the gene lists. The number of times the Polynesian super population was completely clustered ranged from 0 to 78 (Table \@ref(tab:randgenes)). The Polynesian super population was completely clustered more often with the lists of 100 genes for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze} compared to the lists of 25 genes, the opposite occurred for \gls{fld} and \gls{flf}. The number of times all populations were clustered completely was less than 10%. However, if the \gls{amr} super population was not included then it became 44.8 for the 100 genes, and 29 for the 25 genes. \Gls{fld} and \gls{flf} did not perform well at clustering the Polynesian populations into their super population, and only achieved this less than 5% of the time. Clustering all populations was not achieved by \gls{fld} and \gls{flf}. The other frequency spectrum statistics clustered the Polynesian populations into their super population for at least 50% of the time and did better with more genes. Clustering of the other super populations was similar to the Polynesian super population when the \gls{amr} populations were not included. This indicates that clustering from disease associated gene lists is not specific to particular genes. It also indicates that genes are better at clustering the super populations than randomly drawn windows.
 
@@ -1304,7 +1310,8 @@ Yes, the super populations can be grouped
 - yes - for random genes
 
 ### Frequency spectrum
-In Chapter 3 it was noticed that the populations had population specific distributions for the frequency spectrum based selection and neutrality statistics. The tails of the distributions are the most extreme and there most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first attempts used the entire chromosome and created a summary statistic that was used to cluster. It was successful in reassmebling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used with in the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other. The population grouping were also the same as in the \gls{pca}  that was used to select the individuals for the selection analysis (Figure \@ref(allpopPCA)). The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. Some, such as \gls{fld} and \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other populations of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome, or the quality control that the New Zealand samples underwent, leading to an under-representation of the singletons that actually might be present in the populations.
+
+In Chapter 3 it was noticed that the populations had population specific distributions for the frequency spectrum based selection and neutrality statistics. The tails of the distributions are the most extreme and there most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first attempts used the entire chromosome and created a summary statistic that was used to cluster. It was successful in reassmebling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used with in the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other. The population grouping were also the same as in the \gls{pca}  that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. Some, such as \gls{fld} and \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other populations of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome, or the quality control that the New Zealand samples underwent, leading to an under-representation of the singletons that actually might be present in the populations.
 
 
 Then there was \gls{td} and \gls{ze} which both had either complete or near complete groupings for a few super populations, especially \gls{afr} and \gls{eur}. These two statistics involve the low-frequency variants in their calculation, and low-frequency markers, again have a bias against them, as they tend to be under-represented in the \gls{snp} chips [\@ref] and there is also a bias against them in the algorithm and steps for genotype calling on the CoreExome \gls{snp} chip. This again means that there is likely an under-representation of low-frequency variants and thus skews the statistics that utilise them.
