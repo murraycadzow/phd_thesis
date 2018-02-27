@@ -620,7 +620,20 @@ nsl_dendro_plot()
 (ref:nslclust) _\gls{nsl} Clustering_ A. Dendrogram from hierarchical clustering based on proportion of significant \gls{nsl} regions shared between populations. Coloured by super population. B. Heatmap showing the proportion of significant \gls{nsl} regions shared. The population of the axis is A the calculation = (A $\cap$ B)/ A. Axes have been ordered according to the hierarchical clustering.
 
 
+```{r}
+haplo_markerLoc <-function(statGR){
+IRanges::subsetByOverlaps(marker_loc %>% mutate(start = pos, end = pos+1)%>% GenomicRanges::GRanges(),
+                          statGR %>% data.frame() %>% select(1:3) %>% GenomicRanges::GRanges()
+                          ) %>% data.frame() %>% group_by(eff) %>% tally() %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% select(Effect = eff, n)
+}
 
+haplo_markerLoc(gr_ihs[gr_ihs$pop == "POL_NZM"]) %>% full_join(., haplo_markerLoc(gr_ihs[gr_ihs$pop == "POL_CIM"]),by = 'Effect', suffix =  c("_nzm","_cim")) %>% full_join(., haplo_markerLoc(gr_ihs[gr_ihs$pop == "POL_SAM"]),by = 'Effect') %>% full_join(., haplo_markerLoc(gr_ihs[gr_ihs$pop == "POL_TON"]),by = 'Effect', suffix =  c("_sam","_ton")) %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the significant \\gls{ihs} clustered regions for Polynesian populations.', col.names = c("Effect", "NZM","CIM","SAM","TON"), format = 'latex', booktabs = TRUE) %>%  kable_styling(latex_options = "scale_down")
+```
+
+
+```{r}
+haplo_markerLoc(gr_nsl[gr_nsl$pop == "POL_NZM"]) %>% full_join(., haplo_markerLoc(gr_nsl[gr_nsl$pop == "POL_CIM"]),by = 'Effect', suffix =  c("_nzm","_cim")) %>% full_join(., haplo_markerLoc(gr_nsl[gr_nsl$pop == "POL_SAM"]),by = 'Effect') %>% full_join(., haplo_markerLoc(gr_nsl[gr_nsl$pop == "POL_TON"]),by = 'Effect', suffix =  c("_sam","_ton")) %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>%  kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the significant \\gls{nsl} clustered regions for Polynesian populations.', col.names = c("Effect", "NZM","CIM","SAM","TON"), format = 'latex', booktabs = TRUE) %>%  kable_styling(latex_options = "scale_down")
+```
 
  
  \FloatBarrier
@@ -635,6 +648,9 @@ names(t2d) <-  c('mat_d','prop')
 names(obesity) <-  c('mat_d','prop')
 names(metsyn) <-  c('mat_d','prop')
 names(kd) <- c('mat_d','prop')
+
+
+genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
 ```
 
 
@@ -643,7 +659,7 @@ To assess if there was something specific about the metabolic disease gene lists
 
 Overall, gene lists derived from \gls{gwas} associations clustered the individual populations into their super population groupings. Windows that intersected genes that had been associated with a disease were centered by population median and then grouped using hierarchical clustering. There were varying levels of super population proportions and exclusivity (the proportion of super populations in a single cluster) of clusters (Table \@ref(tab:proportion) and \@ref(tab:exclusivity)). The Polynesian populations clustered together when using each of \gls{fwh}, \gls{td}, and \gls{ze}, and in the majority of clustering (18/25) they were exclusive. This pattern was also similar with the \gls{eas} populations (17/25). For the clusters that contained the entirety of a super population, half the groupings for the entire Polynesian super population were exclusive. Three quarters of the groupings for each of the AFR and EAS super populations were exclusive and grouped the super population in their entirety.
 
-Comparing the gene lists by statistic, for all selection statistics and gene lists the populations of the \gls{sas} super population were all clustered together, although often with poor exclusivity. The \gls{eur} super population, with the exception of \gls{fld}, was clustered entirely together but with a ranging degree of exclusivity across the different selection test statistics. \Gls{td}, \gls{fwh}, and \gls{ze} clustered all the super populations in their entirety although the \gls{amr} populations were split. The clustering of super populations was not specific to the gene lists associated with urate, gout, obesity, \gls{t2d}, kidney disease, or, metabolic syndrome but were also seen with lists for genes associated with Alzheimer's disease, Parkinson's disease, age-related macular degeneration, and colerectal cancer (data not shown). This indicates that there is likely nothing specific about the urate and gout, \gls{t2d}, obesity, kidney disease, or metabolic syndrome gene lists, but they contain similar discriminatory information as other lists of genes, which is likely to be capturing allele frequency differences between populations.
+Comparing the gene lists by statistic, for all selection statistics and gene lists the populations of the \gls{sas} super population were all clustered together, although often with poor exclusivity. The \gls{eur} super population, with the exception of \gls{fld}, was clustered entirely together but with a ranging degree of exclusivity across the different selection test statistics. \Gls{td}, \gls{fwh}, and \gls{ze} clustered all the super populations in their entirety although the \gls{amr} populations were split. The clustering of super populations was not specific to the gene lists associated with urate, gout, obesity, \gls{t2d}, kidney disease, or, metabolic syndrome, as the use of random lists of genes had would cluster re-group the super populations (excluding \gls{amr}) up to 75% of the time. This indicates that there is likely nothing specific about the urate and gout, \gls{t2d}, obesity, kidney disease, or metabolic syndrome gene lists, but they contain similar discriminatory information as other lists of genes, which is likely to be capturing allele frequency differences between populations.
 
 
 <!--
@@ -1314,12 +1330,12 @@ Yes, the super populations can be grouped
 In Chapter 3 it was noticed that the populations had population specific distributions for the frequency spectrum based selection and neutrality statistics. The tails of the distributions are the most extreme and there most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first attempts used the entire chromosome and created a summary statistic that was used to cluster. It was successful in reassmebling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used with in the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other. The population grouping were also the same as in the \gls{pca}  that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. Some, such as \gls{fld} and \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other populations of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome, or the quality control that the New Zealand samples underwent, leading to an under-representation of the singletons that actually might be present in the populations.
 
 
-Then there was \gls{td} and \gls{ze} which both had either complete or near complete groupings for a few super populations, especially \gls{afr} and \gls{eur}. These two statistics involve the low-frequency variants in their calculation, and low-frequency markers, again have a bias against them, as they tend to be under-represented in the \gls{snp} chips [\@ref] and there is also a bias against them in the algorithm and steps for genotype calling on the CoreExome \gls{snp} chip. This again means that there is likely an under-representation of low-frequency variants and thus skews the statistics that utilise them.
+Then there was \gls{td} and \gls{ze}, which both had either complete or near complete groupings for a few super populations, especially \gls{afr} and \gls{eur}. These two statistics involve the low-frequency variants in their calculation, and low-frequency markers, again have a bias against them, as they tend to be under-represented in the \gls{snp} chips [\@ref].  There is also a bias against them in the algorithm and steps for genotype calling on the CoreExome \gls{snp} chip. This again means that there is likely an under-representation of low-frequency variants and thus skews the statistics that utilise them.
 
 \gls{td} is a neutrality stat and \gls{ze} is a selection stat, 
 
 
-\Gls{fwh} was the only intra-population selection statistic that re-assembled the nearly all of the super populations in their entirety. \gls{fwh} is based on the ratio of high-frequency derived alleles to intermediate frequency derived alleles. The ancestral allele is not always the equate to the refererence, and nor does it always equate to the major allele. This means that the allele frequencies for the markers that were on the \gls{snp} chip will fit with what this statistic is designed to
+\Gls{fwh} was the only intra-population selection statistic that re-assembled the nearly all of the super populations in their entirety. \gls{fwh} is based on the ratio of high-frequency derived alleles to intermediate frequency derived alleles. The ancestral allele does not always the equate to the refererence, and nor does it always equate to the major allele. This means that the allele frequencies for the markers that were on the \gls{snp} chip that were low frequency have a chance of being high frequency when converted to the ancestral/derived form.
 
 
 Calculating the statistic as a summary for an entire chromosome doesn't inform much about the state of selection in a population, as selection has acts on targeted regions. What it does is give an indication of the overall frequency distributions of the population and if there is a particular obundence in a particular frequency 'bin'
@@ -1332,9 +1348,11 @@ Calculating the statistic as a summary for an entire chromosome doesn't inform m
 - clustering on the extremes 
 windows did, random did not
 
-In order to allow for the more targetted nature of selective events to come through, the extremes of the intra-population selection and neutrality statistics were clustered to see if there were regions in that were in common between populations of a super population and also between super populations.
+In order to allow for the more targeted nature of selective events to come through, the extremes of the intra-population selection and neutrality statistics were clustered to see if there were regions in that were in common between populations of a super population and also between super populations.
 
-The rightwards shift in the distributions of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, largely is influenced by the low frequency and singletons being under-represented. This shift was more noticable in the \gls{afr} populations with the 1st percentile being above zero for \gls{td}, \gls{fld}. This meant that the windows that were being compared were not always the going to be inferring the type of selection or population demographic events as those that were from below zero. The rightward shift won't have been uniformly "applied", but the impact will be different for different genes, based on the frequency of the markers in them. This means that it can't be assumed that the genes in the 1st percentile for for the \gls{afr} populations are the equivilent of the other populations. 
+The rightwards shift in the distributions of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, largely is influenced by the low frequency and singletons being under-represented. This shift was more noticeable in the \gls{afr} populations with the 1st percentile being above zero for \gls{td}, \gls{fld}. This meant that the windows that were being compared were not always the going to be inferring the type of selection or population demographic events as those that were from below zero. 
+
+The rightward shift won't affected all genes in a uniform manner - the impact will be different for different genes, based on the frequency of the markers in them. This means that it can't be assumed that the genes in the 1st percentile for the \gls{afr} populations are the equivalent in terms of ranking by statistic value, than those of the other populations. 
 
 
 
@@ -1343,6 +1361,7 @@ The rightwards shift in the distributions of \gls{td}, \gls{fld}, \gls{flf}, and
 mean unique windows
 
 stat | lower | upper
+---|---|---
 td | 202.4 | 274.5
 fwh | 135.6| 226.4
 fld | 633.7 | 29.2
