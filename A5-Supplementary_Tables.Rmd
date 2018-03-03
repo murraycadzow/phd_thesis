@@ -173,6 +173,16 @@ kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#t
 #
 ```
 
+
+```{r gwasgenes}
+# genelists
+load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')
+genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
+genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE)
+```
+
+
+
 ```{r, echo = FALSE}
 # This is created by coreExome_100kb_windows_intra_filtered.Rmd
 chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS")
