@@ -358,6 +358,9 @@ Of the genes reported in @Jonnalagadda2017, there were 2 of 5 for \gls{td}, 0 of
 
 In conjunction with the studies from @Hider2013 and @Jonnalagadda2017, @Ramos2017 looked at evidence of selection in rheumatic disease, including gout, using the \gls{ihs} results from @voight2006map from the HapMap phase II dataset. There were three populations used which were Asian, European, and African. When comparing the loci reported in @Ramos2017 with the \gls{ihs} results, the equivalent populations of \gls{chb} and \gls{jpt} were used to represent the Asian population, \gls{ceu} for European, and \gls{yri} for African, and "unknown" was any of the specified populations, from the 1000 genomes individuals. Loci reported for European had  `r (sig_ihs_val %>% filter(pop == 'CEU', genename %in% ramos[['ceu']])%>% mutate(pop = 'CEU', statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, statname) %>% distinct() %>% NROW() / length(ramos[["ceu"]] ) *100) %>% round_dp(., 1)`% overlap with \gls{ceu}. The Asian reported loci matched `r (sig_ihs_val %>% filter(pop == 'JPT' | pop == 'CHB', genename %in% ramos[['asi']])%>% mutate(pop = 'ASI', statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, statname) %>% distinct() %>% NROW() / length(ramos[["asi"]] )*100) %>% round_dp(., 1)`% with \gls{chb} and \gls{jpt}, and for African, `r (sig_ihs_val %>% filter(pop == 'YRI', genename %in% ramos[['yri']])%>% mutate(pop = 'YRI', statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, statname) %>% distinct() %>% NROW() / length(ramos[["yri"]] ) *100) %>% round_dp(., 1)`% of the reported loci were also found in \gls{yri}. For the loci reported with an "unknown"" population, `r (sig_ihs_val %>% filter(pop %in% c('CEU','YRI','JPT','CHB' ), genename %in% ramos[['ceu']])%>% mutate(pop = 'ceu_yri_asi', statname = case_when(statid == 21 ~ "nSL", statid == 27 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, statname) %>% distinct() %>% NROW() / length(ramos[["unknown"]] )*100) %>% round_dp(.,1)`% were found to match in any of \gls{ceu}, \gls{yri}, \gls{chb}, or \gls{jpt}.
 
+To supplement the @Ramos2017 \gls{ihs}, additional genes were included from @voight2006map Table 1  to include genes that showed evidence of selection across different combinations of the populations and were not specific to rheumatic disease. The populations covered by these genes were \gls{ceu}, \gls{chb}, \gls{chs}, \gls{jpt}, and \gls{yri}. The genes included were: _LCT_ - specific for \gls{ceu}; _SLC44A5_ - specific for \gls{chb}, \gls{chs}, and \gls{jpt};  _NCOA1_, _ADCY3_ and _SYT1_ - specific for \gls{yri}; _SNTG1_ - specific for \gls{ceu}, \gls{chb}, \gls{chs}, \gls{jpt}, and \gls{yri}; and _SPAG4_ - specific for \gls{ceu} and \gls{yri}. All genes except _SPAG4_ were positive for significant \gls{ihs} markers in the appropriate populations they were originally reported in.
+
+
 The differences in regions being found as significant can be partially attributed to the differing window sizes, and the difference between sequence and chip based genotyping for @Hider2013 and @Jonnalagadda2017, and difference in markers for @Ramos2017. 
 
 <!--
@@ -401,7 +404,7 @@ sig_ihs_val %>% filter(genename %in% c("SLC44A5","LCT","SNTG1","SPAG4","SYT1","N
 
 
 
-A gene list derived from @voight2006map Table 1 was created to include genes that showed evidence of selection across different combinations of the populations \gls{ceu}, \gls{chb}, \gls{chs}, \gls{jpt}, and \gls{yri}. All genes except _SPAG4_ were positive for significant \gls{ihs} markers in the appropriate populations they were originally reported in (Table \@ref(tab:voightTab)). 
+
 
 
 
@@ -415,7 +418,7 @@ A gene list derived from @voight2006map Table 1 was created to include genes tha
 <!-- SPAG4 | 0 | (1) | - | - | 0 -->
 <!-- SYT1 | - | - | - | - | 6 -->
 
-```{r}
+```{r, eval = FALSE}
 read.table(text = 'Gene,CEU,CHB,CHS,JPT,YRI
 LCT,4,-,-,-,-
 SLC44A5,-,2,5,3,-
