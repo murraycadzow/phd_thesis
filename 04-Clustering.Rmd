@@ -174,7 +174,7 @@ some stats about the largest and smallest fsts and focus on the Polynesians
 
 Hierachical clustering of the distribution extremes for each population was done to investigate if there was a similarity between populations and the genetic regions that had the most extreme scores. For the frequency spectrum methods, the 1^st^ and 99^th^ percentile of windows (i.e. distribution tails) by statistic value were selected and a binary matrix of window sharing between populations was used for the clustering. \gls{td}, \gls{fwh}, and \gls{ze}, for the Polynesian populations, all had a higher number of windows in the 99th percentile, compared to the 1st percentile, that contained markers that were annotated as being intergenic, intragenic (being within a gene but there are no transcripts within the gene), or intron variant (Table \@ref(tab:perMarkerLoc)). For the haplotypic methods the proportion of regions that overlapped between populations was used. The groups created by the clustering were then assessed for the number of populations from a super population that were assigned the same cluster. Having all populations correctly grouped into their super population was only completely achieved by clustering using the lower tail of \gls{fwh}. If an allowance is made for the two \gls{amr} populations to be grouped with the \gls{eur} populations, as in the chromosomal F~ST~ clustering, then both haplotypic methods and six tails of the frequency spectrum based methods clustered populations into their respective super populations.  
 
-There were differing numbers of windows used for each population, ranging from a minimum of `r create_windowTable() %>% summarise(min(min))` to a maximum of `r create_windowTable() %>% summarise(max(max))`. The mean number of windows per population was `r create_windowTable() %>% summarise(round(mean(mean), digits = 1))` (SD `r create_windowTable() %>% summarise(round(sd(mean), digits = 1))`). Table \@ref(tab:proportion) and Table \@ref(tab:exclusivity) show the proportion and exclusivity of the clusters respectively, for the clustering of populations by cutting the dendrograms to create 6 groups. Clustering from the windows of the extreme tails of the selection statistic distributions had a higher number of the individual populations clustered into their super populations than the chromosome-wide selection statistics and the clusters were also more exclusive to the super populations. This shows that the aggregate frequency spectrum based selection and neutrality statistics don't capture the population differentiation, but that using the extremes for each population does replicate the population differentiation shown with F~ST~.
+There were differing numbers of windows used for each population, ranging from a minimum of `r create_windowTable() %>% summarise(min(min))` to a maximum of `r create_windowTable() %>% summarise(max(max))`. The mean number of windows per population was `r create_windowTable() %>% summarise(round(mean(mean), digits = 1))` (SD `r create_windowTable() %>% summarise(round(sd(mean), digits = 1))`). Table \@ref(tab:proportion) and Table \@ref(tab:exclusivity) show the proportion and exclusivity of the clusters respectively, for the clustering of populations by cutting the dendrograms to create 6 groups. Clustering from the windows of the extreme tails of the selection statistic distributions had a higher number of the individual populations clustered into their super populations than the chromosome-wide selection statistics and the clusters were also more exclusive to the super populations. This shows that the aggregate frequency spectrum based selection and neutrality statistics don't capture the population differentiation, but that the extremes for each population do replicate the grouping that population differentiation had with F~ST~.
 
 
 ```{r tailwindowSummary, echo = FALSE}
@@ -345,9 +345,9 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 (td_pos_pol_genes <- create_sums('td_pos') %>% filter(POLsum == 4 ) %>% left_join(., lower_sig_stats %>% mutate(chrom = as.numeric(chrom)) %>% select(contains('chrom'), SYMBOL) %>% distinct(), by = c('chrom', 'chrom_start', 'chrom_end')) %>% group_by(SYMBOL) %>% tally())
 ```
 
-##### Disease genes
+##### Metabolic disease-associated genes
 
-Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, and metabolic syndrome from the \gls{gwas} catalog, from the clustering of the extremes there were a total of 31 genes that had at least one of the Polynesian populations having at least one window in the 1st percentile. This dropped to 14 genes that had windows in the 1st percentile for at least one Polynesian, but other populations may have also had windows from their 1st percentile. Some examples of this were _CCR3_ which had windows from all 4 Polynesian populations, the same windows were also in the 1st percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1st percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99th percentile there were no windows from the Polynesian populations that intersected the metabolic disease associated genes.
+Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, and metabolic syndrome from the \gls{gwas} catalog (Tables \@ref(tab:gwascat) and \@ref(tab:gwasgenes)), from the clustering of the extremes, there were a total of 31 genes that had at least one of the Polynesian populations having at least one window in the 1st percentile. This dropped to 14 genes that had windows in the 1st percentile for at least one Polynesian, but other populations may have also had windows from their 1st percentile. Some examples of this were _CCR3_, which had windows from all 4 Polynesian populations, and the same windows were also in the 1st percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1st percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99th percentile there were no windows from the Polynesian populations that intersected the metabolic disease associated genes.
 
 
 #### Fay and Wu's _H_
@@ -440,7 +440,7 @@ fwh_pos_no_pol_genes <- txdb_gene_annotate(create_sums('fwh_pos') %>% filter(POL
 ```
 
 
-The 1^st^ percentile has many of the regions in the Polynesian populations in common with the \gls{eas} populations (Figure \@ref(fig:fwhTop1000). Whereas in the 99^th^ percentile there were more regions that were only from the Polynesian populations that were not in common with any other populations. This shows that the regions with high frequency derived alleles are in common with the \gls{eas} populations, indicating they possibly originated prior to the Polynesian migration.
+The 1^st^ percentile has many of the regions in the Polynesian populations in common with the \gls{eas} populations (Figure \@ref(fig:fwhTop1000)). Whereas, in the 99^th^ percentile there were more regions that were only from the Polynesian populations that were not in common with any other populations. This shows that the regions with high frequency derived alleles are in common with the \gls{eas} populations, indicating they possibly originated prior to the Polynesian migration.
 
 
 ##### Metabolic disease-associated genes
@@ -1568,6 +1568,118 @@ Yes, the super populations can be grouped
 - yes - for disease genes
 - yes - for random genes
 
+
+
+Objective 1:
+can the seelction and neutrality statistics be used to group the 
+
+- reiterate the migration
+
+The history of the Polynesian migrations is the out of Africa, up through europe, and out from East Asia into Polynesia. Polynesia is settled in two waves, Western and then Eastern.
+
+The resutls that we get from the FST on the entire chromosomes gives the same pattern, first it matches the 1000 genomes project and, secondly, specifically the Polynesian populations see a grouping in the East and West. This was also seen in XXX.
+
+The grouping is not seen with the whole chromsome results. 
+
+
+In Chapter 3 it was noticed that the populations had population specific distributions for the frequency spectrum based selection and neutrality statistics. The tails of the distributions are the most extreme and there most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first attempts used the entire chromosome and created a summary statistic that was used to cluster. It was successful in reassmebling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used with in the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other. The population grouping were also the same as in the \gls{pca}  that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. Some, such as \gls{fld} and \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other populations of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome, or the quality control that the New Zealand samples underwent, leading to an under-representation of the singletons that actually might be present in the populations.
+
+
+Overall, it was found that the clustering of selection and neutrality test statistics for entire chromosomes did not resemble the grouping that clustering on F~ST~ produced. However, using windows from the extremes of the distribution was effective at clustering the individual populations into their super population groups. \gls{fwh} was the only statistic that grouped all individual populations into their corresponding super populations, whereas \gls{td} and \gls{ze} had the same split of the \gls{amr} populations as with the F~ST~ clustering. The haplotypic based methods of \gls{ihs} and \gls{nsl} clustered into super populations and had the \gls{amr} population split too. There was not a high amount of region sharing outside of each super population. Clustering from gene lists consistently grouped the individual populations into their super populations although there was inconsistency for the \gls{amr} populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with previously reported results [@1KGP2015snp; @pickrell2009signals]. 
+
+
+
+With the extremes, for many of the super populations had many windows that were not in the extremes of the other populations, these formed the 'blocks' in the heatmap. This was most evident with the \gls{afr} populations, which had a good deal of the windows for each statistic not in common with the extremes from the other populations.
+
+
+Prior to this study there has only been a few studies that have genetically established the relationship of the Polynesian genome with respect to other populations. Recent studies have done this predominantly though the mitochondrial and Y chromosome lineages. The admixture analysis they performed 
+
+The anaylsis is important because it adds evidence to the genetic relationship between the Polynesians and the other populations. 
+
+Other studies have previously shown the ancestral lineages of the Polynesians with relation to the other populations, however this was done predominantly with the mitochondrial and Y chromosome lineages [\@ref]. The relationship using the autosome has aslo been done but using very small sample sizes. This is study is the first to compare four Polynesian populations, two of East, and two of West Polynesian ancestry, and of similar sample sizes to those of the \gls{1kgp}.
+
+Understanding the ancestry of populations helps to inform on
+
+
+
+Objective 2: investigate the gout/metabolic disease loci and their potential shared selective histories
+
+- The introduction sets the framework that geographically similar populations are in similar environments and therefore exposed to similar selective pressures.
+
+- What we see is there is a higher burden of metabolic disease in Polynesians and not in other populations. Could it be that the selective pressure occured after the migratory events?
+
+- looking at the the current populations might give us an idea of if there is selective history and if so when a particular event might have taken place
+ie do we see similar frequencies of disease alleles
+
+- From the sfs results we see that within geographically similar regions they have similar genetic results
+
+- we also get similar results regions with haplotypic selection
+
+- somewhat indicated by the use of the clustering using disease genes
+- are there shared haplotypes?
+
+- because we know the migration history, and we also have shown that the modern day populations still show these groupings that correspond to temporal and spacial geography it can help us infer when a particular region of the genome may have had a selective event.
+
+- why does it matter when something happened though?
+    - distigmatisation
+    
+- why? by comparing populations it might give an idea of particular regions that might explain differences in prevalence and or severity/likelyhood of developing metabolic disease
+obesity what was found?
+t2d what was found?
+kd what was found?
+met syn what was found?
+Anything that did have a signal, was it shared with other populations?
+
+was there similarity in the polys?
+any differences in the polys?
+
+
+the clustering of the most extreme windows represents other than a similarity in allele frequencies between populations that have a pattern that is consistent with the out of Africa model of human migration [@Mallick2016; @Pagani2016].
+
+The extremes of the distributions represent different types of selection or demographic events and are different depending on the selection test statistic being used [@Tajima1989; @fay2000hitchhiking; @Fu1993; @Zeng2006]. The upper end of the distribution is able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics and represent the same types of selection or demography.
+
+
+The clustering based on the median centred values of the statistics was able to reassemble the super population goups. However, the groups were also reassembled with the random draws of genes, with an increase in the number of completely grouped super populations when more genes were used.
+
+limitations
+
+- the fact it was a chip
+
+- FDR was high for most of the statistics - therefor can't really claim selection
+
+As reported in section \@ref(fdrresults), only the \gls{fdr} for the Polynesian populations was below 10% for the 1^st^ percentiles of \gls{td} and \gls{fwh} for the frequency spectrum based statistics.
+
+
+
+The rightwards shift in the distributions of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, largely is influenced by the low frequency and singletons being under-represented. This shift was more noticeable in the \gls{afr} populations with the 1st percentile being above zero for \gls{td}, \gls{fld}. This meant that the windows that were being compared were not always the going to be inferring the type of selection or population demographic events as those that were from below zero. 
+
+The rightward shift won't affected all genes in a uniform manner - the impact will be different for different genes, based on the frequency of the markers in them. This means that it can't be assumed that the genes in the 1st percentile for the \gls{afr} populations are the equivalent in terms of ranking by statistic value, than those of the other populations. 
+
+
+
+- clustering 
+- pop specific shift in distributions
+    - can't compare the 1st percentile for some stats 
+- cuttree method is crude
+- only used hierarchical clustering, other methods may give different results
+    - selection of K might not be appropriate
+- sparsity of the data
+- metrics for assessing correct grouping might not be the best
+- essentially just the capturing sfs -> geographically similar pops have similar allele freq
+- FDR for the extremes suggests that the extremes aren't that different from a null
+
+> The recent work with using the full 1kgp biallelic sites suggests that the distributions are just straight out shifted, although there are some values that are quite different
+
+The technical limitations raised in Section \@ref(chap3limit) of this dataset based on the markers from the CoreExome chip apply to this analysis too. Particular to the analysis in this chapter was also the how the clusters were determined. The cutree method in R [@RCoreTeam2017] that was used to slice the dendrograms, creating the groups used assess the proportions and exclusivity of the clustering was relatively crude and did not always match the clusters that were visible in the dendrogram. It also required that K clusters be returned regardless of what the tree actually looked like. The use of K = 6 was chosen due to there being 6 super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering. Many of the selection tests split \gls{amr} into 2 groups, \gls{clm}/\gls{pur} and \gls{msl}/\gls{pel}. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @1KGP2015snp]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for both Fu and Li's _D_ and _F_ they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand European [@Hollis-Moffatt2012; @Gravel2013].
+
+
+
+
+
+
+
+
+
 ### Frequency spectrum
 
 <!-- Might be able to at least approach this as a confirm the ep/wp similarity and also the similarity of east asian to poly
@@ -1576,12 +1688,10 @@ look at skoglund 2016 and the new paper by Hudjashov2018 to work out how to spin
 -->
 
 
-In Chapter 3 it was noticed that the populations had population specific distributions for the frequency spectrum based selection and neutrality statistics. The tails of the distributions are the most extreme and there most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first attempts used the entire chromosome and created a summary statistic that was used to cluster. It was successful in reassmebling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used with in the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other. The population grouping were also the same as in the \gls{pca}  that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. Some, such as \gls{fld} and \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other populations of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome, or the quality control that the New Zealand samples underwent, leading to an under-representation of the singletons that actually might be present in the populations.
 
 
-Then there was \gls{td} and \gls{ze}, which both had either complete or near complete groupings for a few super populations, especially \gls{afr} and \gls{eur}. These two statistics involve the low-frequency variants in their calculation, and low-frequency markers, again have a bias against them, as they tend to be under-represented in the \gls{snp} chips [\@ref].  There is also a bias against them in the algorithm and steps for genotype calling on the CoreExome \gls{snp} chip. This again means that there is likely an under-representation of low-frequency variants and thus skews the statistics that utilise them.
 
-\gls{td} is a neutrality stat and \gls{ze} is a selection stat, 
+\gls{td} and \gls{ze}, both had either, complete or near complete groupings for a few super populations, especially \gls{afr} and \gls{eur}. These two statistics involve the low-frequency variants in their calculation, and low-frequency markers, again have a bias against them, as they tend to be under-represented in the \gls{snp} chips [\@ref].  There is also a bias against them in the algorithm and steps for genotype calling on the CoreExome \gls{snp} chip. This again means that there is likely an under-representation of low-frequency variants and thus skews the statistics that utilise them.
 
 
 \Gls{fwh} was the only intra-population selection statistic that re-assembled the nearly all of the super populations in their entirety. \gls{fwh} is based on the ratio of high-frequency derived alleles to intermediate frequency derived alleles. The ancestral allele does not always the equate to the refererence, and nor does it always equate to the major allele. This means that the allele frequencies for the markers that were on the \gls{snp} chip that were low frequency have a chance of being high frequency when converted to the ancestral/derived form.
@@ -1604,32 +1714,14 @@ I also want to show that there were degrees of overlap, suggesting some windows 
 
 In order to allow for the more targeted nature of selective events to come through, the extremes of the intra-population selection and neutrality statistics were clustered to see if there were regions in that were in common between populations of a super population and also between super populations.
 
-The rightwards shift in the distributions of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, largely is influenced by the low frequency and singletons being under-represented. This shift was more noticeable in the \gls{afr} populations with the 1st percentile being above zero for \gls{td}, \gls{fld}. This meant that the windows that were being compared were not always the going to be inferring the type of selection or population demographic events as those that were from below zero. 
-
-The rightward shift won't affected all genes in a uniform manner - the impact will be different for different genes, based on the frequency of the markers in them. This means that it can't be assumed that the genes in the 1st percentile for the \gls{afr} populations are the equivalent in terms of ranking by statistic value, than those of the other populations. 
-
-
-
 > should calculate sfs on 1000 genomes full data and subset down to matching windows
 
 > the snps on the core exome might be less 'afr centric'
 
 
-Prior to this study there has only been a few studies that have genetically established the relationship of the Polynesian genome with respect to other populations. Recent studies have done this predominantly though the mitochondrial and Y chromosome lineages. The admixture analysis they performed 
-
-The anaylsis is important because it adds evidence to the genetic relationship between the Polynesians and the other populations. 
-
-Other studies have previously shown the ancestral lineages of the Polynesians with relation to the other populations, however this was done predominantly with the mitochondrial and Y chromosome lineages [\@ref]. The relationship using the autosome has aslo been done but using very small sample sizes. This is study is the first to compare four Polynesian populations, two of East, and two of West Polynesian ancestry, and of similar sample sizes to those of the \gls{1kgp}.
-
-Understanding the ancestry of populations helps to inform on
-
-
 Hudjashov2017 had 10 tongans, 10 samoans, Hudjashov,2018 
 
 Skoglund2016
-
-
-
 
 
 
@@ -1644,34 +1736,6 @@ flf | 467.2 | 120.6
 ze | 119.5 | 113.5
 
 
-Objective 2: investigate the gout/metabolic disease loci and their potential shared selective histories
-
-
-- The introduction sets the framework that geographically similar populations are in similar environments and therefore exposed to similar selective pressures.
-
-- What we see is there is a higher burden of metabolic disease in Polynesians and not in other populations. Could it be that the selective pressure occured after the migratory events?
-
-- looking at the the current populations might give us an idea of if there is selective history and if so when a particular event might have taken place
-ie do we see similar frequencies of disease alleles
-
-
-- From the sfs results we see that within geographically similar regions they have similar genetic results
-
-- we also get similar results regions with haplotypic selection
-
-
-- somewhat indicated by the use of the clustering using disease genes
-- are there shared haplotypes?
-
-
-- because we know the migration history, and we also have shown that the modern day populations still show these groupings that correspond to temporal and spacial geography it can help us infer when a particular region of the genome may have had a selective event.
-
-
-- why does it matter when something happened though?
-    - distigmatisation
-    
-- why? by comparing populations it might give an idea of particular regions that might explain differences in prevalence and or severity/likelyhood of developing metabolic disease
-
 bring in F~ST~ windows for the disease genes
 
 
@@ -1682,10 +1746,6 @@ Bits that I need to add
 - the genes that do share, what are they associated with? and what do th prevalences of those populations look like?
 - 
 
-
-
-Overall, it was found that the clustering of selection and neutrality test statistics for entire chromosomes did not resemble the grouping that clustering on F~ST~ produced. However, using windows from the extremes of the distribution was effective at clustering the individual populations into their super population groups. \gls{fwh} was the only statistic that grouped all individual populations into their corresponding super populations, whereas \gls{td} and \gls{ze} had the same split of the \gls{amr} populations as with the F~ST~ clustering. The haplotypic based methods of \gls{ihs} and \gls{nsl} clustered into super populations and had the \gls{amr} population split too. There was not a high amount of region sharing outside of each super population. Clustering from gene lists consistently grouped the individual populations into their super populations although there was inconsistency for the \gls{amr} populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with previously reported results [@1KGP2015snp; @pickrell2009signals]. 
-
 <!--windows
 correct:
 td: both split amr, clustered others
@@ -1694,7 +1754,9 @@ fld: lower split amr, upper only clustered afr, eas, and sas entirely
 flf: lower split amr, nzm/mxl/pel. upper split amr clustered others
 ze: both split amr, clustered others
 -->
-It is difficult to apply a biological interpretation onto what the clustering of the most extreme windows represents other than a similarity in allele frequencies between populations that have a pattern that is consistent with the out of Africa model of human migration [@Mallick2016; @Pagani2016]. The extremes of the distributions represent different types of selection or demographic events and are different depending on the selection test statistic being used [@Tajima1989; @fay2000hitchhiking; @Fu1993; @Zeng2006]. The upper end of the distribution is able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics and represent the same types of selection or demography. The lower extreme however was a mix of negative and positive values, with the positive values mostly from the \gls{afr} populations. This mix means that the windows from one population do not necessarily represent the same selective or population demographic event component and therefore are not directly comparable. As reported in section \@ref(fdrresults), only the \gls{fdr} for the Polynesian populations was below 10% for the 1^st^ percentiles of \gls{td} and \gls{fwh} for the frequency spectrum based statistics.
+It is difficult to apply a biological interpretation onto what 
+
+ The lower extreme however was a mix of negative and positive values, with the positive values mostly from the \gls{afr} populations. This mix means that the windows from one population do not necessarily represent the same selective or population demographic event component and therefore are not directly comparable. 
 
 The simplest explanation similar clustering occurred with the gene lists, is that for the tests of neutrality or selection that rely on the frequency spectrum, populations that are similar have a similar allele frequency to each other. This would explain why, with \gls{td}, \gls{fwh}, and \gls{ze}, which are based on comparing ratios of low, intermediate and high frequency variants, they all grouped the individual populations into their super population groups. This differed to the statistics based on singletons (\gls{fld} and \gls{flf}) which did not often group the super populations. Both \gls{flf} and \gls{fld} had a very sparse lower tail and this would influence how well the clustering performed. At the extremes of similarity (e.g. very similar or very dissimilar), the clusters were determined by only a few differences which means a large amount of information was not being used for the decision. As the lower tail represents and excess of singletons this is likely to have been impacted on by using chip data as there was a very strong bias against them during the quality control protocol [@Guo2014]. In this situation because the data has reduced singletons, the distribution for \gls{fld} and \gls{flf} was shifted to the right, with the upper tail representing a deficit of singletons [@Fu1993]. This shift now means there is an under representation of regions in the lower tail and the clustering was no better than drawing regions at random.
 
@@ -1719,22 +1781,6 @@ What was observed, was the populations being clustered into their super populati
 <!-- Gautier2013 has a section (figure6) about getting the tree of ceu/jpt/bia/yri and also about inferring the branch lengths -->
 
 ### Limitations
-
-- clustering 
-- pop specific shift in distributions
-    - can't compare the 1st percentile for some stats 
-- cuttree method is crude
-- only used hierarchical clustering, other methods may give different results
-    - selection of K might not be appropriate
-- sparsity of the data
-- metrics for assessing correct grouping might not be the best
-- essentially just the capturing sfs -> geographically similar pops have similar allele freq
-- FDR for the extremes suggests that the extremes aren't that different from a null
-
-> The recent work with using the full 1kgp biallelic sites suggests that the distributions are just straight out shifted, although there are some values that are quite different
-
-The technical limitations raised in Section \@ref(chap3limit) of this dataset based on the markers from the CoreExome chip apply to this analysis too. Particular to the analysis in this chapter was also the how the clusters were determined. The cutree method in R [@RCoreTeam2017] that was used to slice the dendrograms, creating the groups used assess the proportions and exclusivity of the clustering was relatively crude and did not always match the clusters that were visible in the dendrogram. It also required that K clusters be returned regardless of what the tree actually looked like. The use of K = 6 was chosen due to there being 6 super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering. Many of the selection tests split \gls{amr} into 2 groups, \gls{clm}/\gls{pur} and \gls{msl}/\gls{pel}. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @1KGP2015snp]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for both Fu and Li's _D_ and _F_ they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand European [@Hollis-Moffatt2012; @Gravel2013].
-
 
 
 
