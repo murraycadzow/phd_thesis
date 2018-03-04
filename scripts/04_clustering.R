@@ -28,6 +28,11 @@ pol_fst_99genes <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_
 
 marker_loc <- readRDS('~/data/NZ_coreExome_1kgp/snpEff_Annotated/snpeff_terms.RDS') %>% select(chrom = V1, pos = V2, snp = V3, ref = V4, alt = V5, eff )
 
+# genelists
+load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')
+genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
+
+
 create_sel_summary_table <- function(s){
   global_summary %>% ungroup%>% filter(stat == s) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>%  data.frame()
 }
