@@ -40,6 +40,7 @@ objectives:
 
 Selection, GWAS, and Imputation of Polynesian Populations
 
+
 useful papers:
 
 - @Fay2013
@@ -64,6 +65,34 @@ This section describes the gout GWAS and vGWAS performed in the UKBiobank data a
 
 
 UK Biobank approval 12611
+
+
+_Introduction of ukbiobank_
+
+The UK Biobank is a publically available 
+
+The Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic,  health, and lifestype information.
+
+
+_Motivation behind using the different definitions_
+
+In epidemiological studies the use of an accurate case definition is important. 
+
+There is variation in the gout definitions used from the multipurpose cohort studies that are used for genetic analysis. 
+
+Consistent case definition is also important for comparisons between cohorts, this can be done by combining the genetic data and performing the \gls{gwas}. Another common way of combining genetic association studies is through meta-analysis. Having the same case definitions between studies reduces the variations 
+
+For gout, the gold standard case definition is the mono-soldium urate crystals in the synovial fluid of the joint. A sustitute for crystals in the synovial fluid is the American College of Rheumatology (ACR) criteria. The criteria require a minimum of six of twelve conditions to be met. 
+
+It is uncommon for multipurpose cohorts to report either the gold-standard, or ACR criteria, and instead more common for a self-report diagnosis to be reported. The UK Biobank includes the self-report diagnosis that were collected by survey at the time of recruitment, but it also has hospital admission information, for both primary and secondary diagnosis.  
+
+
+
+Power of genetic case-control studies increases with accurate case definition. This means that there are the maximum number of cases, and the maximum number of disease free controls.
+
+
+
+
 
 ### European Gout GWAS
 
@@ -170,6 +199,11 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 ```
 
 
+```{r}
+# create the table of kottgen snps from the data
+
+
+```
 
 
 
