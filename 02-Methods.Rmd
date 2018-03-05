@@ -54,7 +54,7 @@ shapeit2 \
   -T 12
 ```
 
-The second step was the actual phasing step. 
+The second step was the phasing of genotypes into their haplotypes by using the \gls{1kgp} phased haplotype reference and a genetic map that was provided as part of the reference files. Markers that were marked for exclusion from the previous step were excluded. The haplotypes with the maxium likelihood were outputted. The haplotypes were then converted from the .haps format into a phased \gls{vcf}.
 
 
 ```{bash, eval = FALSE, echo = TRUE}
@@ -168,8 +168,6 @@ gwas_interested <- gwas_cat[grep('metabolic syndrome|obesity|diabetes|urate|gout
 kd<- gwas_cat %>% filter(grepl(DISEASE.TRAIT, pattern = 'kidney|renal', ignore.case=TRUE) & !grepl(DISEASE.TRAIT, pattern = 'transplant|carcinoma|Type|stones|gout|related')) %>% filter(DISEASE.TRAIT != "Diabetic kidney disease")
 
 gwas_interested <- rbind(gwas_interested[grep("child|erectile|lean|autoantibodies|gestational|cancer|psychopharmacol|metaformin|metformin|obstructive|interaction|asthmatics|omega|pain|cataracts|time|bilirubin|chain|thyroid|zhi|Type 1|cystic", gwas_interested$DISEASE.TRAIT, invert = TRUE, ignore.case = TRUE),], kd)
-
-
 
 obesity_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("obesity|body mass",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 
