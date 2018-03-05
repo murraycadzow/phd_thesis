@@ -134,7 +134,6 @@ ukbio_gout %>% summarise(n = n(), percent_male = 1 - sum(sex)/NROW(.), mean_age 
 ```
 
 
-** Venn Diagram/upset plot ** 
 
 (ref:ukbbupsetplot) An upset plot showing the total sizes (left) and intersections (upper) of the different classification criteria.
 
@@ -153,22 +152,27 @@ There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individu
 - GWAS results
 - Heritability explained
 
-```{r}
+```{r, message = FALSE}
 kot_t1 <- read.csv("~/data/kottgen_table1.csv", header = TRUE, stringsAsFactors = FALSE)
 uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% separate(file, c("file","CHR"), sep = ':') %>% mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" ))%>%  mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% stringi::stri_sub(9)) %>% left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
 ```
 
+(ref:kotplot) Plot showing ORs (95% CI) for the 30 \gls{snp}s reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles.
 
-```{r, fig.height=7}
+```{r kotplot, fig.height=7, fig.cap = '(ref:kotplot)', warning = FALSE}
 
 flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770152", "rs7193778", "rs164009", "rs653178","rs2078267", "rs478607", "rs12498742")
 uk_kot_t1 %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
-bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) ) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "a","b")) %>% filter(gout != 'all') %>%  ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
-  geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) 
+bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) ) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
+  # mutate(gout = case_when(
+  #   gout == 'hosp' ~ "Hospital", 
+  #   gout == "self" ~ "Self Report", 
+  #   gout == "selfult" ~ "Self Report or ULT",
+  #   gout == "ult" ~ "ULT",
+  #   gout == "winnard" ~ "Winnard")) %>% 
+  ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
+  geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
 ```
-
-
-** kottgen plot **
 
 
 
@@ -182,7 +186,7 @@ number of significant snps
 - hosp `r hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
 - self `r self_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
 - ult `r ult_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
-- self ult `selfult_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
+- self ult `r selfult_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
 - winnard `r winnard_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
 
 (ref:Overlap) Overlap of markers that reached at nominal genome-wide significance between the different gout classifications.
@@ -204,7 +208,7 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 # age, sex, and bmi adjusted
 
 # still need to flip snps to be in the same order as kottgen
-uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% unite("CI",c("L95","U95"), sep = " -") %>% mutate(SNP = paste0(SNP, ' (', grail_gene,')'), Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-grail_gene, -OR, -CI, -P, -CHR) %>% spread(key = gout, value = Effect) %>% select(-all)%>% kable(., format = 'latex', caption = '(\\#tab:ukbbkot)') %>% kable_styling(latex_options = 'scale_down')
+uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% unite("CI",c("L95","U95"), sep = " -") %>% mutate(SNP = paste0(SNP, ' (', grail_gene,')'), Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-grail_gene, -OR, -CI, -P, -CHR) %>% spread(key = gout, value = Effect) %>% select(-all)%>% kable(., format = 'latex', caption = '(\\#tab:ukbbkot)', booktabs = TRUE) %>% kable_styling(latex_options = 'scale_down')
 
 ```
 
