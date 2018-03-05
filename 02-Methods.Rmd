@@ -72,7 +72,6 @@ shapeit2 \
 --exclude-snp coreExome_norm.chr?.checked.snp.strand.exclude \
 -T 8
 
-
 # Convert haps to vcf.gz
 shapeit2 \
 -convert \
@@ -159,22 +158,28 @@ Gene
   
 ### Disease Gene Lists {#diseaselist}
 
-Lists were filtered for P <  5x10^-8^. From the filtered results the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Rows were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data each disease selected rows using keywords in the "disease trait". Gout and urate used the keywords "urate" and "gout", obesity used "obesity" and "body mass", \gls{t2d} used "diabetes", and metabolic syndrome used "syndrome". Kidney disease used the keywords "kidney" and "renal" and removed entries that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". The other disease gene lists used the filtered P-value data and used selected on keywords; for age-related macular degeneration, "age-related macular degeneration" was used. For Alzheimer's disease, "Alzheimer's disease" was used. For Parkinson's disease, "Parkinson's disease" was used, removing entries with the keyword "early". And for colerectal cancer, "Colorectal cancer" and "Colon cancer" were used. All keyword matching was case-insensitive.
+In order to create lists of genes that were associated with urate, gout, obesity, \gls{t2d}, metabolic syndrome, and kidney disease entries for the \gls{gwas} catalog were downloaded from the \gls{gwas} catalog^[gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv https://www.ebi.ac.uk/gwas/ accessed 19 June 2017] [@MacArthur2017]. Entries were then filtered for P <  5x10^-8^. From the filtered results the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Entries were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data each disease selected rows using keywords in the "disease trait". Gout and urate used the keywords "urate" and "gout", obesity used "obesity" and "body mass", \gls{t2d} used "diabetes", and metabolic syndrome used "syndrome". Kidney disease used the keywords "kidney" and "renal" and removed entries that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". All keyword matching was case-insensitive. Alist of the traits for each category can be found in Table \@ref(tab:gwascatref) and a list of the genes and what category they are from is in Table  \@ref(tab:gwasgenes).
 
-```{r diseaseListKeywords, eval = FALSE, echo = FALSE}
+```{r diseaseListKeywords, eval = FALSE, echo = TRUE, tidy=TRUE}
+
 gwas_interested <- gwas_cat[grep('metabolic syndrome|obesity|diabetes|urate|gout|body mass|lipid traits', gwas_cat$DISEASE.TRAIT, ignore.case = TRUE) ,]
 
-#filter out potentially misleading gwas hits
-kd<- gwas_cat %>% filter(grepl(DISEASE.TRAIT, pattern = 'kidney|renal', ignore.case=TRUE) & !grepl(DISEASE.TRAIT, pattern = 'transplant|carcinoma|Type|stones|gout|related')) %>% filter(DISEASE.TRAIT != "Diabetic kidney disease")
+# create kidney disease associated gene list
+kd <- gwas_cat %>% filter(grepl(DISEASE.TRAIT, pattern = 'kidney|renal', ignore.case=TRUE) & !grepl(DISEASE.TRAIT, pattern = 'transplant|carcinoma|Type|stones|gout|related')) %>% filter(DISEASE.TRAIT != "Diabetic kidney disease")
 
+# filter the gene list down to diseases of interest
 gwas_interested <- rbind(gwas_interested[grep("child|erectile|lean|autoantibodies|gestational|cancer|psychopharmacol|metaformin|metformin|obstructive|interaction|asthmatics|omega|pain|cataracts|time|bilirubin|chain|thyroid|zhi|Type 1|cystic", gwas_interested$DISEASE.TRAIT, invert = TRUE, ignore.case = TRUE),], kd)
 
+# create the regions for the obesity asscoiated genes
 obesity_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("obesity|body mass",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 
+# create the regions for the t2d associated geens
 t2d_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("diabetes",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 
+# create the regions for metabolic syndrome associated genes
 metsyn_GR <- gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("Syndrome",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 
+# create the regions for urate and gout genes
 gc_urate_gout_GR <-  gwas_genes_ucscGR[gwas_genes_ucscGR$SYMBOL %in% unique(unlist(strsplit(gwas_interested[grep("urate|gout",gwas_interested$DISEASE.TRAIT, ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 ```
 
@@ -192,7 +197,7 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 #### PCA - eigenstrat {#pca}
 
-The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. All chromosomes were combined into a single \gls{vcf} file and then the independent markers were found by using a sliding window to remove markers that had an R^2^ > 0.2 in windows of 50 kbp and a slide of 5 markers. 
+The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. All chromosomes were combined into a single \gls{vcf} file and then the independent markers were found by using a sliding window to remove markers that had an R^2^ > 0.2 in windows of 50 kb and a slide of 5 markers. 
 
 ```{r eigenstrat code, engine='bash', eval = FALSE}
 scratch=/Volumes/scratch/merrimanlab/murray/working_dir/
@@ -281,14 +286,8 @@ grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 ```
 
 
-```{r, echo = FALSE, fig.cap='(ref:cv)'}
-k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE)
-ggplot(k_cv, aes(x = V1, y = V2)) + geom_line() + geom_point() + labs(x = 'K',y = 'Cross Validation Error') + geom_point(data = k_cv %>% filter(min(V2) == V2), aes(x = V1, y = V2),color = 'red', shape = 4, size = 4, inherit.aes = FALSE) + theme_bw()
-```
 
-(ref:cv) Admixture cross-validation error for different values of K.
 
-The cross validation of K from 1 to 15 resulted in K = 11 having the minimum cross validation error.
 
 ```{bash, eval = FALSE}
 # to project 1000 genomes onto the Polynesians
@@ -329,56 +328,13 @@ cp reference.9.P study.9.P.in
 admixture -s 123456 -P study.bed 9
 ```
 
-```{r admixDataProjection, echo = FALSE}
-ref <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/reference_bootstrap.9.Q')
-ref_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/reference.fam', header = FALSE)
-names(ref_fam) <- c('FID','sample','PID','MID','SEX','AFF')
-ref_fam <- left_join(ref_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
-
-study <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.9.Q')
-study_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.fam', header = FALSE)
-names(study_fam) <- c('FID','sample','PID','MID','SEX','AFF')
-study_fam <- left_join(study_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
-```
-
-```{r cvproj, fig.cap = '(ref:cvproj)', echo = FALSE}
-k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE)
-ggplot(k_cv, aes(x = V1, y = V2)) + geom_line() + geom_point() + labs(x = 'K',y = 'Cross Validation Error') + geom_point(data = k_cv %>% filter(min(V2) == V2), aes(x = V1, y = V2),color = 'red', shape = 4, size = 4, inherit.aes = FALSE) + theme_bw()
-```
-
-(ref:cvproj) Admixture cross-validation error for different K values from projecting components from 1000 Genomes Project populations of AFR, EAS, EUR, and SAS
-
-```{r, echo = FALSE}
-# barplot of the reference proportions
-cbind(ref_fam, ref) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(super_sample = paste0(super_pop,'_',sample), facet_pop = paste(super_pop, pop)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V)) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 6) + theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
-
-```
-
-
-
-```{r, echo = FALSE}
-# admixed pops that were projected onto
-#removed NZC for to make nice
-cbind(study_fam, study) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(super_sample = paste0(super_pop,'_',sample), super_pop = factor(super_pop, levels = c("AMR", "POL","EUR"), ordered = TRUE)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V)) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 4) +theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
-```
-
-
-
-- V1 and V4 were EAS mostly
-- V2 and V5 were AFR
-- V7 was JPT
-- V6 and V8 were EUR
-- V9 was SAS
-
-
-NZC is extremely similar to GBR and CEU
 
 ### GWAS
 
 UK Biobank GWAS
 
 
-#### 
+
 
 #### Heritability Analysis
 
