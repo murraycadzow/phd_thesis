@@ -3,6 +3,7 @@
 ```{r assocLoad, include=FALSE, warning = FALSE}
 source('scripts/Annotate_genes.R')
 library(GenomicRanges)
+library(phdFunctions)
 library(knitr)
 library(kableExtra)
 library(tidyverse)
@@ -208,7 +209,7 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 # age, sex, and bmi adjusted
 
 # still need to flip snps to be in the same order as kottgen
-uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% unite("CI",c("L95","U95"), sep = " -") %>% mutate(SNP = paste0(SNP, ' (', grail_gene,')'), Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-grail_gene, -OR, -CI, -P, -CHR) %>% spread(key = gout, value = Effect) %>% select(-all)%>% kable(., format = 'latex', caption = '(\\#tab:ukbbkot)', booktabs = TRUE) %>% kable_styling(latex_options = 'scale_down')
+uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% unite("CI",c("L95","U95"), sep = " -") %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>%  mutate(SNP = paste0(SNP, ' (', grail_gene,')'), Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-grail_gene, -OR, -CI, -P, -CHR) %>% spread(key = gout, value = Effect) %>% select(-all)%>% kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citep{Kottgen2013} for the different gout classification methods.', col.names = c("Marker", "A1", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95% CI], P. ULT = Urate lowering therapy." , general_title = "", threeparttable = TRUE )
 
 ```
 
