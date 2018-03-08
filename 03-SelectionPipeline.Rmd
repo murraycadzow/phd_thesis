@@ -3261,7 +3261,7 @@ Only _RREB1_ and _IGFR1_ had haplotypic evidence with \gls{xpehh} across multipl
 
 There was a similar situation with obesity, \gls{t2d}, kidney disease, and metabolic syndrome where it was found that there were multiple loci that had evidence of possible selection. The number of genes that had possible evidence of selection was similar in the Polynesian populations to that of the other populations. An interesting point however, was the Western Polynesian populations had the fewest genes associated with \gls{t2d} identified with \gls{ihs} or \gls{nsl} than all the other populations, despite Polynesian populations having a high prevalence of \gls{t2d} [@Winnard2013]. 
 
-Other complex diseases such as the neurological, and, inflammatory and autoimmune also showed multiple genes that showed evidence of selection. One of the 'themes' that appeared was there was genes were often involved in multiple diseases or gene lists, and often involved with the immune system. 
+Other complex diseases in which urate is implicated, such as the neurological, and, inflammatory and autoimmune diseases, also showed multiple genes that showed evidence of selection. One of the 'themes' that appeared was there was genes were often involved in multiple diseases or gene lists, and often involved with the immune system. 
 
 
 
