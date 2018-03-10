@@ -158,7 +158,7 @@ Gene
   
 ### Disease associated gene Lists {#diseaselist}
 
-In order to create lists of genes that were associated with urate, gout, obesity, \gls{t2d}, metabolic syndrome, and kidney disease entries for the \gls{gwas} catalog were downloaded from the \gls{gwas} catalog^[gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv https://www.ebi.ac.uk/gwas/ accessed 19 June 2017] [@MacArthur2017]. Entries were then filtered for P <  5x10^-8^. From the filtered results the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Entries were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data each disease selected rows using keywords in the "disease trait". Gout and urate used the keywords "urate" and "gout", obesity used "obesity" and "body mass", \gls{t2d} used "diabetes", and metabolic syndrome used "syndrome". Kidney disease used the keywords "kidney" and "renal" and removed entries that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". All keyword matching was case-insensitive. Alist of the traits for each category can be found in Table \@ref(tab:gwascatref) and a list of the genes and what category they are from is in Table  \@ref(tab:gwasgenes).
+In order to create lists of genes that were associated with urate, gout, obesity, \gls{t2d}, metabolic syndrome, and kidney disease entries for the \gls{gwas} catalog were downloaded from the \gls{gwas} catalog^[gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv https://www.ebi.ac.uk/gwas/ accessed 19 June 2017] [@MacArthur2017]. Entries were then filtered for P <  5x10^-8^. From the filtered results the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Entries were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data each disease selected rows using keywords in the "disease trait". Gout and urate used the keywords "urate" and "gout", obesity used "obesity" and "body mass", \gls{t2d} used "diabetes", and metabolic syndrome used "syndrome". Kidney disease used the keywords "kidney" and "renal" and removed entries that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". All keyword matching was case-insensitive. A list of the traits for each category can be found in Table \@ref(tab:gwascatref) and a list of the genes and what category they are from is in Table  \@ref(tab:gwasgenes).
 
 ```{r diseaseListKeywords, eval = FALSE, echo = TRUE}
 # libraries that are needed
@@ -217,7 +217,7 @@ gwas_genes_ucscGR <- GRanges(
 gwas_genes_ucscGR <- gwas_genes_ucscGR[
   which(gwas_genes_ucscGR@seqnames %in% paste0('chr',1:22))]
 
-# create the regions for the obesity asscoiated genes
+# create the regions for the obesity associated genes
 obesity_GR <- gwas_genes_ucscGR[
   gwas_genes_ucscGR$SYMBOL %in% 
     unique(unlist(strsplit(
@@ -225,7 +225,7 @@ obesity_GR <- gwas_genes_ucscGR[
         grep("obesity|body mass",gwas_interested$DISEASE.TRAIT, 
              ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
 
-# create the regions for the t2d associated geens
+# create the regions for the t2d associated genes
 t2d_GR <- gwas_genes_ucscGR[
   gwas_genes_ucscGR$SYMBOL %in% 
     unique(unlist(strsplit(
@@ -285,13 +285,11 @@ Custom Views were created to join the supplemental tables to the main tables.
 To calculate the principle components on the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file with BCFtools v1.3.1 and then the independent markers were identified using Plink v1.9b4.9, using a sliding window to remove markers that had an R^2^ > 0.2, using windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006].
 
 ```{r eigenstrat code, engine='bash', eval = FALSE}
-scratch=/Volumes/scratch/merrimanlab/murray/working_dir/
-dir=$scratch/coreExome_selection/NZ_coreExome_1kgp/analysis/PCA/indiv_pops
 #combine the chromosomes
 bcftools concat \
   -O z \
   -o -o NZ_1KGP_allchr.vcf.gz \ 
-  --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) |\
+  --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2)
 
 #find the independent markers
 plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz \
@@ -335,14 +333,11 @@ smartpca.perl \
 Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with an R^2^ of more that 0.1. This was done using plink v1.9b4.9. Following this cross validation was performed to find the best value of K, for K 1 to 15. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)).
 
 ```{r admixture k, engine = 'bash', eval = FALSE}
-scratch=/Volumes/scratch/merrimanlab/murray/working_dir/
-dir=$scratch/coreExome_selection/NZ_coreExome_1kgp/analysis/admixture
-
 # Combine the chromosomes
 bcftools concat \
   -O z \
   -o NZ_1KGP_allchr.vcf.gz \
-  --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2) |\
+  --threads 10 $(ls NZ_1KGP.chr*gz | sort -n -t'r' -k2)
 
 # find the independent snps
 plink1.9b4.9 \
@@ -374,7 +369,7 @@ Admixture ancestry proportions were also calculated using only the populations o
 
 #create reference population
 #remove AMR and POL (and NZC) pops
-cat ~/Murray/Thesis_backup/NZ_coreExome_1kgp/nz_1kgp.panel |\
+cat nz_1kgp.panel |\
 grep -v 'POL\|AMR\|NZC' |\
 awk '{if(NR > 1){print $1,$1}}' > 1kg_ref.list
 
@@ -386,7 +381,7 @@ plink1.9b4.9 --bfile NZ_1KGP_allchr_admix \
   --keep-allele-order
 
 # create 'study population'
-cat ~/Murray/Thesis_backup/NZ_coreExome_1kgp/nz_1kgp.panel |\
+cat nz_1kgp.panel |\
 grep  'AMR\|NZC\|CIM\|TON\|NZM\|SAM' |\
 awk '{if(NR > 1){print $1,$1}}' > pol_amr_nzc.list
 
@@ -421,7 +416,7 @@ admixture -s 123456 -P study.bed 9
 
 #### Heritability analysis
 
-The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011a] was used to calculate the proportion of heritability explained. First the UK Biobank genetic data was subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%.
+The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011part] was used to calculate the proportion of heritability explained. First the UK Biobank genetic data was subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%.
 
 
 ```{r, engine='bash', eval=FALSE}
@@ -430,7 +425,6 @@ The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011a] was used to calculate the proport
 # sample(10000, fam[AFF == controls]) -> controls.txt
 # awk '{if($6 == 2){print $1"\t"$2}}' < condition.fam | cat - controls.txt > ids_keep.txt
 
-ukbio_path=/Volumes/archive/merrimanlab/central_datasets/ukbiobank/plink/
 # Subset samples
 for i in $(seq 1 22)
 do 
@@ -490,7 +484,7 @@ done
 <!-- Analysis Type: PANTHER Overrepresentation Test (release 20170413) -->
 <!-- - annotation set = pnather GO-slim biological process -->
 
-Gene set enrichment of pathways was performed by inputting gene lists into Enrichr^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016] . The pathway enrichment results were based on the KEGG2016 table. A significance threshold for a pathway was set at P < 0.05 after Benjamini-Hochberg adjustment for multiple hypothesis testing as provided by enrichr.
+Gene set enrichment of pathways was performed by inputting gene lists into Enrichr^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016] . The pathway enrichment results were based on the KEGG2016 table. A significance threshold for a pathway was set at P < 0.05 after Benjamini-Hochberg adjustment for multiple hypothesis testing, as provided by Enrichr.
 
 <!-- The p-value is computed from the Fisher exact test which is a proportion test that assumes a binomial distribution and independence for probability of any gene belonging to any set -->
 
@@ -521,7 +515,7 @@ The \glsdesc{1kgp} was an international consortium that was established in 2007 
 
 ```{r populations, results = 'asis', echo = FALSE}
 
-read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%   knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations') %>% kableExtra::group_rows("African Super Population (AFR)", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR)", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS)", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR)", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)*", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS)", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from 'Genetics of Aoteroa' and are not 1000 Genomes Project populations", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
+read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%   knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations') %>% kableExtra::group_rows("African Super Population (AFR)", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR)", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS)", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR)", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)*", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS)", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study and are not 1000 Genomes Project populations", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
 ```
 
 
@@ -580,9 +574,9 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 ```
 #### CoreExome
 
-The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina and comprised a core set of 551,839 markers. Genotyping quality control was performed following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. Samples were also checked for outliers in heterozygosity and depression of genetic variation. 
+The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. Genotyping quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. Samples were also checked for outliers in heterozygosity and depression of genetic variation. 
 
-Markers were subsetted to only include bi-allelic \gls{snp}s, with a final marker number of `r NROW(markers)` and density of `r  lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>%  mean() %>% round_dp(., 0)` bp/marker. Relatedness between individuals was assessed through inheritance by state using Plink v1.9b3.32 and a pedigree of created by Dr Tanya Major (Merriman lab) to identify family groups. Duplicates and first degree relations were excluded and single individuals were randomly selected from family groups identified through identity by state analysis. Hardy-Weinberg equilibrium of markers was checked for European, East Polynesian, and West Polynesian populations (3 or more grandparents self reported ethnicity) using an exact test in Plink v1.9b3b.32 and variants were removed that had a Bonferroni multiple testing corrected P < 0.05. The genetic ancestry determined through \gls{pca} (section \@ref(pca) was compared with self reported ethnicity and individuals were removed where there was disagreement.
+Markers were subsetted to only include bi-allelic \gls{snp}s, with a final marker number of `r NROW(markers)` and density of `r  lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>%  mean() %>% round_dp(., 0)` bp/marker. Relatedness between individuals was assessed through inheritance by state using Plink v1.9b3.32 and a pedigree of created by Dr Tanya Major (Merriman lab) to identify family groups. Duplicates and first degree relations were excluded and single individuals were randomly selected from family groups identified through identity by state analysis. Hardy-Weinberg equilibrium of markers was checked for European, East Polynesian, and West Polynesian populations (3 or more grandparents self reported ethnicity) using an exact test in Plink v1.9b3b.32 and variants were removed that had a Bonferroni multiple testing corrected P < 0.05. The genetic ancestry determined through \gls{pca} (section \@ref(pca)) was compared with self reported ethnicity and individuals were removed where there was disagreement.
 
 
 
