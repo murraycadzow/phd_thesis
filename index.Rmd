@@ -7,7 +7,7 @@ output:
 # bookdown::gitbook: default
  bookdown::pdf_book 
 documentclass: report #book
-bibliography: ["references.bib", "diseaseGR-25-7-2017.bib"]
+bibliography: ["references.bib", "diseaseGR-12-3-2018.bib"]
 biblio-style: otago
 link-citations: true
 description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
