@@ -58,14 +58,14 @@ create_sel_stat_table("Zeng.E", "Mean Zeng E")
 
 ```{r, echo = FALSE}
 # This is created by coreExome_100kb_windows_intra_filtered.Rmd
-chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS")
+chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(stat != "Fu.Li.D")
 pops <- list()
 panel <- read.delim('/home/murraycadzow/data/NZ_coreExome_1kgp/nz_1kgp.panel', stringsAsFactors = FALSE)
 for(p in unique(panel$pop)){
   pops[[p]] <- panel %>% filter(pop == p) %>%  .[["sample"]]
 }
 
-global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"), stat != "Fu.Li.D")
 
 ```
 
@@ -83,7 +83,7 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
       lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"), statname != 'Fu.Li.D')
 
 upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
 upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
@@ -92,7 +92,7 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
       upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"), statname != 'Fu.Li.D')
 
 ```
 
@@ -149,7 +149,7 @@ lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','T
 ```{r}
 create_gwas_cat_table <-function(){
   # data from rnotebooks/CoreExome/gwas_catalog.Rmd
-  load('~/data/gwas_catalog/disease_ref_table-25-7-2017.RData')
+  load('~/data/gwas_catalog/disease_ref_table-12-3-2018.RData')
   return(gwas_int_ref_table %>% select(-pmid, -PUBMEDID))
 }
 
@@ -164,11 +164,17 @@ create_sel_stat_table <- function(sel_stat, cap){
 
 
 ```{r, results = 'asis'}
-m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, Reference) #%>% filter(Category != "Kidney Disease")
+m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, `Disease Trait`, Reference) #%>% filter(Category != "Kidney Disease")
 #colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
 #pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", keep.line.breaks = TRUE)
 
-kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE) %>% group_rows("Gout and Urate",1,18) %>% group_rows("Kidney Disease",19,26) %>% group_rows("Metabolic Syndrome", 27,30) %>% group_rows("Obesity", 31, 63) %>% group_rows("T2D", 64, 102) #%>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) 
+kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE) %>% 
+  group_rows("Auto-immunity and Auto-inflammatory", 1, 128) %>% 
+  group_rows("Gout and Urate",129,146) %>% group_rows("Kidney Disease",147,154) %>% 
+  group_rows("Malaria", 155, 157) %>% 
+  group_rows("Metabolic Syndrome", 158,161) %>% 
+  group_rows("Neurological", 162, 191) %>% 
+  group_rows("Obesity", 192, 224) %>% group_rows("T2D", 225, 263) #%>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) 
 
 #
 ```
@@ -176,7 +182,7 @@ kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#t
 
 ```{r gwasgenes}
 # genelists
-load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')
+load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
 genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
 genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE)
 ```
@@ -200,14 +206,30 @@ global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filt
 
 ```{r chap4data}
 prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
-
-load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR, 
-load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-31-8-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
+prop_list["fld_neg"] <- NULL
+prop_list["fld_pos"] <- NULL
+prop_list["fld_chr"]<-NULL
+load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR, 
+load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-31-8-2017.RData')# brings in objects called gout, obesity, t2d, metsyn, kd
 names(gout) <- c('mat_d','prop')
-names(t2d) <-  c('mat_d','prop')
-names(obesity) <-  c('mat_d','prop')
-names(metsyn) <-  c('mat_d','prop')
+gout$mat_d["Fu.Li.D"] <- NULL
+gout$prop["Fu.Li.D"] <- NULL
 
+names(t2d) <-  c('mat_d','prop')
+t2d$mat_d["Fu.Li.D"] <- NULL
+t2d$prop["Fu.Li.D"] <- NULL
+
+names(obesity) <-  c('mat_d','prop')
+obesity$mat_d["Fu.Li.D"] <- NULL
+obesity$prop["Fu.Li.D"] <- NULL
+
+names(kd) <-  c('mat_d','prop')
+kd$mat_d["Fu.Li.D"] <- NULL
+kd$prop["Fu.Li.D"] <- NULL
+
+names(metsyn) <-  c('mat_d','prop')
+metsyn$mat_d["Fu.Li.D"] <- NULL
+metsyn$prop["Fu.Li.D"] <- NULL
 ```
 
 
@@ -223,7 +245,7 @@ gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median'
 ```
 
 
-```{r, eval = TRUE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE, eval = FALSE}
 gs_fld_table <- create_sel_summary_table("Fu.Li.D")
 
 gs_fld_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
@@ -242,6 +264,53 @@ gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','
 ```
 
 
+#### Polynesian windows for clustering of the extremes
+
+```{r}
+read_csv('Appendices/04-td-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdNegGenes) Genes intersecting the windows of the 1st percentile \\gls{td} in Polynesians') %>% footnote("Appendices/04-td-pol-firstper-genes.csv", threeparttable = TRUE)
+```
+
+```{r}
+read_csv('Appendices/04-td-pol-ninetyninthper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdPosGenes) Genes intersecting the windows of the 99th percentile \\gls{td} in Polynesians') %>% footnote('Appendices/04-td-pol-ninetyninthper-genes.csv', threeparttable = TRUE)
+```
+
+
+```{r}
+read_csv('Appendices/04-fwh-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhNegGenes) Genes intersecting the windows of the 1st percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-firstper-genes.csv', threeparttable = TRUE)
+```
+
+```{r, eval = FALSE}
+read_csv('Appendices/04-fwh-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhPosGenes) Genes intersecting the windows of the 99th percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
+```
+
+```{r, eval = FALSE, eval = FALSE}
+read_csv('Appendices/04-fld-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFldNegGenes) Genes intersecting the windows of the 1st percentile \\gls{fld} in Polynesians') %>% footnote('Appendices/04-fld-pol-firstper-genes.csv', threeparttable = TRUE)
+```
+
+```{r, eval = FALSE}
+read_csv('Appendices/04-fld-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFldPosGenes) Genes intersecting the windows of the 99th percentile \\gls{fld} in Polynesians') %>% footnote('Appendices/04-fld-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
+```
+
+
+```{r}
+read_csv('Appendices/04-flf-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfNegGenes) Genes intersecting the windows of the 1st percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-firstper-genes.csv', threeparttable = TRUE)
+```
+
+```{r}
+read_csv('Appendices/04-flf-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfPosGenes) Genes intersecting the windows of the 99th percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
+```
+
+
+```{r}
+read_csv('Appendices/04-ze-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZeNegGenes) Genes intersecting the windows of the 1st percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-firstper-genes.csv', threeparttable = TRUE)
+```
+
+```{r}
+read_csv('Appendices/04-ze-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZePosGenes) Genes intersecting the windows of the 99th percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
+```
+
+#### Random window and gene lists proportion and exclusivity tables
+
 
 ```{r proportion, results ='asis'}
 # prop_list[['td_neg']]$exclusivity %>% data.frame%>% mutate(pop = rownames(.)) %>% gather("cluster", "prop", 1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean(prop))
@@ -250,11 +319,11 @@ gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','
 
 
 bind_rows(list(
-  bind_rows(lapply(names(prop_list), function(x){prop_list[[x]]$super_prop %>%  spread(super, max_prop) %>% mutate(stat = sapply(x, function(y){strsplit(y, '_')[[1]][1]}), Type = sapply(x, function(y){strsplit(y, '_')[[1]][2]}) ) %>% select(NCOL(.), 1:(NCOL(.)-1)) })), #%>% mutate_if(., is.numeric, funs(sprintf("%.3f",.))),
+  bind_rows(lapply(names(prop_list), function(x){prop_list[[x]]$super_prop %>%  spread(super, max_prop) %>% mutate(stat = sapply(x, function(y){strsplit(y, '_')[[1]][1]}), Type = sapply(x, function(y){strsplit(y, '_')[[1]][2]}) ) %>% select(NCOL(.), 1:(NCOL(.)-1)) })), 
   
   bind_rows(lapply(names(gout[[2]]), function(x){gout[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Urate/Gout'),
   
-  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = '\\gls{t2d}'),
+  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = '\\Gls{t2d}'),
   
   bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$super_prop %>% spread(super, max_prop)%>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Obesity'),
   
@@ -262,7 +331,9 @@ bind_rows(list(
   
   bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$super_prop %>% spread(super, max_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1)) })) %>% mutate(Type = 'Metabolic Syndrome')
   
-)) %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf('%.2f',.)))%>%  select(stat, Type, everything()) %>% data.frame %>% arrange(stat) %>%  data.frame %>% pander::pandoc.table(., caption = "(\\#tab:proportion) Proportion")#knitr::kable(., caption = "Proportion", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) %>% kableExtra::kable_styling(latex_options = "scale_down")
+)) %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf('%.2f',.)))%>%  select(stat, Type, everything()) %>% data.frame %>% arrange(stat) %>%  data.frame %>% knitr::kable(., caption = "(\\#tab:proportion) Proportion", booktabs = TRUE, escape = FALSE)
+  #column_spec(1, width = "15em")
+  #pander::pandoc.table(., caption = "(\\#tab:proportion) Proportion")# %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) %>% kableExtra::kable_styling(latex_options = "scale_down")
 
 ```
 
@@ -276,7 +347,7 @@ bind_rows(list(
   
   bind_rows(lapply(names(gout[[2]]), function(x){gout[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Urate/Gout'),
   
-  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = '\\gls{t2d}'),
+  bind_rows(lapply(names(t2d[[2]]), function(x){t2d[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = '\\Gls{t2d}'),
   
   bind_rows(lapply(names(obesity[[2]]), function(x){obesity[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Obesity'),
   
@@ -285,5 +356,5 @@ bind_rows(list(
   bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Metabolic Syndrome')    
   
   
-)) %>% select(stat, Type, everything())  %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf("%.2f",.))) %>% arrange(Type) %>%  data.frame %>% pander::pandoc.table(., caption = "(\\#tab:exclusivity) Exclusivity")#knitr::kable(., caption = "Exclusivity", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) 
+)) %>% select(stat, Type, everything())  %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf("%.2f",.))) %>% arrange(stat) %>%  data.frame %>%  knitr::kable(., caption = "(\\#tab:exclusivity) Exclusivity", booktabs = TRUE, escape = FALSE) #%>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) 
 ```
