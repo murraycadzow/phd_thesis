@@ -91,7 +91,7 @@ Important distinction is that this used the 1% threshold NOT the 1% and >/< 0 to
 
 ### Frequency spectrum
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _D_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014] for each entire chromosome. Excepting F~ST~, these statistics were also calculated as per section \@ref(popgenomeMethods) to generate non-overlapping windows of 10 kb. For each selection test statistic, windows were ordered by test statistic value, and the 1^st^ and 99^th^ percentiles were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the value caluculated for each whole chromosome (i.e. treating the start and end of the chromosome as the window boundary) used the statistic value itself to create the distance matrix. The distance measure used was Euclidean distance and the linkage criteria was "complete linkage" for both sets of clustering. Accuracy of the clustering was assessed by descending the dendrogram until six groups could be made, and then calculating the maximum proportion of the individual populations of the same super population assigned to the same cluster. Exclusivity of each cluster was calculated using the proportion of populations from a given super population compared to the total number of individual populations assigned that cluster. For example, if a cluster consisted of eight populations, two from population A and six from population B, then the exclusivity of the cluster would be 0.25 for population A, and 0.75 for population B. F~ST~ was calculated pairwise for all populations for each chromosome.
+Tajima's _D_, Fay and Wu's _H_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014] for each entire chromosome. Excepting F~ST~, these statistics were also calculated as per section \@ref(popgenomeMethods) to generate non-overlapping windows of 10 kb. For each selection test statistic, windows were ordered by test statistic value, and the 1^st^ and 99^th^ percentiles were selected from each tail of the distribution. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows across all populations. Hierarchical clustering using the value caluculated for each whole chromosome (i.e. treating the start and end of the chromosome as the window boundary) used the statistic value itself to create the distance matrix. The distance measure used was Euclidean distance and the linkage criteria was "complete linkage" for both sets of clustering. Accuracy of the clustering was assessed by descending the dendrogram until six groups could be made, and then calculating the maximum proportion of the individual populations of the same super population assigned to the same cluster. Exclusivity of each cluster was calculated using the proportion of populations from a given super population compared to the total number of individual populations assigned that cluster. For example, if a cluster consisted of eight populations, two from population A and six from population B, then the exclusivity of the cluster would be 0.25 for population A, and 0.75 for population B. F~ST~ was calculated pairwise for all populations for each chromosome.
 
 ### Extended haplotype homozygosity {#haplocluster}
 
@@ -117,7 +117,7 @@ Disease associated markers and their annotated genes were downloaded from the \g
 
 #### Whole chromosome clustering
 
-Clustering on the full chromosome results for all chromosomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of \gls{fwh}, which grouped all super populations although split the \gls{amr} into two subgroups. \gls{td} grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of two to three populations. \Gls{cim}, \gls{nzm}, and \gls{sam} were grouped with two \gls{amr} populations, \gls{pel} and \gls{mxl}, and this group was the least similar to the others. There was no clear pattern to the clustering order for both Fu and Li's _D_ and _F_, although \gls{flf} did have a few small groups of the same super population of no more than three individuals populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. \Gls{ze} clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations part of it.
+Clustering on the full chromosome results for all chromosomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of \gls{fwh}, which grouped all super populations although split the \gls{amr} into two subgroups. \gls{td} grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of two to three populations. \Gls{cim}, \gls{nzm}, and \gls{sam} were grouped with two \gls{amr} populations, \gls{pel} and \gls{mxl}, and this group was the least similar to the others. There was no clear pattern to the clustering order of \gls{flf}, although it did have a few small groups of the same super population of no more than three individuals populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. \Gls{ze} clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations part of it.
 
 <!--
 - td had eur cluste, nzm-cim, most of a sas, but the other populations are in groups of 2-3, the pol group is quite disimilar to the rest
@@ -451,105 +451,6 @@ The 1^st^ percentile has many of the regions in the Polynesian populations in co
 ##### Metabolic disease-associated genes
 
 Of the genes that were in the windows of the 1st percentile, there were `r fwh_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the list of genes of metabolic disease associated genes and also had windows that intersected them from the Polynesian populations. Thirteen of those genes were for windows from Polynesian populations, as well as others. Some examples of these genes were _RASA2_ and _ERBB4_. _RASA2_ had windows only from \gls{cim} nd \gls{nzm}. _ERBB4_ had windows from all four Polynesian populations, as well as the populations of \gls{eas} - except \gls{jpt}. There were `r fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the 99th percentile that were also in the list of genes of metabolic disease associated genes. Some examples of genes that had windows in both Polynesian and other populations in the 99th percentile include _SHROOM3_, _RBMS1_, and _UBE2E2_. _SHROOM3_ was an example of a gene that had windowsin common from all the other super populations, except \gls{eas}. _RBMS1_ had multiple windows for across all Polynesian populations, but not other super populations. And _UBE2E2_ had multiple windows across the Polynesian populations, as well as the populations of \gls{eas} and \gls{sas}. 
-
-
-#### Fu and Li's _D_
-
-<!-- ##### Fu and Li's _D_ distributions -->
-
-<!-- Similar to \gls{td}, for \gls{fld} the \gls{pol} super population was overall lower than the other super populations and had the lowest mean (`r fld_super_pop_means %>% filter(super_pop == 'POL') %>% .[['mean']] %>% three_dp()`), 1^st^ percentile (`r fld_super_pop_means %>% filter(super_pop == 'POL') %>% .[['lower_1']] %>% three_dp()`), median (`r fld_super_pop_means %>% filter(super_pop == 'POL') %>% .[['median']] %>% three_dp()`), and 99^th^ percentile (`r fld_super_pop_means %>% filter(super_pop == 'POL') %>% .[['upper_99']] %>% three_dp()`) (Figure \@ref(fig:fldDensity)). \gls{eas} too had the smallest min (`r fld_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['min']] %>% three_dp()`), and \gls{eur} had the largest max (`r fld_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['max']] %>% three_dp()`). \gls{afr} had the largest min (`r fld_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['min']] %>% three_dp()`) and also had the highest mean (`r fld_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['mean']] %>% three_dp()`). -->
-
-
-<!-- (ref:fldDensity) Plot of the distribution of \gls{fld} by population. Triangles indicate the minimum and maximum values. Dots indicate the 1st and 99th percentiles for each population. -->
-
-```{r fldDensity, fig.cap = '(ref:fldDensity)',echo = FALSE, eval = FALSE}
-knitr::include_graphics("images/04_clustering/fld_densities.png")
-```
-
-
-<!-- (ref:fldTop1000) _\gls{fld} Clustering._ Hierarchical clustering of \gls{fld} using the upper and lower tails of the distribution. **A** and **B** Dendrogram representing the clusters of \gls{fld} lower and upper tails respectfully using hierarchical clustering with Euclidean distance and complete linkage. Coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectfully. A blue line represents presence of a window, white represents the absence of a window in the 1% of the distribution for a population. -->
-
-```{r fldTop1000, fig.cap = '(ref:fldTop1000)', out.width = "6in", eval = FALSE}
-#ggsave(four_plot("fld","Fu and Li's D"), filename = 'images/04_clustering/fldTop1000.png', device = 'png', height = 7, width = 7)
-knitr::include_graphics('images/04_clustering/fldTop1000.png')
-```
-
-<!--
-- 6 fold difference in the number of windows
-- pos had ~3300, neg had ~19000
-- pol is the least similar to the rest of the 1kgp pops in pos
-- sam/nzm and cim/ton split in neg
-- only sas and nearly eur are completely grouped together, looks somewhat random
--->
-
-<!--
-[x]describe number of total number of windows
-[x]polynesian specific windows
-[x]ep specific windows
-[x]wp specific windows
-[x]cim/nzm/sam/ton specific windows
-
-[x]proportions
-[x]exclusivity
-[]dendrograms
-
-[]refer to figure
--->
-
-
-
-<!-- There was nearly a six-fold difference in the number of total windows used in the clustering between the upper (`r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]`) and lower tails (`r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]`). This indicated that there were a large number of regions in common in the upper tail, whereas few windows were shared in the lower tail, with many windows being population specific. The bais against singletons in the chip is also likely to have created this large number of non-shared windows. In the upper tail there was a mean of `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']], digits = 2)` populations sharing a window, which was `r round(create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>%  .[['mean']] / (create_windowSummaryTable() %>% select(mean) %>% summarise(mean = mean(mean))), digits = 2)` times greater than the mean for all selection test stats used.  -->
-
-<!-- ##### Clustering Fu and Li's _D_ 1st percentile -->
-
-<!-- Clustering of the lower tail (Figure \@ref(fig:fldTop1000) A and C), with the exception of the \gls{afr} populations, clustered the individual populations into their super population groups. The exclusivity of these groups however was low, with 17 populations, including all from \gls{amr}, \gls{eur}, and \gls{sas} assigned the same cluster. The \gls{afr} populations were spread over 3 clusters. The \gls{pol} populations were grouped as an exclusive single cluster. There were a total of `r create_windowSummaryTable() %>% filter(stat == 'fld_neg') %>% .[['total_windows']]` windows with `r create_sums('fld_neg') %>% filter(POLsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows specific to Polynesian populations. This compared to `r create_sums('fld_neg') %>% filter(AFRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{afr}, `r create_sums('fld_neg') %>% filter(AMRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{amr}, `r create_sums('fld_neg') %>% filter(EURsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{eur}, and `r create_sums('fld_neg') %>% filter(EASsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{eas}. The mean number of population unique windows was `r create_sums('fld_neg') %>% filter(ALLsum == 1) %>% select(-contains('chrom'), -posid, -contains('sum')) %>% summarise_all(funs(sum)) %>% t() %>% mean() %>% round(., digits = 1)` (SD `r create_sums('fld_neg') %>% filter(ALLsum == 1) %>% select(-contains('chrom'), -posid, -contains('sum')) %>% summarise_all(funs(sum)) %>% t() %>% sd() %>% round(., digits = 1)`) in the lower tail. The Eastern Polynesian populations had a total of `r create_sums('fld_neg') %>% filter(POL_CIM + POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows, `r create_sums('fld_neg') %>% filter(POL_CIM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were unique to \gls{cim} and `r create_sums('fld_neg') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were unique to \gls{nzm}. The Western Polynesian populations had `r create_sums('fld_neg') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows. Of these, `r create_sums('fld_neg') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were unique to \gls{sam} and `r create_sums('fld_neg') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` to \gls{ton}. -->
-
-
-```{r, eval = TRUE, warning=FALSE, message=FALSE, eval = FALSE}
-# get all of the windows that had a Pol hit
-fld_neg_pol <- create_sums('fld_neg') %>% filter(POLsum > 0) %>%  mutate(chrom = paste0('chr', chrom))
-
-# annotate the windows with gene names
-fld_neg_pol_genes <- left_join(fld_neg_pol, txdb_gene_annotate(GenomicRanges::GRanges(fld_neg_pol)), by = c('chrom' = 'seqnames', "chrom_start" = 'start', "chrom_end" = 'end')) %>% select(contains('chrom'), SYMBOL, everything(), -width, -posid, -TXSTRAND, -strand)
-write.csv(file ='Appendices/04-fld-pol-firstper-genes.csv', x = fld_neg_pol_genes, quote = TRUE, row.names = FALSE, col.names = TRUE )
-
-# Look at the genes to see how many other pops had them too
-#fld_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL,  ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>%  View()
-
-# find the number of genes from the disease genes that the polynesians had
-#fld_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL,  ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum))  %>% pull(SYMBOL) %>% unique() %>% length()
-
-# get the genes that were in windows that the Pol pops weren't in
-fld_no_pol_genes <- txdb_gene_annotate(create_sums('fld_neg') %>% filter(POLsum == 0) %>% mutate(chrom = paste0('chr', chrom)) %>% GenomicRanges::GRanges()) %>% pull(SYMBOL) %>% unique()
-# find how many genes were only found with the Pols + others
-#fld_neg_pol_genes %>% filter(!SYMBOL %in% fld_no_pol_genes, SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()
-```
-
-<!-- ##### Clustering Fu and Li's _D_ 99th percentile -->
-
-<!-- The clustering of the upper tail (Figure \@ref(fig:fldTop1000) B and D) grouped most populations into their super populations. The \gls{eas} populations were clustered together. The Western Polynesian populations were clustered together but the Eastern Polynesian populations were not. The \gls{amr} populations \gls{mxl} and \gls{pel} were grouped with the \gls{nzm}. Ten populations were grouped into a single cluster consisting of two from \gls{afr}, two from \gls{amr}, one from \gls{eur} and all five from \gls{sas}. There were a total of `r create_windowSummaryTable() %>% filter(stat == 'fld_pos') %>% .[['total_windows']]` windows with `r create_sums('fld_pos') %>% filter(POLsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows specific to Polynesian populations. This compared to `r create_sums('fld_pos') %>% filter(AFRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{afr}, `r create_sums('fld_pos') %>% filter(AMRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{amr}, `r create_sums('fld_pos') %>% filter(EURsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{eur}, and `r create_sums('fld_pos') %>% filter(EASsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows for \gls{eas}. The mean number of unique windows per population was `r create_sums('fld_pos') %>% filter(ALLsum == 1) %>% select(-contains('chrom'), -posid, -contains('sum')) %>% summarise_all(funs(sum)) %>% t() %>% mean() %>% round(., digits = 1)` (SD `r create_sums('fld_pos') %>% filter(ALLsum == 1) %>% select(-contains('chrom'), -posid, -contains('sum')) %>% summarise_all(funs(sum)) %>% t() %>% sd() %>% round(., digits = 1)`). The Eastern Polynesian populations had a total of `r create_sums('fld_pos') %>% filter(POL_CIM + POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows with `r create_sums('fld_pos') %>% filter(POL_CIM == ALLsum & ALLsum > 0 ) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` only from \gls{cim} and `r create_sums('fld_pos') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from \gls{nzm}. From the Western Polynesian populations there were `r create_sums('fld_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific windows. There were `r create_sums('fld_pos') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{sam} and `r create_sums('fld_pos') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` specific to \gls{ton}.  -->
-
-```{r, eval = TRUE, warning = FALSE, message= FALSE, eval = FALSE}
-# get all of the windows that had a Pol hit
-fld_pos_pol <- create_sums('fld_pos') %>% filter(POLsum > 0) %>%  mutate(chrom = paste0('chr', chrom))
-
-# annotate the windows with gene names
-fld_pos_pol_genes <- left_join(fld_pos_pol, txdb_gene_annotate(GenomicRanges::GRanges(fld_pos_pol)), by = c('chrom' = 'seqnames', "chrom_start" = 'start', "chrom_end" = 'end')) %>% select(contains('chrom'), SYMBOL, everything(), -width, -posid, -TXSTRAND, -strand)
-write.csv(file ='Appendices/04-fld-pol-ninetyninethper-genes.csv', x = fld_pos_pol_genes, quote = TRUE, row.names = FALSE, col.names = TRUE )
-
-# Look at the genes to see how many other pops had them too
-#fld_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL,  ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>%  View()
-
-# find the number of genes from the disease genes that the polynesians had
-#fld_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL,  ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum))  %>% pull(SYMBOL) %>% unique() %>% length()
-
-# get the genes that were in windows that the Pol pops weren't in
-fld_no_pol_genes <- txdb_gene_annotate(create_sums('fld_pos') %>% filter(POLsum == 0) %>% mutate(chrom = paste0('chr', chrom)) %>% GenomicRanges::GRanges()) %>% pull(SYMBOL) %>% unique()
-# find how many genes were only found with the Pols + others
-#fld_pos_pol_genes %>% filter(!SYMBOL %in% fld_no_pol_genes, SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()
-```
-
-
 
 
 #### Fu and Li's _F_
@@ -905,11 +806,13 @@ names(kd) <- c('mat_d','prop')
 
 
 
-To assess if there was something specific about the metabolic disease gene lists, clustering was performed using the actual values for the genes. These values were median centred to account for the population specific shifting of distributions which would have accounted for the majority of difference in the distance calculation. Gene lists were chosen for metabolic related disease, and also for late onset diseases with a genetic component that should have minimal selective pressure.
+To assess if there was something specific about the metabolic disease gene lists, clustering was performed using the actual values for the genes. These values were median centred to account for the population specific shifting of distributions which would have accounted for the majority of difference in the distance calculation. Gene lists were chosen for metabolic related disease and compared to lists of random genes to assess clustering specificity to metabolic disease.
 
-Overall, gene lists derived from \gls{gwas} associations clustered the individual populations into their super population groupings. Windows that intersected genes that had been associated with a disease were centered by population median and then grouped using hierarchical clustering. There were varying levels of super population proportions and exclusivity (the proportion of super populations in a single cluster) of clusters (Table \@ref(tab:proportion) and \@ref(tab:exclusivity)). The Polynesian populations clustered together when using each of \gls{fwh}, \gls{td}, and \gls{ze}, and in the majority of clustering (18/25) they were exclusive. This pattern was also similar with the \gls{eas} populations (17/25). For the clusters that contained the entirety of a super population, half the groupings for the entire Polynesian super population were exclusive. Three quarters of the groupings for each of the AFR and EAS super populations were exclusive and grouped the super population in their entirety.
+> **check the numbers for gene clustering once fld is removed**
 
-Comparing the gene lists by statistic, for all selection statistics and gene lists the populations of the \gls{sas} super population were all clustered together, although often with poor exclusivity. The \gls{eur} super population, with the exception of \gls{fld}, was clustered entirely together but with a ranging degree of exclusivity across the different selection test statistics. \Gls{td}, \gls{fwh}, and \gls{ze} clustered all the super populations in their entirety although the \gls{amr} populations were split. The clustering of super populations was not specific to the gene lists associated with urate, gout, obesity, \gls{t2d}, kidney disease, or, metabolic syndrome, as the use of random lists of genes had would cluster re-group the super populations (excluding \gls{amr}) up to 75% of the time. This indicates that there is likely nothing specific about the urate and gout, \gls{t2d}, obesity, kidney disease, or metabolic syndrome gene lists, but they contain similar discriminatory information as other lists of genes, which is likely to be capturing allele frequency differences between populations.
+Overall, gene lists derived from \gls{gwas} associations clustered the individual populations into their super population groupings. Windows that intersected genes that had been associated with a disease were centered by population median and then grouped using hierarchical clustering. There were varying levels of super population proportions and exclusivity (the proportion of super populations in a single cluster) of clusters (Table \@ref(tab:proportion) and \@ref(tab:exclusivity)). The Polynesian populations clustered together when using each of \gls{fwh}, \gls{td}, and \gls{ze}, and in the majority of clustering (XXX) they were exclusive. This pattern was also similar with the \gls{eas} populations (XXX). For the clusters that contained the entirety of a super population, half the groupings for the entire Polynesian super population were exclusive. Three quarters of the groupings for each of the AFR and EAS super populations were exclusive and grouped the super population in their entirety.
+
+Comparing the gene lists by statistic, for all selection statistics and gene lists the populations of the \gls{sas} super population were all clustered together, although often with poor exclusivity. The \gls{eur} super population was clustered entirely together but with a ranging degree of exclusivity across the different selection test statistics. \Gls{td}, \gls{fwh}, and \gls{ze} clustered all the super populations in their entirety although the \gls{amr} populations were split. The clustering of super populations was not specific to the gene lists associated with urate, gout, obesity, \gls{t2d}, kidney disease, or, metabolic syndrome, as the use of random lists of genes had would cluster re-group the super populations (excluding \gls{amr}) up to XXX% of the time. This indicates that there is likely nothing specific about the urate and gout, \gls{t2d}, obesity, kidney disease, or metabolic syndrome gene lists, but they contain similar discriminatory information as other lists of genes, which is likely to be capturing allele frequency differences between populations.
 
 
 <!--
@@ -947,9 +850,9 @@ multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajim
 ```
 
 
-There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance level. This mapped to `r nrow(gout$mat_d$Tajima.D)` windows for each of the frequency based selection test statistics. \gls{ze} and \gls{fwh} clustered each super population into their own group and each cluster was exclusive to a super population. Both \gls{td} and \gls{flf} grouped most of the super populations correctly and nearly all clusters had good exclusivity for each single super population. \Gls{fld} clustered the individual populations into a few groups that resembled their super populations, however, other populations were scattered throughout. \gls{td}, \gls{fwh}, and \gls{ze} also had an Eastern/Western Polynesian population sub group within the Polynesian group (Figure \@ref(fig:goutdendros)). Unlike the F~ST~ clustering, the \gls{amr} populations were grouped together for \gls{td}, \gls{fwh}, and \gls{ze}. The \gls{eas} and \gls{pol} populations were closest for \gls{flf}, \gls{fwh}, and \gls{ze}, but not for \gls{td}, where the \gls{pol} populations were furthest from the other populations.
+There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance level. This mapped to `r nrow(gout$mat_d$Tajima.D)` windows for each of the frequency based selection test statistics. \gls{ze} and \gls{fwh} clustered each super population into their own group and each cluster was exclusive to a super population. Both \gls{td} and \gls{flf} grouped most of the super populations correctly and nearly all clusters had good exclusivity for each single super population. \Gls{td}, \gls{fwh}, and \gls{ze} also had an Eastern/Western Polynesian population sub group within the Polynesian group (Figure \@ref(fig:goutdendros)). Unlike the F~ST~ clustering, the \gls{amr} populations were grouped together for \gls{td}, \gls{fwh}, and \gls{ze}. The \gls{eas} and \gls{pol} populations were closest for \gls{flf}, \gls{fwh}, and \gls{ze}, but not for \gls{td}, where the \gls{pol} populations were furthest from the other populations.
 
-There were 2 genes; _BCAS3_ and _RREB1_, that had at least one statistic in all of the Polynesian populations that met the threshold of significance in the lower tail. _BCAS3_ met the significance threshold for \gls{fwh} and \gls{flf} in all Polynesian populations; for \gls{fld}, all Polynesian populations except \gls{sam}, and for \gls{td} all Polynesian populations except \gls{ton}. _INHBC_ and _ATXN2_ both had windows that met the lower tail significance threshold for \gls{ze} in all Polynesians populations, except \gls{sam} for _INHBC_. There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the upper tail, _SLC2A9_ had windows with significant \gls{fld} in the \gls{cim}, \gls{nzm}, and  \gls{sam} populations. _VEGFA_ had windows of \gls{ze} values that met the upper tail significance threshold  for all Polynesians populations. _BAZ1B_ also met the threshold in the Eastern Polynesian populations. There were no loci that were significant in all Polynesian populations in the upper tail.
+There were 2 genes; _BCAS3_ and _RREB1_, that had at least one statistic in all of the Polynesian populations that met the threshold of significance in the lower tail. _BCAS3_ met the significance threshold for \gls{fwh} and \gls{flf} in all Polynesian populations and for \gls{td} all Polynesian populations except \gls{ton}. _INHBC_ and _ATXN2_ both had windows that met the lower tail significance threshold for \gls{ze} in all Polynesians populations, except \gls{sam} for _INHBC_. There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the upper tail, _VEGFA_ had windows of \gls{ze} values that met the upper tail significance threshold for all Polynesians populations. _BAZ1B_ also met the threshold in the Eastern Polynesian populations. There were no loci that were significant in all Polynesian populations in the upper tail.
 
 ```{markdown, eval = FALSE}
 any stat with all populations
@@ -957,8 +860,8 @@ any stat with all populations
  - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()`
 
 has all stats
- - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
- - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
+ - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
+ - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
 
 
 
@@ -1024,9 +927,9 @@ IRanges::subsetByOverlaps((pol_fst_99 %>% mutate(chrom = paste0('chr',chrom)) %>
 #### Obesity
 
 
-The \gls{gwas} catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with obesity, this was represented by `r nrow(obesity$mat_d$Tajima.D)` windows. With the exception of \gls{fld}, clustering resulted in the groupings of super populations (Figure \@ref(fig:obesitydendros)). Exclusivity of a single super population to a cluster was also high with the notable exception being the \gls{amr} populations of \gls{clm} and \gls{pur} often being part of the \gls{eur} cluster. The Polynesian super population cluster was also closest to \gls{eas} in all selection statistics except \gls{fld}. All statistics had an Eastern/Western sup-grouping within the \gls{pol} group, although \gls{fld} did not have the \gls{nzm} as part of this group.
+The \gls{gwas} catalog had `r length(unique(obesity_GR$SYMBOL))` genes associated with obesity, this was represented by `r nrow(obesity$mat_d$Tajima.D)` windows and the clustering resulted in the groupings of super populations (Figure \@ref(fig:obesitydendros)). Exclusivity of a single super population to a cluster was also high with the notable exception being the \gls{amr} populations of \gls{clm} and \gls{pur} often being part of the \gls{eur} cluster. The Polynesian super population cluster was also closest to \gls{eas} in all selection statistics and also had an Eastern/Western sup-grouping within the \gls{pol} group.
 
-There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the obesity associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the lower tail there were `r lower_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()` loci with at least one window that was significant in the Polynesian populations. _ADAMTSL3_, _AGBL4_, _ARL15_, _CCR3_, _CREB1_, _ERBB4_, _FER_, _FHIT_, _GRID1_, _LTBP1_, _MAP2K5_, and _ZBTB38_ each had in all Polynesian populations, at least one statistic that met the significance threshold in the lower tail. Only _DNAH10_ had a significant window for each of \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}, and this was only in the \gls{nzm} population. The upper tail had a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% NROW()` loci that had at least a window that was significant in the Polynesian populations. _ADCY3_, _CHST8_, _CMIP_, _ERBB4_, _FHIT_, _FTO_, _GRID1_, _HMGA2_, _LTBP1_, _NEGR1_, _NRXN3_, _NT5C2_, _PARK2_, _PRKCH_, _RARB_, and  _TCF7L2_ each had in all Polynesian populations, at least one statistic that met the significance threshold in the upper tail.
+There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the obesity associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the lower tail there were `r lower_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()` loci with at least one window that was significant in the Polynesian populations. _ADAMTSL3_, _AGBL4_, _ARL15_, _CCR3_, _CREB1_, _ERBB4_, _FER_, _FHIT_, _GRID1_, _LTBP1_, _MAP2K5_, and _ZBTB38_ each had in all Polynesian populations, at least one statistic that met the significance threshold in the lower tail. Only _DNAH10_ had a significant window for each of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}, and this was only in the \gls{nzm} population. The upper tail had a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% NROW()` loci that had at least a window that was significant in the Polynesian populations. _ADCY3_, _CHST8_, _CMIP_, _ERBB4_, _FHIT_, _FTO_, _GRID1_, _HMGA2_, _LTBP1_, _NEGR1_, _NRXN3_, _NT5C2_, _PARK2_, _PRKCH_, _RARB_, and  _TCF7L2_ each had in all Polynesian populations, at least one statistic that met the significance threshold in the upper tail.
 
 
 ```{markdown, eval = FALSE}
@@ -1035,8 +938,8 @@ any stat
  - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()`
 
 has all stats
- - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
- - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
+ - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
+ - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(obesity_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
 
 <!--
 - td excellent groupings, mxl/pel on their own and clm/pur with eur. exclusivity was also pretty much perfect. ep/wp split
@@ -1098,9 +1001,9 @@ multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima
 #    cols = 2), file = 'images/04_clustering/t2d_dendros.png')
 ```
 
-The \gls{gwas} catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}, this was represented by `r nrow(t2d$mat_d$Tajima.D)` windows. Except for \gls{fld}, clustering of the \gls{t2d} associated genes grouped the individual populations into their super population groups. For all clustering the \gls{amr} populations were split, with \gls{clm} and \gls{pur} grouped with the \gls{eur} populations for \gls{td}, \gls{fwh}, and \gls{ze} (Figure \@ref(fig:t2ddendros)). The \gls{pol} populations were assigned two exclusive groups through the cutree method that created an Eastern/Western Polynesian split for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. \gls{fld} had the Eastern Polynesian populations with the \gls{eur} populations. \gls{fwh} and \gls{ze} had a similar pattern to the groupings of the whole chromosome F~ST~ clustering.
+The \gls{gwas} catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}, this was represented by `r nrow(t2d$mat_d$Tajima.D)` windows and clustering of the \gls{t2d} associated genes grouped the individual populations into their super population groups. For all clustering the \gls{amr} populations were split, with \gls{clm} and \gls{pur} grouped with the \gls{eur} populations for \gls{td}, \gls{fwh}, and \gls{ze} (Figure \@ref(fig:t2ddendros)). The \gls{pol} populations were assigned two exclusive groups through the cutree method that created an Eastern/Western Polynesian split for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. \gls{fwh} and \gls{ze} had a similar pattern to the groupings of the whole chromosome F~ST~ clustering.
 
-There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` \gls{t2d} associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. There were a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` genes that had a significant window in any Polynesian population. In the lower tail there were `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()` genes with at least a window that met the significance threshold in the Polynesian populations. Only _THADA_ had windows from \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze} in the \gls{ton} population from the Polynesian populations. This was also true for the \gls{cdx} and \gls{chs} populations. _ARL15_, _MACF1_, _RREB1_, and _THADA_ each had in all Polynesian populations, at least one statistic that was significant in the lower tail. _CAMK1D_, _FTO_, _HLA-B_, _HMGA2_, _HNF1B_, _PPP2R2C_, _PTPRD_, _RBMS1_, _SGCG_, _TCF7L2_, _THADA_, _UBE2E2_, _ZMIZ1_ each had in all Polynesian populations, at least one statistic that was significant in the upper tail.
+There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` \gls{t2d} associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. There were a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` genes that had a significant window in any Polynesian population. In the lower tail there were `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()` genes with at least a window that met the significance threshold in the Polynesian populations. Only _THADA_ had windows from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze} in the \gls{ton} population from the Polynesian populations. This was also true for the \gls{cdx} and \gls{chs} populations. _ARL15_, _MACF1_, _RREB1_, and _THADA_ each had in all Polynesian populations, at least one statistic that was significant in the lower tail. In the upper tail, _HLA-B_, _HMGA2_, _HNF1B_, _PTPRD_, _RBMS1_, _SGCG_, _TCF7L2_, and _THADA_ each had, in all Polynesian populations, at least one statistic that was significant.
 
 ```{markdown, eval = FALSE}
 any stat
@@ -1108,8 +1011,8 @@ any stat
  - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()`
 
 has all stats
- - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
- - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
+ - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
+ - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
 
 
 
@@ -1161,7 +1064,7 @@ multiplot(gene_dendros(gene_data = kd$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima'
 #    cols = 2), file = 'images/04_clustering/kd_dendros.png')
 ```
 
-The GWAS catalog had `r length(unique(kd_GR$SYMBOL))` genes associated with kidney disease, this was represented by `r nrow(kd$mat_d$Tajima.D)` windows. The clustering of the kidney disease associated genes grouped the individual populations into their super population groups for \gls{afr} and \gls{sas} using \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Populations from \gls{pol} and \gls{eas} were clustered into separate clusters with  \gls{td} and \gls{flf} but were clustered together for \gls{fwh} and \gls{ze} (Figure \@ref(fig:kidneydendros)). No populations were entirely grouped into their super populations with \gls{fld}. \gls{td} clustered populations from \gls{afr}, \gls{eas}, \gls{pol}, and \gls{sas} into super population specific and exclusive clusters.
+The GWAS catalog had `r length(unique(kd_GR$SYMBOL))` genes associated with kidney disease, this was represented by `r nrow(kd$mat_d$Tajima.D)` windows. The clustering of the kidney disease associated genes grouped the individual populations into their super population groups for \gls{afr} and \gls{sas} using \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Populations from \gls{pol} and \gls{eas} were clustered into separate clusters with  \gls{td} and \gls{flf} but were clustered together for \gls{fwh} and \gls{ze} (Figure \@ref(fig:kidneydendros)). \gls{td} clustered populations from \gls{afr}, \gls{eas}, \gls{pol}, and \gls{sas} into super population specific and exclusive clusters.
 
 
 
@@ -1197,8 +1100,8 @@ any stat
  - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(kd_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()`
 
 has all stats
- - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(kd_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
- - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(kd_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
+ - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(kd_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
+ - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(kd_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 4) %>% NROW()`
 ```
 
 
@@ -1222,9 +1125,9 @@ multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Taj
 #    cols = 2), file = 'images/04_clustering/metsyn_dendros.png')
 ```
 
-The GWAS catalog had `r length(unique(metsyn_GR$SYMBOL))` genes associated with metabolic syndrome, this was represented by `r nrow(metsyn$mat_d$Tajima.D)` windows. The clustering of the metabolic syndrome associated genes grouped individual populations into their super population groups for \gls{td} and \gls{fwh} (Figure \@ref(fig:metsyndendros)). For \gls{flf}, the Polynesian populations were assigned two exclusive clusters that followed the Eastern/Western Polynesian split. \Gls{ze} clustered the individual populations, except for \gls{pel}, into their super populations. \gls{fld} separated the Polynesian populations into a separate group but did not distinguish the other populations into their super populations. The Polynesian populations were grouped into entirely exclusive clusters for all stats.
+The GWAS catalog had `r length(unique(metsyn_GR$SYMBOL))` genes associated with metabolic syndrome, this was represented by `r nrow(metsyn$mat_d$Tajima.D)` windows. The clustering of the metabolic syndrome associated genes grouped individual populations into their super population groups for \gls{td} and \gls{fwh} (Figure \@ref(fig:metsyndendros)). For \gls{flf}, the Polynesian populations were assigned two exclusive clusters that followed the Eastern/Western Polynesian split. \Gls{ze} clustered the individual populations, except for \gls{pel}, into their super populations. The Polynesian populations were grouped into entirely exclusive clusters for all stats.
 
-There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` metabolic syndrome associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the lower tail there were `r lower_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()` genes with at least one window that was significant in the Polynesian populations. _DGKB_, _FTO_, _LIPC_, and _MICB_ each had in all Polynesian populations, at least one statistic that was significant in the upper tail. There was a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% NROW()` genes that had at least a window that was significant in the upper tail.
+There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` metabolic syndrome associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the lower tail there were no genes with at least one window that was significant in the Polynesian populations. _DGKB_, and _LIPC_ each had, in all Polynesian populations, at least one statistic that was significant in the upper tail. There was a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% NROW()` genes that had at least a window that was significant in the upper tail.
 
 
 ```{markdown, eval = FALSE}
@@ -1236,14 +1139,11 @@ has all stats
  - lower `r lower_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
  - upper `r upper_sig_stats %>% filter(SYMBOL %in% unique(metsyn_GR$SYMBOL)) %>% group_by(pop, SYMBOL, statname) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON'))  %>% ungroup()%>% select(-n, -statname) %>% group_by(pop, SYMBOL) %>% tally() %>% filter(n == 5) %>% NROW()`
 
-
-
 <!---
 
 dendrograms
 
 exclusivity
-
 
 prop
 td, fwh, and ze all 1.0 except amr (.75)
@@ -1257,10 +1157,6 @@ td, fwh, and ze all 1.0 except amr (.75)
 
 number of significant
 -->
-
-
-
-
 
 <!--
 results from other diseases that are late onset and see if they produce the same patterns
@@ -1332,6 +1228,7 @@ bind_rows(list(
 ### Random draws
 
 ```{r load_rand, results='asis'}
+# only need to do for one stat since it's a true/false matrix
 create_random_tab <- function(rand){
    bind_rows(lapply(seq_along(rand), function(x){rand[[x]]$super_prop})) %>% group_by(super) %>% group_by(super) %>% summarise(min = round(min(max_prop),3), mean = round(mean(max_prop), 3), sd = round(sd(max_prop), 3), max = round(max(max_prop),3), prop50 = round(sum(if_else(max_prop >=0.5, 1, 0))/NROW(.) * 100, 1) , total_complete = sum(if_else(max_prop == 1, 1, 0))) %>% data.frame()
 }
@@ -1447,7 +1344,7 @@ over50per2 <- readRDS('data/04-over50per2.RDS')
 
 It is possible that obtaining the population groupings using the extremes was due to chance, to assess this, 10,000 iterations of random resampling of 2500 windows per population was undertaken and then clustered. This was done so that the extreme tail clustering could be compared to the random windows in to see if the extreme window clustering performed better in exclusivity and proportion of super population clustering than by drawing windows at random. The maximum proportion of populations being clustered into their designated super population was then calculated when the tree was cut to have six groups (K = 6), one for each super population. The mean proportion of populations grouped into their super population was less than 0.5 for all super populations with an overall mean of 0.282 (Table \@ref(tab:randtab)). Other values of K were also tested for K = 9, and K = 11. They both had higher mean exclusivities (K = 9: 0.367, K = 11: 0.424) than K = 6, due to more possible individual clusters. The extra values of K were selected based on the cross-validation tests (section \@ref(admixture)). The rest of the section will report on K = 6.
 
-Not a single random draw grouped the all individual populations into all of their respective super populations. Only the populations of the \gls{afr} and \gls{eur} super populations did not each get fully grouped into a cluster. Grouping at least 50% of a super population was at best `r round(rand_tab %>% summarise(max = max(prop50)), digits = 0) %>% pull(max) %>% num_to_word()`% of the draws but for the larger super populations (\gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas}) it was on average `r round(rand_tab %>% filter(!super %in% c('POL','AMR'))%>% summarise(mean = mean(prop50)), digits = 0) %>% pull(mean) %>% num_to_word(.)`% of the draws. There were only `r over50per %>% NROW() %>% num_to_word()` iterations that had all super populations each having half or more of their individual populations assigned the same group. The mean exclusivity of the random draws was low, ranging from `r min(excl_tab$mean) %>% sprintf('%.2f', .)` to `r max(excl_tab$mean) %>% sprintf('%.2f', .)` and there were no iterations in which the Polynesian populations were all grouped together as a Polynesian exclusive cluster.
+Not a single random draw grouped the all individual populations into all of their respective super populations. Only the populations of the \gls{afr} and \gls{eur} super populations did not each get fully grouped into a cluster. Grouping at least 50% of a super population was at best `r round(rand_tab %>% summarise(max = max(prop50)), digits = 0) %>% pull(max)`% of the draws but for the larger super populations (\gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas}) it was on average `r round(rand_tab %>% filter(!super %in% c('POL','AMR'))%>% summarise(mean = mean(prop50)), digits = 0) %>% pull(mean)`% of the draws. There were only `r over50per %>% NROW() %>% num_to_word()` iterations that had all super populations each having half or more of their individual populations assigned the same group. The mean exclusivity of the random draws was low, ranging from `r min(excl_tab$mean) %>% sprintf('%.2f', .)` to `r max(excl_tab$mean) %>% sprintf('%.2f', .)` and there were no iterations in which the Polynesian populations were all grouped together as a Polynesian exclusive cluster.
 
 
 Compared to the clustering on the extreme tails, the random windows had poorer exclusivity of clusters with a mean exclusivity of 28%. The populations were clustered into their super populations rarely for the random windows and did not have multiple super populations being clustered as the clustering of the extremes returned (Table \@ref(tab:randtab)). This indicates that there is a degree of similarity of regions that are in the extremes of the distributions and the populations who share them.
@@ -1482,7 +1379,7 @@ bind_rows(lapply(seq_along(td_random), function(x){td_random[[x]]$pop_clust_prop
 
 #### Random genes
 
-In order to assess if the clustering from gene lists was specific to the disease associated genes used, lists of random genes were created and then clustered. Random gene lists were generated consisting of either 25 or 100 genes, 100 times each, and median centred based on the population for \gls{td}, \gls{fwh}, \gls{fld}, \gls{flf}, and \gls{ze}. Hierarchical clustering was then performed on the windows that intersected genes from the gene lists. The number of times the Polynesian super population was completely clustered ranged from 0 to 78 (Table \@ref(tab:randgenes)). The Polynesian super population was completely clustered more often with the lists of 100 genes for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze} compared to the lists of 25 genes, the opposite occurred for \gls{fld} and \gls{flf}. The number of times all populations were clustered completely was less than 10%. However, if the \gls{amr} super population was not included then it became 44.8 for the 100 genes, and 29 for the 25 genes. \Gls{fld} and \gls{flf} did not perform well at clustering the Polynesian populations into their super population, and only achieved this less than 5% of the time. Clustering all populations was not achieved by \gls{fld} and \gls{flf}. The other frequency spectrum statistics clustered the Polynesian populations into their super population for at least 50% of the time and did better with more genes. Clustering of the other super populations was similar to the Polynesian super population when the \gls{amr} populations were not included. This indicates that clustering from disease associated gene lists is not specific to particular genes. It also indicates that genes are better at clustering the super populations than randomly drawn windows.
+In order to assess if the clustering from gene lists was specific to the disease associated genes used, lists of random genes were created and then clustered. Random gene lists were generated consisting of either 25 or 100 genes, 100 times each, and median centred based on the population for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Hierarchical clustering was then performed on the windows that intersected genes from the gene lists. The number of times the Polynesian super population was completely clustered ranged from 5 to 78 (Table \@ref(tab:randgenes)). The Polynesian super population was completely clustered more often with the lists of 100 genes for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze} compared to the lists of 25 genes. The number of times all populations were clustered completely was less than 10%. However, if the \gls{amr} super population was not included then it became 56 for the 100 genes, and 36.3 for the 25 genes. \gls{flf} did not perform well at clustering the Polynesian populations into their super population, and only achieved this less than 13% of the time. Clustering all populations was not achieved by \gls{flf}. The other frequency spectrum statistics clustered the Polynesian populations into their super population for at least 50% of the time and did better with more genes. Clustering of the other super populations was similar to the Polynesian super population when the \gls{amr} populations were not included. This indicates that clustering from disease associated gene lists is not specific to particular genes. It also indicates that genes are better at clustering the super populations than randomly drawn windows.
 
 
 
@@ -1494,16 +1391,14 @@ load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/random_gene_clustering_filtered
 
 poly_complete <- bind_rows(
   bind_rows(
-    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'TajimaD') , 
+    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'Tajima.D') , 
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fay.Wu.H$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fay.Wu.H'),
-    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fu.Li.D$super_prop %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.D'),
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fu.Li.F$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.F'),
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Zeng.E$super_prop  %>%spread(super, max_prop) })) %>% mutate(statname = 'Zeng.E')
   ) %>%mutate(total = select_if(., is.numeric) %>% rowSums) %>% filter(POL == 1) %>% group_by(statname) %>% tally() %>% mutate(gene_n = 100),
   bind_rows(
-    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'TajimaD') , 
+    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'Tajima.D') , 
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fay.Wu.H$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fay.Wu.H'),
-    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fu.Li.D$super_prop %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.D'),
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fu.Li.F$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.F'),
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Zeng.E$super_prop  %>%spread(super, max_prop) })) %>% mutate(statname = 'Zeng.E')
   ) %>% 
@@ -1513,16 +1408,14 @@ poly_complete <- bind_rows(
 
 perc_complete <- bind_rows(
   bind_rows(
-    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'TajimaD') , 
+    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'Tajima.D') , 
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fay.Wu.H$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fay.Wu.H'),
-    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fu.Li.D$super_prop %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.D'),
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fu.Li.F$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.F'),
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Zeng.E$super_prop  %>%spread(super, max_prop) })) %>% mutate(statname = 'Zeng.E')
   ) %>%mutate(total = select_if(., is.numeric) %>% rowSums) %>% filter(POL >= 4/4, EUR >= 6/6, EAS >= 5/5, AFR >= 6/6, SAS >= 5/5, AMR >= 4/4) %>% group_by(statname) %>% tally() %>% mutate(gene_n = 100),
   bind_rows(
-    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'TajimaD') , 
+    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'Tajima.D') , 
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fay.Wu.H$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fay.Wu.H'),
-    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fu.Li.D$super_prop %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.D'),
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fu.Li.F$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.F'),
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Zeng.E$super_prop  %>%spread(super, max_prop) })) %>% mutate(statname = 'Zeng.E')
   ) %>% 
@@ -1531,16 +1424,14 @@ perc_complete <- bind_rows(
 
 perc_complete_no_amr <- bind_rows(
   bind_rows(
-    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'TajimaD') , 
+    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'Tajima.D') , 
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fay.Wu.H$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fay.Wu.H'),
-    bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fu.Li.D$super_prop %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.D'),
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Fu.Li.F$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.F'),
     bind_rows(lapply(seq_along(random_genes100), function(x){random_genes100[[x]][[2]]$Zeng.E$super_prop  %>%spread(super, max_prop) })) %>% mutate(statname = 'Zeng.E')
   ) %>%mutate(total = select_if(., is.numeric) %>% rowSums) %>% filter(POL >= 4/4, EUR >= 6/6, EAS >= 5/5, AFR >= 6/6, SAS >= 5/5) %>% group_by(statname) %>% tally() %>% mutate(gene_n = 100),
   bind_rows(
-    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'TajimaD') , 
+    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Tajima.D$super_prop %>% spread(super, max_prop) }))  %>% mutate(statname = 'Tajima.D') , 
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fay.Wu.H$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fay.Wu.H'),
-    bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fu.Li.D$super_prop %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.D'),
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Fu.Li.F$super_prop  %>% spread(super, max_prop) })) %>% mutate(statname = 'Fu.Li.F'),
     bind_rows(lapply(seq_along(random_genes25), function(x){random_genes25[[x]][[2]]$Zeng.E$super_prop  %>%spread(super, max_prop) })) %>% mutate(statname = 'Zeng.E')
   ) %>% 
@@ -1551,7 +1442,7 @@ perc_complete_no_amr <- bind_rows(
 <!-- need to get fld in the 100 -->
 ```{r}
 # add in fld 100 because it has no results, therefore wasn't in the original table
-poly_complete %>% full_join(., perc_complete %>% select(allcomplete = n, everything()), by = c('statname','gene_n')) %>% full_join(., perc_complete_no_amr %>% select(noAMR = n, everything()), by = c('statname','gene_n'))%>% mutate(allcomplete = ifelse(is.na(allcomplete),0,allcomplete), noAMR = ifelse(is.na(noAMR),0,noAMR)) %>% rbind(., c("Fu.Li.D",0,100,0,0,0)) %>% arrange(gene_n, statname)%>% select("Statistic" = statname, "Genes (n)" = gene_n, 'POL Complete (%)' = n, 'All Complete (%)' = allcomplete, 'All Complete excl. AMR (%)' = noAMR, everything()) %>% kable(., booktabs = TRUE, caption = '(\\#tab:randgenes) Percentage of draws from randomly selected genes for completely clustered super populations.', align = "lrrrr")
+poly_complete %>% full_join(., perc_complete %>% select(allcomplete = n, everything()), by = c('statname','gene_n')) %>% full_join(., perc_complete_no_amr %>% select(noAMR = n, everything()), by = c('statname','gene_n'))%>% mutate(allcomplete = ifelse(is.na(allcomplete),0,allcomplete), noAMR = ifelse(is.na(noAMR),0,noAMR)) %>% arrange(gene_n, statname)%>% select("Statistic" = statname, "Genes (n)" = gene_n, 'POL Complete (%)' = n, 'All Complete (%)' = allcomplete, 'All Complete excl. AMR (%)' = noAMR, everything()) %>% kable(., booktabs = TRUE, caption = '(\\#tab:randgenes) Percentage of draws from randomly selected genes for completely clustered super populations.', align = "lrrrr")
 ```
 
 

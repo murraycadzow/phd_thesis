@@ -8,14 +8,26 @@ panel <- read.delim(paste0('~/data/NZ_coreExome_1kgp/nz_1kgp.panel'), stringsAsF
 ###
 # made in clustering/coreExome_1kg_popgenome_clustering_100kb_filtered_3ns.Rmd
 mat_d_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_mat_d_list-31-8-2017.RDS')
+mat_d_list["fld_neg"] <- NULL
+mat_d_list["fld_pos"] <- NULL
+mat_d_list["fld_chr"]<-NULL
 prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
+prop_list["fld_neg"] <- NULL
+prop_list["fld_pos"] <- NULL
+prop_list["fld_chr"]<-NULL
 clus_r_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_r_list-31-8-2017.RDS')
+clus_r_list["fld_neg"] <- NULL
+clus_r_list["fld_pos"] <- NULL
+clus_r_list["fld_chr"]<-NULL
 clus_c_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_clus_c_list-31-8-2017.RDS')
+clus_c_list["fld_neg"] <- NULL
+clus_c_list["fld_pos"] <- NULL
+clus_c_list["fld_chr"]<-NULL
 ###
 
 ## load global summary info
-global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
-global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"), stat != 'Fu.Li.D')
+global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS') %>% filter(stat != 'Fu.Li.D')
 
 ## load fst
 #100kb window 10kb slide pairwise fst
@@ -29,7 +41,7 @@ pol_fst_99genes <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_
 marker_loc <- readRDS('~/data/NZ_coreExome_1kgp/snpEff_Annotated/snpeff_terms.RDS') %>% select(chrom = V1, pos = V2, snp = V3, ref = V4, alt = V5, eff )
 
 # genelists
-load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')
+load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
 genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
 
 
@@ -43,13 +55,13 @@ create_sel_summary_table <- function(s){
 
 gs_td_table <- create_sel_summary_table('Tajima.D')
 gs_fwh_table <- create_sel_summary_table('Fay.Wu.H')
-gs_fld_table <- create_sel_summary_table('Fu.Li.D')
+#gs_fld_table <- create_sel_summary_table('Fu.Li.D')
 gs_flf_table <- create_sel_summary_table('Fu.Lu.F')
 gs_ze_table <- create_sel_summary_table('Zeng.E')
 
 td_super_pop_means <- global_super_summary %>% filter(stat == 'Tajima.D') %>% mutate(range = max - min)
 fwh_super_pop_means <- global_super_summary %>% filter(stat == 'Fay.Wu.H') %>% mutate(range = max - min)
-fld_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.D') %>% mutate(range = max - min)
+#fld_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.D') %>% mutate(range = max - min)
 flf_super_pop_means <- global_super_summary %>% filter(stat == 'Fu.Li.F') %>% mutate(range = max - min)
 ze_super_pop_means <- global_super_summary %>% filter(stat == 'Zeng.E') %>% mutate(range = max - min)
 
@@ -65,11 +77,11 @@ gg_color_hue <- function(n) {
 super_pop_colours <- cbind(panel %>% select(super_pop) %>% distinct() %>% arrange(super_pop) %>% select('group' = super_pop),colour = gg_color_hue(panel %>% select(super_pop) %>% distinct() %>% tally() %>% .[['n']]))
 
 create_windowTable <- function(){
-  bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>% select(-pop) %>% group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% data.frame()
+  bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-contains('chrom'), -posid) %>% gather(., pop, value, 1:NCOL(.)) %>% group_by(pop) %>% summarise(total_windows =  sum(value)) %>% mutate(d = x)})) %>% mutate(super = sapply(pop, function(x){strsplit(x, '_')[[1]][1]})) %>%  select(-pop) %>%  group_by(d, super) %>% summarise(min = min(total_windows), mean = mean(total_windows), max = max(total_windows)) %>% filter(!d %in% c("fld_neg","fld_pos")) %>% data.frame()
 }
 
 create_windowSummaryTable <- function(){
-  bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
+  bind_rows(lapply(names(mat_d_list)[!grepl('chr',names(mat_d_list))], function(x){mat_d_list[[x]] %>% select(-posid, -contains('chrom')) %>% summarise(total_windows = NROW(.), min = min(rowSums(.)), mean = mean(rowSums(.)), max = max(rowSums(.)), median = median(rowSums(.)), sd = sd(rowSums(.)) ) %>% mutate( stat = x)})) %>% filter(!stat %in% c("fld_neg","fld_pos")) %>% select(stat, total_windows, min, median, max, mean, sd) %>% data.frame()
 }
 
 
@@ -249,7 +261,7 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
       lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"), statname != 'Fu.Li.D')
 
 # made from clustering/popgenome_freq_stats.Rmd
 upper_sig_stats <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
@@ -260,7 +272,7 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
       upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"), statname != "Fu.Li.D")
 
 
 gene_dendros <- function(gene_data){
