@@ -33,7 +33,7 @@ a
 
 ## Methods
 
-Unless otherwise specified all genomic resources and co-ordinates reported in this project use the human genome reference build GRCh37.
+All genomic resources and co-ordinates reported in this project use the human genome reference build GRCh37, unless otherwise specified.
 
 ### Phasing {#phase}
 
@@ -54,7 +54,7 @@ shapeit2 \
   -T 12
 ```
 
-The second step was the phasing of genotypes into their haplotypes by using the \gls{1kgp} phased haplotype reference and a genetic map that was provided as part of the reference files. Markers that were marked for exclusion from the previous step were excluded. The haplotypes with the maxium likelihood were outputted. The haplotypes were then converted from the .haps format into a phased \gls{vcf}.
+The second step was the phasing of genotypes into their haplotypes by using the \gls{1kgp} phased haplotype reference and a genetic map that was provided as part of the reference files. Markers that were marked for exclusion from the previous step were excluded. The haplotypes with the maximum likelihood were outputted. The haplotypes were then converted from the .haps format into a phased \gls{vcf}.
 
 
 ```{bash, eval = FALSE, echo = TRUE}
@@ -160,7 +160,7 @@ Gene
 
 In order to create lists of genes that were associated with urate, gout, obesity, \gls{t2d}, metabolic syndrome, and kidney disease entries for the \gls{gwas} catalog were downloaded from the \gls{gwas} catalog^[gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv https://www.ebi.ac.uk/gwas/ accessed 19 June 2017] [@MacArthur2017]. Entries were then filtered for P <  5x10^-8^. From the filtered results the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Entries were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data each disease selected rows using keywords in the "disease trait". Gout and urate used the keywords "urate" and "gout", obesity used "obesity" and "body mass", \gls{t2d} used "diabetes", and metabolic syndrome used "syndrome". Kidney disease used the keywords "kidney" and "renal" and removed entries that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". 
 
-Additional gene lists were created for malaria, auto immune and auto inflammatory diseases, and neurological diseases. The malaria gene list used the keyword "malaria" to filter the disease trait column. The auto immune and auto inflammatory gene list was based on diseases that were listed in Table 2 of @Zhang2013a. The following keywords were filtered for in the disease trait column: "Crohn's disease", 'Celiac disease', "Ulcerative colitis", "Inflammatory bowel disease", "Type 1 diabetes",  "Rheumatoid arthritis", "Multiple sclerosis", "Psoriasis", "Systemic lupus erythematosus", "Primary biliary cirrhosis", and "Vitiligo". Finally, a genelist for genes associated with neurological diseases was created by filtering the disease trait column for the following keywords:
+Additional gene lists were created for malaria, auto immune and auto inflammatory diseases, and neurological diseases. The malaria gene list used the keyword "malaria" to filter the disease trait column. The auto immune and auto inflammatory gene list was based on diseases that were listed in Table 2 of @Zhang2013a. The following keywords were filtered for in the disease trait column: "Crohn's disease", 'Celiac disease', "Ulcerative colitis", "Inflammatory bowel disease", "Type 1 diabetes",  "Rheumatoid arthritis", "Multiple sclerosis", "Psoriasis", "Systemic lupus erythematosus", "Primary biliary cirrhosis", and "Vitiligo". Finally, a gene list for genes associated with neurological diseases was created by filtering the disease trait column for the following keywords:
 
 
 
@@ -370,7 +370,7 @@ smartpca.perl \
 
 ### Admixture analysis {#admixture}
 
-Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with an R^2^ of more that 0.1. This was done using plink v1.9b4.9. Following this cross validation was performed to find the best value of K, for K 1 to 15. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)).
+Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with an R^2^ of more that 0.1. This was done using Plink v1.9b4.9. Following this cross validation was performed to find the best value of K, for K 1 to 15. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)).
 
 ```{r admixture k, engine = 'bash', eval = FALSE}
 # Combine the chromosomes
@@ -615,14 +615,9 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 ```
 #### CoreExome
 
-The Infinium CoreExome-24 beadchip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. Genotyping quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. Samples were also checked for outliers in heterozygosity and depression of genetic variation. 
+The Infinium CoreExome-24 bead-chip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. Genotyping quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were zeroed if they were < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. Samples were also checked for outliers in heterozygosity and depression of genetic variation. 
 
 Markers were subsetted to only include bi-allelic \gls{snp}s, with a final marker number of `r NROW(markers)` and density of `r  lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>%  mean() %>% round_dp(., 0)` bp/marker. Relatedness between individuals was assessed through inheritance by state using Plink v1.9b3.32 and a pedigree of created by Dr Tanya Major (Merriman lab) to identify family groups. Duplicates and first degree relations were excluded and single individuals were randomly selected from family groups identified through identity by state analysis. Hardy-Weinberg equilibrium of markers was checked for European, East Polynesian, and West Polynesian populations (3 or more grandparents self reported ethnicity) using an exact test in Plink v1.9b3b.32 and variants were removed that had a Bonferroni multiple testing corrected P < 0.05. The genetic ancestry,determined through \gls{pca} (section \@ref(pca)), was compared with self reported ethnicity and individuals were removed where there was disagreement.
-
-
-
-Selection of samples to form the populations used in the selection analyses
-Gout affection was determined by the American College of Rheumatology criteria
 
 
 
@@ -664,9 +659,12 @@ left_join(markers, marker_loc, by = c("chrom" = "chrom", "chrom_start" = "pos", 
 
 ```
 
+### Polynesian Gout \gls{gwas} dataset
+
+> will be inserted once it is finalised
 
 ```{r, warning= FALSE, message = FALSE, echo = FALSE}
-ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for the ancestral groups that were genotyped on the CoreExome platform.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Wester Polynesian" = 2)) %>% kable_styling(latex_options = 'scale_down')
+ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for samples that were genotyped on the CoreExome platform by genetic ancestry.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Western Polynesian" = 2)) %>% kable_styling(latex_options = 'scale_down')
 ```
 
 
@@ -685,11 +683,14 @@ ce_pop_table <- ce_populations_table()
 
 #### Sample selection
 
-Principle components were calculated for all individuals genotyped on the coreExome \gls{snp} array using SmartPCA (EIGENSOFT v6.0.1, see section \@ref(pca)) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported their ethnicity as unknown.
+\Gls{pc}s were calculated for all individuals genotyped on the coreExome \gls{snp} array using SmartPCA (EIGENSOFT v6.0.1, see section \@ref(pca)) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported their ethnicity as unknown.
 
-Principle component 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and PC4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of Caucasian, New Zealand M$\bar{a}$ori, Cook Island M$\bar{a}$ori, Samoan, and Tongan ancestry were used to define the threshold values. The mean and SD for PC2 and PC4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean +/- 2 SD for PC2 and PC4 for each corresponding self-report population group. Samples were filtered so that only those that lay within a boundary remained. Remaining samples were then randomly sampled to form groups of 100 individuals, where possible trying to match general population prevalence for gout (Figure \@ref(fig:cePCA)).
+\Gls{pc} 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and \gls{pc} 4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of Caucasian, New Zealand M$\bar{a}$ori, Cook Island M$\bar{a}$ori, Samoan, and Tongan ancestry were used to define the threshold values. The mean and SD for PC2 and PC4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean $\pm$ 2 SD for \gls{pc} 2 and \gls{pc} 4 for each corresponding self-report population group. Samples were filtered so that only those that lay within a boundary remained. Population samples of 100 individuals were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc}, by randomly sampling from within each ancestry group (Figure \@ref(fig:cePCA)). To unenrich for gout, individuals were prioritised based on gout affection to reach population specific prevalences based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton}. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained (\@ref(tab:cePopTable)).
 
 
+```{r,echo = FALSE}
+knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations used in the selection analysis',align = 'lcrrrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","Diabetes (%)","Gout (%)", "Kidney Disease (%)","Heart Problems (%)"), booktabs = TRUE, format = 'latex' ) %>% kable_styling(latex_options = 'scale_down') 
+```
  
 
 (ref:cePCA) Principle components 2 and 4 for individuals used in the selection analysis.
@@ -698,13 +699,11 @@ Principle component 2 was identified as providing the best separation of Europea
 knitr::include_graphics('images/02_methods/pca_plot.png')
 ```
 
-Analysis groups were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc} and unenriching for gout. To unenrich for gout, population specific prevalence based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton} were used and individuals were randomly sampled. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained.
 
-#### Core Exome - Filter individuals and markers 
 
-To create a data set to calculate selection statistics, a subset of the individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the \gls{1kgp} phase 3 release. Before the data sets could be combined there were a series of steps that were performed.
+#### Filter individuals and markers 
 
-The first step was to keep only the individuals who had been selected through \gls{pca} and had a genotyping rate of at least 95%. Markers were filtered to remove \gls{indel}s so that only \gls{snp}s remained.
+To create a data set to calculate selection statistics, the subset of the Genetics of Aotearoa individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the \gls{1kgp} phase 3 release. Before the data sets could be combined there were a series of steps that were performed. The first step was to keep only the individuals who had been selected through \gls{pca} and had a genotyping rate of at least 95%. Markers were filtered to remove \gls{indel}s so that only \gls{snp}s remained.
 
 ```{r, engine = 'bash', eval = FALSE}
 parallel '
@@ -742,7 +741,7 @@ parallel '
 
 After normalisation, the \gls{vcf} files were phased using the 1000 Genomes Project phase 3 reference haplotypes as described in section \@ref(phase).
 
-#### Merge NZ coreExome with 1000 Genomes Project
+#### Merge genotypes
 
 In order to efficiently merge the data sets, the intersection of the markers from the \gls{1kgp} dataset and the CoreExome was found. This was done by extracting the marker positions and alleles from the coreExome data and then matching these to the marker positions extracted from the \gls{1kgp} phase 3. The \gls{1kgp} phase 3 markers were also filtered to remove non bi-allelic \gls{snp}s.
 
@@ -854,7 +853,7 @@ do
 done
 ```
 
-Principle components for the merged \gls{1kgp} data and the New Zealand samples showed in the first two components that the \gls{afr}, \gls{eur}, \gls{sas} super populations all formed separate groupings. \gls{eas} and \gls{pol} were extremely similar in PC1 but the \gls{pol} populations were spread with PC2, with the majority of the spread being accounted for by the Eastern Polynesian populations whereas the Western Polynesian populations had a tight grouping at -0.025 on PC2, slightly below the \gls{eas} group. This can be observed when PC6 is used to separate the Polynesian populations (Figure \@ref(fig:polPCA)).
+\Glsdesc{pc}s for the merged \gls{1kgp} data and the New Zealand samples showed in the first two components that the \gls{afr}, \gls{eur}, \gls{sas} super populations all formed separate groupings. \gls{eas} and \gls{pol} were extremely similar in \gls{pc} 1 but the \gls{pol} populations were spread with \gls{pc} 2, with the majority of the spread being accounted for by the Eastern Polynesian populations whereas the Western Polynesian populations had a tight grouping at -0.025 on \gls{pc} 2, slightly below the \gls{eas} group. This can be observed when PC6 is used to separate the Polynesian populations (Figure \@ref(fig:polPCA)).
 
 (ref:allpopPCA) Principle components 1 and 2 for all populations, coloured by super population grouping.
 
@@ -880,22 +879,17 @@ eigen %>%  filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, shape 
 eigen %>%  filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(POL = '#619CFF')) + scale_shape_manual(values = c("CIM" = 0,"NZM" = 1, "TON" = 2, "SAM" = 3)) + guides(size = FALSE) + guides(shape  = guide_legend(title = "Population"), colour = guide_legend(title = "Super Population"))
 ```
 
-```{r,echo = FALSE}
-knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations in selection analysis',align = 'lcrrrrrrrr', col.names = c("pop","n","Age","Sex (% Male)","BMI","Waist","Diabetes (%)","Gout (%)", "Kidney Disease (%)","Heart Problems (%)"), booktabs = TRUE, format = 'latex' ) %>% kable_styling(latex_options = 'scale_down') 
-```
-
-
-There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPCA)), this indicated that the use of chip versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations where split into Eastern and Western Polynesian sub-groups with PC6 (Figure \@ref(fig:polPCA)).
+There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPCA)), this indicated that the use of chip versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations where split into Eastern and Western Polynesian sub-groups with \gls{pc} 6 (Figure \@ref(fig:polPCA)).
 
 ### UK Biobank
 
-The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including subcodes). The dataset was also filtered to individuals with a self reported an ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, failed genotype quality control. The remaining individuals were used eligible for the \gls{gwas} performed in section \@ref(ukbbgwas).
+The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including sub-codes). The dataset was also filtered to individuals with a self reported an ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, failed genotype quality control. The remaining individuals were used eligible for the \gls{gwas} performed in section \@ref(ukbbgwas).
 
 
 
 ### Reference datasets
 
-Table \@ref(tab:refDatasets) provides the name of the dataset and the date it was accessed and the url from which the dataset was downloaded. These datasets were incorporated into many of the analysis steps.
+Table \@ref(tab:refDatasets) provides the name of the dataset and the date it was accessed and the URL from which the dataset was downloaded. These datasets were incorporated into many of the analysis steps.
 
 Table: (\#tab:refDatasets) _Reference Datasets_
 
