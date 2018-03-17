@@ -13,8 +13,8 @@ lower_sig_stats <- bind_rows(lapply(names(lower_sig_stats), function(y){
       lower_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
-lower_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS') %>% mutate(chrom = paste0('chr',chrom)) %>% select('statname' = stat, everything())
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"), statname != 'Fu.Li.D')
+lower_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS') %>% mutate(chrom = paste0('chr',chrom)) %>% select('statname' = stat, everything()) %>% filter(statname != 'Fu.Li.D')
 
 
 
@@ -25,24 +25,24 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
       upper_sig_stats[[y]][[x]] %>% mutate(pop = x, statname =y, chrom = as.character(chrom)) 
     }
     ))
-})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"))
+})) %>% filter(!pop %in% c("NAD","EPN","WPN","POL"), statname != 'Fu.Li.D')
 
-upper_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS') %>% mutate(chrom = paste0('chr',chrom)) %>% select('statname' = stat, everything())
+upper_sig_stats_binned <-readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_stat_filtered_ns3_resized_binned-2-11-2017.RDS') %>% mutate(chrom = paste0('chr',chrom)) %>% select('statname' = stat, everything()) %>% filter(statname != 'Fu.Li.D')
 
 ## permutation data
 # reorder the lower and upper columns so that the numbers make sense in the tables
-fdr_low <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_low.2-11-2017.RDS') %>% select(stat, pop, lower_per, 'lowerCI' = upper, 'FDR' = med, 'upperCI' = lower, lowest_quant, super_pop)
+fdr_low <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_low.2-11-2017.RDS') %>% select(stat, pop, lower_per, 'lowerCI' = upper, 'FDR' = med, 'upperCI' = lower, lowest_quant, super_pop) %>% filter(stat != 'Fu.Li.D')
 
-fdr_high <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_high.2-11-2017.RDS') %>% select(stat, pop, upper_per, 'lowerCI' = lower, 'FDR' = med, 'upperCI' = upper, highest_quant, super_pop)
+fdr_high <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_stats_popgenome_long_ns3_resized_binned_fdr_high.2-11-2017.RDS') %>% select(stat, pop, upper_per, 'lowerCI' = lower, 'FDR' = med, 'upperCI' = upper, highest_quant, super_pop)  %>% filter(stat != 'Fu.Li.D')
 
-perm_median <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_median_thresholds.2-11-2017.RDS')
-perm_ci2.5 <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_ci2.5_thresholds.2-11-2017.RDS')
-perm_ci97.5 <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_ci97.5_thresholds.2-11-2017.RDS')
+perm_median <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_median_thresholds.2-11-2017.RDS') %>% filter(stat != 'Fu.Li.D')
+perm_ci2.5 <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_ci2.5_thresholds.2-11-2017.RDS') %>% filter(stat != 'Fu.Li.D')
+perm_ci97.5 <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/permutations_ci97.5_thresholds.2-11-2017.RDS') %>% filter(stat != 'Fu.Li.D')
 
 
 ## load global summary info
-global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
-global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS')
+global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(!pop %in% c("WPN","EPN","POL","NAD"), stat != 'Fu.Li.D')
+global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS') %>% filter(stat != 'Fu.Li.D')
 
 
 ## load ihs and nsl data
@@ -69,15 +69,15 @@ pol_fst_99genes <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/windowed_
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
 
 # find all of the genes from POL that have something to suggest they may have been selected
-table(unique(lower_sig_stats$SYMBOL) %in% (lower_sig_stats %>% filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.Li.F', 'Fu.Li.D'), pop %in% c('CIM','NZM','SAM','TON')) %>% .[['SYMBOL']] %>% unique()))
+table(unique(lower_sig_stats$SYMBOL) %in% (lower_sig_stats %>% filter(statname %in% c('Tajima.D','Fay.Wu.H','Zeng.E', 'Fu.Li.F'), pop %in% c('CIM','NZM','SAM','TON')) %>% .[['SYMBOL']] %>% unique()))
 
-load('~/data/gwas_catalog/diseaseGR-25-7-2017.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR
-load('~/data/gwas_catalog/zhang_and_extra_18-11-2017.RData') # brings in objects called malaria_GR, zhang_immune_GR, neurological_GR, psychiatric_GR
+load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR
+#load('~/data/gwas_catalog/zhang_and_extra_18-11-2017.RData') # brings in objects called malaria_GR, zhang_immune_GR, neurological_GR, psychiatric_GR
 
 # made from Thesis/selectionpipeline/consec_regions.R
-consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-15-12-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+consec_lower_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_consec_regions_annotated-15-12-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD')) %>% filter(stat != "Fu.Li.D")
 # this is incorrect
-consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-15-12-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+consec_upper_regions <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_upper_sig_consec_regions_annotated-15-12-2017.RDS') %>% filter(!pop %in% c('WPN','EPN','NAD')) %>% filter(stat != "Fu.Li.D")
 
 
 plot_gene <- function(p, g){
@@ -108,7 +108,7 @@ for(file in list.files('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', inc
   kegg[[file]] <- read.delim(paste0('~/Git_repos/bookdown_thesis/data/enrichr_kegg2016/', file), header = TRUE, stringsAsFactors = FALSE)
   
 }
-
+kegg[grep(x = names(kegg), pattern = 'fld')] <- NULL
 kegg_sig <-list()
 kegg_sig <- lapply(names(kegg), function(n){kegg[[n]] %>% filter(Adjusted.P.value < 0.05) %>% arrange(Adjusted.P.value) %>% mutate(filename = n)} )
 names(kegg_sig) <- names(kegg)
