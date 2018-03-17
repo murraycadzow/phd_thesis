@@ -805,20 +805,93 @@ haplo_markerLoc(gr_nsl[gr_nsl$pop == "POL_NZM"]) %>% full_join(., haplo_markerLo
  
 #### Metabolic disease associated genes
 
-```{r, eval = FALSE}
+```{r, eval = TRUE, warning = FALSE, message = FALSE}
+sig_ihs_val_GR <- sig_ihs_val %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue, statid) %>% mutate(chrom = paste0('chr',chrom)) %>% GRanges()
+sig_nsl_val_GR <- sig_nsl_val %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue, statid) %>% mutate(chrom = paste0('chr',chrom)) %>% GRanges()
+
 seqlevels(gr_ihs) <- paste0('chr',seqlevels(gr_ihs))
 seqlevels(gr_nsl) <- paste0('chr',seqlevels(gr_nsl))
-
-gr <- subsetByOverlaps(gr_ihs, urate_goutGR)
-left_join(gr %>% as.tibble(),txdb_gene_annotate(gr) %>% as.tibble()) %>% filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL))) %>%  View()
-
-
 gr <- subsetByOverlaps(gr_ihs, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR))
 gr2 <- subsetByOverlaps(gr_nsl, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR))
+
+
+subset_snps <- function(snp_listGR, regionsGR, diseaseGR){
+  suppressWarnings(suppressMessages( purrr::map_df(panel %>% unite(pop, c("super_pop", "pop")) %>% pull(pop) %>% unique(), ~ subsetByOverlaps(snp_listGR[snp_listGR$pop == stringr::str_sub(.x,5, 7)], GenomicRanges::reduce(subsetByOverlaps(regionsGR[regionsGR$pop== .x], diseaseGR), ignore.strand = TRUE)) %>% as_tibble() %>% mutate(seqnames = as.character(seqnames)))))
+}
+
+urate_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, urate_goutGR)
+obesity_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, obesity_GR)
+t2d_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, t2d_GR)
+kd_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, kd_GR)
+metsyn_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, metsyn_GR)
+
+
+urate_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, urate_goutGR)
+obesity_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, obesity_GR)
+t2d_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, t2d_GR)
+kd_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, kd_GR)
+metsyn_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, metsyn_GR)
+
+
+
+# number of significant regions in each super populaton by gene for both ihs and nsl
+# in the metabolic genes
+ihs_nsl <- left_join(gr %>% as.tibble(),txdb_gene_annotate(gr) %>% as.tibble()) %>%filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL)), SYMBOL %in% genelists$genename) %>%  mutate(super = stringr::str_sub(pop, 1,3)) %>% select(SYMBOL, pop, super) %>% distinct() %>% group_by(SYMBOL, super) %>% tally() %>% full_join(.,                                                                                             left_join(gr2 %>% as.tibble(),txdb_gene_annotate(gr2) %>% as.tibble()) %>%filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL)), SYMBOL %in% genelists$genename) %>%  mutate(super = stringr::str_sub(pop, 1,3)) %>% select(SYMBOL, pop, super) %>% distinct() %>% group_by(SYMBOL, super) %>% tally(), by = c("SYMBOL","super"), suffix = c("_ihs","_nsl")
+)
+
+# ihs snps  snps in the genes that were in the significant regions of metabolic disease genes
+a_gr <- GRanges(sig_ihs_val %>% filter(genename %in%(ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% pull(SYMBOL)) ) %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue) %>% mutate(statname = 'ihs'))
+
+# nsl snps in the genes that were in the significant regions of metabolic disease genes
+b_gr <- GRanges(sig_nsl_val %>% filter(genename %in%(ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% pull(SYMBOL)) ) %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue) %>% mutate(statname = 'ihs'))
+
+# n regions
+n_regions_ihs_nsl <- NROW(GenomicRanges::reduce(subsetByOverlaps(c(gr,gr2), c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+
+n_regions_pol_ihs_nsl <- NROW(GenomicRanges::reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+
+n_regions_ihs <-NROW(GenomicRanges::reduce(subsetByOverlaps(gr, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+n_regions_nsl <- NROW(GenomicRanges::reduce(subsetByOverlaps(gr2, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+
+n_regions_ihs_nsl_intersect <- NROW(intersect(GenomicRanges::reduce(subsetByOverlaps(gr, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE), GenomicRanges::reduce(subsetByOverlaps(gr2, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE)))
+
+# n snps
+n_pol_snps_ihs <- bind_rows(urate_ihs_snps, obesity_ihs_snps, t2d_ihs_snps, kd_ihs_snps, metsyn_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
+
+n_pol_snps_nsl <- bind_rows(urate_nsl_snps, obesity_nsl_snps, t2d_nsl_snps, kd_nsl_snps, metsyn_nsl_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
+
+n_pol_snps_ihs_nsl <- inner_join( bind_rows(urate_ihs_snps, obesity_ihs_snps, t2d_ihs_snps, kd_ihs_snps, metsyn_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct(),
+              bind_rows(urate_nsl_snps, obesity_nsl_snps, t2d_nsl_snps, kd_nsl_snps, metsyn_nsl_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct()
+             ) %>% NROW() 
+
+# n disease regions
+n_disease_pol_urate <- NROW(reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), urate_goutGR)))
+n_disease_pol_obesity <- NROW(reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), obesity_GR)))
+n_disease_pol_t2d <- NROW(reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), t2d_GR)))
+n_disease_pol_kd <- NROW(reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), kd_GR)))
+n_disease_pol_metsyn <- NROW(reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), metsyn_GR)))
+```
+
+In the clustered significant regions of both \gls{ihs} and \gls{nsl} there were `r n_regions_ihs_nsl` independent regions that overlapped with genes associated with urate and metabolic diseases from all populations, for Polynesian populations the number of regions was `r n_regions_pol_ihs_nsl`. \gls{ihs} had `r n_regions_ihs` regions, while \gls{nsl} had `r n_regions_nsl`, and in common between the two statistics were `r n_regions_ihs_nsl_intersect` regions. The regions of the Polynesian populations covered `r n_pol_snps_ihs` \gls{snp}s for \gls{ihs} and `r n_pol_snps_nsl` for \gls{nsl}, with `r n_pol_snps_ihs_nsl ` in common between them. For the genes that had significant regions in Polynesian populations, `r n_disease_pol_urate` regions intersected genes that had been assosciated with urate and gout, `r n_disease_pol_obesity` with obesity, `r n_disease_pol_t2d` with \gls{t2d}, `r n_disease_pol_kd` with kidney disease, and `r n_disease_pol_metsyn` with metabolic syndrome.
+
+Using the significant \gls{snp}s for these \gls{ihs} and \gls{nsl} (as in Chapter 3) there were a total of XXX \gls{snp}s that were significant in a Polynesian population and also significant for the same allele in at least one other population for \gls{ihs}, and XXX for \gls{nsl}
+
+The urate associated gene _ABCG2_ had a single \gls{snp} (rs2622626) that was significant in \gls{ton} that was in common for significance for \gls{ihs} in two other populations, \gls{gih} and \gls{itu}, both were from the \gls{sas} super population. The situation was the same for \gls{nsl}, but with the addition of \gls{jpt}.
+
+The \gls{sam} and \gls{ton} populations had multiple \gls{snp}s in common that were significant for both \gls{ihs} and \gls{nsl}. 
+
+Of the metabolic disease genes, ERBB4, FHIT, and ITGB6 were also found in @pickrell2009signals.
+
+pickrell ERBB4 in eas, sas, and mideas, oceania. FHIT in bantu. ITGB6 in america
+
+
+
+
+
+```{r, eval = FALSE}
+# ihs regions for the disease genes
 left_join(gr %>% as.tibble(),txdb_gene_annotate(gr) %>% as.tibble()) %>%filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL)), SYMBOL %in% genelists$genename) %>%  View()
 
-ihs_nsl <- left_join(gr %>% as.tibble(),txdb_gene_annotate(gr) %>% as.tibble()) %>%filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL)), SYMBOL %in% genelists$genename) %>%  mutate(super = stringr::str_sub(pop, 1,3)) %>% select(SYMBOL, pop, super) %>% distinct() %>% group_by(SYMBOL, super) %>% tally() %>% full_join(.,                                                                                             left_join(gr2 %>% as.tibble(),txdb_gene_annotate(gr2) %>% as.tibble()) %>%filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL)), SYMBOL %in% genelists$genename) %>%  mutate(super = stringr::str_sub(pop, 1,3)) %>% select(SYMBOL, pop, super) %>% distinct() %>% group_by(SYMBOL, super) %>% tally(),                                                                                                           by = c("SYMBOL","super"), suffix = c("_ihs","_nsl")
-)
 
 # need to load pickrell2009 from 03_selectionpipeline.R
 ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% filter(SYMBOL %in% unlist(lapply(pickrell2009, unlist)))
@@ -826,31 +899,28 @@ ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% filter(SYMBOL %in% unlist(
 
 a <- left_join(gr %>% as.tibble(),txdb_gene_annotate(gr) %>% as.tibble()) %>%filter( SYMBOL %in% (filter(., pop %in% paste0("POL_",poly_pop)) %>% pull(SYMBOL)), SYMBOL %in% c("FHIT"))
 
-a_gr <- GRanges(sig_ihs_val %>% filter(genename %in%(ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% pull(SYMBOL)) ) %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue))
+
 subsetByOverlaps(a_gr,a_gr[grep(x = a_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% View()
 
-subsetByOverlaps(a_gr,a_gr[grep(x = a_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% group_by(seqnames, start) %>% mutate(n = n()) %>% filter(n > 1) %>%ungroup() %>%  mutate(seqnames = as.character(seqnames)) %>% left_join(., markers,by = c('seqnames' = 'chrom', 'start' = 'chrom_start')) %>% View()
+subsetByOverlaps(a_gr,a_gr[grep(x = a_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% group_by(seqnames, start) %>% mutate(n = n()) %>% filter(n > 1) %>%ungroup() %>%  mutate(seqnames = as.integer(as.character(seqnames))) %>% left_join(., markers,by = c('seqnames' = 'chrom', 'start' = 'chrom_start')) %>% View()
 
 # ihs
 subsetByOverlaps(a_gr,a_gr[grep(x = a_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% group_by(seqnames, start) %>% mutate(n = n()) %>% filter(n > 1) %>%ungroup() %>%  mutate(seqnames = as.integer(as.character(seqnames))) %>% left_join(., markers,by = c('seqnames' = 'chrom', 'start' = 'chrom_start')) %>% View()
 
+test <- subsetByOverlaps(a_gr,a_gr[grep(x = a_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% group_by(seqnames, start) %>% mutate(n = n()) %>% filter(n > 1) %>%ungroup() %>%  mutate(seqnames = as.integer(as.character(seqnames))) %>% left_join(., markers,by = c('seqnames' = 'chrom', 'start' = 'chrom_start')) %>% head() %>% select(marker, n, genename, pop, statvalue) 
+
+
 # nsl
-b_gr <- GRanges(sig_nsl_val %>% filter(genename %in%(ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% pull(SYMBOL)) ) %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue))
+
 subsetByOverlaps(b_gr,b_gr[grep(x = b_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% View()
 
 subsetByOverlaps(b_gr,b_gr[grep(x = b_gr$superpop, 'POL')]) %>% as.tibble() %>% arrange(seqnames, start) %>% group_by(seqnames, start) %>% mutate(n = n()) %>% filter(n > 1) %>%ungroup() %>%  mutate(seqnames = as.integer(as.character(seqnames))) %>% left_join(., markers,by = c('seqnames' = 'chrom', 'start' = 'chrom_start')) %>% View()
 
 ```
 
-In the clustered significant regions of both \gls{ihs} and \gls{nsl} there were XXX regions that overlapped with genes associated with urate and metabolic diseases. \gls{ihs} had XXX regions, while \gls{nsl} had XXX, and in common between the two statistics were XXX regions. These regions covered XXX \gls{snp}s for \gls{ihs} and XXX for \gls{nsl}, with XXX in common between them.
+```{r}
 
-Using the significant \gls{snp}s for these two statistics (as in Chapter 3) there were a total of XXX \gls{snp}s that were significant in a Polynesian population and also in 
-
-The urate associated gene _ABCG2_ had a single \gls{snp} (rs2622626) that was significant in \gls{ton} that was in common for significance for \gls{ihs} in two other populations, \gls{gih} and \gls{itu}, both were from the \gls{sas} super population. The situation was the same for \gls{nsl}, but with the addition of \gls{jpt}.
-
-The \gls{sam} and \gls{ton} populations had multiple \gls{snp}s in common that were significant for both \gls{ihs} and \gls{nsl}. 
-
-Of the metabolic disease genes, ERBB4, FHIT, and ITGB6 were also found in @pickrell2009signals.
+```
 
 
 
