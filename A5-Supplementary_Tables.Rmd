@@ -14,16 +14,10 @@ library(phdFunctions)
 
 ## Electronic Supplements
 
-
-
-
-
 ```{r, results = 'asis', eval = FALSE}
 # modify so that the full table comes out
 pander::pandoc.table(chr_summary %>% mutate(mean = sapply(mean, three_dp), sd = sapply(sd, three_dp), lower_1 = sapply(lower_1, three_dp), upper_99 = sapply(upper_99, three_dp), median = sapply(median, three_dp), min = sapply(min,three_dp), max = sapply(max, three_dp)) %>% arrange(chrom,pop,stat) %>% head() %>% data.frame(),  caption = '(\\#tab:selStatSummary) Summary of the selection test statistics for all populations and all autosomes', split.tables = 80, style = 'multiline', justify = 'lccrrrrrrr')
 ```
-
-
 
 ```{r meanSegSitesTable, results='asis', echo = FALSE, eval=FALSE}
 create_sel_stat_table("n.segregating.sites", "Mean Number of Segregating Sites")
@@ -54,13 +48,11 @@ create_sel_stat_table("Fu.Li.F","Mean Fu and Li F")
 create_sel_stat_table("Zeng.E", "Mean Zeng E")
 ```
 
-
-
 ```{r, echo = FALSE}
 # This is created by coreExome_100kb_windows_intra_filtered.Rmd
 chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(stat != "Fu.Li.D")
 pops <- list()
-panel <- read.delim('/home/murraycadzow/data/NZ_coreExome_1kgp/nz_1kgp.panel', stringsAsFactors = FALSE)
+panel <- read.delim('/home/murraycadzow/data/NZ_coreExome_1kgp/nz_1kgp.panel', stringsAsFactors = FALSE) %>% filter(!pop %in% c("WPN","EPN","POL","NAD"))
 for(p in unique(panel$pop)){
   pops[[p]] <- panel %>% filter(pop == p) %>%  .[["sample"]]
 }
@@ -69,11 +61,9 @@ global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/1
 
 ```
 
-
 ```{r, echo = FALSE}
 global_summary  %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(stat, super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>% arrange(stat,super_pop, pop) %>%  data.frame() %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-gsTable.csv', row.names = FALSE, quote = FALSE)} %>% head(0) %>% kable(., caption = '(\\#tab:gsTable) Global Summary Table', format = 'latex', booktabs = TRUE) %>% footnote(general = "Appendices/03-gsTable.csv")
 ```
-
 
 ```{r, warning =TRUE}
 lower_sig_stats <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_lower_sig_stat_genes_filtered_ns3_resized-31-8-2017.RDS')
@@ -113,7 +103,7 @@ sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>%
 rm(sig_nsl_val)
 ```
 
-```{r, eval = TRUE}
+```{r, eval = TRUE, message=FALSE}
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
 xpehh %>% filter(!is.na(genename) & genename != "")%>% select(Pop1 = pop1,Pop2 = pop2, chrom, chrom_start, chrom_end,XPEHH = xpehh_value, Genename = genename)  %>% arrange(chrom, chrom_start, Pop1, Pop2) %T>% 
   {
@@ -184,7 +174,7 @@ kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#t
 # genelists
 load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
 genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
-genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE)
+genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE, longtable = TRUE)
 ```
 
 
@@ -204,7 +194,7 @@ global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filt
 
 ```
 
-```{r chap4data}
+```{r chap4data, message = FALSE}
 prop_list <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/100kbwindows_filtered_3ns_prop_list-31-8-2017.RDS')
 prop_list["fld_neg"] <- NULL
 prop_list["fld_pos"] <- NULL
@@ -266,24 +256,24 @@ gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','
 
 #### Polynesian windows for clustering of the extremes
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-td-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdNegGenes) Genes intersecting the windows of the 1st percentile \\gls{td} in Polynesians') %>% footnote("Appendices/04-td-pol-firstper-genes.csv", threeparttable = TRUE)
 ```
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-td-pol-ninetyninthper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdPosGenes) Genes intersecting the windows of the 99th percentile \\gls{td} in Polynesians') %>% footnote('Appendices/04-td-pol-ninetyninthper-genes.csv', threeparttable = TRUE)
 ```
 
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-fwh-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhNegGenes) Genes intersecting the windows of the 1st percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r, eval = FALSE}
+```{r, message = FALSE}
 read_csv('Appendices/04-fwh-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhPosGenes) Genes intersecting the windows of the 99th percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r, eval = FALSE, eval = FALSE}
+```{r, eval = FALSE}
 read_csv('Appendices/04-fld-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFldNegGenes) Genes intersecting the windows of the 1st percentile \\gls{fld} in Polynesians') %>% footnote('Appendices/04-fld-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
@@ -292,20 +282,20 @@ read_csv('Appendices/04-fld-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable
 ```
 
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-flf-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfNegGenes) Genes intersecting the windows of the 1st percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-flf-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfPosGenes) Genes intersecting the windows of the 99th percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
 
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-ze-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZeNegGenes) Genes intersecting the windows of the 1st percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r}
+```{r, message = FALSE}
 read_csv('Appendices/04-ze-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZePosGenes) Genes intersecting the windows of the 99th percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
 
