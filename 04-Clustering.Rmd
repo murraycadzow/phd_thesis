@@ -192,7 +192,11 @@ stat_markerLoc <-function(stat){
 IRanges::subsetByOverlaps(marker_loc %>% mutate(start = pos, end = pos+1)%>% GenomicRanges::GRanges(),create_sums(paste0(stat,'_neg')) %>% filter(POLsum == ALLsum) %>% select(1:3) %>% GenomicRanges::GRanges()) %>% data.frame() %>% group_by(eff) %>% tally() %>% full_join(., IRanges::subsetByOverlaps(marker_loc %>% mutate(start = pos, end = pos+1)%>% GenomicRanges::GRanges(),create_sums(paste0(stat,'_pos')) %>% filter(POLsum == ALLsum) %>% select(1:3) %>% GenomicRanges::GRanges()) %>% data.frame() %>% group_by(eff) %>% tally(), by = 'eff') %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% select(Effect = eff, firstper = n.x, ninetyninthper = n.y)
 }
 
-stat_markerLoc("td") %>% full_join(., stat_markerLoc("fwh"),by = 'Effect', suffix =  c("_td","_fwh")) %>% full_join(., stat_markerLoc("fld"),by = 'Effect') %>% full_join(., stat_markerLoc("flf"),by = 'Effect', suffix =  c("_fld","_flf")) %>% full_join(., stat_markerLoc("ze"),by = 'Effect') %>% mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the 1st or 99th percentiles for Polynesian populations for the intrapopulation frequency spectrum selection and neutrality statistics.', col.names = c("Effect", rep(c("1st percentile", "99th percentile" ), 5)), format = 'latex', booktabs = TRUE) %>% add_header_above(c("","Tajima's D" =2, "Fay and Wu's H" = 2, "Fu and Li's D" = 2, "Fu and Lu's F" = 2, "Zeng's E" = 2)) %>% kable_styling(latex_options = "scale_down") %>% landscape()
+stat_markerLoc("td") %>% full_join(., stat_markerLoc("fwh"),by = 'Effect', suffix =  c("_td","_fwh")) %>% 
+  full_join(., stat_markerLoc("flf"),by = 'Effect') %>% 
+  full_join(., stat_markerLoc("ze"),by = 'Effect', suffix =  c("_flf","_ze")) %>% 
+  mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% 
+  kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the 1st or 99th percentiles for Polynesian populations for the intrapopulation frequency spectrum selection and neutrality statistics.', col.names = c("Effect", rep(c("1st percentile", "99th percentile" ), 4)), format = 'latex', booktabs = TRUE) %>% add_header_above(c("","Tajima's D" =2, "Fay and Wu's H" = 2, "Fu and Lu's F" = 2, "Zeng's E" = 2)) %>% kable_styling(latex_options = "scale_down") %>% landscape()
 ```
 
 
@@ -347,6 +351,8 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 
 ##### Metabolic disease-associated genes
 
+> not sure how best to represent the genes listed in this section and the equivalent ones for other stats
+
 Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, and metabolic syndrome from the \gls{gwas} catalog (Tables \@ref(tab:gwascatref) and \@ref(tab:gwasgenes)), from the clustering of the extremes, there were a total of 31 genes that had at least one of the Polynesian populations having at least one window in the 1st percentile. This dropped to 14 genes that had windows in the 1st percentile for at least one Polynesian, but other populations may have also had windows from their 1st percentile. Some examples of this were _CCR3_, which had windows from all 4 Polynesian populations, and the same windows were also in the 1st percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1st percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99th percentile there were no windows from the Polynesian populations that intersected the metabolic disease associated genes.
 
 
@@ -450,7 +456,11 @@ The 1^st^ percentile has many of the regions in the Polynesian populations in co
 
 ##### Metabolic disease-associated genes
 
-Of the genes that were in the windows of the 1st percentile, there were `r fwh_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the list of genes of metabolic disease associated genes and also had windows that intersected them from the Polynesian populations. Thirteen of those genes were for windows from Polynesian populations, as well as others. Some examples of these genes were _RASA2_ and _ERBB4_. _RASA2_ had windows only from \gls{cim} nd \gls{nzm}. _ERBB4_ had windows from all four Polynesian populations, as well as the populations of \gls{eas} - except \gls{jpt}. There were `r fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the 99th percentile that were also in the list of genes of metabolic disease associated genes. Some examples of genes that had windows in both Polynesian and other populations in the 99th percentile include _SHROOM3_, _RBMS1_, and _UBE2E2_. _SHROOM3_ was an example of a gene that had windowsin common from all the other super populations, except \gls{eas}. _RBMS1_ had multiple windows for across all Polynesian populations, but not other super populations. And _UBE2E2_ had multiple windows across the Polynesian populations, as well as the populations of \gls{eas} and \gls{sas}. 
+Of the genes that were in the windows of the 1st percentile, there were `r fwh_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the list of genes of metabolic disease associated genes and also had windows that intersected them from the Polynesian populations. Thirteen of those genes were for windows from Polynesian populations, as well as others. Some examples of these genes were _RASA2_ and _ERBB4_. _RASA2_ had windows only from \gls{cim} nd \gls{nzm}. _ERBB4_ had windows from all four Polynesian populations, as well as the populations of \gls{eas} - except \gls{jpt}. There were `r fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the 99th percentile that were also in the list of genes of metabolic disease associated genes. Some examples of genes that had windows in both Polynesian and other populations in the 99th percentile include _SHROOM3_, _RBMS1_, and _UBE2E2_. _SHROOM3_ was an example of a gene that had windows in common from all the other super populations, except \gls{eas}. _RBMS1_ had multiple windows for across all Polynesian populations, but not other super populations. And _UBE2E2_ had multiple windows across the Polynesian populations, as well as the populations of \gls{eas} and \gls{sas}. 
+
+```{r, eval = FALSE}
+fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"))
+```
 
 
 #### Fu and Li's _F_
@@ -819,18 +829,19 @@ subset_snps <- function(snp_listGR, regionsGR, diseaseGR){
   suppressWarnings(suppressMessages( purrr::map_df(panel %>% unite(pop, c("super_pop", "pop")) %>% pull(pop) %>% unique(), ~ subsetByOverlaps(snp_listGR[snp_listGR$pop == stringr::str_sub(.x,5, 7)], GenomicRanges::reduce(subsetByOverlaps(regionsGR[regionsGR$pop== .x], diseaseGR), ignore.strand = TRUE)) %>% as_tibble() %>% mutate(seqnames = as.character(seqnames)))))
 }
 
-urate_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, urate_goutGR)
-obesity_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, obesity_GR)
-t2d_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, t2d_GR)
-kd_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, kd_GR)
-metsyn_ihs_snps <- subset_snps(sig_ihs_val_GR, gr, metsyn_GR)
+disease_ihs_snps <- list()
+disease_ihs_snps$urate <- subset_snps(sig_ihs_val_GR, gr, urate_goutGR)
+disease_ihs_snps$obesity <- subset_snps(sig_ihs_val_GR, gr, obesity_GR)
+disease_ihs_snps$t2d <- subset_snps(sig_ihs_val_GR, gr, t2d_GR)
+disease_ihs_snps$kd <- subset_snps(sig_ihs_val_GR, gr, kd_GR)
+disease_ihs_snps$metsyn <- subset_snps(sig_ihs_val_GR, gr, metsyn_GR)
 
-
-urate_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, urate_goutGR)
-obesity_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, obesity_GR)
-t2d_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, t2d_GR)
-kd_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, kd_GR)
-metsyn_nsl_snps <- subset_snps(sig_nsl_val_GR, gr2, metsyn_GR)
+disease_nsl_snps <- list()
+disease_nsl_snps$urate <- subset_snps(sig_nsl_val_GR, gr2, urate_goutGR)
+disease_nsl_snps$obesity <- subset_snps(sig_nsl_val_GR, gr2, obesity_GR)
+disease_nsl_snps$t2d <- subset_snps(sig_nsl_val_GR, gr2, t2d_GR)
+disease_nsl_snps$kd <- subset_snps(sig_nsl_val_GR, gr2, kd_GR)
+disease_nsl_snps$metsyn <- subset_snps(sig_nsl_val_GR, gr2, metsyn_GR)
 
 
 
@@ -856,12 +867,12 @@ n_regions_nsl <- NROW(GenomicRanges::reduce(subsetByOverlaps(gr2, c(urate_goutGR
 n_regions_ihs_nsl_intersect <- NROW(intersect(GenomicRanges::reduce(subsetByOverlaps(gr, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE), GenomicRanges::reduce(subsetByOverlaps(gr2, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE)))
 
 # n snps
-n_pol_snps_ihs <- bind_rows(urate_ihs_snps, obesity_ihs_snps, t2d_ihs_snps, kd_ihs_snps, metsyn_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
+n_pol_snps_ihs <- bind_rows(disease_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
 
-n_pol_snps_nsl <- bind_rows(urate_nsl_snps, obesity_nsl_snps, t2d_nsl_snps, kd_nsl_snps, metsyn_nsl_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
+n_pol_snps_nsl <- bind_rows(disease_nsl_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
 
-n_pol_snps_ihs_nsl <- inner_join( bind_rows(urate_ihs_snps, obesity_ihs_snps, t2d_ihs_snps, kd_ihs_snps, metsyn_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct(),
-              bind_rows(urate_nsl_snps, obesity_nsl_snps, t2d_nsl_snps, kd_nsl_snps, metsyn_nsl_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct()
+n_pol_snps_ihs_nsl <- inner_join( bind_rows(disease_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct(),
+              bind_rows(disease_nsl_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct()
              ) %>% NROW() 
 
 # n disease regions
@@ -874,17 +885,76 @@ n_disease_pol_metsyn <- NROW(reduce(subsetByOverlaps(c(gr[grep(x = gr$pop,  patt
 
 In the clustered significant regions of both \gls{ihs} and \gls{nsl} there were `r n_regions_ihs_nsl` independent regions that overlapped with genes associated with urate and metabolic diseases from all populations, for Polynesian populations the number of regions was `r n_regions_pol_ihs_nsl`. \gls{ihs} had `r n_regions_ihs` regions, while \gls{nsl} had `r n_regions_nsl`, and in common between the two statistics were `r n_regions_ihs_nsl_intersect` regions. The regions of the Polynesian populations covered `r n_pol_snps_ihs` \gls{snp}s for \gls{ihs} and `r n_pol_snps_nsl` for \gls{nsl}, with `r n_pol_snps_ihs_nsl ` in common between them. For the genes that had significant regions in Polynesian populations, `r n_disease_pol_urate` regions intersected genes that had been assosciated with urate and gout, `r n_disease_pol_obesity` with obesity, `r n_disease_pol_t2d` with \gls{t2d}, `r n_disease_pol_kd` with kidney disease, and `r n_disease_pol_metsyn` with metabolic syndrome.
 
-Using the significant \gls{snp}s for these \gls{ihs} and \gls{nsl} (as in Chapter 3) there were a total of XXX \gls{snp}s that were significant in a Polynesian population and also significant for the same allele in at least one other population for \gls{ihs}, and XXX for \gls{nsl}
+```{r, message=FALSE, warning=FALSE}
+shared_ihs_pol_disease_snps <- left_join(bind_rows(disease_ihs_snps) %>% filter(superpop == "POL") %>% select(seqnames, start, end) %>% distinct(), bind_rows(disease_ihs_snps), by =c("seqnames", "start","end")) %>% select(-genename, -width, -strand) %>% distinct() %>% group_by(seqnames, start, end) %>% mutate(n = n()) %>% filter(n > 1) %>% arrange(desc(n))
+shared_ihs_pol_disease_snps_genes <- left_join(shared_ihs_pol_disease_snps, txdb_gene_annotate(GRanges(shared_ihs_pol_disease_snps)), by = c('seqnames', 'start','end'))
+
+
+shared_nsl_pol_disease_snps <- left_join(bind_rows(disease_nsl_snps) %>% filter(superpop == "POL") %>% select(seqnames, start, end) %>% distinct(), bind_rows(disease_nsl_snps), by =c("seqnames", "start","end")) %>% select(-genename, -width, -strand) %>% distinct() %>% group_by(seqnames, start, end) %>% mutate(n = n()) %>% filter(n > 1) %>% arrange(desc(n))
+
+shared_nsl_pol_disease_snps_genes <- left_join(shared_nsl_pol_disease_snps, txdb_gene_annotate(GRanges(shared_nsl_pol_disease_snps)), by = c('seqnames', 'start','end'))
+
+# combined stats
+
+# look at intersection
+shared_ihs_nsl_pol_disease_snps <-full_join(shared_ihs_pol_disease_snps, shared_nsl_pol_disease_snps, by = c("seqnames", "start", "end", "pop", "superpop"), suffix = c("_ihs", "_nsl"))
+shared_ihs_nsl_pol_disease_snps_intersect <- shared_ihs_nsl_pol_disease_snps %>% inner_join(., shared_ihs_nsl_pol_disease_snps %>% filter(superpop == 'POL') %>% filter(!is.na(statid_ihs) & !is.na(statid_nsl)) %>% select(seqnames, start, end))
+
+#shared_ihs_nsl_pol_disease_snps_intersect %>% left_join(., txdb_gene_annotate(GRanges(.))) %>% mutate(max_n = max(n_ihs, n_nsl, na.rm = TRUE)) %>% arrange(desc(max_n)) %>% left_join(., markers %>%  mutate(chrom = paste0('chr',chrom)), by = c('seqnames' = 'chrom', 'start' = 'chrom_start') ) %>% distinct() %>%  arrange(SYMBOL, marker, superpop, pop) %>%  View()
+
+#shared_ihs_nsl_pol_disease_snps_intersect %>% left_join(., txdb_gene_annotate(GRanges(.))) %>% mutate(max_n = max(n_ihs, n_nsl, na.rm = TRUE)) %>% arrange(desc(max_n)) %>% left_join(., markers %>%  mutate(chrom = paste0('chr',chrom)), by = c('seqnames' = 'chrom', 'start' = 'chrom_start') ) %>% select(seqnames, start, end, pop, superpop, statvalue_ihs,n_ihs, statvalue_nsl, n_nsl, max_n, marker, SYMBOL)%>% distinct() %>% group_by(marker, SYMBOL,superpop) %>% tally() %>% spread(superpop, n) %>% arrange(SYMBOL, marker, superpop, pop) #%>% View()
+
+
+# combine the snps from ihs and nsl and annotate with genes
+#full_join(shared_ihs_pol_disease_snps, shared_nsl_pol_disease_snps, by = c("seqnames", "start", "end", "pop", "superpop"), suffix = c("_ihs", "_nsl")) %>% left_join(., txdb_gene_annotate(GRanges(.)))
+
+```
+
+
+Using the significant \gls{snp}s for these \gls{ihs} and \gls{nsl} (as in Chapter 3) there were a total of `r shared_ihs_pol_disease_snps %>% select(seqnames, start, end) %>% distinct() %>% NROW()` \gls{snp}s that were significant in a Polynesian population and also significant in at least one other population for \gls{ihs}, and `r shared_nsl_pol_disease_snps %>% select(seqnames, start, end) %>% distinct() %>% NROW()` for \gls{nsl}. The number of \gls{snp}s that were significant in both \gls{ihs} and \gls{nsl} in the Polynesian population was `r shared_ihs_nsl_pol_disease_snps_intersect %>% select(seqnames, start, end) %>% distinct() %>% NROW()`
 
 The urate associated gene _ABCG2_ had a single \gls{snp} (rs2622626) that was significant in \gls{ton} that was in common for significance for \gls{ihs} in two other populations, \gls{gih} and \gls{itu}, both were from the \gls{sas} super population. The situation was the same for \gls{nsl}, but with the addition of \gls{jpt}.
 
-The \gls{sam} and \gls{ton} populations had multiple \gls{snp}s in common that were significant for both \gls{ihs} and \gls{nsl}. 
-
-Of the metabolic disease genes, ERBB4, FHIT, and ITGB6 were also found in @pickrell2009signals.
-
-pickrell ERBB4 in eas, sas, and mideas, oceania. FHIT in bantu. ITGB6 in america
+The \gls{sam} and \gls{ton} populations had multiple \gls{snp}s in common that were significant for both \gls{ihs} and \gls{nsl}. An example is in _LRP1B_, where there were three \gls{snp}s: rs10173806, rs4591293, and rs2890615. Rs2890615 was also significant in \gls{esn} and \gls{chs}.
 
 
+
+_ERBB4_ had a single significant \gls{snp}, rs6707285, in \gls{sam}, and was also signifcant in \gls{pur}, \gls{khv}, \gls{ibs}, \gls{tsi}, and \gls{gbr}. _FHIT_ also had a single significant \gls{snp}, but this was in the \gls{nzm}, \gls{chb}, \gls{chs}, \gls{cdx}, \gls{khv}, and \gls{pel} populations. Of the metabolic disease genes, _ERBB4_, _FHIT_, and were also found in @pickrell2009signals.
+
+<!-- pickrell ERBB4 in eas, sas, and mideas, oceania. FHIT in bantu -->
+
+
+One of the main regions (chr20:33470694-34556005) had 11 significant \gls{snp}s in Polynesian populations as well as up to 16 other populations, contained the obesity-associated gene _GDF5_ and the neighbouring genes of _CEP250_ and _UQCC1._ The majority of the significant \gls{snp}s were for the ancestral allele. Both rs1570841 and rs4911502  were significant in the populations of \gls{amr} (\gls{clm}, \gls{mxl} and \gls{pur}), \gls{eas} (\gls{cdx}, \gls{chb}, \gls{chs}, \gls{jpt}, and \gls{khv}), \gls{eur} (\gls{ceu}, \gls{fin}, \gls{gbr}, \gls{ibs}), \gls{pol} (\gls{cim}, \gls{nzm}, and \gls{ton}), and \gls{sas} (\gls{beb} and \gls{itu}. Both \gls{snp}s were for the ancestral allele. Four \gls{snp}s ,rs4911178, rs4911494, rs6087704, and rs6087704, intersected both _GDF5_ and _UQCC1_, and were significant for the derived alleles in the \gls{cim} and \gls{jpt} populations.
+
+<!-- CEP250 -->
+<!--   - rs1570841 3 AMR, 5 EAS, 4 EUR, 3 POL, 2 SAS -ve -->
+<!--   - rs2236164 2 AMR, 5 EAS, 1 EUR, 2 POL +ve -->
+<!--   - rs224360 2 EAS, 2 POL +ve -->
+<!--   - rs4911502 3 AMR, 5 EAS, 4 EUR, 3 POL, 2 SAS -ve -->
+<!--   - rs4911507 3 EAS, 1 EUR, 1 POL -ve -->
+<!-- GDF5 -->
+<!--   - rs4911178 1 EAS, 1 POL +ve cim/jpt -->
+<!--   - rs4911494 1 EAS, 1 POL +ve cim/jpt -->
+<!--   - rs6060373 3 AMR, 5 EAS, 4 EUR, 3 POL -ve -->
+<!--   - rs6087704 1 EAS, 1 POL +ve cim/jpt -->
+<!--   - rs6087705 2 AMR, 5 EAS, 3 EUR, 3 POL, 2 SAS -ve -->
+<!--   - rs6088813 1 EAS, 1 POL +ve cim/jpt -->
+
+<!-- UQCC1 (all overlap with GDF5) -->
+<!--   - rs4911178 1 EAS, 1 POL +ve -->
+<!--   - rs4911494 1 EAS, 1 POL +ve -->
+<!--   - rs6060373 3 AMR, 5 EAS, 4 EUR, 3 POL -ve -->
+<!--   - rs6088813 1 EAS, 1 POL +ve -->
+
+
+<!-- ERBB4 -->
+<!--   - rs6707285 1 AMR, 1 EAS, 3 EUR, 1 POL -ve sam -->
+
+<!-- FHIT -->
+<!--   - rs6806415 1 AMR, 4 EAS, 1 POL -ve nzm -->
+
+<!-- HLA-B -->
+<!--   - rs3130696 1 AFR, 4 EAS, 1 EUR, 1 POL, 2 SAS -ve cim -->
 
 
 
@@ -918,188 +988,183 @@ subsetByOverlaps(b_gr,b_gr[grep(x = b_gr$superpop, 'POL')]) %>% as.tibble() %>% 
 
 ```
 
-```{r}
 
-```
+<!-- - Tongans had a region chr4:88777743-89066715 (289 kbp), overlapped chr4:89066715-89066715 in SAS_GIH and SAS_ITU -->
 
+<!-- - ERBB4, FHIT, and ITGB6 from pickrell2009 -->
 
+<!-- Looking at the ihs results for all metabolic disease genes, for shared snps -->
 
-- Tongans had a region chr4:88777743-89066715 (289 kbp), overlapped chr4:89066715-89066715 in SAS_GIH and SAS_ITU
+<!-- - FPGT-TNNI3K at rs520806 -->
+<!--     - TON, EAS(CDX,CHS,JPT,KHV) -->
 
-- ERBB4, FHIT, and ITGB6 from pickrell2009
+<!-- - LRP1B numerous SAM/TON pairs -->
+<!--     - rs10173806 SAM/TON -->
+<!--     - rs4591293 SAM/TON -->
+<!--     - rs2890615 SAM/TON/ESN/CHS -->
 
-Looking at the ihs results for all metabolic disease genes, for shared snps
+<!-- - ITGB6 -->
+<!--     - rs10497213 TON/KHV/CDX -->
 
-- FPGT-TNNI3K at rs520806
-    - TON, EAS(CDX,CHS,JPT,KHV)
+<!-- - ERBB4* -->
+<!--     - rs1025753 CIM/NZM -->
+<!--     - rs6707285 SAM/KHV -->
 
-- LRP1B numerous SAM/TON pairs
-    - rs10173806 SAM/TON
-    - rs4591293 SAM/TON
-    - rs2890615 SAM/TON/ESN/CHS
+<!-- - FHIT*  -->
+<!--     - rs3772497 TON/BEB/GIH/TSI -->
+<!--     - rs6806415 NZM/CDX/CHB/CHS/PEL -->
 
-- ITGB6
-    - rs10497213 TON/KHV/CDX
+<!-- - PSMD6 -->
+<!--     - rs2280162 CIM/NZM -->
 
-- ERBB4*
-    - rs1025753 CIM/NZM
-    - rs6707285 SAM/KHV
-    
-- FHIT* 
-    - rs3772497 TON/BEB/GIH/TSI
-    - rs6806415 NZM/CDX/CHB/CHS/PEL
+<!-- - ADAMTS9 -->
+<!--     - rs6787633 CIM/NZM -->
 
-- PSMD6
-    - rs2280162 CIM/NZM
-    
-- ADAMTS9
-    - rs6787633 CIM/NZM
+<!-- -LPP -->
+<!--     - rs12495383 CIM/NZM -->
+<!--     - rs3856921 CIM/NZM -->
+<!--     - rs6444332 CIM/NZM -->
 
--LPP
-    - rs12495383 CIM/NZM
-    - rs3856921 CIM/NZM
-    - rs6444332 CIM/NZM
-    
-- ABCG2
-    - rs2622626 TON/GIH/ITU
+<!-- - ABCG2 -->
+<!--     - rs2622626 TON/GIH/ITU -->
 
-- ARL15
-    - rs17213 CIM/NZM
-    - rs26775 CIM/NZM
+<!-- - ARL15 -->
+<!--     - rs17213 CIM/NZM -->
+<!--     - rs26775 CIM/NZM -->
 
-- CCNJL
-    - rs2421778 CIM/NZM
-    
-- SSR1
-    - rs9505109 CIM/NZM
-    - rs2714354 CIM/CHS/GWD/NZM
+<!-- - CCNJL -->
+<!--     - rs2421778 CIM/NZM -->
 
-- BTNL2
-    - rs41521946 NZM/JPT/FIN/CHB
-    - rs28362677 NZM/CHB/FIN/JPT
-    - rs28362678 NZM/CHB/FIN/JPT
-    - rs2076530 CIM/JPT
-    - rs28362679 CIM/LWK/NZM
-    - rs2076529 CIM/JPT
-    - rs3129954 ASW/PJL/SAM/STU/TSI
-    - rs3817964 CEU/CHS/CIM/CLM/GBR/ITU/JPT/MXL/PEL/PUR/STU
-    - rs3817963 CIM/GWD/JPT
-    - rs2076522 CIM/BEB/CHB/GWD/JPT/STU
-    - rs3793127 ACB/BEB/CHB/CHS/CIM/CLM/ITU/JPT/MXL/STU
-    - rs3763308 NZM/ITU/MXL
-    
-- PARK2
-    - rs9347666 SAM/TON
+<!-- - SSR1 -->
+<!--     - rs9505109 CIM/NZM -->
+<!--     - rs2714354 CIM/CHS/GWD/NZM -->
 
-- MSRA
-    - rs6983566 CEU/CIM/GBR/IBS/JPT/PUR/TSI
+<!-- - BTNL2 -->
+<!--     - rs41521946 NZM/JPT/FIN/CHB -->
+<!--     - rs28362677 NZM/CHB/FIN/JPT -->
+<!--     - rs28362678 NZM/CHB/FIN/JPT -->
+<!--     - rs2076530 CIM/JPT -->
+<!--     - rs28362679 CIM/LWK/NZM -->
+<!--     - rs2076529 CIM/JPT -->
+<!--     - rs3129954 ASW/PJL/SAM/STU/TSI -->
+<!--     - rs3817964 CEU/CHS/CIM/CLM/GBR/ITU/JPT/MXL/PEL/PUR/STU -->
+<!--     - rs3817963 CIM/GWD/JPT -->
+<!--     - rs2076522 CIM/BEB/CHB/GWD/JPT/STU -->
+<!--     - rs3793127 ACB/BEB/CHB/CHS/CIM/CLM/ITU/JPT/MXL/STU -->
+<!--     - rs3763308 NZM/ITU/MXL -->
 
-- PTPRD
-    - rs10977210 CLM/GBR/GIH/PUR/TON
-    - rs2890854 SAM/TON
-    - rs16929395 NZM/CIM
-    - rs4628308 CIM/JPT
-    - rs10809063 CIM/SAM/TON
-    - rs587791 SAM/TON
+<!-- - PARK2 -->
+<!--     - rs9347666 SAM/TON -->
 
-- BDNF
-    - rs2030323 SAM/TON
+<!-- - MSRA -->
+<!--     - rs6983566 CEU/CIM/GBR/IBS/JPT/PUR/TSI -->
 
-- ZFAND6
-    - rs12592217 CIM/NZM
+<!-- - PTPRD -->
+<!--     - rs10977210 CLM/GBR/GIH/PUR/TON -->
+<!--     - rs2890854 SAM/TON -->
+<!--     - rs16929395 NZM/CIM -->
+<!--     - rs4628308 CIM/JPT -->
+<!--     - rs10809063 CIM/SAM/TON -->
+<!--     - rs587791 SAM/TON -->
+
+<!-- - BDNF -->
+<!--     - rs2030323 SAM/TON -->
+
+<!-- - ZFAND6 -->
+<!--     - rs12592217 CIM/NZM -->
 
 
-- ADCY9
-    - rs879620 CIM/NZM
-    - rs2238443 CIM/NZM
-    
-- GPRC5B
-    - rs183452 SAM/TON
-    
-- RABEP1
-    - rs2309381 CHB/ESN/ITU/NZM/STU
+<!-- - ADCY9 -->
+<!--     - rs879620 CIM/NZM -->
+<!--     - rs2238443 CIM/NZM -->
 
-- GDF5
-    - rs224331 CIM/JPT
+<!-- - GPRC5B -->
+<!--     - rs183452 SAM/TON -->
 
+<!-- - RABEP1 -->
+<!--     - rs2309381 CHB/ESN/ITU/NZM/STU -->
 
-**nsl**
-
-- FPGT-TNNI3K
-    - rs520806 CDX/CHS/JPT/KHV/TON
-
-- LRP1B
-    - rs10173806 SAM/TON
-    - rs4591293 SAM/TON
-    - rs2890615 CHS/ESN/SAM/TON
-    
-- ERBB4
-    - rs6707285 GBR/IBS/KHV/PUR/SAM/TSI
-    
-- FHIT
-    - rs6806415 CDX/CHB/CHS/KHV/NZM
-    
-- PSMD6
-    - rs2280162 CIM/NZM
-
-- ADAMTS9
-    - rs6787633 CIM/NZM
-    - rs17726803 CIM/NZM
-  
-- LPP
-    - rs9877898 NZM/TON
-    
-- ABCG2
-    - rs2622626 GIH/ITU/JPT/TON
-
-- SLC39A8
-    - rs2165265 SAM/TON
-    - rs964504 SAM/TON
-
-- CCNJL
-    - rs2421778 CIM/NZM
-
-- SSR1
-    - rs9505109 CIM/NZM
-    - rs2714354 CIM/NZM
+<!-- - GDF5 -->
+<!--     - rs224331 CIM/JPT -->
 
 
-- FOXO3
-    - rs9372190 NZM/SAM
+<!-- **nsl** -->
 
-- PARK2
-    - rs9347666 KHV/SAM
+<!-- - FPGT-TNNI3K -->
+<!--     - rs520806 CDX/CHS/JPT/KHV/TON -->
 
-- MSRA
-    - rs6983566 CEU/CIM/GBR/IBS/JPT/NZC/PUR/TSI
+<!-- - LRP1B -->
+<!--     - rs10173806 SAM/TON -->
+<!--     - rs4591293 SAM/TON -->
+<!--     - rs2890615 CHS/ESN/SAM/TON -->
 
-- PTPRD
-    - rs2890854 SAM/TON
-    - rs4628308 CIM/JPT
-    - rs9299106 CIM/PEL
-    - rs10809063 SAM/TON
-    
-- BDNF
-    - rs2030323 SAM/TON
-    
-- MAP2K5
-    - rs884202 CDX/CHB/CHS/JPT/MXL/TON
+<!-- - ERBB4 -->
+<!--     - rs6707285 GBR/IBS/KHV/PUR/SAM/TSI -->
 
-- ZFAND6
-    - rs12592217 CIM/NZM
-    
-- ADCY9
-    - rs879620 CIM/NZM
-    
-- RABEP1
-    - rs2309381 ITU/NZM/STU
+<!-- - FHIT -->
+<!--     - rs6806415 CDX/CHB/CHS/KHV/NZM -->
 
-- GDF5
-    - rs143384 CIM/JPT
-    - rs143383 CIM/JPT
+<!-- - PSMD6 -->
+<!--     - rs2280162 CIM/NZM -->
+
+<!-- - ADAMTS9 -->
+<!--     - rs6787633 CIM/NZM -->
+<!--     - rs17726803 CIM/NZM -->
+
+<!-- - LPP -->
+<!--     - rs9877898 NZM/TON -->
+
+<!-- - ABCG2 -->
+<!--     - rs2622626 GIH/ITU/JPT/TON -->
+
+<!-- - SLC39A8 -->
+<!--     - rs2165265 SAM/TON -->
+<!--     - rs964504 SAM/TON -->
+
+<!-- - CCNJL -->
+<!--     - rs2421778 CIM/NZM -->
+
+<!-- - SSR1 -->
+<!--     - rs9505109 CIM/NZM -->
+<!--     - rs2714354 CIM/NZM -->
 
 
- \FloatBarrier
+<!-- - FOXO3 -->
+<!--     - rs9372190 NZM/SAM -->
+
+<!-- - PARK2 -->
+<!--     - rs9347666 KHV/SAM -->
+
+<!-- - MSRA -->
+<!--     - rs6983566 CEU/CIM/GBR/IBS/JPT/NZC/PUR/TSI -->
+
+<!-- - PTPRD -->
+<!--     - rs2890854 SAM/TON -->
+<!--     - rs4628308 CIM/JPT -->
+<!--     - rs9299106 CIM/PEL -->
+<!--     - rs10809063 SAM/TON -->
+
+<!-- - BDNF -->
+<!--     - rs2030323 SAM/TON -->
+
+<!-- - MAP2K5 -->
+<!--     - rs884202 CDX/CHB/CHS/JPT/MXL/TON -->
+
+<!-- - ZFAND6 -->
+<!--     - rs12592217 CIM/NZM -->
+
+<!-- - ADCY9 -->
+<!--     - rs879620 CIM/NZM -->
+
+<!-- - RABEP1 -->
+<!--     - rs2309381 ITU/NZM/STU -->
+
+<!-- - GDF5 -->
+<!--     - rs143384 CIM/JPT -->
+<!--     - rs143383 CIM/JPT -->
+
+
+ <!-- \FloatBarrier -->
 
 ### Disease-associated gene clustering {#genelistcluster}
 <!-- might be a good idea to use a grid to put multiple plots into one -->
@@ -1115,11 +1180,7 @@ names(kd) <- c('mat_d','prop')
 
 ```
 
-
-
 To assess if there was something specific about the metabolic disease gene lists, clustering was performed using the actual values for the genes. These values were median centred to account for the population specific shifting of distributions which would have accounted for the majority of difference in the distance calculation. Gene lists were chosen for metabolic related disease and compared to lists of random genes to assess clustering specificity to metabolic disease.
-
-> **check the numbers for gene clustering once fld is removed**
 
 Overall, gene lists derived from \gls{gwas} associations clustered the individual populations into their super population groupings. Windows that intersected genes that had been associated with a disease were centered by population median and then grouped using hierarchical clustering. There were varying levels of super population proportions and exclusivity (the proportion of super populations in a single cluster) of clusters (Table \@ref(tab:proportion) and \@ref(tab:exclusivity)). The Polynesian populations clustered together when using each of \gls{fwh}, \gls{td}, and \gls{ze}, and in the majority of clustering (17/20) they were exclusive. This pattern was also similar with the \gls{eas} populations (17/20). For the clusters that contained the entirety of a super population, half the groupings for the entire Polynesian super population were exclusive. Three quarters of the groupings for each of the AFR and EAS super populations were exclusive and grouped the super population in their entirety.
 
@@ -1142,24 +1203,6 @@ Comparing the gene lists by statistic, for all selection statistics and gene lis
 Clustering on other diseases such as pd, macular degeneration, alzhimers and colon cancer revealed similar patters 
 -->
 #### Urate and gout
-
-(ref:goutdendros) _Urate and Gout Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(urate_goutGR$SYMBOL))` loci associated with urate and gout. Coloured by super population.
-
-```{r goutdendros, fig.cap='(ref:goutdendros)', fig.height=7, message=FALSE}
-multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
-          gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
-          #gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
-          gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-          gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
-  cols = 2)
-# ggsave(multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
-#           gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
-#           gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
-#           gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-#           gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
-#   cols = 2), file = 'images/04_clustering/urate_dendros.png')
-```
-
 
 There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance level. This mapped to `r nrow(gout$mat_d$Tajima.D)` windows for each of the frequency based selection test statistics. \gls{ze} and \gls{fwh} clustered each super population into their own group and each cluster was exclusive to a super population. Both \gls{td} and \gls{flf} grouped most of the super populations correctly and nearly all clusters had good exclusivity for each single super population. \Gls{td}, \gls{fwh}, and \gls{ze} also had an Eastern/Western Polynesian population sub group within the Polynesian group (Figure \@ref(fig:goutdendros)). Unlike the F~ST~ clustering, the \gls{amr} populations were grouped together for \gls{td}, \gls{fwh}, and \gls{ze}. The \gls{eas} and \gls{pol} populations were closest for \gls{flf}, \gls{fwh}, and \gls{ze}, but not for \gls{td}, where the \gls{pol} populations were furthest from the other populations.
 
@@ -1234,6 +1277,23 @@ IRanges::subsetByOverlaps((pol_fst_99 %>% mutate(chrom = paste0('chr',chrom)) %>
 ```
 
 
+(ref:goutdendros) _Urate and Gout Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(urate_goutGR$SYMBOL))` loci associated with urate and gout. Coloured by super population.
+
+```{r goutdendros, fig.cap='(ref:goutdendros)', fig.height=7, message=FALSE}
+multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          #gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+  cols = 2)
+# ggsave(multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+#           gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+#           gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+#           gene_dendros(gene_data = gout$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+#           gene_dendros(gene_data = gout$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+#   cols = 2), file = 'images/04_clustering/urate_dendros.png')
+```
+
 
 #### Obesity
 
@@ -1295,23 +1355,6 @@ multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Ta
 
 #### Type 2 diabetes
 
-(ref:t2ddendros) _Type 2 Diabetes Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(t2d_GR$SYMBOL))` loci associated with \gls{t2d}. Coloured by super population.
-
-```{r t2ddendros, fig.cap='(ref:t2ddendros)', fig.height=7, message = FALSE}
-multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
-          gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
-          #gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
-          gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-          gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
-   cols = 2)
-# ggsave(multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
-#           gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
-#           gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
-#           gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
-#           gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
-#    cols = 2), file = 'images/04_clustering/t2d_dendros.png')
-```
-
 The \gls{gwas} catalog had `r length(unique(t2d_GR$SYMBOL))` genes associated with \gls{t2d}, this was represented by `r nrow(t2d$mat_d$Tajima.D)` windows and clustering of the \gls{t2d} associated genes grouped the individual populations into their super population groups. For all clustering the \gls{amr} populations were split, with \gls{clm} and \gls{pur} grouped with the \gls{eur} populations for \gls{td}, \gls{fwh}, and \gls{ze} (Figure \@ref(fig:t2ddendros)). The \gls{pol} populations were assigned two exclusive groups through the cutree method that created an Eastern/Western Polynesian split for \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. \gls{fwh} and \gls{ze} had a similar pattern to the groupings of the whole chromosome F~ST~ clustering.
 
 There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` \gls{t2d} associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. There were a total of `r upper_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` genes that had a significant window in any Polynesian population. In the lower tail there were `r lower_sig_stats %>% filter(SYMBOL %in% unique(t2d_GR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(pop, SYMBOL) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==4) %>% NROW()` genes with at least a window that met the significance threshold in the Polynesian populations. Only _THADA_ had windows from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze} in the \gls{ton} population from the Polynesian populations. This was also true for the \gls{cdx} and \gls{chs} populations. _ARL15_, _MACF1_, _RREB1_, and _THADA_ each had in all Polynesian populations, at least one statistic that was significant in the lower tail. In the upper tail, _HLA-B_, _HMGA2_, _HNF1B_, _PTPRD_, _RBMS1_, _SGCG_, _TCF7L2_, and _THADA_ each had, in all Polynesian populations, at least one statistic that was significant.
@@ -1355,6 +1398,24 @@ td, fwh, and flf have 1.0 for eur,afr and sas. pol is 0.5
 fld not bad for all except POL
 -->
 ```
+
+(ref:t2ddendros) _Type 2 Diabetes Associated Gene Clustering_ Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(t2d_GR$SYMBOL))` loci associated with \gls{t2d}. Coloured by super population.
+
+```{r t2ddendros, fig.cap='(ref:t2ddendros)', fig.height=7, message = FALSE}
+multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+          gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+          #gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+          gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+          gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+   cols = 2)
+# ggsave(multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
+#           gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
+#           gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
+#           gene_dendros(gene_data = t2d$mat_d$Fu.Li.F[,-1:-3]) + ggtitle("Fu and Li's F"),
+#           gene_dendros(gene_data = t2d$mat_d$Zeng.E[,-1:-3]) + ggtitle("Zeng's E"),
+#    cols = 2), file = 'images/04_clustering/t2d_dendros.png')
+```
+
   
 #### Kidney disease
 
@@ -1534,7 +1595,7 @@ bind_rows(list(
   bind_rows(lapply(names(metsyn[[2]]), function(x){metsyn[[2]][[x]]$exclusivity %>% data.frame%>% mutate(pop = row.names(.)) %>% gather("cluster","prop",1:6) %>% filter(prop > 0) %>% group_by(pop) %>% summarise(mean_prop = mean(prop)) %>% spread(pop, mean_prop) %>% mutate(stat = x) %>% select(NCOL(.), 1:(NCOL(.)-1))})) %>% mutate(Type = 'Metabolic Syndrome')    
 )) %>% select(stat, Type, everything())  %>% mutate(stat = sapply(stat, function(x){short_to_latex(stat_to_short(x))}), Type = sapply(Type, function(x){switch(x, chr = "Chromosome", neg = "Lower Tail", pos ="Upper Tail",x)})) %>% mutate_if(., is.numeric, funs(sprintf("%.3f",.))) %>% arrange(Type) %>%  data.frame %>% pander::pandoc.table(., caption = "Exclusivity")#knitr::kable(., caption = "Exclusivity", booktabs = TRUE) %>% kableExtra::group_rows("Fu and Li's D", 1, 7) %>% kableExtra::group_rows("Fu and Li's F", 8, 14) %>% kableExtra::group_rows("Fay and Wu's H", 15, 21) %>% kableExtra::group_rows("Tajima's D", 22, 28) %>% kableExtra::group_rows("Zeng's E", 29, 35) 
 ```
-\FloatBarrier
+<!-- \FloatBarrier -->
 
 ### Random draws
 
@@ -1765,121 +1826,175 @@ poly_complete %>% full_join(., perc_complete %>% select(allcomplete = n, everyth
 
 ### Clustering by selection and neutrality statistic
 
-Objective 1: can neutrality and selection statistics be used to group populations?
+<!-- Objective 1: can neutrality and selection statistics be used to group populations? -->
 
-Yes, the super populations can be grouped
+<!-- Yes, the super populations can be grouped -->
 
-- yes - F~ST~ at chromosome wide scale does
-- no - sfs does not at chromosome wide
-- yes - sfs does at the extremes of the distribution (mostly)
-- no - for random windows
-- yes - for haplotypes
-- yes - for disease genes
-- yes - for random genes
+<!-- - yes - F~ST~ at chromosome wide scale does -->
+<!-- - no - sfs does not at chromosome wide -->
+<!-- - yes - sfs does at the extremes of the distribution (mostly) -->
+<!-- - no - for random windows -->
+<!-- - yes - for haplotypes -->
+<!-- - yes - for disease genes -->
+<!-- - yes - for random genes -->
 
 
 
-### Objective 1: can the selection and neutrality statistics be used to group populations?
+### Use of selection and neutrality statistics to group populations
 
 Other studies have previously shown the affinities between Polynesians and other Pacific populations, most often with mitochondrial DNA and Y chromosome markers [@Kayser2010; @Duggan2014a]. Autosomes have also been used to explore Polynesian origins and relationships between Pacific populations, through generally with rather small sample sizes [@Kimura2008; @Kayser2010; @Hudjashov2017; @Hudjashov2018]. This study is the first to compare four Polynesian populations, two of East, and two of West Polynesian ancestry, and of similar sample sizes to those of the \gls{1kgp}. The analysis is important because it adds evidence to the genetic relationship between the Polynesians and other populations and understanding the ancestry of populations helps to inform and reduce the stigma of genetic diseases [@Sankar2006].
 
 In Chapter 3 it was noticed that the populations had population specific distributions for the frequency spectrum based selection and neutrality statistics. The tails of the distributions are the most extreme and therefore most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first test used the entire chromosome and created a summary statistic that was used to create clusters. It was successful in re-assembling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used within the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other [@1KGP2015snp]. The population grouping were also the same as in the \gls{pca} that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). Both the F~ST~ results and PCA (for the subject selection) confirmed the genetic relatedness and differentiation of the Polynesian populations in a global context, as being most similar to the East Asian populations [@Kayser2008a]. It also confirmed that within Polynesia, the differentiation between Eastern and Western Polynesian, consistent with the out of Africa human migration and subsequent Polynesian expansion [@Nielsen2017; @Matisoo-Smith2015; @Skoglund2016; @Hudjashov2018]. 
 
-The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. Some, such as \gls{fld} and \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other groups of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome chip itself, or the quality control that the New Zealand samples underwent. This would lead to an under-representation of the singletons that actually might be present in the populations. Overall, it was found that the clustering of selection and neutrality test statistics for entire chromosomes did not resemble the grouping that clustering on F~ST~ produced. 
+The whole chromosome summary using the intra-population frequency spectrum neutrality and selection statistics had varying levels of success in re-assembling the super populations. \gls{flf} had mini-groups of 2-3 populations that were part of the same super population, but these mini-groups were not closely linked to the other groups of the same super population. These two statistics are based on singletons, and it is likely that these are not well represented in the markers of the CoreExome chip itself, or the quality control that the New Zealand samples underwent. This would lead to an under-representation of the singletons that actually might be present in the populations. Overall, it was found that the clustering of selection and neutrality test statistics for entire chromosomes did not resemble the grouping that clustering on F~ST~ produced. 
 
 However, compared to the entire chromosome summaries, using windows from the extremes of the distribution was effective at clustering the individual populations into their super population groups. \gls{fwh} was the only statistic that grouped all individual populations into their corresponding super populations, whereas \gls{td} and \gls{ze} had the same split of the \gls{amr} populations as with the F~ST~ clustering. The clustering of populations into their super populations was not seen when random windows were used for clustering, indicating that there is a degree of commonality in the extreme windows within a super population group.The haplotypic based methods of \gls{ihs} and \gls{nsl} clustered into super populations and had the \gls{amr} population split too. There was not a high amount of region sharing outside of each super population.
 
-Clustering from gene lists for the frequency spectrum based selection and neutrality statistics consistently grouped the individual populations into their super populations although there was inconsistency for the \gls{amr} populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with previously reported results [@1KGP2015snp; @pickrell2009signals]. The grouping of populations was also seen with random lists of genes. This would indicate that the commonalities with populations for a gene are not specific to a disease, but a more general similarity.
+Clustering from gene lists for the frequency spectrum based selection and neutrality statistics consistently grouped the individual populations into their super populations although there was inconsistency for the \gls{amr} populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with previously reported results [@1KGP2015snp; @pickrell2009signals]. The grouping of populations was also seen with random lists of genes. This would indicate that the commonalities with populations for a gene are not specific to a disease, but instead, a general gene similarity.
 
-Allele sharing between populations is moderate for common \gls{snp}s, and more so for contiental groups, but is minimal for rarer frequencies, due to population divergence [@Gravel2011]. This helps to explain the patterns of window sharing between the \gls{sfs} based statistics.
-
-
-> need some more info about ihs/nsl
-
-
-
-### Objective 2: investigate the gout/metabolic disease loci and their potential shared selective histories
-
-
-Under a neutral model the differences in allele frequency are due to genetic drift [@kimura1979neutral]. Demographic events such as bottleneck, migration, expansion, and admixture also contribute to the differences in allele frequencies found between populations [@Wright1951]. Selection on the other hand acts in a targeted manner so therefore if the selection occurred post population split then it would be expected to look neutral in one population but not in the other. However, if the selective event happened in an ancestral population of the two then dependent on time since divergence, it would be expected to be observed in both populations [@Hermisson2017]. It is also possible to have 'parallel' selection, where both populations experience independent selection [@Tennessen2011]. 
-
-As found in Chapter 3, there was limited evidence for selection, especially in the overlap between haplotypic and \gls{sfs} based methodologies, in the genes that were associated with urate and associated metabolic diseases \@ref(tab:superDiseaseGenesTab). 
-
-With the haplotypic statistics there were commonalities between some of the significant \gls{snp}s. The \gls{snp}s that were in common were more often in pairs of either \gls{sam} and \gls{ton}, or \gls{cim} an d \gls{nzm}. The \gls{snp}s that were significant for a Polynesian population were more likely to have also been significant in an \gls{eas} population than the other super populations.
-
-
-
-With the extremes, many of the super populations had windows that were not in the extremes of the other populations, these formed the 'blocks' in the heatmap. This was most evident with the \gls{afr} populations, which had a the majority of windows for each statistic not in common with the extremes from the other populations.
-
-
-the clustering of the most extreme windows represents other than a similarity in allele frequencies between populations that have a pattern that is consistent with the out of Africa model of human migration [@Mallick2016; @Pagani2016].
+Allele sharing between populations is moderate for common \gls{snp}s, and more so for continental groups, but is minimal for rarer frequencies, due to population divergence [@Gravel2011]. This helps to explain both of the patterns observed with \gls{sfs} based statistics for both the extremes and gene clustering. With the extremes, many of the super populations had windows that were not in the extremes of the other populations, these formed the 'blocks' in the heatmap. This was most evident with the \gls{afr} populations, which had a the majority of windows for each statistic not in common with the extremes from the other populations. And with the gene clustering it was again seen 
 
 The extremes of the distributions represent different types of selection or demographic events and are different depending on the selection test statistic being used [@Tajima1989; @fay2000hitchhiking; @Fu1993; @Zeng2006]. The upper end of the distribution is able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics and represent the same types of selection or demography.
 
 
-The clustering based on the median centred values of the statistics was able to reassemble the super population groups. However, the groups were also reassembled with the random draws of genes, with an increase in the number of completely grouped super populations when more genes were used.
+The clustering of the most extreme windows represents, other than a similarity in allele frequencies between populations, a pattern that is consistent with the out of Africa model of human migration [@Mallick2016; @Pagani2016].
+
+### Potential shared selective histories for loci associated with urate and metabolic disease
+
+<!-- Extreme windows  -->
+
+<!-- - any metabolic disease related windows in the extreme? -->
+<!-- - were those windows in common with other populations? -->
+
+<!-- Clustering on genes -->
+
+<!-- - did the genes separate the populations? -->
+
+<!-- Haplotypic -->
+<!-- - Any genes significant from the clusters? -->
+<!-- - were any snps/regions in common between Poly and other populations? -->
+
+
+<!-- intro/set scene -->
+<!-- clustering on the gene values - this says that there is similarities between the populations and what groups are closest -->
+<!-- genes that were in the extremes - this givesa compare/contrast for the Polynesian populations -->
+<!-- haplotypic sharing - shows if there were likely something haplotypically similar between populations -->
+<!-- could the genes that were distinctive explain the disease burden differences -->
+
+_intro_
+
+Under a neutral model the differences in allele frequency are due to genetic drift [@kimura1979neutral]. Demographic events such as bottleneck, migration, expansion, and admixture also contribute to the differences in allele frequencies found between populations [@Wright1951]. Selection on the other hand acts in a targeted manner so therefore if the selection occurred post population split then it would be expected to look neutral in one population but not in the other. However, if the selective event happened in an ancestral population of the two then dependent on time since divergence, it would be expected to be observed in both populations [@Hermisson2017]. It is also possible to have 'parallel' selection, where both populations experience independent selection [@Tennessen2011]. 
+
+The current metabolic disease burden in the Polynesian populations is higher than other populations [@ref]. This higher disease burden could possibly have arisen due to environmental changes and  selective pressure on the Polynesian populations after the migration into the Pacific. As found in Chapter 3, however, there was limited evidence for selection, especially in the overlap between haplotypic and \gls{sfs} based methodologies, in the genes that were associated with urate and associated metabolic diseases (Table \@ref(tab:superDiseaseGenesTab)). Three approaches were taken to investigate the potential of a 'shared selective' history of the loci associated with urate and metabolic disease. These included, investigating the loci that were in either the 1st or 99th percentile, the loci that were in the clustered regions for the significant \gls{snp}s of the haplotypic statistics, \gls{ihs} and \gls{nsl}. And finally, hierarchical clustering of the median centred values for windows that intersected the loci associated with urate and metabolic disease.
+
+_clustering on median values_
+
+The clustering based on the median centred values of the statistics was able to reassemble the super population groups. Again the similarity of the allele frequency spectrum based on geography appeared through urate and metabolic disease genes. Both exclusivity and proportion of populations clustered correctly was very high for nearly all populations for the four site-frequency statistics, across the metabolic disease gene lists. This indicated that there was sufficient similarity between populations of a super population, and differences between super populations that the statistic values were discriminatory. However, the groups were also reassembled with the random draws of genes, with an increase in the number of completely grouped super populations when more genes were used. This showed that the particular genes themselves were not specific to the clustering but the frequency distributions in genes were different and the number of genes influenced the discrimination of populations during clustering.
+
+The simplest explanation similar clustering occurred with the gene lists is that the tests of neutrality or selection that rely on the frequency spectrum, populations that are similar geographically, also have a similar allele frequency to each other [@Gravel2011]. This would explain why, with \gls{td}, \gls{fwh}, and \gls{ze}, which are based on comparing ratios of low, intermediate and high frequency variants, all were clustered into their super population groups. 
+
+The differences in the extremes of the distributions for the site-frequency spectrum statistics showed that they could be used to cluster the populations into their super populations. The differences and commonalities in the genes that had evidence of association with a metabolic disease, in the 1st percentiles of the statistics for the Polynesian populations, were relatively isolated to only the Polynesian populations. The windows that were in common with other populations were for the most part, only found in the populations of \gls{eas}.
+
+The windows or \gls{snp}s that were significant in the Polynesian populations within the metabolic disease gene lists were usually limited to commonality with the paired ancestrally similar population (\gls{cim} and \gls{nzm}, or \gls{sam} and \gls{ton}). Windows were more likely to be in common between populations for the 99th percentiles where this represented an increase in high frequency variants.
+
+> For the haplotypic statistics, the regions that were in common between the Polynesian populations...
+
+With the haplotypic statistics there were commonalities between some of the significant \gls{snp}s. The \gls{snp}s that were in common were more often in pairs of either \gls{sam} and \gls{ton}, or \gls{cim} and \gls{nzm}. The \gls{snp}s that were significant for a Polynesian population were more likely to have also been significant in an \gls{eas} population than the other super populations.
+
+```{r, eval = FALSE}
+bind_rows(fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = "FWH_pos", dir = 1),
+flf_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = "FLF_pos", dir = 1),
+td_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = "TD_pos", dir = 1),
+ze_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = 'ZE_pos',dir = 1),
+fwh_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = "FWH_neg", dir = -1),
+flf_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = "FLF_neg", dir = -1),
+td_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = "TD_neg", dir = -1),
+ze_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains('chrom'), SYMBOL, contains("sum"), contains('POL')) %>% mutate(stat = 'ZE_neg', dir = -1)
+) %>% group_by(SYMBOL, stat) %>% summarise(mean_pol = mean(POLsum) %>% round(2), mean_all = mean(ALLsum) %>% round(2), mean_dir = mean(dir) %>% round(2), n = n()) %>% View()
+```
+
+
+<!-- TD ~ low:med freq variants -->
+<!-- yes 1st percentile did, but sharing was limited to eas -->
+<!-- 99th percentile did not have any windows -->
+
+<!-- fwh ~ high derived:med freq -->
+<!-- 1st percentile: limited sharing mostly to either only poly pops, or poly plus eas -->
+<!-- 99th percentile: shroom3 very shared. several examples of multiple populations being in common, although eas was less likely to be in those genes -->
+
+<!-- flf ~ singletons -->
+<!-- 1st percentile: differing degrees of sharing -->
+<!-- 99th percentile: see abo, hla-b, and shroom again. quite a bit of sharing across the populations -->
+
+<!-- ze high:low freq -->
+<!-- 1st percentile: some examples spanned many populations, some were just the pairs -->
+<!-- 99th percentile: -->
 
 
 
-- The introduction sets the framework that geographically similar populations are in similar environments and therefore exposed to similar selective pressures.
-- What we see is there is a higher burden of metabolic disease in Polynesians and not in other populations. Could it be that the selective pressure occurred after the migratory events?
-- looking at the the current populations might give us an idea of if there is selective history and if so when a particular event might have taken place
-i.e. do we see similar frequencies of disease alleles
-- From the sfs results we see that within geographically similar regions they have similar genetic results
-- we also get similar results regions with haplotypic selection
-- somewhat indicated by the use of the clustering using disease genes
-- are there shared haplotypes?
-- because we know the migration history, and we also have shown that the modern day populations still show these groupings that correspond to temporal and spatial geography it can help us infer when a particular region of the genome may have had a selective event.
-- why does it matter when something happened though?
-    - distigmatisation
-- why? by comparing populations it might give an idea of particular regions that might explain differences in prevalence and or severity/likelihood of developing metabolic disease
-obesity what was found?
-t2d what was found?
-kd what was found?
-met syn what was found?
-Anything that did have a signal, was it shared with other populations?
 
-was there similarity in the polys?
-any differences in the polys?
+
+
+
+
+
+<!-- - The introduction sets the framework that geographically similar populations are in similar environments and therefore exposed to similar selective pressures. -->
+<!-- - What we see is there is a higher burden of metabolic disease in Polynesians and not in other populations. Could it be that the selective pressure occurred after the migratory events? -->
+<!-- - looking at the the current populations might give us an idea of if there is selective history and if so when a particular event might have taken place -->
+<!-- i.e. do we see similar frequencies of disease alleles -->
+<!-- - From the sfs results we see that within geographically similar regions they have similar genetic results -->
+<!-- - we also get similar results regions with haplotypic selection -->
+<!-- - somewhat indicated by the use of the clustering using disease genes -->
+<!-- - are there shared haplotypes? -->
+<!-- - because we know the migration history, and we also have shown that the modern day populations still show these groupings that correspond to temporal and spatial geography it can help us infer when a particular region of the genome may have had a selective event. -->
+<!-- - why does it matter when something happened though? -->
+<!--     - distigmatisation -->
+<!-- - why? by comparing populations it might give an idea of particular regions that might explain differences in prevalence and or severity/likelihood of developing metabolic disease -->
+<!-- obesity what was found? -->
+<!-- t2d what was found? -->
+<!-- kd what was found? -->
+<!-- met syn what was found? -->
+<!-- Anything that did have a signal, was it shared with other populations? -->
+
+<!-- was there similarity in the polys? -->
+<!-- any differences in the polys? -->
 
 
 
 ### Limitations
 
+The technical limitations of this dataset based on the markers from the CoreExome \gls{snp} array raised in Section \@ref(chap3limit) apply to this analysis too. Particular to the analysis in this chapter is how the clusters were determined. The cutree method implemented in R [@RCoreTeam2017] that was used to slice the dendrograms, creating the groups used assess the proportions and exclusivity of the clustering was relatively crude and did not always agree with the clusters that were 'visually apparent' in the dendrogram. Although 'visually apparent' could be partially attributed to confirmation bias. Hierarchical clustering was chosen as the clustering algorithm over K-means because the branching nature could be thought of as a metaphor for the population migration histories. It is also possible that different linkage and distance criteria for the clustering algorithm may have produced different clusters, however, any differences in clusters would likely be minor.
 
-The technical limitations raised in Section \@ref(chap3limit) of this dataset based on the markers from the CoreExome chip apply to this analysis too. Particular to the analysis in this chapter was also the how the clusters were determined. The cutree method in R [@RCoreTeam2017] that was used to slice the dendrograms, creating the groups used assess the proportions and exclusivity of the clustering was relatively crude and did not always match the clusters that were visible in the dendrogram. It also required that K clusters be returned regardless of what the tree actually looked like. The use of K = 6 was chosen due to there being 6 super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering. Many of the selection tests split \gls{amr} into 2 groups, \gls{clm}/\gls{pur} and \gls{msl}/\gls{pel}. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @1KGP2015snp]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for and _F_ they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand European [@Hollis-Moffatt2012; @Gravel2013].
+The cutree method also required that K clusters be returned regardless of what the tree actually looked like, and K < n. The use of K = 6 was chosen due to there being six super populations, however, \gls{clm}, \gls{pur}, \gls{mxl}, and \gls{pel} being classed as a single super population was not reflected in the clustering of the chromosome-wide F~ST~. Many of the selection tests split \gls{amr} into 2 groups, \gls{clm}/\gls{pur} and \gls{msl}/\gls{pel}. This pairing is consistent with what had previously been found from similarity of admixture and F~ST~ [@Gravel2013; @1KGP2015snp]. These \gls{amr} populations had also been identified as being admixed and so it was interesting that for upper tail for and \gls{flf} they were clustered with the \gls{nzm} population which is also know to be admixed, mostly with New Zealand European [@Hollis-Moffatt2012; @Gravel2013]. Because these \gls{amr} populations were still included, and the requirement for six clusters, this affected the exclusivity measurement of clusters. The proportion measurement was also affected because sometimes a super population was spread across multiple but exclusive clusters. This was the case for the Polynesian populations and the 99th percentile of \gls{flf} where the Eastern Polynesian populations were an exclusive cluster, and the Western Polynesian populations were an exclusive cluster. This meant the more clusters were assigned to Polynesian populations than should have been, and there for to remain at six clusters the \gls{sas} populations were assigned with the \gls{eur} populations.
 
+The only statistic that consistently did not cluster the Polynesian populations was \gls{flf}. \Gls{flf} is based on singletons and for the clustering of one the windows in the extremes had sparse matrix of windows that were in common between populations in lower tail. The sparsity of the matrix influenced how well the clustering performed due to the lack of windows that were in common between any pair of populations. At the extremes of similarity (e.g. very similar or very dissimilar), the clusters are determined by only a few differences which means a large amount of information was not being used for the differentiation of populations. As the lower tail represents and excess of singletons this is likely to have been impacted by using chip data as there was a very strong bias against singletons during the quality control protocol [@Guo2014]. In this situation because the data has reduced singletons, the distribution for \gls{flf} was shifted to the right, with the upper tail representing a deficit of singletons [@Fu1993]. This shift now means there is an under representation of regions in the lower tail.
 
-The simplest explanation similar clustering occurred with the gene lists, is that for the tests of neutrality or selection that rely on the frequency spectrum, populations that are similar also have a similar allele frequency to each other. This would explain why, with \gls{td}, \gls{fwh}, and \gls{ze}, which are based on comparing ratios of low, intermediate and high frequency variants, all grouped the individual populations into their super population groups. This differed to the statistics based on singletons (\gls{fld} and \gls{flf}) which did not often group the super populations. Both \gls{flf} and \gls{fld} had a sparse lower tail and this would influence how well the clustering performed. At the extremes of similarity (e.g. very similar or very dissimilar), the clusters were determined by only a few differences which means a large amount of information was not being used for the decision. As the lower tail represents and excess of singletons this is likely to have been impacted on by using chip data as there was a very strong bias against them during the quality control protocol [@Guo2014]. In this situation because the data has reduced singletons, the distribution for \gls{fld} and \gls{flf} was shifted to the right, with the upper tail representing a deficit of singletons [@Fu1993]. This shift now means there is an under representation of regions in the lower tail and the clustering was no better than drawing regions at random.
+As reported in section \@ref(fdrresults), only the \gls{fdr} for the Polynesian populations was below 10% for the 1^st^ percentiles of \gls{td} and \gls{fwh} for the frequency spectrum based statistics. This means that while the extremes would be considered the most likely ends of the distribution that would contain regions of the genome that had been selected, it cannot with confidence be claimed. Therefore the mechanism through which they became the extremes of the distribution is possibly through selection, however, other neutrality mechanisms are still valid. While it is true that the extremes may include selected loci, it is also true that because of the use of a distribution proportion threshold, there will always be a windows or \gls{snp}s that would be identified as possibly being under selection (the empirical dist paper would possibly be a good reference here). This means that while there were similarities in the extremes of the distributions for the frequency based statistics, they are not necessarily under selection and based on the \gls{fdr} calculated from the permutations, likely to be false positives.
 
-As reported in section \@ref(fdrresults), only the \gls{fdr} for the Polynesian populations was below 10% for the 1^st^ percentiles of \gls{td} and \gls{fwh} for the frequency spectrum based statistics. 
+A limitation was also some of the lack of 'internal replication' i.e. the Eastern and Western Polynesian pairs, where a region would only meet the threshold for significance in a single population and not in its paired population.
 
-This means that while there were similarities in the extremes of the distributions for the frequency based statistics, they are not necessessarily under selection.
-
-
-
-The rightwards shift in the distributions of \gls{td}, \gls{fld}, \gls{flf}, and \gls{ze}, largely is influenced by the low frequency and singletons being under-represented. This shift was more noticeable in the \gls{afr} populations with the 1st percentile being above zero for \gls{td}, \gls{fld}. This meant that the windows that were being compared were not always the going to be inferring the type of selection or population demographic events as those that were from below zero. 
-
-The rightward shift won't affected all genes in a uniform manner - the impact will be different for different genes, based on the frequency of the markers in them. This means that it can't be assumed that the genes in the 1st percentile for the \gls{afr} populations are the equivalent in terms of ranking by statistic value, than those of the other populations. 
+The rightwards shift in the distributions of \gls{td}, \gls{flf}, and \gls{ze}, largely is influenced by the low frequency and singletons being under-represented. This shift was more noticeable in the \gls{afr} populations with the 1st percentile being above zero for \gls{td} and \gls{flf}. This meant that the windows that were being compared were not always the going to be inferring the type of selection or population demographic events as those that were from below zero. The rightward shift won't affected all genes in a uniform manner - the impact will be different for different genes, based on the frequency of the markers in them. This means that it can't be assumed that the genes in the 1st percentile for the \gls{afr} populations are the equivalent in terms of ranking by statistic value, than those of the other populations. Nor can it be assumed that the distribution that was observed using the markers from the CoreExome would be the same that would be observed from using sequencing data.
 
 
+Grouping based on the clustering of the significant results in \gls{ihs} or \gls{nsl} may falsely link \gls{snp}s into a 'region of significance'. The 200 kb limit was the maximum distance that selscan by default would allow the calculation of the extended haplotype heterozygosity to extend across a gap of information before terminating.  The calculation of region sharing also does not take into account the directionality of the selection, i.e. one population might have favoured the ancestral allele, whereas a second favoured the derived allele, the region sharing calculation treats these the same and would consider them a shared region.
 
 
-- the fact it was a chip -> ascertainment bias
-- the snps on the core exome might be less 'afr centric'
-- FDR was high for most of the statistics - therefor can't really claim selection
-- clustering 
-- pop specific shift in distributions
-    - can't compare the 1st percentile for some stats 
-- cuttree method is crude
-- only used hierarchical clustering, other methods may give different results
-    - selection of K might not be appropriate
-- sparsity of the data
-- metrics for assessing correct grouping might not be the best
-- essentially just the capturing sfs -> geographically similar pops have similar allele freq
-- FDR for the extremes suggests that the extremes aren't that different from a null
+<!-- - the fact it was a chip -> ascertainment bias -->
+<!-- - the snps on the core exome might be less 'afr centric' -->
+<!--      again an ascertainment bias but also would lead to the skewwing of the distributions seen for afr populations -->
+<!-- - FDR was high for most of the statistics - therefore can't really claim selection -->
+<!-- - clustering  -->
+<!-- - pop specific shift in distributions -->
+<!--     - can't compare the 1st percentile for some stats  -->
+<!-- - cuttree method is crude -->
+<!-- - only used hierarchical clustering, other methods may give different results -->
+<!--     - selection of K might not be appropriate -->
+<!-- - sparsity of the data -->
+<!-- - metrics for assessing correct grouping might not be the best -->
+<!-- - essentially just the capturing sfs -> geographically similar pops have similar allele freq -->
+<!-- - FDR for the extremes suggests that the extremes aren't that different from a null -->
 
-> The recent work with using the full 1kgp biallelic sites suggests that the distributions are just straight out shifted, although there are some values that are quite different
+<!-- > The recent work with using the full 1kgp biallelic sites suggests that the distributions are just straight out shifted, although there are some values that are quite different - actually minimal overlap in the regions that were represented in the extremes -->
 
 
 
@@ -1897,10 +2012,10 @@ look at skoglund 2016 and the new paper by Hudjashov2018 to work out how to spin
 \gls{td} and \gls{ze}, both had either, complete or near complete groupings for a few super populations, especially \gls{afr} and \gls{eur}. These two statistics involve the low-frequency variants in their calculation, and low-frequency markers, again have a bias against them, as they tend to be under-represented in the \gls{snp} chips [\@ref].  There is also a bias against them in the algorithm and steps for genotype calling on the CoreExome \gls{snp} chip. This again means that there is likely an under-representation of low-frequency variants and thus skews the statistics that utilise them.
 
 
-\Gls{fwh} was the only intra-population selection statistic that re-assembled the nearly all of the super populations in their entirety. \gls{fwh} is based on the ratio of high-frequency derived alleles to intermediate frequency derived alleles. The ancestral allele does not always the equate to the refererence, and nor does it always equate to the major allele. This means that the allele frequencies for the markers that were on the \gls{snp} chip that were low frequency have a chance of being high frequency when converted to the ancestral/derived form.
+\Gls{fwh} was the only intra-population selection statistic that re-assembled the nearly all of the super populations in their entirety. \gls{fwh} is based on the ratio of high-frequency derived alleles to intermediate frequency derived alleles. The ancestral allele does not always the equate to the reference, and nor does it always equate to the major allele. This means that the allele frequencies for the markers that were on the \gls{snp} chip that were low frequency have a chance of being high frequency when converted to the ancestral/derived form.
 
 
-Calculating the statistic as a summary for an entire chromosome doesn't inform much about the state of selection in a population, as selection has acts on targeted regions. What it does is give an indication of the overall frequency distributions of the population and if there is a particular obundence in a particular frequency 'bin'
+Calculating the statistic as a summary for an entire chromosome doesn't inform much about the state of selection in a population, as selection has acts on targeted regions. What it does is give an indication of the overall frequency distributions of the population and if there is a particular abundance in a particular frequency 'bin'
 
 
 #### Clustering on the extremes
