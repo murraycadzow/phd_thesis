@@ -73,7 +73,7 @@ Genome-wide association studies provide a statistical framework for an associati
 
 _Introduction of ukbiobank_
 
-The UK Biobank is a publically available data set consisting of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestype information. As part of the UK Biobank, participants filled in detailed surveys on health and lifestyle questions, provided biological samples, and were genotyped on the UK BElieve \gls{snp} array with XXX markers. The genotypes were first phased using SHAPEIT3, and then imputed using IMPUTE3 with both the UK10K impute reference panel, and the haplotype reference consortium impute panel to bring the total number of markers to XXX.
+The UK Biobank is a publically available data set consisting of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestype information. As part of the UK Biobank, participants filled in detailed surveys on health and lifestyle questions, provided biological samples, and were genotyped on an Axiom array with 820,967 markers (Affymetrix, Santa Clara, CA, USA). The genotypes were phased using SHAPEIT3, and then imputed using IMPUTE2 with both the UK10K impute reference panel, and the haplotype reference consortium impute panel, to bring the total number of \glspl{snp} to approximately 73.3 milion.
 
 
 _Motivation behind using the different definitions_
@@ -95,6 +95,7 @@ Power of genetic case-control studies increases with accurate case definition. T
 
 _polynesian gwas_
 
+## Methods
 
 ### European Gout GWAS {#ukbbgwas}
 
@@ -104,12 +105,13 @@ This \gls{gwas} was performed using the interim data release from the UK Biobank
 Inclusion criteria were European ethnicity, aged between 40 and 69 years and had genome wide genotypes available. The exclusion criteria used was: mismatch between self-reported sex and genetic sex, genotype quality control failure, relatedness, or either a primary or secondary hospital diagnosis of kidney disease (International Classification of Diseases, Tenth Revision (ICD-10), codes I12, I13, N00-N05, N07, N11, N14, N17–N19, Q61, N25.0, Z49, Z94.0, Z99.2), participants aged 70 years and over, and those with kidney disease, because these are risk factors for secondary gout.
 
 
-_Classifications used_
+#### Classifications used
 
-There were four main classification criteria that were used to define gout cases. Hospital defined gout involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). Self-report of gout was defined as reporting having gout at the time of the study interview. Use of \gls{ult} used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukemia or lymphoma (ICD-10 codes C81-C96). The Winnard definition was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
+There were four main classification criteria that were used to define gout cases. _Hospital defined gout_ involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). _Self-report of gout_ was defined as reporting having gout at the time of the study interview. _Use of \gls{ult}_ used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukemia or lymphoma (ICD-10 codes C81-C96). _Winnard defined gout_ was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
 
+#### Model to decide covariates
 
-Prior to conducting the \gls{gwas} for gout, phenotypic models were assessed using any method of classifying gout. Logistic regression was performed and the Akaike information criterion (AIC) for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant (P < 0.05) on their own, age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (AIC 22706.05), sex (AIC 21041.80) and \gls{bmi} (AIC 22001.03). Based on the AIC for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown by affection status is in Table \@ref(tab:ukbbclin).
+Prior to conducting the \gls{gwas} for gout, phenotypic models were assessed using any method of classifying gout. Logistic regression was performed and the \gls{aic} for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant on their own: age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (\gls{aic} 22706.05), sex (\gls{aic} 21041.80) and \gls{bmi} (\gls{aic} 22001.03). Based on the \gls{aic} for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown by affection status is in Table \@ref(tab:ukbbclin).
 
 
 
@@ -129,7 +131,7 @@ lapply(c(1,2,4,3,5 ), function(x){broom::tidy(models[[x]]$model)})
 ```
 
 
-** UKBiobank participant characteristics **
+#### UK Biobank participant characteristics
 
 ```{r, results = 'asis'}
 ukbio_gout %>% summarise(n = n(), percent_male = 1 - sum(sex)/NROW(.), mean_age = mean(age, na.rm = TRUE), mean_bmi = mean(bmi, na.rm = TRUE),  febuxostat = sum(febuxostat, na.rm = TRUE), allopurinol = sum(allopurinol, na.rm = TRUE), sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), colchicine = sum(colchicine, na.rm = TRUE), hosp = sum(gouthosp, na.rm =TRUE), self = sum(goutself, na.rm=TRUE), winnard = sum(goutwinnard, na.rm = TRUE), ult = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>%  dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants.")
@@ -145,38 +147,134 @@ listInput <- readRDS('data/Ukbiobank/upsetPlotList.RDS')
 UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 )
 ```
 
-There were a total of `r ukbio_gout %>% filter(goutaff ==1) %>% NROW()` individuals that had any classification of gout and `r ukbio_gout %>% filter(goutaff ==0) %>% NROW()` controls. Of those with any classification of gout, there were `r ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1) %>% NROW()` with a hospital diagnosis, `r ukbio_gout %>% filter(goutaff ==1 & goutult ==1) %>% NROW()` with urate lowering therapy, `r ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1) %>% NROW()` with the Winnard criteria, and `r ukbio_gout %>% filter(goutaff ==1 & goutself ==1) %>% NROW()` with self-reported gout. The overlaps in classification between each group can be seen in Figure \@ref(fig:ukbbupsetplot). There was considerable overlap between the self-report, urate lowering therapy, and Winnard classifications with 1242 individuals meeting all three classifications.
+```{r ukbbNumbers}
+ukbb_n <- list()
+ukbb_n$n_controls <- ukbio_gout %>% filter(goutaff ==0) %>% NROW()
+ukbb_n$n_gout <- ukbio_gout %>% filter(goutaff ==1) %>% NROW()
+ukbb_n$n_total <- ukbb_n$n_controls + ukbb_n$n_gout
+ukbb_n$n_self <- ukbio_gout %>% filter(goutaff ==1 & goutself ==1) %>% NROW()
+ukbb_n$n_selfult <- ukbio_gout %>% filter(goutaff ==1 & (goutself ==1 | goutult == 1)) %>% NROW()
+ukbb_n$n_ult <- ukbio_gout %>% filter(goutaff ==1 & goutult ==1) %>% NROW()
+ukbb_n$n_winnard <- ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1) %>% NROW()
+ukbb_n$n_hosp <- ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1) %>% NROW()
+
+ukbb_male_n <- list()
+ukbb_male_n$n_controls <- ukbio_gout %>% filter(goutaff ==0 & sex == 1) %>% NROW()
+ukbb_male_n$n_gout <- ukbio_gout %>% filter(goutaff ==1 & sex == 1) %>% NROW()
+ukbb_male_n$n_total <- ukbb_male_n$n_controls + ukbb_male_n$n_gout
+ukbb_male_n$n_self <- ukbio_gout %>% filter(goutaff ==1 & goutself ==1 & sex == 1) %>% NROW()
+ukbb_male_n$n_selfult <- ukbio_gout %>% filter(goutaff ==1 & (goutself ==1 | goutult == 1) & sex == 1) %>% NROW()
+ukbb_male_n$n_ult <- ukbio_gout %>% filter(goutaff ==1 & goutult ==1 & sex == 1) %>% NROW()
+ukbb_male_n$n_winnard <- ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1 & sex == 1) %>% NROW()
+ukbb_male_n$n_hosp <- ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1 & sex == 1) %>% NROW()
+
+ukbb_female_n <- list()
+ukbb_female_n$n_controls <- ukbio_gout %>% filter(goutaff ==0 & sex == 0) %>% NROW()
+ukbb_female_n$n_gout <- ukbio_gout %>% filter(goutaff ==1 & sex == 0) %>% NROW()
+ukbb_female_n$n_total <- ukbb_female_n$n_controls + ukbb_female_n$n_gout
+ukbb_female_n$n_self <- ukbio_gout %>% filter(goutaff ==1 & goutself ==1 & sex == 0) %>% NROW()
+ukbb_female_n$n_selfult <- ukbio_gout %>% filter(goutaff ==1 & (goutself ==1 | goutult == 1) & sex == 0) %>% NROW()
+ukbb_female_n$n_ult <- ukbio_gout %>% filter(goutaff ==1 & goutult ==1 & sex == 0) %>% NROW()
+ukbb_female_n$n_winnard <- ukbio_gout %>% filter(goutaff ==1 & goutwinnard == 1 & sex == 0) %>% NROW()
+ukbb_female_n$n_hosp <- ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1 & sex == 0) %>% NROW()
+
+```
+
+
+There were a total of `r ukbb_n$n_gout` individuals that had any classification of gout and `r ukbb_n$n_controls` controls. Of those with any classification of gout, there were `r ukbb_n$n_hosp` with a hospital diagnosis, `r ukbb_n$n_ult` with urate lowering therapy, `r ukbb_n$n_winnard` with the Winnard criteria, and `r ukbb_n$n_self` with self-reported gout. The overlaps in classification between each group can be seen in Figure \@ref(fig:ukbbupsetplot). There was considerable overlap between the self-report, urate lowering therapy, and Winnard classifications with 1242 individuals meeting all three classifications.
+
+Confidence intervals for proportions were calculated using the _prop.test_ function from the _stats_ package in R.
+
+```{r}
+entire <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_entire = paste0(n, ", ", estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def,study_entire)
+
+male <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_male = paste0(n, ", ", estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def, study_male)
+
+female <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_female = paste0(n, ", ", estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def, study_female)
+
+all_gout <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_gout )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_gout = paste0(estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def, study_gout)
+
+full_join(entire, male) %>% full_join(., female) %>% full_join(., all_gout) %>% 
+  mutate(def = case_when(def == "n_self" ~ "Self-report of gout diagnosis",
+                         def == "n_ult" ~ "ULT use",
+                         def == "n_hosp" ~ "Hospital diagnosis",
+                         def == "n_winnard" ~ "Winnard definition",
+                         def == "n_selfult" ~ "Self-report of gout or ULT use"
+                         )) %>% 
+ kable(caption = '(\\#tab:ukbbprev) Number, prevalence (95\\% CI) of participants defined as gout cases', col.names = c("Definition", "No. of subjects, prevalence (95\\% CI) in entire study population (n = 105,421)", "No. of subjects, prevalence (95\\% CI) in male participants (n = 51,844) ","No. of subjects, prevalence (95\\% CI) in female participants (n = 53,577)", "Percentage (95\\% CI) of study population with gout using any definition (n = 2432)"),format = 'latex', booktabs = TRUE) %>% kable_styling(latex_options = "scale_down")
+
+```
+
+#### Gout association test
+
+A \gls{gwas} was performed using logisitic regression in Plink1.9b [@plink] for each gout classification, with age, sex, and \gls{bmi} as co-variates. The association results for each \gls{gwas} were then compared with the 30 \glspl{snp} reported in Table 1 of @Kottgen2013 that had previously been associated with urate and gout in a cohort of >140,000 Europeans. 
+
+
+#### Heriabililty
+
+For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selected 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto the continuous liability scale using the restricted maximum likelihood analysis in gcta and a general population prevalence of gout of 2% (\@ref(gctaHeritability)).  Estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
+
+
+\begin{equation} 
+  SE = \sqrt{SE_1^2 + SE_2^2}
+  (\#eq:h2se)
+\end{equation} 
+
+### Polynesian Gout GWAS
+
+#### Polynesian gout gwas dataset
+
+A multi-cohort gout dataset was assembled by combining individuals from the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and the Ngati Porou Hauora Charitable Trust cohort. Genotyping on the Inifinium CoreExome v24 bead-chip was performed at the University of Queensland (Centre for Clinical Genomics) for the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and at AgResearch (Invermay Agricultural Centre) for the Ngati Porou Hauora Charitable Trust cohort. The genotype quality control procedures as described in section \@ref(coreExomeQC) were applied per cohort, and then as necessary after combining the cohorts. The genotype quality control, and combining of cohorts was performed by Dr Tanya Major, Merriman Lab. \Glsdesc{pca} was performed on the combined dataset with the first 10 components outputted and 
 
 
 
-A \gls{gwas} was performed using logisitic regression in Plink1.9b [@plink] for each gout classification, with age, sex, and \gls{bmi} as co-variates. The association results for each \gls{gwas} were then compared with the \glspl{snp} reported in Table 1 of @Kottgen2013. 
+#### Polynesian gout GWAS
 
-For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selected 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto the continuous liability scale using the restricted maximum likelihood analysis in gcta and a general population prevalence of gout of 2% (\@ref(gctaHeritability)). 
+A \gls{gwas} was also performed for individuals with Polynesian ancestry. 
+Gout affection was determined by the American college of rheumatology criteria [@ref], or a doctor diagnosis, or enrolled in a gout drug trial. All participants were older than 18. Exclusion criteria included unknown gout affection status, non-Polynesian self-reported ancestry, or a mismatch between self-report ancestry and \gls{pca} clustering.
+
+<!-- polynesian_gout-affection.pheno -->
+<!--     - gout either ACR criteria or GP diagnosed / in a gout drug trial (only 119 not ACR) -->
+<!--     - excluded unknown gout status, non-polynesian (either self-report or PCA mismatch), and people <18 years old -->
+
+
+Principal components were 
+
+The \gls{gwas} was adjusted for age, sex, and the first ten \glspl{pc} calculated from 2,858 ancestry informative markers (as identified by Illumina) 
+The \gls{gwas} was conducted by Dr Tanya Major, a member of the Merriman Lab group.
+
+
+Filtered for hwe < 1e-6 and maf > 0.01
+
+## Results
 
 ```{r, message = FALSE}
 kot_t1 <- read.csv("~/data/kottgen_table1.csv", header = TRUE, stringsAsFactors = FALSE)
 uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% separate(file, c("file","CHR"), sep = ':') %>% mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" ))%>%  mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% stringi::stri_sub(9)) %>% left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
 ```
 
-(ref:kotplot) Plot showing ORs (95% CI) for the 30 \glspl{snp} reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles.
+(ref:kotplot) Plot showing ORs (95% CI) for the 30 \glspl{snp} reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles. The reported Kottgen OR was inverted to maintain consistency of reported effect allele (A1) for the following markers: rs2307394, rs2079742, rs7224610, rs7188445, rs1178977, rs6770152, rs7193778, rs164009, rs653178, rs2078267, rs478607, and rs12498742.
 
 ```{r kotplot, fig.height=7, fig.cap = '(ref:kotplot)', warning = FALSE}
 
 flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770152", "rs7193778", "rs164009", "rs653178","rs2078267", "rs478607", "rs12498742")
-uk_kot_t1 %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
-bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) ) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
-  # mutate(gout = case_when(
-  #   gout == 'hosp' ~ "Hospital", 
-  #   gout == "self" ~ "Self Report", 
-  #   gout == "selfult" ~ "Self Report or ULT",
-  #   gout == "ult" ~ "ULT",
-  #   gout == "winnard" ~ "Winnard")) %>% 
-  ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
-  geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
+uk_kot_t1 %>% 
+  #mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  
+  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
+  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR)  %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
+              # mutate(gout = case_when(
+              #   gout == 'hosp' ~ "Hospital", 
+              #   gout == "self" ~ "Self Report", 
+              #   gout == "selfult" ~ "Self Report or ULT",
+              #   gout == "ult" ~ "ULT",
+              #   gout == "winnard" ~ "Winnard")) %>% 
+              ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
+              geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
 ```
 
 
 
+### UK Biobank
 
 #### GWAS results
 
@@ -204,10 +302,10 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 ```
 
 
-```{r}
+```{r, message=FALSE}
 # create the table of kottgen snps from the data
 # age, sex, and bmi adjusted
-kot_bim <- read_delim('data/Ukbiobank/kottgen_ukbb_alleles.txt', col_names = c("CHR","SNP","GPOS","POS","REF","ALT"), delim = " ")
+kot_bim <- read_delim('data/Ukbiobank/kottgen_ukbb_alleles.txt', col_names = c("CHR","SNP","GPOS","POS","A1","A2"), delim = " ")
 
 #calculate number of snps that are significant
 uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS)  %>% mutate(P_bac = P) %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>% arrange(P) %>%  select(-grail_gene, -OR, -CHR) %>%group_by(gout) %>% mutate(P_sig = P_bac < (0.05/NROW(.)), P_gw = P_bac < 5e-8 ) %>% summarise( P_gw = sum(P_gw),P_exp = sum(P_sig)) %>% filter(gout != 'all')%>% gather("sig", "value",2:3) %>% spread(gout, value) %>% rename("SNP" = sig) %>% mutate_all(as.character) %>%  mutate(A1 = "", REF ="",ALT ="")
@@ -216,17 +314,17 @@ uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS)  %>% 
 # still need to flip snps to be in the same order as kottgen
 uk_kot_t1 %>% 
   select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>%  
-  left_join(., kot_bim %>% select(SNP, REF, ALT)) %>% 
-  mutate(OR = ifelse(A1 != REF, 1/OR, OR), L95 = ifelse(A1 != REF, 1/U95, L95), U95 = ifelse(A1 != REF, 1/L95, U95), mod = ifelse(A1 != REF, 1, 0)) %>% 
+  left_join(., kot_bim %>% select(SNP, A1, A2), by = c("SNP", "A1")) %>% 
+  #mutate(OR = ifelse(A1 != REF, 1/OR, OR), L95 = ifelse(A1 != REF, 1/U95, L95), U95 = ifelse(A1 != REF, 1/L95, U95), mod = ifelse(A1 != REF, 1, 0)) %>% 
   mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% 
   unite("CI",c("L95","U95"), sep = " -") %>%
   mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>%  
   mutate(SNP = paste0(SNP, ' (', grail_gene,')'), Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-grail_gene, -OR, -CI, -P, -CHR) %>%
   spread(key = gout, value = Effect) %>% 
-  select(-all, -mod) %>% 
+  select(-all) %>% 
   #bind_rows(., uk_kot_psig ) %>% 
-  kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citet{Kottgen2013} for the different gout classification methods.', col.names = c("Marker", "A1", "REF","ALT", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% #group_rows("Number of significant markers", NROW(.)-1, NROW(.)) %>% 
-  kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95\\\\% CI], P. ULT = Urate lowering therapy." , general_title = "", threeparttable = TRUE , escape = FALSE)
+  kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citet{Kottgen2013} for the different gout classification methods.', col.names = c("Marker", "A1", "A2", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% #group_rows("Number of significant markers", NROW(.)-1, NROW(.)) %>% 
+  kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95\\\\% CI], P. ULT = Urate lowering therapy. The reported effect allele is A1." , general_title = "", threeparttable = TRUE , escape = FALSE) %>% landscape()
 
 ```
 
@@ -242,7 +340,7 @@ hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(P = format(P, scientifi
 ```
 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 dat <- hosp_asb 
 txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
 ```
@@ -256,35 +354,35 @@ There were ```r self_asb %>% filter(P < 1e-8,  nchar(A1) ==1) %>% mutate(P = for
 self_asb %>% filter(P < 1e-8,  nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% dim()# kable()
 ```
 
-```{r}
+```{r, message = FALSE, warning=FALSE}
 dat <- self_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
 ```
 
 
 
 - self + ULT
 
-```{r}
+```{r, message = FALSE, warning=FALSE}
 dat <- selfult_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>%  kable()
 ```
 
 
 - ULT
 
-```{r}
+```{r, message = FALSE, warning=FALSE}
 dat <- ult_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>%head() %>%  kable()
 ```
 
 
 - all
 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 dat <- all_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
 ```
 
 
@@ -349,17 +447,10 @@ sig_ihs_val %>% filter(pop == 'GBR') %>% inner_join(., all_asb, by = c("chrom" =
 sig_nsl_val %>% filter(pop == 'GBR') %>% inner_join(., all_asb, by = c("chrom" = "CHR", "chrom_start" = "BP"))
 ```
 
-## Polynesian GWAS and Selection
+### Polynesian GWAS and Selection
 
 
-A \gls{gwas} was also performed for individuals with Polynesian ancestry. Gout affection was determined by the American college of rheumatology criteria [@ref], or a doctor diagnosis, or enrolled in a gout drug trial. All participants were older than 18. 
 
-The \gls{gwas} was adjusted for age, sex, and the first ten principle components calculated from XXX ancestry informative markers.
-
-The \gls{gwas} was conducted by Dr Tanya Major, a member of the Merriman Lab group.
-
-
-Filtered for hwe < 1e-6 and maf > 0.01
 
 
 ```{r}
@@ -375,13 +466,13 @@ polyGout %>% filter(TEST == "ADD", P < 0.05) %>% qqman::manhattan(., ylim= c(0,1
 polyGout %>% filter(TEST == "ADD", P < 1e-5)
 ```
 
-There two markers that met the threshold for genome-wide significance, rs2725215 and rs2231142 located in _ABCG2_. Two other markers reached the nominal significance threshold, rs2728108 (ABCG2) and rs11034401 (). This is a problem of having insufficient samples to have the power to detect the other gout loci.
+The two markers that met the threshold for genome-wide significance, rs2725215 and rs2231142 located in _ABCG2_. Two other markers reached the nominal significance threshold, rs2728108 (_ABCG2_) and rs11034401 (inter-genic). This is a problem of having insufficient samples to have the power to detect the other gout loci.
 
-In order to try and prioritise th variants of the gwas, combining the results of the logisitic regression with those of the selection analysis was done in order to investigate snps that did not reach the genome-wide threshold for sigificance in gwas but did have a significant ihs or nsl result.
+In order to try and prioritise the variants of the gwas, combining the results of the logisitic regression with those of the selection analysis was done in order to investigate snps that did not reach the genome-wide threshold for sigificance in gwas but did have a significant ihs or nsl result.
 
 
 ```{r}
- sig_ihs_val %>% filter(superpop == 'POL') %>% inner_join(., polyGout %>% filter(P < 5e-2, TEST == "ADD"), by = c("chrom" = "CHR", "chrom_start" = "BP")) %>% spread(pop, statvalue) %>% arrange(P) %>% filter((!is.na(CIM) & !is.na(NZM)) | (!is.na(TON) & !is.na(SAM))) %>% filter(abs(NZM) > 2.6 | abs(CIM) > 2.6 | abs(SAM) > 2.6 | abs(TON) > 2.6) %>% select(-TEST, -statid, -contains('gene_'), -ensgeneid, -NMISS, -sig, -STAT)
+ sig_ihs_val %>% filter(superpop == 'POL') %>% inner_join(., polyGout %>% filter(P < 5e-2, TEST == "ADD"), by = c("chrom" = "CHR", "chrom_start" = "BP")) %>% spread(pop, statvalue) %>% arrange(P) %>% filter((!is.na(CIM) & !is.na(NZM)) | (!is.na(TON) & !is.na(SAM))) %>% filter(abs(NZM) > 2.6 | abs(CIM) > 2.6 | abs(SAM) > 2.6 | abs(TON) > 2.6) %>% select(-TEST, -statid, -contains('gene_'), -ensgeneid, -NMISS, -sig, -STAT) %>% kable(., longtable = TRUE, booktabs = TRUE, format = 'latex')
 ```
 
 ```{r}
@@ -408,6 +499,32 @@ sig_nsl_val %>% filter(superpop == 'POL') %>% inner_join(., polyGout %>% filter(
 
 - what do the different classifications mean
 - 
+
+
+----
+
+UKBB paper discussion
+
+
+- consistent findings with SUGAR paper
+- in sugar paper highest spec/sense with self-report/ULT
+- support the use of the self-report or ULT definition when better classification isn't available
+- not all patients were captured by all criteria
+- winnard was not as good as self-report or ULT use
+- when self-report is info available recommend self-report/ULT
+- all definitions tested abcg2/slc2a9 were genome-wide significant
+- large effect sizes -> effect sizes in GWAS of control of SU levels - consistent with their role in regulation of SU and gout risk
+- heritability estimates for variance explained by all common snps 0.282-0.308 (ex hospital def)
+- within the range from kottgen (0.27-0.41) and they also calculated using GCTA for SU
+- estimates of variance explained in european by common snps  are comparable, suggesting that the common genetic variant-mediated heritabilities of SU and gout are similar
+- diet, medications and other environmental factors contribute to risk of gout
+- heritabilities are estimated under an additive model, so don't include non-additive variance (GxG and GxE), rare variants, CNV
+- limited to european -> might not translate to other populations
+- limited in that no gold-standard available to determine FPR/FNR
+
+
+----
+
 
 Poly gwas
 
@@ -442,7 +559,16 @@ There was limited seection for gout and urate assocaited loci in the \gls{gbr} p
 - EUR selection/gwas
     - the greatly reduced number of markers because the selection results were calculated in the coreexome markers
 
+
+> Maybe bring up the current discussion about the gcta for the use of heritability versus ldak?
+
 <!-- TANYA -->
+
+<!-- Whole-genome principal component analysis vectors were calculated using a subset of 2,858 ancestry informative markers (as identified by Illumina) extracted from the CoreExome whole-genome genotypes. The SmartPCA (EIGENSOFT v6.0.1) [25]) program was used to perform this prinicipal component analysis, with an output of 10 eigenvectors, no outlier removal, and no population size limit. Individuals of non-Polynesian ancestry were included in the analysis group, and the first four vectors plotted against each other to view the clustering of ancestral groupings (Asian, European, Eastern Polynesian, and Western Polynesian). The first four vectors were chosen for inclusion as covariates in the linear regression to account for population stratification and cryptic relatedness, which may cause confounding. -->
+<!-- The Illumina Infinium CoreExome v24 bead chip platform was used to genotype participants for ~500,000 variants across the whole-genome. Genotyping was performed at the University of Queensland (Centre for Clinical Genomics) for the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and at AgResearch (Invermay Agricultural Centre) for the Ngati Porou Hauora Charitable Trust cohort. Bead chip genotyping batches were auto-clustered using GenomeStudio v2011.1 software (Illumina, San Diego). The Illumina GenomeStudio best practice guidelines and quality control protocols of Guo et al. (2014) were applied to these auto-clustered genotypes to ensure final genotype calls were of the highest possible quality [23, 24]. After the initial quality control protocols were applied the genotyping batches were merged and relevant quality control steps repeated in the full dataset. -->
+
+
+
 <!-- How I did the Polynesian GWAS(s): -->
 <!-- Run from: -->
 <!-- /Volumes/userdata/staff_users/tanyaflynn/ShortCuts/murray_working_dir/coreExome/Batch_Merge/Merged_Merriman_Brown_Matsuo/PlusStrand_Merge -->
@@ -461,6 +587,7 @@ There was limited seection for gout and urate assocaited loci in the \gls{gbr} p
 <!--     - anyone self-reporting west polynesian with a PCA labelled west polynesian or general polynesian (not east) -->
 <!--     - accidentally used the wrong column for this & excluded Pukapukan & Niuean samples due to their unique clustering -->
 <!--         - this list has 772 people, the updated list has 939 (have not updated analysis yet) -->
+
 <!-- Polynesian Gout - actual command run -->
 <!-- plink2 \ -->
 <!--   --bfile QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_rsIDconverted \ -->
@@ -476,6 +603,7 @@ There was limited seection for gout and urate assocaited loci in the \gls{gbr} p
 <!--   --geno 0.38 \ # to remove the extra czech sample only SNPs -->
 <!--   --allow-no-sex \ -->
 <!--   --out ../new_polyGWAS/polynesian_gout_CoreExome24v1.0-1_rsIDconverted -->
+
 <!-- East Polynesian Gout - actual command run -->
 <!-- plink2 \ -->
 <!--   --bfile QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_rsIDconverted \ -->
