@@ -40,8 +40,9 @@ All genomic resources and co-ordinates reported in this project use the human ge
 
 ### Phasing {#phase}
 
+> Phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes. Phasing can be performed through the use of trios (parents and offspring), or it can be done through pobablistic phasing using large population haplotype reference panels and probablistically determining the most likely haplotype.
 
-Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} haplotype panel. There were two steps involved for phasing of genotypes. The first was to check the markers were aligned with the markers in the reference haplotypes. This was done using the SHAPEIT2 -check flag.
+Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel. There were two steps involved for phasing of genotypes. The first was to check the markers were aligned with the markers in the reference haplotypes. This was done using the SHAPEIT2 -check flag.
 
 ```{bash, eval = FALSE, echo =TRUE}
 # Check alignment of markers against reference haplotypes
@@ -59,6 +60,7 @@ shapeit2 \
 
 The second step was the phasing of genotypes into their haplotypes by using the \gls{1kgp} phased haplotype reference and a genetic map that was provided as part of the reference files. Markers that were marked for exclusion from the previous step were excluded. The haplotypes with the maximum likelihood were outputted. The haplotypes were then converted from the .haps format into a phased \gls{vcf}.
 
+> what was the exclusion criteria - missing from reference panel? ambiguous snp?
 
 ```{bash, eval = FALSE, echo = TRUE}
 # Run phasing against reference haplotypes
@@ -89,14 +91,14 @@ shapeit2 \
 
 #### PopGenome {#popgenomeMethods}
 
-The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was the 1st percentile and less than zero. The upper significance threshold was the 99th percentile and greater than zero. The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results. F~ST~ was also calculated in the same sliding window setup, and pair-wise for between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0.
+The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was min(1^st^ percentile, 0). The upper significance threshold was max(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise for between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0.
 
-The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf} file where possible for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf} and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population for \gls{fwh} was set to be that of the Ancestor sample so that the ancestral allele would be used in the calculation.
+The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf} file where possible for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf}, and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele, dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population for \gls{fwh} was set to be that of the Ancestor sample so that the ancestral allele would be used in the calculation.
 
 
 #### SelectionTools {#selectionTools}
 
-SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Within each population, markers were filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of P < 10^-6^. Markers were converted into "ancestral" or "derived" by comparing alleles to the homo sapiens ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
+SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Within each population, markers were filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of P < 10^-6^ [@Wigginton2005]. Markers were converted into "ancestral" or "derived" by comparing alleles to the homo sapiens ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
 
 \gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014]. Markers with an \gls{ihs}, \gls{nsl} or \gls{xpehh} value > |2.6| were determined to be significant, which was approximately the most extreme 1% of values.
 
@@ -342,8 +344,10 @@ plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz \
   --indep-pairwise 50 5 0.2 \
   --out NZ_1KGP_allchr
 
+# create an empty affection file that is required for Plink to use the --make-pheno
+# which in turn is required for the creation of the ped file just the way
+# SmartPCA wants it
 touch cases.txt
-
 plink1.9b4.9 --vcf NZ_1KGP_allchr.vcf.gz \
   --extract NZ_1KGP_allchr.prune.in \
   --recode \
@@ -466,7 +470,9 @@ admixture -s 123456 -P study.bed 9
 
 ### Heritability analysis {#gctaHeritability}
 
-The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011part] was used to calculate the proportion of genetic heritability explained. First the UK Biobank genetic data was subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%.
+> Heritability analysis is a method for determining the partitioning of total trait variation into the variation that is environmental (or non-heritable), and that which is genetic, and therefore heritable.
+
+The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011part] was used to calculate the proportion of genetic heritability explained for gout. First the UK Biobank genetic data was subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%.
 
 
 ```{r, engine='bash', eval=FALSE}
@@ -534,7 +540,7 @@ done
 <!-- Analysis Type: PANTHER Overrepresentation Test (release 20170413) -->
 <!-- - annotation set = pnather GO-slim biological process -->
 
-Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016] . The pathway enrichment results were based on the KEGG2016 table, which is a long standing database, currated by a small group of experts. A significance threshold for a pathway was set at P < 0.05 after Benjamini-Hochberg adjustment for multiple hypothesis testing, as provided by Enrichr.
+Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016] . The pathway enrichment results were based on the \gls{kegg} 2016 table, which is a long standing database, curated by a small group of experts. A significance threshold for a pathway was set at P < 0.05 after Benjamini-Hochberg adjustment for multiple hypothesis testing, as provided by Enrichr.
 
 <!-- The p-value is computed from the Fisher exact test which is a proportion test that assumes a binomial distribution and independence for probability of any gene belonging to any set -->
 
@@ -620,12 +626,12 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 - density
 -->
 ```
-#### CoreExome
+#### CoreExome {#coreExomeQC}
 
-The Infinium CoreExome-24 bead-chip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. Genotyping quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were removed if the callrate was < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. 
+The Infinium CoreExome-24 bead-chip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. Genotyping quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from Genome Studio that had a call rate > 98%, markers were removed if the call-rate was < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. 
 <!-- Samples were also checked for outliers in heterozygosity and depression of genetic variation. -->
 
-Markers were subsetted to only include bi-allelic \glspl{snp}, with a final marker number of `r NROW(markers)` and density of `r  lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>%  mean() %>% round_dp(., 0)` bp/marker. Relatedness between individuals was assessed through inheritance by state using Plink v1.9b3.32 and a pedigree of families created by Dr Tanya Major (Merriman lab) to identify family groups. Duplicates and first degree relations were excluded and single individuals were randomly selected from family groups identified through identity by state analysis. Hardy-Weinberg equilibrium of markers was checked for European, East Polynesian, and West Polynesian populations . Ethinicity was determined 3 or more grandparents self reported ethnicity) using an exact test in Plink v1.9b3b.32, and variants were removed if they had a Bonferroni multiple testing corrected P < 0.05. The genetic ancestry, determined through \gls{pca} (section \@ref(pca)), was compared with self reported ethnicity and individuals were removed where there was disagreement.
+Markers were subsetted to only include bi-allelic \glspl{snp}, with a final marker number of `r NROW(markers)` and density of `r  lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>%  mean() %>% round_dp(., 0)` bp/marker. Relatedness between individuals was assessed through inheritance by state using Plink v1.9b3.32 and a pedigree of families created by Dr Tanya Major (Merriman lab) to identify family groups. Duplicates and first degree relations were excluded and single individuals were randomly selected from family groups identified through identity by state analysis. \Glsdesc{hwe} of markers was checked for European, East Polynesian, and West Polynesian populations . Ethnicity was determined 3 or more grandparents self reported ethnicity) using a \gls{hwe} exact test [@Wigginton2005] in Plink v1.9b3b.32, and variants were removed if they had a Bonferroni multiple testing corrected P < 0.05. The genetic ancestry, determined through \gls{pca} (section \@ref(pca)), was compared with self reported ethnicity and individuals were removed where there was disagreement.
 
 
 
@@ -658,7 +664,7 @@ number of snps used for selection
 ```
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 marker_loc <- readRDS('~/data/NZ_coreExome_1kgp/snpEff_Annotated/snpeff_terms.RDS') %>% select(chrom = V1, pos = V2, snp = V3, ref = V4, alt = V5, eff )
 
 
@@ -693,7 +699,7 @@ ce_pop_table <- ce_populations_table()
 
 \Glsentrydescplural{pc} were calculated for all individuals genotyped on the coreExome \gls{snp} array using SmartPCA (EIGENSOFT v6.0.1, see section \@ref(pca)) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported their ethnicity as unknown.
 
-\Glsdesc{pc} 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and \gls{pc} 4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of Caucasian, New Zealand M$\bar{a}$ori, Cook Island M$\bar{a}$ori, Samoan, and Tongan ancestry were used to define the threshold values. The mean and SD for \gls{pc} 2 and \gls{pc} 4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean $\pm$ 2 SD for \gls{pc} 2 and \gls{pc} 4 for each corresponding self-report population group. Samples were filtered so that only those that lay within a boundary remained. Population samples of 100 individuals were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc}, by randomly sampling from within each ancestry group (Figure \@ref(fig:cePCA)). To unenrich for gout, individuals were prioritised based on gout affection to reach population specific prevalences based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton}. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained (\@ref(tab:cePopTable)).
+\Glsdesc{pc} 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and \gls{pc} 4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of Caucasian, New Zealand M$\bar{a}$ori, Cook Island M$\bar{a}$ori, Samoan, and Tongan ancestry were used to define the threshold values. The mean and SD for \gls{pc} 2 and \gls{pc} 4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean $\pm$ 2 SD for \gls{pc} 2 and \gls{pc} 4 for each corresponding self-report population group. Samples were filtered so that only those that lay within the thresholds remained. Population samples of 100 individuals were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc}, by randomly sampling from within each ancestry group (Figure \@ref(fig:cePCA)). To create a population sample that resembled the general population for gout prevalence, individuals were prioritised based on gout affection to reach population specific prevalences based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton}. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained (Table \@ref(tab:cePopTable)).
 
 
 ```{r,echo = FALSE}
@@ -711,7 +717,7 @@ knitr::include_graphics('images/02_methods/pca_plot.png')
 
 #### Filter individuals and markers 
 
-To create a data set to calculate selection statistics, the subset of the Genetics of Aotearoa individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the \gls{1kgp} phase 3 release. Before the data sets could be combined there were a series of steps that were performed. The first step was to keep only the individuals who had been selected through \gls{pca} and had a genotyping rate of at least 95%. Markers were filtered to remove \glspl{indel} so that only \glspl{snp} remained.
+To create a data set from which to calculate selection statistics, the subset of the Genetics of Aotearoa individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the \gls{1kgp} phase 3 release. This was done in order to have a common set of markers between all populations, making the populations comparable. Before the data sets could be combined there were a series of steps that were performed. The first step was to keep only the individuals who had been selected through \gls{pca} and had a genotyping rate of at least 95%. Markers were filtered to remove \glspl{indel} so that only \glspl{snp} remained.
 
 ```{r, engine = 'bash', eval = FALSE}
 parallel '
@@ -843,7 +849,7 @@ parallel
   ' ::: $(seq 1 22)
 ```
 
-Sample identifiers were then updated to match the panel file that describe the population and super population an individual belonged to.
+Sample identifiers were then updated to match the panel file that described the population and super population an individual belonged to.
 ```{r, engine = 'bash', eval = FALSE}
 # Combine FID and IID of CoreExome samples so they match the panel file
 for i in $(seq 1 22)
@@ -891,13 +897,13 @@ There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populat
 
 ### UK Biobank
 
-The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including sub-codes). The dataset was also filtered to individuals with a self reported an ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, failed genotype quality control. The remaining individuals were used eligible for the \gls{gwas} performed in section \@ref(ukbbgwas).
+The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including sub-codes). The dataset was also filtered to individuals with a self reported an ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, or whose samples failed genotype quality control. The remaining individuals were eligible for inclusion in the \gls{gwas} performed in section \@ref(ukbbgwas).
 
 
 
 ### Reference datasets
 
-Table \@ref(tab:refDatasets) provides the name of the dataset and the date it was accessed and the URL from which the dataset was downloaded. These datasets were incorporated into many of the analysis steps.
+Table \@ref(tab:refDatasets) provides the name of the dataset, the date it was accessed, and the URL from which the dataset was downloaded. These datasets were incorporated into many of the analysis steps.
 
 Table: (\#tab:refDatasets) _Reference Datasets_
 
