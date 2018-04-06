@@ -1,5 +1,152 @@
 # Appendix D
 
+Code
+
+## GWAS catalog gene list creation {#gwascatlist}
+```{r diseaseListKeywords, eval = FALSE, echo = TRUE}
+# libraries that are needed
+library(tidyverse)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(org.Hs.eg.db)
+
+# read in the gwas catalog entries
+gwas_cat <- read.delim(
+  'gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv', 
+  header=TRUE, stringsAsFactors = FALSE, sep='\t')
+
+#filter gwas catalogue for results of genome wide significance
+gwas_cat <- gwas_cat[ gwas_cat$P.VALUE < 5e-8,]
+
+gwas_interested <- gwas_cat[grep(
+  'metabolic syndrome|obesity|diabetes|urate|gout|body mass|lipid traits', 
+  gwas_cat$DISEASE.TRAIT, ignore.case = TRUE) ,]
+
+# create kidney disease associated gene list
+kd <- gwas_cat %>% 
+  filter(grepl(
+    DISEASE.TRAIT, pattern = 'kidney|renal', ignore.case=TRUE) & 
+      !grepl(DISEASE.TRAIT, 
+             pattern = 'transplant|carcinoma|Type|stones|gout|related')) %>% 
+  filter(DISEASE.TRAIT != "Diabetic kidney disease")
+
+# filter the gene list down to diseases of interest
+gwas_interested <- rbind(
+  gwas_interested[grep(paste0("child|erectile|lean|autoantibodies|gestational|",
+                              "cancer|psychopharmacol|metaformin|metformin|",
+                              "obstructive|interaction|asthmatics|",
+                              "omega|pain|cataracts|time|",
+                              "bilirubin|chain|thyroid|zhi|Type 1|cystic"), 
+                       gwas_interested$DISEASE.TRAIT, 
+                       invert = TRUE, ignore.case = TRUE),], 
+  kd)
+
+# pull out the genomic regions for all the transcripts for all the genes 
+# that we are interested in
+gwas_genes <-sort(unique(unlist(
+  strsplit(gwas_interested$REPORTED.GENE.S., split = ', '))))
+
+gwas_genes_entrez <- na.omit(select(
+  org.Hs.eg.db, keys = gwas_genes, 
+  columns = c('SYMBOL','ENTREZID'), keytype="SYMBOL"))
+
+gwas_genes_ucsc <- merge(select(
+  TxDb.Hsapiens.UCSC.hg19.knownGene, 
+  columns = c("TXID","TXCHROM","TXSTART","TXEND","TXSTRAND"),
+  keys = gwas_genes_entrez$ENTREZID, keytype="GENEID"), gwas_genes_entrez, 
+  by.x ='GENEID', by.y = "ENTREZID")
+
+gwas_genes_ucscGR <- GRanges(
+  gwas_genes_ucsc[!is.na(gwas_genes_ucsc$TXID) ,])
+gwas_genes_ucscGR <- gwas_genes_ucscGR[
+  which(gwas_genes_ucscGR@seqnames %in% paste0('chr',1:22))]
+
+# create the regions for the obesity associated genes
+obesity_GR <- gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(
+      gwas_interested[
+        grep("obesity|body mass",gwas_interested$DISEASE.TRAIT, 
+             ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+# create the regions for the t2d associated genes
+t2d_GR <- gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(
+      gwas_interested[grep("diabetes",gwas_interested$DISEASE.TRAIT,
+                           ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+# create the regions for metabolic syndrome associated genes
+metsyn_GR <- gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(
+      gwas_interested[grep("Syndrome",gwas_interested$DISEASE.TRAIT, 
+                           ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+# create the regions for urate and gout genes
+gc_urate_gout_GR <-  gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(
+      gwas_interested[grep("urate|gout",gwas_interested$DISEASE.TRAIT, 
+                           ignore.case = TRUE),]$REPORTED.GENE.S., ', '))),]
+
+# the entries that match the diseases reported in Zhang et al 2013 Table 2
+zhang_immune <- gwas_cat %>% 
+  filter(DISEASE.TRAIT %in% c("Crohn's disease", 'Celiac disease', 
+                              "Ulcerative colitis", "Inflammatory bowel disease", 
+                              "Type 1 diabetes", "Rheumatoid arthritis", 
+                              "Multiple sclerosis", "Psoriasis", 
+                              "Systemic lupus erythematosus", 
+                              "Primary biliary cirrhosis", "Vitiligo")) %>% 
+  dplyr::select(DISEASE.TRAIT, contains('gene'))
+
+# entries that have Parkinson's or Alzheimers disease
+neurological <- gwas_cat %>% 
+  filter(DISEASE.TRAIT %in%  c("Parkinson's disease", "Alzheimer's disease")) %>% 
+  dplyr::select(DISEASE.TRAIT, contains('gene'))
+
+#entries that have an association with malaria
+malaria <- gwas_cat %>% filter(DISEASE.TRAIT %in%  c( "Malaria")) %>% 
+  plyr::select(DISEASE.TRAIT, contains('gene'))
+
+# find the coordinatesfor the transcripts for the genes
+gwas_genes <-sort(unique(unlist(strsplit(c(zhang_immune$REPORTED.GENE.S., 
+                                           neurological$REPORTED.GENE.S., 
+                                           malaria$REPORTED.GENE.S.), split = ', '))))
+gwas_genes_entrez <- na.omit(AnnotationDbi::select(org.Hs.eg.db, 
+                                                   keys = gwas_genes, 
+                                                   columns = c('SYMBOL','ENTREZID'), 
+                                                   keytype="SYMBOL"))
+
+gwas_genes_ucsc<- merge(AnnotationDbi::select(TxDb.Hsapiens.UCSC.hg19.knownGene , 
+                                              columns = c("TXID","TXCHROM",
+                                                          "TXSTART","TXEND",
+                                                          "TXSTRAND"),
+                                              keys = gwas_genes_entrez$ENTREZID, 
+                                              keytype="GENEID"), 
+                        gwas_genes_entrez, by.x ='GENEID', by.y = "ENTREZID")
+
+gwas_genes_ucscGR <- GRanges(gwas_genes_ucsc[!is.na(gwas_genes_ucsc$TXID) ,])
+gwas_genes_ucscGR <- gwas_genes_ucscGR[which(gwas_genes_ucscGR@seqnames %in% 
+                                               paste0('chr',1:22))]
+
+# get the coordinates for the transcripts for the malaria associated genes
+malaria_GR <- gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(malaria$REPORTED.GENE.S., ', '))),]
+
+# get the coordinates for the transcripts for the auto immune associated genes
+zhang_immune_GR <- gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(zhang_immune$REPORTED.GENE.S., ', '))),]
+
+# get the coordinates for the transcripts for the neuro disease associated genes
+neurological_GR <- gwas_genes_ucscGR[
+  gwas_genes_ucscGR$SYMBOL %in% 
+    unique(unlist(strsplit(neurological$REPORTED.GENE.S., ', '))),]
+```
+
+
+
 SelectionTools Pipeline NeSI Scripts
 
 ## unimputed_selection_pipeline.sl
