@@ -201,7 +201,7 @@ full_join(entire, male) %>% full_join(., female) %>% full_join(., all_gout) %>%
                          def == "n_winnard" ~ "Winnard definition",
                          def == "n_selfult" ~ "Self-report of gout or ULT use"
                          )) %>% 
- kable(caption = '(\\#tab:ukbbprev) Number, prevalence (95\\% CI) of participants defined as gout cases', col.names = c("Definition", "No. of subjects, prevalence (95\\% CI) in entire study population (n = 105,421)", "No. of subjects, prevalence (95\\% CI) in male participants (n = 51,844) ","No. of subjects, prevalence (95\\% CI) in female participants (n = 53,577)", "Percentage (95\\% CI) of study population with gout using any definition (n = 2432)"),format = 'latex', booktabs = TRUE) %>% kable_styling(latex_options = "scale_down")
+ kable(caption = '(\\#tab:ukbbprev) Number, prevalence (95\\% CI) of\nparticipants defined as gout cases', col.names = c("Definition", "No. of subjects, prevalence (95\\% CI) in entire study population (n = 105,421)", "No. of subjects, prevalence (95\\% CI) in \nmale participants (n = 51,844) ","No. of subjects, prevalence (95\\% CI) in \nfemale participants (n = 53,577)", "Percentage (95\\% CI) of study \npopulation with gout using any definition (n = 2432)"),format = 'latex', booktabs = TRUE) %>% kable_styling(latex_options = "scale_down")
 
 ```
 
@@ -212,12 +212,12 @@ A \gls{gwas} was performed using logisitic regression in Plink1.9b [@plink] for 
 
 #### Heriabililty
 
-For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selected 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto the continuous liability scale using the restricted maximum likelihood analysis in gcta and a general population prevalence of gout of 2% (\@ref(gctaHeritability)).  Estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
+For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selected 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto the continuous liability scale using the restricted maximum likelihood analysis in gcta and a general population prevalence of gout of 2% (\@ref(gctaHeritability)). Estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
 
 
 \begin{equation} 
-  SE = \sqrt{SE_1^2 + SE_2^2}
-  (\#eq:h2se)
+ SE = \sqrt{SE_1^2 + SE_2^2}
+ (\#eq:h2se)
 \end{equation} 
 
 ### Polynesian Gout GWAS
@@ -250,7 +250,7 @@ Filtered for hwe < 1e-6 and maf > 0.01
 
 ```{r, message = FALSE}
 kot_t1 <- read.csv("~/data/kottgen_table1.csv", header = TRUE, stringsAsFactors = FALSE)
-uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% separate(file, c("file","CHR"), sep = ':') %>% mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" ))%>%  mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% stringi::stri_sub(9)) %>% left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
+uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% separate(file, c("file","CHR"), sep = ':') %>% mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" ))%>% mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% stringi::stri_sub(9)) %>% left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
 ```
 
 (ref:kotplot) Plot showing ORs (95% CI) for the 30 \glspl{snp} reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles. The reported Kottgen OR was inverted to maintain consistency of reported effect allele (A1) for the following markers: rs2307394, rs2079742, rs7224610, rs7188445, rs1178977, rs6770152, rs7193778, rs164009, rs653178, rs2078267, rs478607, and rs12498742.
@@ -261,7 +261,7 @@ flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770
 uk_kot_t1 %>% 
   #mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  
   select(gout, SNP, grail_gene,OR, L95, U95) %>% 
-  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR)  %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
+  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
               # mutate(gout = case_when(
               #   gout == 'hosp' ~ "Hospital", 
               #   gout == "self" ~ "Self Report", 
@@ -308,7 +308,7 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 kot_bim <- read_delim('data/Ukbiobank/kottgen_ukbb_alleles.txt', col_names = c("CHR","SNP","GPOS","POS","A1","A2"), delim = " ")
 
 #calculate number of snps that are significant
-uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS)  %>% mutate(P_bac = P) %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>% arrange(P) %>%  select(-grail_gene, -OR, -CHR) %>%group_by(gout) %>% mutate(P_sig = P_bac < (0.05/NROW(.)), P_gw = P_bac < 5e-8 ) %>% summarise( P_gw = sum(P_gw),P_exp = sum(P_sig)) %>% filter(gout != 'all')%>% gather("sig", "value",2:3) %>% spread(gout, value) %>% rename("SNP" = sig) %>% mutate_all(as.character) %>%  mutate(A1 = "", REF ="",ALT ="")
+uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate(P_bac = P) %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>% arrange(P) %>% select(-grail_gene, -OR, -CHR) %>%group_by(gout) %>% mutate(P_sig = P_bac < (0.05/NROW(.)), P_gw = P_bac < 5e-8 ) %>% summarise( P_gw = sum(P_gw),P_exp = sum(P_sig)) %>% filter(gout != 'all')%>% gather("sig", "value",2:3) %>% spread(gout, value) %>% rename("SNP" = sig) %>% mutate_all(as.character) %>% mutate(A1 = "", REF ="",ALT ="")
 
 
 # still need to flip snps to be in the same order as kottgen
@@ -336,27 +336,27 @@ uk_kot_t1 %>%
 - hosp
 
 ```{r}
-hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>%  kable()
+hosp_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
 ```
 
 
 ```{r, message = FALSE, warning = FALSE}
 dat <- hosp_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
+txdb_gene_annotate(dat %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% kable()
 ```
 
 
 - self
 
-There were ```r self_asb %>% filter(P < 1e-8,  nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% tally()``` \glspl{snp} that met the genome-wide significance threshold. 
+There were ```r self_asb %>% filter(P < 1e-8, nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% tally()``` \glspl{snp} that met the genome-wide significance threshold. 
 
 ```{r}
-self_asb %>% filter(P < 1e-8,  nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% dim()# kable()
+self_asb %>% filter(P < 1e-8, nchar(A1) ==1) %>% mutate(P = format(P, scientific = TRUE)) %>% dim()# kable()
 ```
 
 ```{r, message = FALSE, warning=FALSE}
 dat <- self_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
+txdb_gene_annotate(dat %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
 ```
 
 
@@ -365,7 +365,7 @@ txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = 
 
 ```{r, message = FALSE, warning=FALSE}
 dat <- selfult_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>%  kable()
+txdb_gene_annotate(dat %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
 ```
 
 
@@ -373,7 +373,7 @@ txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = 
 
 ```{r, message = FALSE, warning=FALSE}
 dat <- ult_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>%head() %>%  kable()
+txdb_gene_annotate(dat %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>%head() %>% kable()
 ```
 
 
@@ -382,7 +382,7 @@ txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = 
 
 ```{r, message = FALSE, warning = FALSE}
 dat <- all_asb 
-txdb_gene_annotate(dat %>%  filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
+txdb_gene_annotate(dat %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% mutate(chrom = paste0("chr",CHR), chrom_start = BP, chrom_end = BP +1, marker = SNP) %>% select(contains('chrom'), marker) %>% GRanges()) %>% left_join(., dat %>% mutate(start = BP, seqnames = paste0("chr",CHR)), by = c('seqnames','start')) %>% select(CHR, SNP, BP, SYMBOL, A1, OR, SE, L95, U95, P ) %>% arrange(P) %>% mutate(SYMBOL = ifelse(is.na(SYMBOL), paste0("NA_",CHR,"_",BP) , SYMBOL)) %>% group_by(CHR, SYMBOL ) %>% filter(min(P) == P) %>% arrange(CHR, BP) %>% mutate(P = format(P, scientific = TRUE)) %>% head() %>% kable()
 ```
 
 
@@ -422,7 +422,7 @@ To see if there was a difference between gout classifications in the genetic com
 
 
 
-<!-- Kottgen refs 10-12 put heritability explained for serum urate at 40-70%.  Kottgen reported heritability explained in serum urate loci that were adjusted for age and sex from 0.27 to 0.41. -->
+<!-- Kottgen refs 10-12 put heritability explained for serum urate at 40-70%. Kottgen reported heritability explained in serum urate loci that were adjusted for age and sex from 0.27 to 0.41. -->
 
 
 
@@ -516,7 +516,7 @@ UKBB paper discussion
 - large effect sizes -> effect sizes in GWAS of control of SU levels - consistent with their role in regulation of SU and gout risk
 - heritability estimates for variance explained by all common snps 0.282-0.308 (ex hospital def)
 - within the range from kottgen (0.27-0.41) and they also calculated using GCTA for SU
-- estimates of variance explained in european by common snps  are comparable, suggesting that the common genetic variant-mediated heritabilities of SU and gout are similar
+- estimates of variance explained in european by common snps are comparable, suggesting that the common genetic variant-mediated heritabilities of SU and gout are similar
 - diet, medications and other environmental factors contribute to risk of gout
 - heritabilities are estimated under an additive model, so don't include non-additive variance (GxG and GxE), rare variants, CNV
 - limited to european -> might not translate to other populations
