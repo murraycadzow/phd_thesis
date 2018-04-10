@@ -111,7 +111,7 @@ There were four main classification criteria that were used to define gout cases
 
 #### Model to decide covariates
 
-Prior to conducting the \gls{gwas} for gout, phenotypic models were assessed using any method of classifying gout. Logistic regression was performed and the \gls{aic} for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant on their own: age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (\gls{aic} 22706.05), sex (\gls{aic} 21041.80) and \gls{bmi} (\gls{aic} 22001.03). Based on the \gls{aic} for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown by affection status is in Table \@ref(tab:ukbbclin).
+Prior to conducting the \gls{gwas} for gout, phenotypic models were assessed using any method of classifying gout. Logistic regression was performed and the \gls{aic} for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant on their own: age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (\gls{aic} 22706.05), sex (\gls{aic} 21041.80) and \gls{bmi} (\gls{aic} 22001.03). Based on the \gls{aic} for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown of by affection status for anthropomorphic traits, drug use, and gout classifications, is in Table \@ref(tab:ukbbclin).
 
 
 
@@ -134,7 +134,7 @@ lapply(c(1,2,4,3,5 ), function(x){broom::tidy(models[[x]]$model)})
 #### UK Biobank participant characteristics
 
 ```{r, results = 'asis'}
-ukbio_gout %>% summarise(n = n(), percent_male = 1 - sum(sex)/NROW(.), mean_age = mean(age, na.rm = TRUE), mean_bmi = mean(bmi, na.rm = TRUE),  febuxostat = sum(febuxostat, na.rm = TRUE), allopurinol = sum(allopurinol, na.rm = TRUE), sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), colchicine = sum(colchicine, na.rm = TRUE), hosp = sum(gouthosp, na.rm =TRUE), self = sum(goutself, na.rm=TRUE), winnard = sum(goutwinnard, na.rm = TRUE), ult = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>%  dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants.")
+  ukbio_gout %>% summarise(n = n(), `Male (\\%)` = round(1 - sum(sex)/NROW(.),2), `Mean Age (SD)` = paste0(round(mean(age, na.rm = TRUE),2), " (",round(sd(age, na.rm = TRUE),2), ")" )  , `Mean BMI (SD)` = paste0(round(mean(bmi, na.rm = TRUE),2), " (", round(sd(bmi, na.rm = TRUE),2),")"),  Febuxostat = sum(febuxostat, na.rm = TRUE), Allopurinol = sum(allopurinol, na.rm = TRUE), Sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), Colchicine = sum(colchicine, na.rm = TRUE), Hospital = sum(gouthosp, na.rm =TRUE), `Self-report` = sum(goutself, na.rm=TRUE), Winnard = sum(goutwinnard, na.rm = TRUE), ULT = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>% dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants.", format = "latex", escape = FALSE, col.names = c("", "Case", "Control")) %>% group_rows(., "Gout medication", 5, 8) %>% group_rows(., "Gout classification", 9, 12)
 ```
 
 
@@ -144,7 +144,7 @@ ukbio_gout %>% summarise(n = n(), percent_male = 1 - sum(sex)/NROW(.), mean_age 
 ```{r ukbbupsetplot, fig.width=6.5, fig.cap='(ref:ukbbupsetplot)', fig.asp=1/1.5 }
 
 listInput <- readRDS('data/Ukbiobank/upsetPlotList.RDS')
-UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 )
+UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 , nintersects = NA)
 ```
 
 ```{r ukbbNumbers}
@@ -183,16 +183,16 @@ ukbb_female_n$n_hosp <- ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1 & sex 
 
 There were a total of `r ukbb_n$n_gout` individuals that had any classification of gout and `r ukbb_n$n_controls` controls. Of those with any classification of gout, there were `r ukbb_n$n_hosp` with a hospital diagnosis, `r ukbb_n$n_ult` with urate lowering therapy, `r ukbb_n$n_winnard` with the Winnard criteria, and `r ukbb_n$n_self` with self-reported gout. The overlaps in classification between each group can be seen in Figure \@ref(fig:ukbbupsetplot). There was considerable overlap between the self-report, urate lowering therapy, and Winnard classifications with 1242 individuals meeting all three classifications.
 
-Confidence intervals for proportions were calculated using the _prop.test_ function from the _stats_ package in R.
+Confidence intervals for proportions were calculated using the \texttt{prop.test} function from the _stats_ package in R.
 
 ```{r}
-entire <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_entire = paste0(n, ", ", estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def,study_entire)
+entire <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_entire = paste0(n, ", ", estimate,"\\% (",conf.low, "-", conf.high, ")")) %>% select(def,study_entire)
 
-male <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_male = paste0(n, ", ", estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def, study_male)
+male <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_male = paste0(n, ", ", estimate,"\\% (",conf.low, "-", conf.high, ")")) %>% select(def, study_male)
 
-female <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_female = paste0(n, ", ", estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def, study_female)
+female <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_female = paste0(n, ", ", estimate,"\\% (",conf.low, "-", conf.high, ")")) %>% select(def, study_female)
 
-all_gout <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_gout )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_gout = paste0(estimate,"% (",conf.low, "-", conf.high, ")")) %>% select(def, study_gout)
+all_gout <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_gout )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_gout = paste0(estimate,"\\% (",conf.low, "-", conf.high, ")")) %>% select(def, study_gout)
 
 full_join(entire, male) %>% full_join(., female) %>% full_join(., all_gout) %>% 
   mutate(def = case_when(def == "n_self" ~ "Self-report of gout diagnosis",
@@ -201,7 +201,7 @@ full_join(entire, male) %>% full_join(., female) %>% full_join(., all_gout) %>%
                          def == "n_winnard" ~ "Winnard definition",
                          def == "n_selfult" ~ "Self-report of gout or ULT use"
                          )) %>% 
- kable(caption = '(\\#tab:ukbbprev) Number, prevalence (95\\% CI) of\nparticipants defined as gout cases', col.names = c("Definition", "No. of subjects, prevalence (95\\% CI) in entire study population (n = 105,421)", "No. of subjects, prevalence (95\\% CI) in \nmale participants (n = 51,844) ","No. of subjects, prevalence (95\\% CI) in \nfemale participants (n = 53,577)", "Percentage (95\\% CI) of study \npopulation with gout using any definition (n = 2432)"),format = 'latex', booktabs = TRUE) %>% kable_styling(latex_options = "scale_down")
+ kable(caption = '(\\#tab:ukbbprev) Number, prevalence (95\\% CI) of participants defined as gout cases', col.names = c("Definition", "No. of subjects, prevalence (95\\% CI) in entire study population (n = 105,421)", "No. of subjects, prevalence (95\\% CI) in male participants (n = 51,844) ","No. of subjects, prevalence (95\\% CI) in female participants (n = 53,577)", "Percentage (95\\% CI) of study population with gout using any definition (n = 2432)"),format = 'latex', booktabs = TRUE, escape = FALSE) %>% column_spec(., column = c(2:5), width = '3.5cm')%>% landscape() 
 
 ```
 
@@ -319,18 +319,25 @@ uk_kot_t1 %>%
   mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% 
   unite("CI",c("L95","U95"), sep = " -") %>%
   mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>%  
-  mutate(SNP = paste0(SNP, ' (', grail_gene,')'), Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-grail_gene, -OR, -CI, -P, -CHR) %>%
+  mutate(Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-OR, -CI, -P, -CHR) %>%
   spread(key = gout, value = Effect) %>% 
-  select(-all) %>% 
+  select(grail_gene, everything(), -all) %>%
+  arrange(grail_gene) %>% 
   #bind_rows(., uk_kot_psig ) %>% 
-  kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citet{Kottgen2013} for the different gout classification methods.', col.names = c("Marker", "A1", "A2", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% #group_rows("Number of significant markers", NROW(.)-1, NROW(.)) %>% 
-  kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95\\\\% CI], P. ULT = Urate lowering therapy. The reported effect allele is A1." , general_title = "", threeparttable = TRUE , escape = FALSE) %>% landscape()
+  kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citet{Kottgen2013} for the different gout classification methods.', col.names = c("Grail gene","Marker", "A1", "A2", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% #group_rows("Number of significant markers", NROW(.)-1, NROW(.)) %>% 
+  kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95\\\\% CI], P. ULT = Urate lowering therapy. The reported effect allele is A1. Effects are adjusted by age, sex, and BMI." , general_title = "", threeparttable = TRUE , escape = FALSE) %>% landscape()
 
 ```
 
-```{r}
-
+```{r, nkotsig}
+n_kot_sig <- uk_kot_t1 %>% group_by(gout) %>% summarise(gw = sum(P < 1e-8), ew = sum(P < 0.05/30))
 ```
+
+Experimant wide significance was defined as P < `r as.character(signif(0.005/30,2))`.
+The hospital classification had `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(gw) %>% num_to_word()` \gls{snp} that were significant at the genome-wide threshold (`r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` at experiment)
+
+Self-report had `r n_kot_sig %>% filter(gout == 'self') %>% pull(gw)` \glspl{snp} at genome-wide significance (`r n_kot_sig %>% filter(gout == 'self') %>% pull(ew)` at experiment-wide), and self-report or \gls{ult} was similar, with `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` \glspl{snp} at genome-wide significance and `r n_kot_sig %>% filter(gout == 'selfult') %>% pull(gw)` (`r n_kot_sig %>% filter(gout == 'selfult') %>% pull(ew)` experiment-wide)
+
 
 
 - hosp
@@ -429,7 +436,7 @@ To see if there was a difference between gout classifications in the genetic com
 ### European selection 
 - EUR/GBR/CEU selection results
 
-Compare the ukbiobank gwas results to those of the significant ihs/nsl snps
+Compare the ukbiobank gwas results to those of the significant ihs/nsl snps in the self or \gls{ult}
 
 
 ```{r}
