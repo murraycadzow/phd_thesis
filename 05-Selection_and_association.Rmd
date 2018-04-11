@@ -27,7 +27,7 @@ ukbio_gout <- bd_refined_gout %>% filter(f.eid %in% fam$V2) %>% select(goutaff, 
 ```
 
 
-This chapter about using the results of selection analyses to better inform \gls{gwas}
+This chapter is about using the results of selection analyses to better inform \gls{gwas}
 
 The first section of this chapter has been published as part of @Cadzow2017
 
@@ -57,43 +57,40 @@ Improvement gwas through the use of imputation:
 - HRC panel paper
 
 refer to gwas done by ukbio in all phenotypes and say it looks similar
+## Association studies for Gout
 
-## Performance of gout definitions
+### Performance of gout definitions
 
 Part of this work has been published in @Cadzow2017.
 
-This section describes the gout GWAS and vGWAS performed in the UKBiobank data and the comparision with the results from the selection analysis in the 1000 Genomes Project data.
+This section describes the gout GWAS performed in the UKBiobank data and the comparision with the results from the selection analysis in the 1000 Genomes Project data.
 
 
-UK Biobank approval 12611
 
 _genome-wide association studies_
 
-Genome-wide association studies provide a statistical framework for an association analysis between a phenotype of interest, and a genotypes of a genetic marker, usually using linear regression for a continuous trait, or logisitic regression for a dichotomous trait. The association test in a gwas is repeated for all available markers across the genome.  
+Genome-wide association studies provide a statistical framework for an association analysis between a phenotype of interest, and a genotypes of a genetic marker, usually using linear regression for a continuous trait, or logisitic regression for a dichotomous trait. The association test, in a \gls{gwas} context, is repeated for all available markers across the genome.
 
 _Introduction of ukbiobank_
 
-The UK Biobank is a publically available data set consisting of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestype information. As part of the UK Biobank, participants filled in detailed surveys on health and lifestyle questions, provided biological samples, and were genotyped on an Axiom array with 820,967 markers (Affymetrix, Santa Clara, CA, USA). The genotypes were phased using SHAPEIT3, and then imputed using IMPUTE2 with both the UK10K impute reference panel, and the haplotype reference consortium impute panel, to bring the total number of \glspl{snp} to approximately 73.3 milion.
+The UK Biobank is a publically available data set consisting of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It contains genetic, health, and lifestype information. As part of the UK Biobank collection process, participants filled in detailed surveys on health and lifestyle questions, provided biological samples, and provided access to administrative health records.
 
 
 _Motivation behind using the different definitions_
 
-In epidemiological studies the use of an accurate case definition is important. 
+In epidemiological studies the use of an accurate case definition is important. There is variation in the gout definitions used from the multi-purpose cohort studies that are used for genetic analysis, some well known cohorts include the Wellcome Trust case control constortium cohort, the Framingham Heart Study and the Artherosis risk in the community study [@Burton2007;@Aric1989; \@fhs]. 
 
-There is variation in the gout definitions used from the multipurpose cohort studies that are used for genetic analysis. 
-
-Consistent case definition is also important for comparisons between cohorts, this can be done by combining the genetic data and performing the \gls{gwas}. Another common way of combining genetic association studies is through meta-analysis. Having the same case definitions between studies reduces the variations 
-
-For gout, the gold standard case definition is the mono-soldium urate crystals in the synovial fluid of the joint. A sustitute for crystals in the synovial fluid is the American College of Rheumatology (ACR) criteria. The criteria require a minimum of six of twelve conditions to be met. 
-
-It is uncommon for multipurpose cohorts to report either the gold-standard, or ACR criteria, and instead more common for a self-report diagnosis to be reported. The UK Biobank includes the self-report diagnosis that were collected by survey at the time of recruitment, but it also has hospital admission information, for both primary and secondary diagnosis.  
+The use of a consistent case definition is also important for comparisons between cohorts, this can be done by combining the genetic data and performing the \gls{gwas}. Another common way of combining genetic association studies is through meta-analysis. In both instances, having the same case definitions between studies reduces the variation. Power of genetic case-control studies increases with accurate case definition. This means that there are the maximum number of cases, and the maximum number of disease free controls [\@ref]. For gout, the gold standard case definition is the mono-soldium urate crystals in the synovial fluid of the joint [\@ref]. A sustitute for crystals in the synovial fluid is the \gls{acr} criteria [@Wallace1977]. The criteria require a minimum of six of twelve conditions to be met. It is uncommon for multipurpose cohorts to report either the gold-standard, or ACR criteria, but instead, for a self-report diagnosis of conditions and diseases to be reported. The UK Biobank includes the self-report diagnoses that were collected by survey at the time of recruitment, but it also has hospital admission information, for both primary and secondary diagnosis.  
 
 
 
-Power of genetic case-control studies increases with accurate case definition. This means that there are the maximum number of cases, and the maximum number of disease free controls.
 
 
-_polynesian gwas_
+### Polynesian associations with gout
+
+Phipps-Green2016
+
+### Use of selection statistics to inform GWAS
 
 ## Methods
 
@@ -104,15 +101,13 @@ This \gls{gwas} was performed using the interim data release from the UK Biobank
 
 Inclusion criteria were European ethnicity, aged between 40 and 69 years and had genome wide genotypes available. The exclusion criteria used was: mismatch between self-reported sex and genetic sex, genotype quality control failure, relatedness, or either a primary or secondary hospital diagnosis of kidney disease (International Classification of Diseases, Tenth Revision (ICD-10), codes I12, I13, N00-N05, N07, N11, N14, N17–N19, Q61, N25.0, Z49, Z94.0, Z99.2), participants aged 70 years and over, and those with kidney disease, because these are risk factors for secondary gout.
 
+Inidivduals from the UK Biobank cohort were genotyped on an Axiom array with 820,967 markers (Affymetrix, Santa Clara, CA, USA). The genotypes were phased using SHAPEIT3, and then imputed using IMPUTE2 with both the UK10K impute reference panel, and the haplotype reference consortium impute panel, to bring the total number of \glspl{snp} to approximately 73.3 milion. Genotyping, phasing, and imputation were performed by the UK Biobank.
 
 #### Classifications used
 
 There were four main classification criteria that were used to define gout cases. _Hospital defined gout_ involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). _Self-report of gout_ was defined as reporting having gout at the time of the study interview. _Use of \gls{ult}_ used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukemia or lymphoma (ICD-10 codes C81-C96). _Winnard defined gout_ was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
 
-#### Model to decide covariates
-
-Prior to conducting the \gls{gwas} for gout, phenotypic models were assessed using any method of classifying gout. Logistic regression was performed and the \gls{aic} for each model was used for model selection. The covariates used included: age, sex, BMI. Each covariate was significant on their own: age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model with all three covariates there was an AIC for the model of 19558.30 compared to models with each with age (\gls{aic} 22706.05), sex (\gls{aic} 21041.80) and \gls{bmi} (\gls{aic} 22001.03). Based on the \gls{aic} for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown of by affection status for anthropomorphic traits, drug use, and gout classifications, is in Table \@ref(tab:ukbbclin).
-
+Confidence intervals for proportions were calculated using the \texttt{prop.test} function from the _stats_ package in R.
 
 
 ```{r, warning = FALSE, eval = FALSE}
@@ -128,23 +123,6 @@ broom::tidy(models[[5]]$model) %>% mutate(p.value = format(p.value, scientific =
 
 ```{r, eval = FALSE}
 lapply(c(1,2,4,3,5 ), function(x){broom::tidy(models[[x]]$model)})
-```
-
-
-#### UK Biobank participant characteristics
-
-```{r, results = 'asis'}
-  ukbio_gout %>% summarise(n = n(), `Male (\\%)` = round(1 - sum(sex)/NROW(.),2), `Mean Age (SD)` = paste0(round(mean(age, na.rm = TRUE),2), " (",round(sd(age, na.rm = TRUE),2), ")" )  , `Mean BMI (SD)` = paste0(round(mean(bmi, na.rm = TRUE),2), " (", round(sd(bmi, na.rm = TRUE),2),")"),  Febuxostat = sum(febuxostat, na.rm = TRUE), Allopurinol = sum(allopurinol, na.rm = TRUE), Sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), Colchicine = sum(colchicine, na.rm = TRUE), Hospital = sum(gouthosp, na.rm =TRUE), `Self-report` = sum(goutself, na.rm=TRUE), Winnard = sum(goutwinnard, na.rm = TRUE), ULT = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>% dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants.", format = "latex", escape = FALSE, col.names = c("", "Case", "Control")) %>% group_rows(., "Gout medication", 5, 8) %>% group_rows(., "Gout classification", 9, 12)
-```
-
-
-
-(ref:ukbbupsetplot) An upset plot showing the total sizes (left) and intersections (upper) of the different classification criteria.
-
-```{r ukbbupsetplot, fig.width=6.5, fig.cap='(ref:ukbbupsetplot)', fig.asp=1/1.5 }
-
-listInput <- readRDS('data/Ukbiobank/upsetPlotList.RDS')
-UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 , nintersects = NA)
 ```
 
 ```{r ukbbNumbers}
@@ -181,11 +159,76 @@ ukbb_female_n$n_hosp <- ukbio_gout %>% filter(goutaff ==1 & gouthosp == 1 & sex 
 ```
 
 
-There were a total of `r ukbb_n$n_gout` individuals that had any classification of gout and `r ukbb_n$n_controls` controls. Of those with any classification of gout, there were `r ukbb_n$n_hosp` with a hospital diagnosis, `r ukbb_n$n_ult` with urate lowering therapy, `r ukbb_n$n_winnard` with the Winnard criteria, and `r ukbb_n$n_self` with self-reported gout. The overlaps in classification between each group can be seen in Figure \@ref(fig:ukbbupsetplot). There was considerable overlap between the self-report, urate lowering therapy, and Winnard classifications with 1242 individuals meeting all three classifications.
 
-Confidence intervals for proportions were calculated using the \texttt{prop.test} function from the _stats_ package in R.
+#### Gout association test
 
-```{r}
+A \gls{gwas} was performed using logisitic regression in Plink1.9b [@plink2; @Chang2015] for each gout classification, with age, sex, and \gls{bmi} as co-variates. The association results for each \gls{gwas} were then compared with the 30 \glspl{snp} reported in Table 1 of @Kottgen2013 that had previously been associated with urate and gout in a cohort of >140,000 Europeans. 
+
+
+#### Heriabililty
+
+For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selected 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto the continuous liability scale using the restricted maximum likelihood analysis using GCTA (v1.26.0) and a general population prevalence of gout of 2% (section \@ref(gctaHeritability)). Heritabilty estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
+
+> need to explain the continuity scale and the reml approach
+
+\begin{equation} 
+ SE = \sqrt{SE_1^2 + SE_2^2}
+ (\#eq:h2se)
+\end{equation} 
+
+### Polynesian Gout GWAS
+
+#### Polynesian gout gwas dataset
+
+A multi-cohort gout dataset was assembled by combining individuals from the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and the Ngati Porou Hauora Charitable Trust cohort. Genotyping on the Inifinium CoreExome v24 bead-chip was performed at the University of Queensland (Centre for Clinical Genomics) for the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and at AgResearch (Invermay Agricultural Centre) for the Ngati Porou Hauora Charitable Trust cohort. The genotype quality control procedures as described in section \@ref(coreExomeQC) were applied per cohort, and then as necessary after combining the cohorts. The genotype quality control, and combining of cohorts was performed by Dr Tanya Major, Merriman Lab. \Glsdesc{pca} was performed on the combined dataset with the first 10 components outputted and 
+
+
+
+#### Polynesian gout GWAS
+
+A \gls{gwas} was also performed for individuals with Polynesian ancestry. Gout affection was determined by the American college of rheumatology criteria [\@ref], or a doctor diagnosis, or enrolled in a gout drug trial. All participants were older than 18, and provided informed written consent. Exclusion criteria included unknown gout affection status, non-Polynesian self-reported ancestry, or a mismatch between self-report ancestry and \gls{pca} clustering.
+
+<!-- polynesian_gout-affection.pheno -->
+<!--     - gout either ACR criteria or GP diagnosed / in a gout drug trial (only 119 not ACR) -->
+<!--     - excluded unknown gout status, non-polynesian (either self-report or PCA mismatch), and people <18 years old -->
+
+
+The \gls{gwas} was adjusted for age, sex, and the first ten \glspl{pc} calculated from 2,858 ancestry informative markers (as identified by Illumina). Markers were filtered to remove if the minor allele frequency was less than 0.01, or had an \gls{hwe} chi-squared exact test P > 1x10^-6^. The \gls{gwas} was conducted by Dr Tanya Major(Merriman Lab).
+
+
+
+
+## Results
+
+### UK Biobank
+
+#### Particpant and association model characteristics
+
+There was genome-wide genotype data for 105,421 participants, after applying the inclusion and exclusion criteria. The mean \gls{bmi} for all participants was `r ukbio_gout %>%ungroup() %>%  summarise(bmi = mean(bmi, na.rm = TRUE)) %>% pull(bmi) %>% round(., 2)` kg/m^2^, the mean age was `r ukbio_gout %>%ungroup() %>% summarise(age = mean(age, na.rm = TRUE)) %>% pull(age) %>% round(., 2)` years, and `r ukbio_gout %>%ungroup() %>% summarise(percent_male = (1 - sum(sex)/NROW(.)) *100) %>% pull(percent_male) %>% round(., 2)`% were male. A breakdown of by affection status for anthropomorphic traits, drug use, and gout classifications is in Table \@ref(tab:ukbbclin).
+
+Prior to performing the \glspl{gwas} using the different classifications for gout, the best model (determined by \gls{aic}) for phenotypic co-variate adjustment was determined by logistic regression. Known co-variates for gout included age, sex, and \gls{bmi}. Each of these co-variates were tested individually and together. Each covariate had a significant of association on their own: age (P = \num{`r broom::tidy(models[[1]]$model) %>% filter(term == 'age') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), sex (P = \num{`r broom::tidy(models[[2]]$model) %>% filter(term == 'sex_factormale') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}), and \gls{bmi} (P = \num{`r broom::tidy(models[[4]]$model) %>% filter(term == 'bmi') %>% .[['p.value']] %>% format(., scientific = TRUE, digits = 3)`}). In the combined model, with all three covariates there was an \gls{aic} for the model of 19558.30 compared to models with each with age (\gls{aic} 22706.05), sex (\gls{aic} 21041.80) and \gls{bmi} (\gls{aic} 22001.03). Based on the \gls{aic} for the combined model, age, sex, and \gls{bmi} were used as the covariates in the \gls{gwas} for gout. 
+
+```{r, results = 'asis'}
+  ukbio_gout %>% summarise(n = n(), `Male (\\%)` = round(1 - sum(sex)/NROW(.),2), `Mean Age (SD)` = paste0(round(mean(age, na.rm = TRUE),2), " (",round(sd(age, na.rm = TRUE),2), ")" )  , `Mean BMI (SD)` = paste0(round(mean(bmi, na.rm = TRUE),2), " (", round(sd(bmi, na.rm = TRUE),2),")"),  Febuxostat = sum(febuxostat, na.rm = TRUE), Allopurinol = sum(allopurinol, na.rm = TRUE), Sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), Colchicine = sum(colchicine, na.rm = TRUE), Hospital = sum(gouthosp, na.rm =TRUE), `Self-report` = sum(goutself, na.rm=TRUE), Winnard = sum(goutwinnard, na.rm = TRUE), ULT = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>% dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants.", format = "latex", escape = FALSE, col.names = c("", "Case", "Control")) %>% group_rows(., "Gout medication", 5, 8) %>% group_rows(., "Gout classification", 9, 12)
+```
+
+#### Performance of classification
+
+There were a total of `r ukbb_n$n_gout` individuals that had any classification of gout and `r ukbb_n$n_controls` controls. Of those with any classification of gout, there were `r ukbb_n$n_hosp` with a hospital diagnosis, `r ukbb_n$n_ult` with urate lowering therapy, `r ukbb_n$n_winnard` with the Winnard criteria, and `r ukbb_n$n_self` with self-reported gout. The overlaps in classification between each group can be seen in Figure \@ref(fig:ukbbupsetplot). There was considerable overlap between the self-report, urate lowering therapy, and Winnard classifications with 1242 individuals meeting all three classifications. There were 571 (27.6%) of 2066 participants who could only be defined through self-report. And for hospital diagnosis, 126 (33.0%) of 382, did not meet the self-report of gout, or \gls{ult} use definition criteria.
+
+
+The prevalence of gout from all definitions was `r round(ukbb_n$n_gout/ukbb_n$n_control *100,1)`%, this ranged from the lowest prevalence of gout of 0.36%, from the hospital diagnosis defintion, through to the highest of 2.18%, by self-report of gout or \gls{ult} usage in the study population (Table \@ref(tab:ukbbprev)).
+
+(ref:ukbbupsetplot) An upset plot showing the total sizes (left) and intersections (upper) of the different classification criteria.
+
+```{r ukbbupsetplot, fig.width=6.5, fig.cap='(ref:ukbbupsetplot)', fig.asp=1/1.5 }
+
+listInput <- readRDS('data/Ukbiobank/upsetPlotList.RDS')
+UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3 , nintersects = NA)
+```
+
+
+```{r, message = FALSE}
 entire <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_entire = paste0(n, ", ", estimate,"\\% (",conf.low, "-", conf.high, ")")) %>% select(def,study_entire)
 
 male <- purrr::map_df(names(ukbb_n)[!names(ukbb_n)  %in% c("n_controls", 'n_total', "n_gout")], ~ c(broom::tidy(prop.test(x = ukbb_n[[.x]], n = ukbb_n$n_total )), def = .x, n =ukbb_n[[.x]] )) %>% select(def, n, estimate, conf.low, conf.high) %>% mutate_at(.vars = c("estimate", "conf.low", "conf.high"), .funs = function(x){round(x * 100, 2)}) %>% mutate(study_male = paste0(n, ", ", estimate,"\\% (",conf.low, "-", conf.high, ")")) %>% select(def, study_male)
@@ -205,48 +248,16 @@ full_join(entire, male) %>% full_join(., female) %>% full_join(., all_gout) %>%
 
 ```
 
-#### Gout association test
+#### Replication of @Kottgen2013 urate associated loci
 
-A \gls{gwas} was performed using logisitic regression in Plink1.9b [@plink] for each gout classification, with age, sex, and \gls{bmi} as co-variates. The association results for each \gls{gwas} were then compared with the 30 \glspl{snp} reported in Table 1 of @Kottgen2013 that had previously been associated with urate and gout in a cohort of >140,000 Europeans. 
-
-
-#### Heriabililty
-
-For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selected 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto the continuous liability scale using the restricted maximum likelihood analysis in gcta and a general population prevalence of gout of 2% (\@ref(gctaHeritability)). Estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
-
-
-\begin{equation} 
- SE = \sqrt{SE_1^2 + SE_2^2}
- (\#eq:h2se)
-\end{equation} 
-
-### Polynesian Gout GWAS
-
-#### Polynesian gout gwas dataset
-
-A multi-cohort gout dataset was assembled by combining individuals from the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and the Ngati Porou Hauora Charitable Trust cohort. Genotyping on the Inifinium CoreExome v24 bead-chip was performed at the University of Queensland (Centre for Clinical Genomics) for the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and at AgResearch (Invermay Agricultural Centre) for the Ngati Porou Hauora Charitable Trust cohort. The genotype quality control procedures as described in section \@ref(coreExomeQC) were applied per cohort, and then as necessary after combining the cohorts. The genotype quality control, and combining of cohorts was performed by Dr Tanya Major, Merriman Lab. \Glsdesc{pca} was performed on the combined dataset with the first 10 components outputted and 
+Analysis of the 30 reported urate associated \glspl{snp} from @Kottgen2013 revealed similar odds ratios for all gout definitions (Figure \@ref(fig:kotplot), Table \@ref(tab:ukbbkot)). Experiment wide significance was defined as P < `r as.character(signif(0.005/30,2))`, and genome-wide significance as P < 5x10^-8^.
 
 
 
-#### Polynesian gout GWAS
 
-A \gls{gwas} was also performed for individuals with Polynesian ancestry. 
-Gout affection was determined by the American college of rheumatology criteria [@ref], or a doctor diagnosis, or enrolled in a gout drug trial. All participants were older than 18. Exclusion criteria included unknown gout affection status, non-Polynesian self-reported ancestry, or a mismatch between self-report ancestry and \gls{pca} clustering.
+The hospital classification had `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(gw) %>% num_to_word()` \gls{snp} that were significant at the genome-wide threshold (`r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` at experiment)
 
-<!-- polynesian_gout-affection.pheno -->
-<!--     - gout either ACR criteria or GP diagnosed / in a gout drug trial (only 119 not ACR) -->
-<!--     - excluded unknown gout status, non-polynesian (either self-report or PCA mismatch), and people <18 years old -->
-
-
-Principal components were 
-
-The \gls{gwas} was adjusted for age, sex, and the first ten \glspl{pc} calculated from 2,858 ancestry informative markers (as identified by Illumina) 
-The \gls{gwas} was conducted by Dr Tanya Major, a member of the Merriman Lab group.
-
-
-Filtered for hwe < 1e-6 and maf > 0.01
-
-## Results
+Self-report had `r n_kot_sig %>% filter(gout == 'self') %>% pull(gw)` \glspl{snp} at genome-wide significance (`r n_kot_sig %>% filter(gout == 'self') %>% pull(ew)` at experiment-wide), and self-report or \gls{ult} was similar, with `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` \glspl{snp} at genome-wide significance and `r n_kot_sig %>% filter(gout == 'selfult') %>% pull(gw)` (`r n_kot_sig %>% filter(gout == 'selfult') %>% pull(ew)` experiment-wide)
 
 ```{r, message = FALSE}
 kot_t1 <- read.csv("~/data/kottgen_table1.csv", header = TRUE, stringsAsFactors = FALSE)
@@ -274,7 +285,7 @@ uk_kot_t1 %>%
 
 
 
-### UK Biobank
+
 
 #### GWAS results
 
@@ -333,10 +344,12 @@ uk_kot_t1 %>%
 n_kot_sig <- uk_kot_t1 %>% group_by(gout) %>% summarise(gw = sum(P < 1e-8), ew = sum(P < 0.05/30))
 ```
 
-Experimant wide significance was defined as P < `r as.character(signif(0.005/30,2))`.
-The hospital classification had `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(gw) %>% num_to_word()` \gls{snp} that were significant at the genome-wide threshold (`r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` at experiment)
+```{r}
+n_kot_sig
+```
 
-Self-report had `r n_kot_sig %>% filter(gout == 'self') %>% pull(gw)` \glspl{snp} at genome-wide significance (`r n_kot_sig %>% filter(gout == 'self') %>% pull(ew)` at experiment-wide), and self-report or \gls{ult} was similar, with `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` \glspl{snp} at genome-wide significance and `r n_kot_sig %>% filter(gout == 'selfult') %>% pull(gw)` (`r n_kot_sig %>% filter(gout == 'selfult') %>% pull(ew)` experiment-wide)
+
+
 
 
 
@@ -434,19 +447,25 @@ To see if there was a difference between gout classifications in the genetic com
 
 
 ### European selection 
-- EUR/GBR/CEU selection results
-
-Compare the ukbiobank gwas results to those of the significant ihs/nsl snps in the self or \gls{ult}
-
 
 ```{r}
 # ihs and nsl sig markers
 sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2 )
 sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2 )
+
 ```
 
+
+In order to investigate the relationship between the haplotypic selection results and the gout \gls{gwas} using the UK Biobank, the significant results for \gls{ihs} and \gls{nsl} for \gls{gbr} from the \gls{1kgp} were compared to those for the \gls{gwas}. Given that the classification of self-reported gout or on \gls{ult} had the best performance, it was selected as the gout classification method to compare to.
+
+There were no \gls{ihs} \glspl{snp} that also had P < 5x10^-5^ in the \gls{gwas}. If the significance threshold for \gls{ihs} was reduced to |\gls{ihs}| > 2 (approximately the 5% extreme most values), then there were three \glspl{snp}, all located at _SLC22A12_ or within 1kb, that were genome-wide significant in the \gls{gwas} (rs505802, rs9734313, and rs559946), and four \glspl{snp} that were nominally significant.
+
+There was a single marker - rs7185008 - that had both a significant \gls{nsl} score, and had a nominally significant \gls{gwas} P-value (P = 1.8x10^-5^, adjusted for age, sex, and \gls{bmi}). 
+
+
+
 ```{r}
-sig_ihs_val %>% filter(pop == 'GBR') %>% inner_join(., all_asb, by = c("chrom" = "CHR", "chrom_start" = "BP"))
+sig_ihs_val %>% filter(pop == 'GBR') %>% inner_join(., selfult_asb, by = c("chrom" = "CHR", "chrom_start" = "BP"))
 ```
 
 
@@ -488,7 +507,7 @@ sig_ihs_val %>% filter(superpop == 'POL') %>% inner_join(., polyGout %>% filter(
 sig_nsl_val %>% filter(superpop == 'POL') %>% inner_join(., polyGout %>% filter(P < 5e-2, TEST == "ADD"), by = c("chrom" = "CHR", "chrom_start" = "BP")) %>% ggplot(., aes(x = -log10(P), y = statvalue)) + geom_point()
 ```
 
-> Compared to the comparison in GWAS for gout with the ukbiobank, the Polynesian gwas did not have 
+> Compared to the comparison in GWAS for gout with the ukbiobank, the Polynesian gwas did not have many snps with a p value lower than 10^-4^
 
 > There were XXX snps that had an ihs that was greater than XXX and a P value less than XXX. With nls there were similar/different snps. The snps that were in common between the two statitics were XXX.
 
