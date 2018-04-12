@@ -250,18 +250,49 @@ full_join(entire, male) %>% full_join(., female) %>% full_join(., all_gout) %>%
 
 #### Replication of @Kottgen2013 urate associated loci
 
-Analysis of the 30 reported urate associated \glspl{snp} from @Kottgen2013 revealed similar odds ratios for all gout definitions (Figure \@ref(fig:kotplot), Table \@ref(tab:ukbbkot)). Experiment wide significance was defined as P < `r as.character(signif(0.005/30,2))`, and genome-wide significance as P < 5x10^-8^.
-
-
-
-
-The hospital classification had `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(gw) %>% num_to_word()` \gls{snp} that were significant at the genome-wide threshold (`r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` at experiment)
-
-Self-report had `r n_kot_sig %>% filter(gout == 'self') %>% pull(gw)` \glspl{snp} at genome-wide significance (`r n_kot_sig %>% filter(gout == 'self') %>% pull(ew)` at experiment-wide), and self-report or \gls{ult} was similar, with `r n_kot_sig %>% filter(gout == 'hosp') %>% pull(ew)` \glspl{snp} at genome-wide significance and `r n_kot_sig %>% filter(gout == 'selfult') %>% pull(gw)` (`r n_kot_sig %>% filter(gout == 'selfult') %>% pull(ew)` experiment-wide)
-
 ```{r, message = FALSE}
 kot_t1 <- read.csv("~/data/kottgen_table1.csv", header = TRUE, stringsAsFactors = FALSE)
-uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% separate(file, c("file","CHR"), sep = ':') %>% mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" ))%>% mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% stringi::stri_sub(9)) %>% left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
+uk_kot_t1 <-read_delim(file = 'data/Ukbiobank/kottgen_t1_age_sex_bmi_results.txt', delim = '\t', col_names = c("file","SNP","POS","A1","TEST","NMISS","OR", "SE", "L95", "U95", "STAT", "P")) %>% 
+  separate(file, c("file","CHR"), sep = ':') %>% 
+  mutate(file = stringi::stri_replace(file, "selfult", regex ="self_ult" )) %>% 
+  mutate(gout = map_chr(stringi::stri_split(file, regex = "_"), 1) %>% 
+           stringi::stri_sub(9)) %>% 
+  left_join(., kot_t1 %>% select(SNP, grail_gene), by = "SNP")
+
+# create the table of kottgen snps from the data
+# age, sex, and bmi adjusted
+kot_bim <- read_delim('data/Ukbiobank/kottgen_ukbb_alleles.txt', col_names = c("CHR","SNP","GPOS","POS","A1","A2"), delim = " ")
+
+#calculate number of snps that are significant
+uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate(P_bac = P) %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>% arrange(P) %>% select(-grail_gene, -OR, -CHR) %>%group_by(gout) %>% mutate(P_sig = P_bac < (0.05/NROW(.)), P_gw = P_bac < 5e-8 ) %>% summarise( P_gw = sum(P_gw),P_exp = sum(P_sig)) %>% filter(gout != 'all')%>% gather("sig", "value",2:3) %>% spread(gout, value) %>% rename("SNP" = sig) %>% mutate_all(as.character) %>% mutate(A1 = "", REF ="",ALT ="")
+```
+
+Analysis of the 30 reported urate associated \glspl{snp} from @Kottgen2013 revealed similar odds ratios for all gout definitions (Figure \@ref(fig:kotplot), Table \@ref(tab:ukbbkot)). Experiment wide significance was defined as P < `r as.character(signif(0.005/30,2))`, and genome-wide significance as P < 5x10^-8^. There were differing numbers of \glspl{snp} that had a sigificant association with gout, both at genome and the experiment-wide thresholds between the gout definitions used. Meeting genome-wide significance, there were five \glspl{snp} (_ABCG2_, _GCKR_, _SLC17A3_, _SLC22A12_, and _SLC2A9_) for both the self-reported gout or \gls{ult} usage definition and the self-reported gout defintion, four \glspl{snp} (_ABCG2_, _GCKR_, _SLC22A12_, and _SLC2A9_) for the \gls{ult} usage definition, three \glspl{snp} (_ABCG2_, _GCKR_, and _SLC2A9_) for the Winnard definition, and two \glspl{snp} (_ABCG2_ and _SLC2A9_) for the hospital diagnosis definition. For all definitions, the effect size and strength of association was larger for _ABCG2_ than _SLC2A9_. At the experiment-wide significance threshold, there were 13 \glspl{snp} for the self-reported gout or \gls{ult} use definition, 12 \glspl{snp} for the self-reported gout definition, 11 for \gls{ult} use definition, 10 for the Winnard definition, and three \glspl{snp} for the hospital diagnosis definition.
+
+
+```{r, nkotsig}
+n_kot_sig <- uk_kot_t1 %>% group_by(gout) %>% summarise(gw = sum(P < 5e-8), ew = sum(P < 0.05/30))
+```
+
+
+
+```{r, message=FALSE}
+# still need to flip snps to be in the same order as kottgen
+uk_kot_t1 %>% 
+  select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>%  
+  left_join(., kot_bim %>% select(SNP, A1, A2), by = c("SNP", "A1")) %>% 
+  #mutate(OR = ifelse(A1 != REF, 1/OR, OR), L95 = ifelse(A1 != REF, 1/U95, L95), U95 = ifelse(A1 != REF, 1/L95, U95), mod = ifelse(A1 != REF, 1, 0)) %>% 
+  mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% 
+  unite("CI",c("L95","U95"), sep = " -") %>%
+  mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>%  
+  mutate(Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-OR, -CI, -P, -CHR) %>%
+  spread(key = gout, value = Effect) %>% 
+  select(grail_gene, everything(), -all) %>%
+  arrange(grail_gene) %>% 
+  #bind_rows(., uk_kot_psig ) %>% 
+  kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citet{Kottgen2013} for the different gout classification methods.', col.names = c("Grail gene","Marker", "A1", "A2", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% #group_rows("Number of significant markers", NROW(.)-1, NROW(.)) %>% 
+  kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95\\\\% CI], P. ULT = Urate lowering therapy. The reported effect allele is A1. Effects are adjusted by age, sex, and BMI." , general_title = "", threeparttable = TRUE , escape = FALSE) %>% landscape()
+
 ```
 
 (ref:kotplot) Plot showing ORs (95% CI) for the 30 \glspl{snp} reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles. The reported Kottgen OR was inverted to maintain consistency of reported effect allele (A1) for the following markers: rs2307394, rs2079742, rs7224610, rs7188445, rs1178977, rs6770152, rs7193778, rs164009, rs653178, rs2078267, rs478607, and rs12498742.
@@ -299,7 +330,7 @@ number of significant snps
 - self ult `r selfult_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
 - winnard `r winnard_asb %>% filter(P < 1e-8, nchar(A1) ==1 ) %>% NROW()`
 
-(ref:Overlap) Overlap of markers that reached at nominal genome-wide significance between the different gout classifications.
+(ref:Overlap) Overlap of markers that reached nominal genome-wide significance between the different gout classifications.
 
 ```{r ukOverlap, fig.cap = '(ref:ukOverlap)'}
 listInput <- list(hosp = hosp_asb %>% filter(P < 1e-5, nchar(A1) ==1 ) %>% pull(SNP),
@@ -313,40 +344,7 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 ```
 
 
-```{r, message=FALSE}
-# create the table of kottgen snps from the data
-# age, sex, and bmi adjusted
-kot_bim <- read_delim('data/Ukbiobank/kottgen_ukbb_alleles.txt', col_names = c("CHR","SNP","GPOS","POS","A1","A2"), delim = " ")
 
-#calculate number of snps that are significant
-uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate(P_bac = P) %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>% arrange(P) %>% select(-grail_gene, -OR, -CHR) %>%group_by(gout) %>% mutate(P_sig = P_bac < (0.05/NROW(.)), P_gw = P_bac < 5e-8 ) %>% summarise( P_gw = sum(P_gw),P_exp = sum(P_sig)) %>% filter(gout != 'all')%>% gather("sig", "value",2:3) %>% spread(gout, value) %>% rename("SNP" = sig) %>% mutate_all(as.character) %>% mutate(A1 = "", REF ="",ALT ="")
-
-
-# still need to flip snps to be in the same order as kottgen
-uk_kot_t1 %>% 
-  select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>%  
-  left_join(., kot_bim %>% select(SNP, A1, A2), by = c("SNP", "A1")) %>% 
-  #mutate(OR = ifelse(A1 != REF, 1/OR, OR), L95 = ifelse(A1 != REF, 1/U95, L95), U95 = ifelse(A1 != REF, 1/L95, U95), mod = ifelse(A1 != REF, 1, 0)) %>% 
-  mutate_at(., vars("OR",contains('95')), funs(sprintf("%.2f",. ))) %>% 
-  unite("CI",c("L95","U95"), sep = " -") %>%
-  mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>%  
-  mutate(Effect = paste0(OR, ' [', CI,'], ', P)) %>% arrange(P) %>%  select(-OR, -CI, -P, -CHR) %>%
-  spread(key = gout, value = Effect) %>% 
-  select(grail_gene, everything(), -all) %>%
-  arrange(grail_gene) %>% 
-  #bind_rows(., uk_kot_psig ) %>% 
-  kable(., format = 'latex', caption = '(\\#tab:ukbbkot) The odds ratios for the 30 variants reported in \\citet{Kottgen2013} for the different gout classification methods.', col.names = c("Grail gene","Marker", "A1", "A2", "Hospital","Self-report","Self-report or ULT","ULT","Winnard"), booktabs = TRUE, escape = FALSE) %>% #group_rows("Number of significant markers", NROW(.)-1, NROW(.)) %>% 
-  kable_styling(latex_options = 'scale_down') %>% footnote(general = "OR [95\\\\% CI], P. ULT = Urate lowering therapy. The reported effect allele is A1. Effects are adjusted by age, sex, and BMI." , general_title = "", threeparttable = TRUE , escape = FALSE) %>% landscape()
-
-```
-
-```{r, nkotsig}
-n_kot_sig <- uk_kot_t1 %>% group_by(gout) %>% summarise(gw = sum(P < 1e-8), ew = sum(P < 0.05/30))
-```
-
-```{r}
-n_kot_sig
-```
 
 
 
