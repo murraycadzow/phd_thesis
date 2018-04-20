@@ -17,7 +17,24 @@ was gout/urate and other diseases under selection?
     - HWE
     - MAF
     
+use of the gwas catalog, while extremely useful in terms of automatic defining of gene lists, does have a few drawbacks
+
+- there is a potential bias in the genes that are being reported, refer to the large bias in the gwas populations that are used -> heavily favour the europeans
+- genes that are involved might not have been genome-wide significant and therefore get missed
+- the techinicalities of annotating, the reported gene might not be the actual gene, what happens when the snp is intergenic (closest gene?),  
+
     
 One of the limitations of using the gwas catalog is for gene associations
 - bias of the populations
 - genes that are involved might not be genome wide significant therefore missed
+
+
+
+if it isn't selection, then what could explain the differences in the disease affections?
+
+- bottlenecking
+- migration
+- admixture
+- "drift"
+
+talk about the distributions and that with the new push for sequence data, esp in poly that the it should be repeated
