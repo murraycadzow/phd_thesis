@@ -1,4 +1,4 @@
-# Positive Selection in Polynesian Populations
+# Positive Selection in Polynesian Populations #{selectionResults}
 
 ```{r source, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -581,7 +581,7 @@ xpehh %>% group_by(pop1, pop2, genename) %>% tally() %>% arrange(genename) %>% g
 
 ```{r, eval = FALSE}
 #look at the number of urate genes that were significant for the polynesian populations
-xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% urate_goutGR$SYMBOL) %>% group_by(pop1,pop2, genename) %>%tally() %>% spread(pop1, n, fill = "") %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = "pop2" ) %>% select(super_pop, everything()) %>% arrange(genename,super_pop,pop2) %>% kable(., caption = 'urate genes significant in Polynesians', longtable = TRUE)
+xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% gc_urate_gout_GR$SYMBOL) %>% group_by(pop1,pop2, genename) %>%tally() %>% spread(pop1, n, fill = "") %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = "pop2" ) %>% select(super_pop, everything()) %>% arrange(genename,super_pop,pop2) %>% kable(., caption = 'urate genes significant in Polynesians', longtable = TRUE)
 ```
 
 ```{r, eval = FALSE, include = FALSE}
@@ -644,7 +644,7 @@ xpehh %>%
 xpehh %>%
   select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
   filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% 
-  filter(genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
+  filter(genename %in% c(gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
   select(pop = pop1,pop2, genename) %>% 
   distinct() %>% 
   group_by(pop, genename)%>% tally() %>% 
@@ -785,7 +785,7 @@ sfs_windows_table %>%
 # create table for superDiseaseGenesTab
 superSFSdisease <- lower_sig_stats %>% select(SYMBOL, pop) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% 
     mutate(
-      urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+      urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
       obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
       t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
       kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -798,7 +798,7 @@ superHaploDisease <- bind_rows(sig_ihs_val, sig_nsl_val) %>%
     select(pop, 'SYMBOL' = genename) %>% 
     left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% 
     mutate(
-      urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+      urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
       obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
       t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
       kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -824,7 +824,7 @@ superDiseaseGenesTab <- bind_rows(
   ) %>% 
     left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>%
     mutate(
-      urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+      urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
       obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
       t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
       kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -857,7 +857,7 @@ lower_sig_stats %>% select(SYMBOL, pop), by = c('SYMBOL','pop')
 ) %>% 
   left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>%
   mutate(
-    urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+    urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
     obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
     t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
     kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -896,25 +896,25 @@ create_gene_table <- function(popname, genelist){
   )
 }
 
-cim_urate_sig <- create_gene_table("CIM", urate_goutGR$SYMBOL)
+cim_urate_sig <- create_gene_table("CIM", gc_urate_gout_GR$SYMBOL)
 cim_t2d_sig <- create_gene_table("CIM", t2d_GR$SYMBOL)
 cim_obesity_sig <- create_gene_table("CIM", obesity_GR$SYMBOL)
 cim_kd_sig <- create_gene_table("CIM", kd_GR$SYMBOL)
 cim_metsyn_sig <- create_gene_table("CIM", metsyn_GR$SYMBOL)
 
-nzm_urate_sig <- create_gene_table("NZM", urate_goutGR$SYMBOL)
+nzm_urate_sig <- create_gene_table("NZM", gc_urate_gout_GR$SYMBOL)
 nzm_t2d_sig <- create_gene_table("NZM", t2d_GR$SYMBOL)
 nzm_obesity_sig <- create_gene_table("NZM", obesity_GR$SYMBOL)
 nzm_kd_sig <- create_gene_table("NZM", kd_GR$SYMBOL)
 nzm_metsyn_sig <- create_gene_table("NZM", metsyn_GR$SYMBOL)
 
-sam_urate_sig <- create_gene_table("SAM", urate_goutGR$SYMBOL)
+sam_urate_sig <- create_gene_table("SAM", gc_urate_gout_GR$SYMBOL)
 sam_t2d_sig <- create_gene_table("SAM", t2d_GR$SYMBOL)
 sam_obesity_sig <- create_gene_table("SAM", obesity_GR$SYMBOL)
 sam_kd_sig <- create_gene_table("SAM", kd_GR$SYMBOL)
 sam_metsyn_sig <- create_gene_table("SAM", metsyn_GR$SYMBOL)
 
-ton_urate_sig <- create_gene_table("TON", urate_goutGR$SYMBOL)
+ton_urate_sig <- create_gene_table("TON", gc_urate_gout_GR$SYMBOL)
 ton_t2d_sig <- create_gene_table("TON", t2d_GR$SYMBOL)
 ton_obesity_sig <- create_gene_table("TON", obesity_GR$SYMBOL)
 ton_kd_sig <- create_gene_table("TON", kd_GR$SYMBOL)
@@ -1068,7 +1068,7 @@ xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter
 xpehh %>%  
   select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% 
   filter(pop1 %in% poly_pop, xpehh_value > 0) %>% 
-  filter(genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
+  filter(genename %in% c(gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
   select(pop = pop1,pop2, genename) %>% 
   distinct() %>% 
   group_by(pop, genename)%>% tally() %>% 
@@ -1253,7 +1253,7 @@ svg(filename = 'images/03_selectionpipeline/cim_upset.svg')
 ```{r cim_urate_results, results = 'asis', eval = FALSE}
 # look at all significant stats from cim for urate genes
 bind_rows(cim_urate_sig)%>% spread(statname,n, fill = "" ) %>% arrange() %>% kable(., caption = '(\\#tab:cimUrate) CIM genes with evidence of selection in urate')
-consec_lower_regions %>% filter(pop == 'CIM', SYMBOL %in% urate_goutGR$SYMBOL)
+consec_lower_regions %>% filter(pop == 'CIM', SYMBOL %in% gc_urate_gout_GR$SYMBOL)
 
 # obesity genes
 bind_rows(cim_obesity_sig)%>% spread(statname,n, fill = "" ) %>% arrange() %>% kable(., caption = '(\\#tab:cimObesity) CIM genes with evidence of selection in obesity')
@@ -1409,7 +1409,7 @@ tmp@ranges
 
 
 ```{r, eval = FALSE}
-bind_rows(sig_ihs_val %>% mutate(statname = 'ihs'), sig_nsl_val %>% mutate(statname = 'nsl')) %>% filter(pop == 'CIM', genename %in% urate_goutGR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+bind_rows(sig_ihs_val %>% mutate(statname = 'ihs'), sig_nsl_val %>% mutate(statname = 'nsl')) %>% filter(pop == 'CIM', genename %in% gc_urate_gout_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
 
 bind_rows(sig_ihs_val %>% mutate(statname = 'ihs'), sig_nsl_val %>% mutate(statname = 'nsl')) %>% filter(pop == 'CIM', genename %in% t2d_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
 
@@ -1520,7 +1520,7 @@ rm(p)
 
 <!-- From all of the intra population -->
 
-<!-- - There were `r bind_rows(nzm_urate_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(urate_goutGR$SYMBOL))` urate genes -->
+<!-- - There were `r bind_rows(nzm_urate_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(gc_urate_gout_GR$SYMBOL))` urate genes -->
 <!-- - There were `r bind_rows(nzm_obesity_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(obesity_GR$SYMBOL))` obesity genes -->
 <!-- - There were `r bind_rows(nzm_t2d_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(t2d_GR$SYMBOL))` \gls{t2d} genes -->
 <!-- - There were `r bind_rows(nzm_kd_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(kd_GR$SYMBOL))` kidney disease genes -->
@@ -1680,7 +1680,7 @@ knitr::include_graphics('images/03_selectionpipeline/nzmSUPT3H.png')
 
 ```{r, eval = FALSE}
 # number of genes associated with urate, obesity, t2d, kd, and met syn
-bind_rows(sig_ihs_val %>% mutate(statname = 'ihs'), sig_nsl_val %>% mutate(statname = 'nsl')) %>% filter(pop == 'NZM', genename %in% urate_goutGR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
+bind_rows(sig_ihs_val %>% mutate(statname = 'ihs'), sig_nsl_val %>% mutate(statname = 'nsl')) %>% filter(pop == 'NZM', genename %in% gc_urate_gout_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
 
 bind_rows(sig_ihs_val %>% mutate(statname = 'ihs'), sig_nsl_val %>% mutate(statname = 'nsl')) %>% filter(pop == 'NZM', genename %in% t2d_GR$SYMBOL) %>% group_by(genename, statname) %>% tally() %>% arrange(desc(n))
 
@@ -2046,7 +2046,7 @@ There were no consecutively depressed score regions that intersected genes assoc
 
 <!-- From all of the intra population -->
 
-<!-- - There were `r bind_rows(ton_urate_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(urate_goutGR$SYMBOL))` urate genes -->
+<!-- - There were `r bind_rows(ton_urate_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(gc_urate_gout_GR$SYMBOL))` urate genes -->
 <!-- - There were `r bind_rows(ton_obesity_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(obesity_GR$SYMBOL))` obesity genes -->
 <!-- - There were `r bind_rows(ton_t2d_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(t2d_GR$SYMBOL))` \gls{t2d} genes -->
 <!-- - There were `r bind_rows(ton_kd_sig) %>% select(SYMBOL) %>% distinct() %>% NROW()` of `r length(unique(kd_GR$SYMBOL))` kidney disease genes -->
@@ -2227,7 +2227,7 @@ In order to establish if there was evidence of selection in genes associated wit
 bind_rows(
 lower_sig_stats %>% select(SYMBOL, pop) %>% filter(pop %in% poly_pop) %>% 
   mutate(
-    urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+    urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
     obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
     t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
     kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -2242,7 +2242,7 @@ bind_rows(sig_ihs_val, sig_nsl_val) %>%
   select(pop, 'SYMBOL' = genename) %>% 
   filter(pop %in% poly_pop) %>% 
   mutate(
-    urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+    urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
     obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
     t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
     kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -2261,7 +2261,7 @@ bind_rows(
 )%>% 
   filter(pop %in% poly_pop) %>% 
   mutate(
-    urate = ifelse(SYMBOL %in% urate_goutGR$SYMBOL, TRUE, FALSE),
+    urate = ifelse(SYMBOL %in% gc_urate_gout_GR$SYMBOL, TRUE, FALSE),
     obesity = ifelse(SYMBOL %in% obesity_GR$SYMBOL, TRUE, FALSE),
     t2d = ifelse(SYMBOL %in% t2d_GR$SYMBOL, TRUE, FALSE),
     kd = ifelse(SYMBOL %in% kd_GR$SYMBOL, TRUE, FALSE),
@@ -2289,7 +2289,7 @@ superDiseaseGeneTab3 %>% kable(., col.names = c("Population","Super Pop.", rep(c
 
 #### Urate and gout
 ```{r}
-g <- urate_goutGR$SYMBOL
+g <- gc_urate_gout_GR$SYMBOL
 uratePol <- xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% g) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, "") %>% rename(pop = pop1) %>% full_join(., sig_ihs_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(ihs = n) %>% full_join(., sig_nsl_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(nsl = n) %>%full_join(., lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% g)%>% select(-contains('chrom')) %>% group_by(pop, SYMBOL, statname) %>% tally() %>% spread(statname, n), by = c('pop', 'genename' = 'SYMBOL') ) %>% arrange(genename)
 
 uratePol %>% mutate_all(., function(x){replace(x, is.na(x), "")}) %>% select(genename, pop, everything()) %>% kable(., caption = '(\\#tab:uratePol) Number of populations, windows, and markers with significant selection and neutrality statistics in Polynesian populations for all GWAS associated genes for urate and gout', col.names = c('Gene','Population','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay & Wu's H", " Fu & Li's F", "Tajima's D"," Zeng's E"), booktabs = TRUE, format ='latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
@@ -2297,11 +2297,11 @@ rm(g)
 ```
 
 ```{r, eval = FALSE}
-lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% urate_goutGR$SYMBOL) %>% select(pop, SYMBOL, statname) %>% distinct()%>% spread(statname, statname, "") %>% arrange(SYMBOL)
+lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% select(pop, SYMBOL, statname) %>% distinct()%>% spread(statname, statname, "") %>% arrange(SYMBOL)
 ```
 
 
-The `r urate_goutGR$SYMBOL %>% unique() %>% length()` loci identified through \gls{gwas} [@Kottgen2013] as being associated with urate and gout only had a small proportion with any evidence of possible selection. In the Polynesian populations, from the intra-population neutrality and selection statistics, there were 10 genes that had some evidence. However, there were only three genes with haplotypic evidence, and only one gene (_PRKAG2_) that had both haplotypic and \gls{sfs}-based evidence. The Western Polynesian populations were the only Polynesian populations to have haplotypic-based evidence. Overall, the Polynesian populations did not have more urate genes with evidence than the other populations (Table \@ref(tab:superDiseaseGenesTab)).
+The `r gc_urate_gout_GR$SYMBOL %>% unique() %>% length()` loci identified through \gls{gwas} [@Kottgen2013] as being associated with urate and gout only had a small proportion with any evidence of possible selection. In the Polynesian populations, from the intra-population neutrality and selection statistics, there were 10 genes that had some evidence. However, there were only three genes with haplotypic evidence, and only one gene (_PRKAG2_) that had both haplotypic and \gls{sfs}-based evidence. The Western Polynesian populations were the only Polynesian populations to have haplotypic-based evidence. Overall, the Polynesian populations did not have more urate genes with evidence than the other populations (Table \@ref(tab:superDiseaseGenesTab)).
 
 The two main effect loci for serum urate, _SLC2A9_ and _ABCG2_ both had limited evidence of selection. _SLC2A9_ did not have any values for \gls{ihs} or \gls{nsl} because of an extended region of no recombination leading to a large gap in the reference genome which caused the \gls{ehh} calculation to be terminated. There was evidence with \gls{flf} which had windows from _SLC2A9_ in the 1st percentile from \gls{ton}. This was also observed with the \gls{eas} populations of \gls{chb} and \gls{jpt}. For Polynesian populations, _ABCG2_ only had significant results from \gls{ihs} and \gls{nsl} at the same marker (rs2622626) for \gls{ton}. With \gls{ihs} the \gls{sas} populations of \gls{gih} and \gls{itu} also had significant values for rs2622626. For \gls{nsl}, along with \gls{gih}, and \gls{itu}, the other non-Polynesian populations that had a significant value was the \gls{eas} population \gls{jpt}, and the \gls{afr} population of \gls{yri}. Rs2622626 is associated with both urate and gout [@Kottgen2013]. There were no Polynesian populations with values in the 1st percentile for the frequency-based statistics, and only \gls{esn} had windows that met the threshold for \gls{fwh}. The only other transporter that was associated with urate that had a window meeting the significance threshold in Polynesian populations was _SLC16A9_ in \gls{ton} for \gls{fld} (XXX check).
 
@@ -2318,7 +2318,7 @@ urate_poly_interst <- c("BCAS3","IGF1R","RREB1","ABCG2")
 # Gout specific
 # number of ihs snps by gout gene by population
 sig_ihs_val %>% 
-  filter(genename %in% urate_goutGR$SYMBOL) %>% 
+  filter(genename %in% gc_urate_gout_GR$SYMBOL) %>% 
   group_by(pop, genename) %>% tally() %>%
   arrange(genename) %>% 
   spread(genename, n, fill= "") %>% 
@@ -2339,7 +2339,7 @@ sig_ihs_val %>%
 # gout specific
 # number of nsl snps by gout gene by poplation
 sig_nsl_val %>% 
-  filter(genename %in% urate_goutGR$SYMBOL) %>% 
+  filter(genename %in% gc_urate_gout_GR$SYMBOL) %>% 
   group_by(pop, genename) %>% tally() %>%
   arrange(genename) %>% 
   spread(genename, n, fill= "") %>% 
@@ -2368,32 +2368,32 @@ sig_nsl_val %>%
 
 
 ```{r urate_fst, include = FALSE}
-fst_map <- findOverlaps(pol_fstGR, urate_goutGR)
+fst_map <- findOverlaps(pol_fstGR, gc_urate_gout_GR)
 
 # NZM fst
-pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(urate_goutGR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('NZM') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "NZM")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('NZM FST')
+pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(gc_urate_gout_GR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('NZM') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "NZM")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('NZM FST')
 ```
 
 ```{r, eval = FALSE}
 # CIM fst
-pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(urate_goutGR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('CIM') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "CIM")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('CIM FST')
+pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(gc_urate_gout_GR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('CIM') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "CIM")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('CIM FST')
 ```
 
 ```{r, eval = FALSE}
 # SAM fst
-pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(urate_goutGR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('SAM') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "SAM")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('SAM FST')
+pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(gc_urate_gout_GR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('SAM') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "SAM")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('SAM FST')
 ```
 
 ```{r, eval = FALSE}
 # TON fst
-pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(urate_goutGR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('TON') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "TON")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('TON FST')
+pol_fst %>% slice(fst_map@from) %>% bind_cols(., data.frame(gc_urate_gout_GR[fst_map@to], stringsAsFactors = FALSE) ) %>% select(contains('chrom'), SYMBOL,contains('TON') )%>% gather("pop","fst", 5:NCOL(.))%>% mutate(pop = sapply(pop, function(x){popswitch(x, "TON")})) %>% mutate(pop1 = substring(pop,1,3), pop2 = substring(pop, 4, 7)) %>% left_join(., panel %>% select('pop1' = pop, super_pop) %>% distinct(), by = 'pop1') %>% distinct() %>% ggplot(., aes(x = chrom_start, y =fst, by = pop1, colour = super_pop)) + geom_line() + facet_wrap(~SYMBOL, scales = 'free') + ggtitle('TON FST')
 ```
 
 
 
 
 ```{r, eval = FALSE}
-bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(genename %in% urate_goutGR$SYMBOL) %>% left_join(., markers) %>% select(-ensgeneid) %>% arrange(genename, pop, marker) %>% View()
+bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(genename %in% gc_urate_gout_GR$SYMBOL) %>% left_join(., markers) %>% select(-ensgeneid) %>% arrange(genename, pop, marker) %>% View()
 ```
 
 
@@ -2468,7 +2468,7 @@ haplo_obesity <- bind_rows(sig_ihs_val, sig_nsl_val) %>% select(SYMBOL = genenam
 
 ```{r, eval = FALSE}
 
-c("PTPRD", "PRKAG2","NRXN3","MAP2K5","HSD17B12","GRID1","FHIT","ERBB4","BDNF","ARL15","APOA5","AGBL4") %in% urate_goutGR$SYMBOL
+c("PTPRD", "PRKAG2","NRXN3","MAP2K5","HSD17B12","GRID1","FHIT","ERBB4","BDNF","ARL15","APOA5","AGBL4") %in% gc_urate_gout_GR$SYMBOL
 
 c("PTPRD", "PRKAG2","NRXN3","MAP2K5","HSD17B12","GRID1","FHIT","ERBB4","BDNF","ARL15","APOA5","AGBL4") %in% obesity_GR$SYMBOL
 
@@ -3455,7 +3455,7 @@ nsl_clus %>%select(pop, chrom, ClusterID, chrom_start, chrom_end) %>% distinct()
 bind_rows(sig_ihs_val %>% 
             mutate(statname = 'ihs'), sig_nsl_val %>% 
             mutate(statname = 'nsl')) %>% 
-  filter(pop %in% poly_pop, genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
+  filter(pop %in% poly_pop, genename %in% c(gc_gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
   mutate(pop = paste(statname,pop)) %>% 
   group_by(genename, pop) %>% 
   tally() %>% 
@@ -3469,7 +3469,7 @@ bind_rows(sig_ihs_val %>%
 bind_rows(sig_ihs_val %>% 
             mutate(statname = 'ihs'), sig_nsl_val %>% 
             mutate(statname = 'nsl')) %>%
-  filter(pop %in% poly_pop, genename %in% c(urate_goutGR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
+  filter(pop %in% poly_pop, genename %in% c(gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, obesity_GR$SYMBOL, metsyn_GR$SYMBOL)) %>% 
   mutate(pop = paste(statname,pop)) %>% 
   group_by(genename, pop) %>% tally() %>% 
   arrange(desc(n)) %>% 
