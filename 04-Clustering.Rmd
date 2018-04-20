@@ -116,6 +116,21 @@ Disease associated markers and their annotated genes were downloaded from the \g
 ### Frequency spectrum
 
 
+#### PCA analysis
+
+> talk about the nice groupings from the pca
+
+> need to explain why K = 6 for the rest of the analysis
+
+#### Admixture analysis
+
+> what does the admixture analysis add?
+
+> K = 11  from the use all data in the cross validation
+
+> K = 9 in the remove the admixed populations and use the ancestral proportions to work out the proportions in the admixed pops
+
+
 #### Whole chromosome clustering
 
 Clustering on the full chromosome results for all chromosomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of \gls{fwh}, which grouped all super populations, although it split the \gls{amr} populations into two subgroups. \gls{td} grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of two to three populations. \Gls{cim}, \gls{nzm}, and \gls{sam} were grouped with two \gls{amr} populations, (\gls{pel} and \gls{mxl}), and this group was the least similar to the others. There was no clear pattern to the clustering order of \gls{flf}, although it did have a few small groups of the same super population of no more than three individual populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. \Gls{ze} clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations as part of it.
@@ -409,9 +424,9 @@ write.csv(file ='Appendices/04-td-pol-ninetyninthper-genes.csv', x = td_pos_pol_
 #td_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% pull(SYMBOL) %>% unique() %>% length()
 
 # get the genes that were in windows that the Pol pops weren't in
-td_neg_no_pol_genes <- txdb_gene_annotate(create_sums('td_pos') %>% filter(POLsum == 0) %>% mutate(chrom = paste0('chr', chrom)) %>% GenomicRanges::GRanges()) %>% pull(SYMBOL) %>% unique()
+td_pos_no_pol_genes <- txdb_gene_annotate(create_sums('td_pos') %>% filter(POLsum == 0) %>% mutate(chrom = paste0('chr', chrom)) %>% GenomicRanges::GRanges()) %>% pull(SYMBOL) %>% unique()
 # find how many genes were only found with the Pols + others
-#td_pos_pol_genes %>% filter(!SYMBOL %in% td_neg_no_pol_genes, SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()
+#td_pos_pol_genes %>% filter(!SYMBOL %in% td_pos_no_pol_genes, SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()
 ```
 
 The upper tail had a total of `r create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, or `r round(create_sums('td_pos') %>% filter(POLsum == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.) / mat_d_list[['td_pos']] %>% NROW(.) *100, digits = 1)`% that were unique to the Polynesian populations. This compares to super population unique window numbers of `r create_sums('td_pos') %>% filter(AFRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` (\gls{afr}), `r create_sums('td_pos') %>% filter(AMRsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` (\gls{amr}), `r create_sums('td_pos') %>% filter(EASsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` (\gls{eas}), `r create_sums('td_pos') %>% filter(EURsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` (\gls{eur}), `r create_sums('td_pos') %>% filter(SASsum == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` (\gls{sas}). Eastern Polynesians contributed `r create_sums('td_pos') %>% filter((POL_CIM + POL_NZM & ALLsum > 0) == ALLsum) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows, with \gls{cim} having `r create_sums('td_pos') %>% filter(POL_CIM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows and \gls{nzm} having `r create_sums('td_pos') %>% filter(POL_NZM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows. The Western Polynesians had `r create_sums('td_pos') %>% filter((POL_SAM + POL_TON) == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` unique windows. `r create_sums('td_pos') %>% filter(POL_SAM == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` were from only \gls{sam} and `r create_sums('td_pos') %>% filter(POL_TON == ALLsum & ALLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` from only \gls{ton}. There were `r create_sums('td_pos') %>% filter(POLsum < ALLsum & POLsum == 4) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows where all the Polynesian populations shared a window with a non-Polynesian population. And `r create_sums('td_pos') %>% filter(POLsum < ALLsum & POLsum > 0) %>% select(contains('chrom'), contains('sum')) %>% NROW(.)` windows, intersecting `r td_pos_pol_genes %>% filter(!is.na(SYMBOL)) %>% pull(SYMBOL) %>% unique() %>% length()` genes, where at least one Polynesian population shared a windows with a non-Polynesian population (Table \@ref(tab:polTdPosGenes)). 
@@ -437,7 +452,7 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 
 <!-- > not sure how best to represent the genes listed in this section and the equivalent ones for other stats -->
 
-Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, and metabolic syndrome from the \gls{gwas} catalog (Tables \@ref(tab:gwascatref) and \@ref(tab:gwasgenes)), from the clustering of the extremes, there were a total of 31 genes that had at least one of the Polynesian populations having at least one window in the 1^st^ percentile. This dropped to 14 genes that had windows in the 1^st^ percentile for at least one Polynesian, but may also have been in the 1^st^ percentile of other populations. Some examples of this were _CCR3_, which had windows in the 1^st^ percentile for all four Polynesian populations, and the same windows were also in the 1^st^ percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1^st^ percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99^th^ percentile there were no windows from the Polynesian populations that intersected the metabolic disease associated genes.
+Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, and metabolic syndrome from the \gls{gwas} catalog (Tables \@ref(tab:gwascatref) and \@ref(tab:gwasgenes)), from the clustering of the extremes, there were a total of XXX 31 genes that had at least one of the Polynesian populations having at least one window in the 1^st^ percentile. This dropped to XXX 14 genes that had windows in the 1^st^ percentile for at least one Polynesian, but may also have been in the 1^st^ percentile of other populations. Some examples of this were _CCR3_, which had windows in the 1^st^ percentile for all four Polynesian populations, and the same windows were also in the 1^st^ percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1^st^ percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99^th^ percentile there were no windows from the Polynesian populations that intersected the metabolic disease associated genes.
 
 
 #### Fay and Wu's _H_
@@ -912,8 +927,8 @@ sig_nsl_val_GR <- sig_nsl_val %>% select(chrom, chrom_start, chrom_end, pop, sup
 
 GenomeInfoDb::seqlevels(gr_ihs) <- paste0('chr', GenomeInfoDb::seqlevels(gr_ihs))
 GenomeInfoDb::seqlevels(gr_nsl) <- paste0('chr',GenomeInfoDb::seqlevels(gr_nsl))
-gr <- IRanges::subsetByOverlaps(gr_ihs, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR))
-gr2 <- IRanges::subsetByOverlaps(gr_nsl, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR))
+gr <- IRanges::subsetByOverlaps(gr_ihs, c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR))
+gr2 <- IRanges::subsetByOverlaps(gr_nsl, c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR))
 
 
 subset_snps <- function(snp_listGR, regionsGR, diseaseGR){
@@ -921,14 +936,14 @@ subset_snps <- function(snp_listGR, regionsGR, diseaseGR){
 }
 
 disease_ihs_snps <- list()
-disease_ihs_snps$urate <- subset_snps(sig_ihs_val_GR, gr, urate_goutGR)
+disease_ihs_snps$urate <- subset_snps(sig_ihs_val_GR, gr, gc_urate_gout_GR)
 disease_ihs_snps$obesity <- subset_snps(sig_ihs_val_GR, gr, obesity_GR)
 disease_ihs_snps$t2d <- subset_snps(sig_ihs_val_GR, gr, t2d_GR)
 disease_ihs_snps$kd <- subset_snps(sig_ihs_val_GR, gr, kd_GR)
 disease_ihs_snps$metsyn <- subset_snps(sig_ihs_val_GR, gr, metsyn_GR)
 
 disease_nsl_snps <- list()
-disease_nsl_snps$urate <- subset_snps(sig_nsl_val_GR, gr2, urate_goutGR)
+disease_nsl_snps$urate <- subset_snps(sig_nsl_val_GR, gr2, gc_urate_gout_GR)
 disease_nsl_snps$obesity <- subset_snps(sig_nsl_val_GR, gr2, obesity_GR)
 disease_nsl_snps$t2d <- subset_snps(sig_nsl_val_GR, gr2, t2d_GR)
 disease_nsl_snps$kd <- subset_snps(sig_nsl_val_GR, gr2, kd_GR)
@@ -948,14 +963,14 @@ a_gr <- GenomicRanges::GRanges(sig_ihs_val %>% filter(genename %in%(ihs_nsl %>% 
 b_gr <- GenomicRanges::GRanges(sig_nsl_val %>% filter(genename %in%(ihs_nsl %>% filter(!is.na(n_ihs) & !is.na(n_nsl)) %>% pull(SYMBOL)) ) %>% select(chrom, chrom_start, chrom_end, pop, superpop, genename, statvalue) %>% mutate(statname = 'ihs'))
 
 # n regions
-n_regions_ihs_nsl <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr,gr2), c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+n_regions_ihs_nsl <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr,gr2), c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
 
-n_regions_pol_ihs_nsl <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop, pattern = 'POL')],gr2[grep(x = gr2$pop, pattern = 'POL')]), c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+n_regions_pol_ihs_nsl <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop, pattern = 'POL')],gr2[grep(x = gr2$pop, pattern = 'POL')]), c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
 
-n_regions_ihs <-NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(gr, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
-n_regions_nsl <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(gr2, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+n_regions_ihs <-NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(gr, c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
+n_regions_nsl <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(gr2, c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE))
 
-n_regions_ihs_nsl_intersect <- NROW(intersect(GenomicRanges::reduce(IRanges::subsetByOverlaps(gr, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE), GenomicRanges::reduce(IRanges::subsetByOverlaps(gr2, c(urate_goutGR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE)))
+n_regions_ihs_nsl_intersect <- NROW(GenomicRanges::intersect(GenomicRanges::reduce(IRanges::subsetByOverlaps(gr, c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE), GenomicRanges::reduce(IRanges::subsetByOverlaps(gr2, c(gc_urate_gout_GR, obesity_GR, t2d_GR, kd_GR, metsyn_GR)), ignore.strand = TRUE)))
 
 # n snps
 n_pol_snps_ihs <- bind_rows(disease_ihs_snps) %>% filter(superpop == 'POL') %>% select(seqnames, start, end) %>% distinct() %>% NROW()
@@ -967,14 +982,14 @@ n_pol_snps_ihs_nsl <- inner_join( bind_rows(disease_ihs_snps) %>% filter(superpo
              ) %>% NROW() 
 
 # n disease regions
-n_disease_pol_urate <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), urate_goutGR)))
+n_disease_pol_urate <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop,  pattern = 'POL')]), gc_urate_gout_GR)))
 n_disease_pol_obesity <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop,  pattern = 'POL')],gr2[grep(x = gr2$pop, pattern = 'POL')]), obesity_GR)))
 n_disease_pol_t2d <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop, pattern = 'POL')],gr2[grep(x = gr2$pop, pattern = 'POL')]), t2d_GR)))
 n_disease_pol_kd <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop, pattern = 'POL')],gr2[grep(x = gr2$pop, pattern = 'POL')]), kd_GR)))
 n_disease_pol_metsyn <- NROW(GenomicRanges::reduce(IRanges::subsetByOverlaps(c(gr[grep(x = gr$pop, pattern = 'POL')],gr2[grep(x = gr2$pop, pattern = 'POL')]), metsyn_GR)))
 ```
 
-In the clustered significant regions of both \gls{ihs} and \gls{nsl} there were `r n_regions_ihs_nsl` independent regions that overlapped with genes associated with urate and metabolic diseases from all populations, for Polynesian populations the number of regions was `r n_regions_pol_ihs_nsl`. \gls{ihs} had `r n_regions_ihs` regions, while \gls{nsl} had `r n_regions_nsl`, and in common between the two statistics were `r n_regions_ihs_nsl_intersect` regions. The regions of the Polynesian populations covered `r n_pol_snps_ihs` \glspl{snp} for \gls{ihs} and `r n_pol_snps_nsl` for \gls{nsl}, with `r n_pol_snps_ihs_nsl ` in common between them. For the genes that had significant regions in Polynesian populations, `r n_disease_pol_urate` regions intersected genes that had been associated with urate and gout, `r n_disease_pol_obesity` with obesity, `r n_disease_pol_t2d` with \gls{t2d}, `r n_disease_pol_kd` with kidney disease, and `r n_disease_pol_metsyn` with metabolic syndrome.
+In the clustered significant regions of both \gls{ihs} and \gls{nsl} there were `r n_regions_ihs_nsl` independent regions that overlapped with genes associated with urate and metabolic diseases from all populations, for Polynesian populations the number of regions was `r n_regions_pol_ihs_nsl`. XXX \gls{ihs} had `r n_regions_ihs` regions, while \gls{nsl} had `r n_regions_nsl`, and in common between the two statistics were `r n_regions_ihs_nsl_intersect` regions. The regions of the Polynesian populations covered `r n_pol_snps_ihs` \glspl{snp} for \gls{ihs} and `r n_pol_snps_nsl` for \gls{nsl}, with `r n_pol_snps_ihs_nsl ` in common between them. For the genes that had significant regions in Polynesian populations, `r n_disease_pol_urate` regions intersected genes that had been associated with urate and gout, `r n_disease_pol_obesity` with obesity, `r n_disease_pol_t2d` with \gls{t2d}, `r n_disease_pol_kd` with kidney disease, and `r n_disease_pol_metsyn` with metabolic syndrome.
 
 ```{r, message=FALSE, warning=FALSE}
 shared_ihs_pol_disease_snps <- left_join(bind_rows(disease_ihs_snps) %>% filter(superpop == "POL") %>% select(seqnames, start, end) %>% distinct(), bind_rows(disease_ihs_snps), by =c("seqnames", "start","end")) %>% select(-genename, -width, -strand) %>% distinct() %>% group_by(seqnames, start, end) %>% mutate(n = n()) %>% filter(n > 1) %>% arrange(desc(n))
@@ -1261,7 +1276,7 @@ subsetByOverlaps(b_gr,b_gr[grep(x = b_gr$superpop, 'POL')]) %>% as.tibble() %>% 
 <!-- might be a good idea to use a grid to put multiple plots into one -->
 ```{r load_gene_clus, include = FALSE}
 # brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR, 
-load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-31-8-2017.RData')# brings in objects called gout, obesity, t2d, metsyn
+load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-16-4-2018.RData')# brings in objects called gout, obesity, t2d, metsyn
 names(gout) <- c('mat_d','prop')
 names(t2d) <-  c('mat_d','prop')
 names(obesity) <- c('mat_d','prop')
@@ -1297,7 +1312,7 @@ Clustering on other diseases such as pd, macular degeneration, alzhimers and col
 
 There were `r length(unique(urate_goutGR$SYMBOL))` genes that had an association with urate or gout at a genome-wide significance level. This mapped to `r nrow(gout$mat_d$Tajima.D)` windows for each of the frequency based selection test statistics. \gls{ze} and \gls{fwh} clustered each super population into their own group and each cluster was exclusive to a super population. Both \gls{td} and \gls{flf} grouped most of the super populations correctly and nearly all clusters had good exclusivity for each single super population. \Gls{td}, \gls{fwh}, and \gls{ze} also had an Eastern/Western Polynesian population sub group within the Polynesian group (Figure \@ref(fig:goutdendros)). Unlike the F~ST~ clustering, the \gls{amr} populations were grouped together for \gls{td}, \gls{fwh}, and \gls{ze}. The \gls{eas} and \gls{pol} populations were closest for \gls{flf}, \gls{fwh}, and \gls{ze}, but not for \gls{td}, where the \gls{pol} populations were furthest from the other populations.
 
-There were 2 genes; _BCAS3_ and _RREB1_, that had at least one statistic in all of the Polynesian populations that met the threshold of significance in the lower tail. _BCAS3_ met the significance threshold for \gls{fwh} and \gls{flf} in all Polynesian populations and for \gls{td} all Polynesian populations except \gls{ton}. _INHBC_ and _ATXN2_ both had windows that met the lower tail significance threshold for \gls{ze} in all Polynesians populations, except \gls{sam} for _INHBC_. There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW()` of the urate and gout associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the upper tail, _VEGFA_ had windows of \gls{ze} values that met the upper tail significance threshold for all Polynesians populations. _BAZ1B_ also met the threshold in the Eastern Polynesian populations. There were no loci that were significant in all Polynesian populations in the upper tail. The genes that met the significance threshold are not urate transporters.
+There were 2 genes; _BCAS3_ and _RREB1_, that had at least one statistic in all of the Polynesian populations that met the threshold of significance in the lower tail. _BCAS3_ met the significance threshold for \gls{fwh} and \gls{flf} in all Polynesian populations and for \gls{td} all Polynesian populations except \gls{ton}. _INHBC_ and _ATXN2_ both had windows that met the lower tail significance threshold for \gls{ze} in all Polynesians populations, except \gls{sam} for _INHBC_. There were `r lower_sig_stats %>% filter(SYMBOL %in% unique(urate_goutGR$SYMBOL)) %>% group_by(pop, statname, SYMBOL) %>%tally() %>% filter(pop %in% c('CIM','NZM','SAM','TON')) %>% ungroup()%>% select(SYMBOL) %>% distinct() %>% NROW() %>% num_to_word()` of the urate and gout associated genes that had evidence from at least one selection statistic of possible selection in any of the Polynesian populations from the lower tail of the distributions. In the upper tail, _VEGFA_ had windows of \gls{ze} values that met the upper tail significance threshold for all Polynesians populations. _BAZ1B_ also met the threshold in the Eastern Polynesian populations. There were no loci that were significant in all Polynesian populations in the upper tail. The genes that met the significance threshold are not urate transporters.
 
 
 ```{markdown, eval = FALSE}
