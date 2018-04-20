@@ -31,18 +31,18 @@ a <- '## "stx2A; shiga-like toxin II A subunit encoded by bacteriophage BP-933W;
 a
 ```
 
-This chapter will describe the methods and datasets used. The methods section will cover the methods used for the preparation of the datasets, such as haplotype phasing, \gls{pca}, and file format conversions, as well as the methods used for the analysis of the datasets, such as the calculation of selection statistics. The datasets described include a description of the two main data sources that were used and how they were transformed for the analysis.
+This chapter will describe the methods and datasets used in this thesis. Section \@ref(methods) covers the methods used for the preparation of the datasets, such as haplotype phasing, \gls{pca}, and file format conversions, as well as the methods used for the analysis of the datasets, such as the calculation of selection statistics. Section \@ref(datasets) contains a description of the two main data sources that were used and how they were transformed for the analysis.
 
 
-## Methods
+## Methods {#methods}
 
 All genomic resources and co-ordinates reported in this project use the human genome reference build GRCh37, unless otherwise specified.
 
 ### Phasing {#phase}
 
-Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
+Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype at any given position in the genome. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes by recombination. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}, Table \@ref(tab:refDatasets)) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
 
-Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel. There were two steps involved for phasing of genotypes. The first was to check the markers were aligned with the markers in the reference haplotypes. Markers would be marked for exclusion by this step for reasons such as the marker was not in the reference panel, or if the marker had different allele types to that in the reference panel. An example of this step is in the following code.
+Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel (Table \@ref(tab:refDatasets). There were two steps involved for phasing of genotypes. The first was to check the markers in each data set were matched with the markers in the reference haplotypes. Markers would be marked for exclusion by this step for reasons such as the marker was not in the reference panel, or if the marker had different allele types to that in the reference panel. An example of this step is in the following code.
 
 ```{bash, eval = FALSE, echo =TRUE}
 # Check alignment of markers against reference haplotypes
@@ -182,7 +182,7 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 \Glsdesc{pca} is a statistical dimension reduction technique that transforms potentially correlated variables into a linear and non-correlated set of variables. In a genetic context \gls{pca} is used to reduce variation at many thousands of markers into a handful of components that represent the majority of the variation of the data [@Patterson2006]. The components are ordered such that the first \gls{pc} captures the most variation, with each subsequent component capturing less. These components often, but not necessarily, represent population differences and population substructure.
 
-To calculate the principal components of the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file using BCFtools v1.3.1 and then the independent markers were identified using Plink v1.9b4.9, using a sliding window to remove markers that had an R^2^ > 0.2, using windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. The following code was used to accomplish these steps.
+To calculate the principal components of the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file using BCFtools v1.3.1 and then the independent markers were identified using Plink v1.9b4.9, using a sliding window to remove markers that had a marker \gls{ld} R^2^ > 0.2, using windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. The following code was used to accomplish these steps.
 
 ```{r eigenstrat code, engine='bash', eval = FALSE}
 #combine the chromosomes
@@ -232,9 +232,9 @@ smartpca.perl \
 
 ### Admixture analysis {#admixture}
 
-Admixture arises when two populations that were previously separate, begin to interbreed. This changes the allele frequencies in the new population. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies.
+Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [\@ref]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies.
 
-Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with an R^2^ of more that 0.1. This was done using Plink v1.9b4.9. Following this cross validation was performed to find the best value of K, for values of K from 1 to 15. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)). The default of 5-fold cross-validation was used, where-by the data was partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
+Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with a marker \gls{ld} R^2^ > 0.1. This was done using Plink v1.9b4.9. Following this, cross validation was performed to find the best value of K (number of ancestral populations), for values of K from 1 to 15. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)). The default of 5-fold cross-validation was used, where-by the data was partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
 
 ```{r admixture k, engine = 'bash', eval = FALSE}
 # Combine the chromosomes
@@ -323,9 +323,9 @@ admixture -s 123456 -P study.bed 9
 
 ### Heritability analysis {#gctaHeritability}
 
-Heritability analysis is a method for determining what proportion of phenotypic variation can be attributed to environmental effects (non-heritable) and genetic effects (heritable) [@Visscher2008]. There are two measures of heritability, the first is know as broad-sense heritability (H^2^) and is the ratio of the total genetic variance to the total phenotypic variance. The second measure is narrow-sense heritability (h^2^) and is the ratio of the genetic variance attributed to an additive genetic model to the total genetic variance.
+Heritability analysis is a method for determining what proportion of phenotypic variation can be attributed to environmental effects (non-heritable) and genetic effects (heritable) [@Visscher2008]. There are two measures of heritability, the first is known as broad-sense heritability (H^2^) and is the ratio of the total genetic variance to the total phenotypic variance. The second measure is narrow-sense heritability (h^2^) and is the ratio of the genetic variance attributed to an additive genetic model to the total genetic variance.
 
-The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011part] was used to calculate the proportion of genetic heritability explained for gout. First the UK Biobank genetic data was subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%. The following code was used to calculate the \gls{grm} and partition the genetic heritability by chromosome.
+The \gls{gcta} v1.26.0 [@Yang2011; @Yang2011part] was used to calculate the proportion of genetic heritability explained for gout. First the UK Biobank genetic data (section \@ref(ukbbdata)) was subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%. The following code was used to calculate the \gls{grm} and partition the genetic heritability by chromosome.
 
 
 ```{r, engine='bash', eval=FALSE}
@@ -404,7 +404,7 @@ Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp
 <!-- combined score is computed by taking the log of the p-value from the Fisher exact test and multiplying that by the z-score of the deviation from the expected rank (c = log(p) * z) -->
 
 
-## Datasets
+## Datasets {#datasets}
 
 ### 1000 Genomes Project Phase 3
 
@@ -748,7 +748,7 @@ eigen %>% filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape =
 
 There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPCA)), this indicated that the use of \gls{snp} array versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations where split into Eastern and Western Polynesian sub-groups with \gls{pc} 6 (Figure \@ref(fig:polPCA)).
 
-### UK Biobank
+### UK Biobank {#ukbbdata}
 
 The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including sub-codes). The dataset was also filtered to individuals with a self reported an ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, or whose samples failed genotype quality control. The remaining individuals were eligible for inclusion in the \gls{gwas} performed in section \@ref(ukbbgwas).
 
