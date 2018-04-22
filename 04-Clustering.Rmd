@@ -32,7 +32,7 @@ key tasks to complete:
 
 This chapter investigates the idea that populations with shared ancestry will display similar signals of selection. To test this idea I will be clustering the various selection statistics and then comparing the clusters to current population migratory history.
 
-## Introduction
+## Introduction {#chap4Intro}
 
 <!--
 * introduce the out of africa history
@@ -121,6 +121,35 @@ Disease associated markers and their annotated genes were downloaded from the \g
 > talk about the nice groupings from the pca
 
 > need to explain why K = 6 for the rest of the analysis
+
+\Glsentrydescplural{pc} for the merged \gls{1kgp} data and the New Zealand samples showed in the first two components that the \gls{afr}, \gls{eur}, \gls{sas} super populations all formed separate groupings. \gls{eas} and \gls{pol} were extremely similar in \gls{pc} 1 but the \gls{pol} populations were spread with \gls{pc} 2, with the majority of the spread being accounted for by the Eastern Polynesian populations whereas the Western Polynesian populations had a tight grouping at -0.025 on \gls{pc} 2, slightly below the \gls{eas} group. This can be observed when PC6 is used to separate the Polynesian populations (Figure \@ref(fig:polPCA)).
+
+(ref:allpopPCA) Principal components 1 and 2 for all populations, coloured by super population grouping.
+
+```{r allpopPCA, fig.cap = '(ref:allpopPCA)', echo = FALSE}
+eigen <- read.table('~/data/NZ_coreExome_1kgp/PCA/indiv_pops/NZ_1KGP_allchr_indep_eigen.pca.evec', stringsAsFactors = FALSE)
+
+eigen <- eigen %>% select("sample" = V1, everything()) %>% left_join(., panel, by = 'sample') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+names(eigen)[2:11] <- paste0("PC",1:10)
+eigen %>% ggplot(., aes(x = PC1, y = PC2, colour = super_pop)) + geom_point() + theme_bw() + guides(colour = guide_legend(title = "Super Population"))
+```
+
+(ref:eurPCA) Principal components 1 and 2 for populations of the European Super Population.
+
+```{r eurPCA, fig.cap = '(ref:eurPCA)', echo = FALSE}
+#eigen %>% filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, colour = pop)) + geom_point() + theme_bw() + guides(colour = guide_legend(title = "Population"))
+
+eigen %>% filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(EUR = '#00BFC4')) + guides(shape = guide_legend(title = "Population"), colour = guide_legend(title = "Super Population")) + scale_shape_manual(values = c(CEU = 0, NZC = 1, GBR = 2, IBS = 3, FIN = 4, TSI = 5))
+```
+
+(ref:polPCA) Principal components 2 and 6 for the Polynesian populations.
+
+```{r polPCA, fig.cap = '(ref:polPCA)', echo = FALSE}
+eigen %>% filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(POL = '#619CFF')) + scale_shape_manual(values = c("CIM" = 0,"NZM" = 1, "TON" = 2, "SAM" = 3)) + guides(size = FALSE) + guides(shape = guide_legend(title = "Population"), colour = guide_legend(title = "Super Population"))
+```
+
+There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPCA)), this indicated that the use of \gls{snp} array versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations where split into Eastern and Western Polynesian sub-groups with \gls{pc} 6 (Figure \@ref(fig:polPCA)).
+
 
 #### Admixture analysis
 
