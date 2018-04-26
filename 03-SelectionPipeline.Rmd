@@ -1,4 +1,4 @@
-# Positive Selection in Polynesian Populations #{selectionResults}
+# Positive Selection in Polynesian Populations {#selectionResults}
 
 ```{r source, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
