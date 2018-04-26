@@ -7,7 +7,7 @@ library(phdFunctions)
 library(knitr)
 library(kableExtra)
 library(tidyverse)
-source('scripts/05_ukbb_filteredSnps.R') # load in the filtered results for the age,sex,bmi adjusted gwases  (P < 1e-5, nchar(A1) == 1)
+source('scripts/05_ukbb_filteredSnps.R') # load in the filtered results for the age,sex,bmi adjusted gwases  (P < 1e-3, nchar(A1) == 1, TEST =='ADD')
 knitr::opts_chunk$set(echo = FALSE)
 models <- readRDS('data/Ukbiobank/pheno_models.RDS')
 pheno_models <- bind_rows(lapply(models, function(x){cbind(adjuster = x$adjuster,broom::glance(x$model))})) %>% arrange(AIC)
@@ -302,7 +302,7 @@ uk_kot_t1 %>%
               geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
 ```
 
-#### Heritability Explained
+#### Heritability explained
 
 To see if there was a difference between gout classifications in the genetic component of the variance explained by an additive model in gout, heritability estimates were calculated for each gout classification. To do this, 10000 controls were randomly selected and were used with each different gout criteria and heritability estimates for each chromosome were calculated using GCTA 1.26.0 [@Yang2011; @Yang2011part]. The heritability estimates were 0.289 (SE 0.034) for the self-report of gout or ULT use definition, 0.283 (SE 0.036) for the self-report of gout definition, 0.282 (SE 0.040) for the Winnard definition, 0.308 (SE 0.044) for the ULT use definition and 0.236 (SE 0.160) for the hospital diagnosis definition. There were no statistically significant differences between the heritability estimates of any of the different classifications. The heritability estimates were similar to the estimates of genetic variance of serum urate [@Kottgen2013].
 
@@ -347,7 +347,7 @@ nom_snps$winnard <- winnard_asb %>% filter(P < 1e-5) %>% pull(SNP)
 nom_snps$ult <- ult_asb %>% filter(P < 1e-5) %>% pull(SNP)
 ```
 
-#### UK Biobank gout defintions GWAS
+#### UK Biobank gout defintions \gls{gwas}
 
 The total number of genome-wide significant \glspl{snp} was `r nom_snps$hosp %>% length()` for the hospital definition, `r nom_snps$self %>% length()` for the self-reported gout definition, `r nom_snps$ult %>% length()` for the \gls{ult} use definition, `r nom_snps$winnard %>% length()` for the Winnard definition, and `r nom_snps$selfult %>% length()` for the self-reported gout or \gls{ult} use definition. There was considerable overlap between the definitions in the \glspl{snp} that met the nominal significance threshold of P < 1x10^-5^ (Figure \@ref(fig:ukOverlap)). There were five main regions of the genome that had peaks of association with gout. These were at _GCKR_ on chromosome 2, _SLC2A9_ and _ABCG2_ on chromosome 4, the _SLC17A1-SLC17A3_ region on chromosome 6, and the _SLC22A11-SLC22A12_ region on chromosome 11 (Figure \@ref(fig:manhatSelfUltAgeSexBmi)). Only the peaks at _SLC2A9_ and _ABCG2_ reached genome-wide significance in the hospital definition.
 
@@ -422,7 +422,7 @@ UpSetR::upset(UpSetR::fromList(listInput), order.by = "freq", text.scale = 1.3, 
 
 
 ```{r}
-purrr::map_dfr(names(top_snps), ~ top_snps[[.x]] %>% filter(SYMBOL %in% c(kot_t1$grail_gene, kot_t1$closest_gene)) %>% mutate(group = .x)) %>% arrange(CHR,SYMBOL) %>% select(-SE) %>% filter(P < 5e-8) %>% mutate(P = as.character(P)) %>% select(-BP) %>% mutate(group = case_when(group == "hosp" ~ 'Hospital',group == 'self' ~ "Self-report", group == "ult" ~ 'ULT', group == 'selfult'~ "Self-report or ULT",group == 'winnard' ~ "Winnard",  TRUE ~ group), P = purrr::map_chr(as.numeric(P), ~ format_p_md(p = .x, format = 'latex'))) %>% mutate(effect = paste0(OR, ' [',L95,'-',U95,'], ',P)) %>% select(CHR, group, SYMBOL,SNP, A1, effect)%>%  kable(.,col.names = c("Chromosome","Definition","Gene name", "Marker","A1","OR [95\\% CI], P"), digits = 2, caption = '(\\#tab:ukgwas) Top genome-wide significant SNPs by gout definition', booktabs = TRUE, format='latex', escape = FALSE)
+purrr::map_dfr(names(top_snps), ~ top_snps[[.x]] %>% filter(SYMBOL %in% c(kot_t1$grail_gene, kot_t1$closest_gene)) %>% mutate(group = .x)) %>% arrange(CHR,SYMBOL) %>% select(-SE) %>% filter(P < 5e-8) %>% mutate(P = as.character(P)) %>% select(-BP) %>% mutate(group = case_when(group == "hosp" ~ 'Hospital',group == 'self' ~ "Self-report", group == "ult" ~ 'ULT', group == 'selfult'~ "Self-report or ULT",group == 'winnard' ~ "Winnard",  TRUE ~ group), P = purrr::map_chr(as.numeric(P), ~ format_p_md(p = .x, format = 'latex'))) %>% mutate(effect = paste0(OR, ' [',L95,'-',U95,'], ',P)) %>% select(CHR, group, SYMBOL,SNP, A1, effect)%>%  kable(.,col.names = c("Chromosome","Definition","Gene name", "Marker","A1","OR [95\\% CI], P"), digits = 2, caption = '(\\#tab:ukgwas) Top genome-wide significant SNPs by gout definition in the UK Biobank', booktabs = TRUE, format='latex', escape = FALSE)
 ```
 
 
@@ -473,9 +473,7 @@ polyGout <- read_delim('~/data/PolyGwas/polynesian_gout_CoreExome24v1.0-1_rsIDco
 
 ```
 
-The \gls{gwas} for gout in the Polynesian populations of New Zealand had a total of 2402 individuals, with a mean age of 48.6 (SD 14.9), was 60.5% male, and had a mean \gls{bmi} of 35.0 (SD 8.35). A break down by gout affection is in Table \@ref(tab:polyGwasclinc). There were only two markers that met the threshold for genome-wide significance, rs2725215 (risk allele = T, OR = 1.939, 95% CI = 1.567-2.40, P = 1.162 x 10^-9^) and rs2231142 (risk allele = T, OR = 2.306, 95% CI =1.891-2.81, P = 1.570 x 10^-16^), both located in _ABCG2_. Two other markers reached the nominal significance threshold, rs2728108 (_ABCG2_) and rs11034401 (inter-genic). Other genes that had \glspl{snp} that were close to the nominal significance threshold, in the 10^-4^ > P > 10^-5^ range, were _DDI2, PPP2R2C SLC2A9, ABCG2, LINC01331, CPVL/CHN2, BICC1, AB231779, TRPC2, DUSP6, DCN, FARP1, ALDH1A2, CA10, SLC39A11, ZNF543, DEFB118, DEFB119,_ and _PTPRT_ (Figure \@ref(polyManhat)).
-
-
+The \gls{gwas} for gout in the Polynesian populations of New Zealand had a total of 2402 individuals, with a mean age of 48.6 (SD 14.9), was 60.5% male, and had a mean \gls{bmi} of 35.0 (SD 8.35). A break down by gout affection is in Table \@ref(tab:polyGwasclinc). There were only two markers that met the threshold for genome-wide significance, rs2725215 (risk allele = T, OR = 1.939, 95% CI = 1.567-2.40, P = 1.162 x 10^-9^) and rs2231142 (risk allele = T, OR = 2.306, 95% CI =1.891-2.81, P = 1.570 x 10^-16^), both located in _ABCG2_. Two other markers reached the nominal significance threshold, rs2728108 (_ABCG2_) and rs11034401 (inter-genic). Other genes that had \glspl{snp} that were close to the nominal significance threshold, in the 10^-4^ > P > 10^-5^ range, were _DDI2, PPP2R2C SLC2A9, ABCG2, LINC01331, CPVL/CHN2, BICC1, AB231779, TRPC2, DUSP6, DCN, FARP1, ALDH1A2, CA10, SLC39A11, ZNF543, DEFB118, DEFB119,_ and _PTPRT_ (Figure \@ref(fig:polyManhat)). This list of genes included some of the main effect loci for serum urate (_SLC2A9_ and _ABCG2_), but the majority of these loci have not previously been associated with gout or serum urate.
 
 
 ```{r}
@@ -583,7 +581,7 @@ sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_g
 ```
 
 ```{r, message = FALSE}
-f <- list.files('~/data/ukbiobank_gwas/filtered_p0.05/', full.names = TRUE)
+f <- list.files(path = '~/data/ukbiobank_gwas/filtered_p0.05', pattern = '.*self_ult.*', full.names = TRUE)
 selfult_asb_p0_05 <- purrr::map_dfr(f,~ read_tsv(.x, col_names = TRUE ))
 
 ukbb_p05_ihs2 <- sig_ihs_val %>% filter(pop == 'GBR', abs(statvalue) > 2.0 ) %>% inner_join(., selfult_asb_p0_05, by = c("chrom" = "CHR", "chrom_start" = "BP")) %>% select(-gene_chrom, -STAT, -TEST)
@@ -602,7 +600,7 @@ ukhaplogwas <- bind_rows(
 ukbb_p05_ihs2 %>% filter(abs(statvalue) > 2.0, P< 2e-4) %>% select(chrom, chrom_start, SNP, genename, statvalue, A1, OR, L95, U95, P, statid) %>% mutate(P = purrr::map_chr(P, ~format_p_md(.x, format = 'latex'))) %>% mutate(effect = paste0(OR, ' [',L95,'-',U95,'], ',P)) %>% select(-(OR:P)), 
 ukbb_p05_nsl2 %>% filter(abs(statvalue) > 2.0, P< 2e-4) %>% select(chrom, chrom_start, SNP, genename, statvalue, A1, OR, L95, U95, P, statid) %>% mutate(P = purrr::map_chr(P, ~format_p_md(.x, format = 'latex'))) %>% mutate(effect = paste0(OR, ' [',L95,'-',U95,'], ',P)) %>% select(-(OR:P))
 ) %>% rename("pos" = chrom_start) %>% select(chrom, pos, SNP, genename, A1, effect, 'GBR' = statvalue) 
-ukhaplogwas %>%   kable(., format = 'latex', booktabs = TRUE, caption = "(\\#tab:haplogwas) SNPs that had |iHS| or |nSL| > 2 from the GBR, 1000 Genomes Project population and a gout association P > 2 x 10\\textsuperscript{-4} in the UK Biobank self-reported gout or ULT definition.", escape = FALSE) %>% kableExtra::group_rows(., group_label = "iHS",start_row = 1, end_row = 10) %>% kableExtra::group_rows(., "nSL", 11, 17) %>% footnote(general = "Effect = OR [95\\\\% CI], P. P is age, sex and BMI adjusted.", escape = FALSE)
+ukhaplogwas %>% select(Chromsome = chrom, Position = pos, Marker = SNP, `Gene name` = genename, A1, `OR [95\\% CI], P` = effect, GBR) %>%   kable(., format = 'latex', booktabs = TRUE, caption = "(\\#tab:haplogwas) SNPs that had |iHS| or |nSL| > 2 from the GBR, 1000 Genomes Project population and a gout association P > 2 x 10\\textsuperscript{-4} in the UK Biobank self-reported gout or ULT definition.", escape = FALSE) %>% kableExtra::group_rows(., group_label = "iHS",start_row = 1, end_row = 10) %>% kableExtra::group_rows(., "nSL", 11, 17) %>% footnote(general = "Effect = OR [95\\\\% CI], P. P is age, sex and BMI adjusted.", escape = FALSE)
 
 ```
 
@@ -687,7 +685,7 @@ polyGout %>% filter(between(BP, 2140497, 3099645), CHR == 3, P < 0.05) %>% arran
 
 
 ```{r}
-polyhaplogwas %>% select(-statid) %>% kable(., format = 'latex', booktabs = TRUE, caption = "(\\#tab:polyhaplogwas) SNPs that had |iHS| or |nSL| > 2 in the New Zealand Polynesian populations and a gout association P > 2 x 10\\textsuperscript{-4} in the Polynesian GWAS.", escape = FALSE) %>% group_rows(., 'iHS', 1, 11) %>% group_rows(., "nSL", 12, 25) %>% footnote(general = "Effect = OR [95\\\\% CI], P. P is age, sex and BMI adjusted.", escape = FALSE) %>% kable_styling(latex_options = 'scale_down')
+polyhaplogwas %>% select(-statid, Chromosome = chrom, Position = pos, Marker = SNP, `Gene name` = genename, A1, `OR [95\\% CI], P` = effect, CIM, NZM, SAM, TON) %>% kable(., format = 'latex', booktabs = TRUE, caption = "(\\#tab:polyhaplogwas) SNPs that had |iHS| or |nSL| > 2 in the New Zealand Polynesian populations and a gout association P > 2 x 10\\textsuperscript{-4} in the Polynesian GWAS.", escape = FALSE) %>% group_rows(., 'iHS', 1, 11) %>% group_rows(., "nSL", 12, 25) %>% footnote(general = "P value is age and sex adjusted. A1 is the effect allele.", escape = FALSE) %>% kable_styling(latex_options = 'scale_down')
 ```
 
 
@@ -698,7 +696,7 @@ polyhaplogwas %>% select(-statid) %>% kable(., format = 'latex', booktabs = TRUE
 - Concepts, estimation and interpretation of SNPbased heritability - Yang2016
 - Identifying genetic variants that affect viability in large cohorts - Mostafavi2017
 
-### GWAS results
+### Performance of gout definition
 
 
 
@@ -730,14 +728,26 @@ Heritability estimates for the variance attributed to the additive effects of co
 
 ----
 
+### \gls{gwas} and selection
 
-Poly gwas
+The main peak of association in the Manhattan plots (Figures \@ref(fig:manhatSelfUltAgeSexBmi) and \@ref(fig:polyManhat)) for the \glspl{gwas} of both the UK Biobank, and the New Zealand Polynesians was _ABCG2_, this was consisent with previous \glspl{gwas} for gout, compared to \gls{gwas} for serum urate which has the strongest association with _SLC2A9_ [\@ref]. Combining the haplotypic selection results for \gls{ihs} and \gls{nsl} from the \gls{gbr} population with the UK Biobank gout \gls{gwas}, showed additional evidence at _SLC22A12_, _PTPN11_, _SLC17A3, _SLC17A4_ , and _ADAM10_, but from the \gls{gwas} met the suggestive significance threshold of P < 10^-5^. All except ADAM10 had also previously been reported as being significant at a genome-wide threshold for association with serum urate levels [\@ref]. However, the locus of _ADAM10_, had not been previously associated at a genome-wide threshold with either gout or serum urate levels, but had previously been reported as a strong candidate for positive selection [\@ref]. The role of ADAM10 in the innate immune system 
 
-ABCG2 is the usual contender, the other variant rs11034401is an intergenic variant on chr11
+The supplementation of the New Zealand Polynesian gout \gls{gwas} with the haplotypic selection statistics of \gls{ihs} and \gls{nsl} from the Polynesian populations of \gls{cim}, \gls{nzm}, \gls{sam}, and \gls{ton} did not have any corroboration with the equivalent combination of analyses in the European ancestry results. The \gls{ton} population was the main source of the selection statistics that met the threshold, this could be due to the high proportion of gout patients (> 50%) that were included in the sample. The lead \gls{snp} in _ABCG2_, rs2231142, a known 
 
-- talk about rs2231142 a little and why it is the main gout result
+PPCDC
+
+had consistent evidence at ADAM10 from both selection statistics, but had not previously
+
+
+ABCG2 is the usual contender, the other variant rs11034401 is an intergenic variant on chr11
+
 
 the polynesian gwas is largely underpowered
+
+<!-- The main peak in the polynesian gwas is the same as the ukbiobank, abcg2 - this is different to kottgen, with the serum urate levels association where slc2a9 is the main effect loci -->
+
+- The ukbiobank had quite different loci that fell at the suggestive significance level compared to the poly gwas
+- the poly gwas didn't highly defined peaks in the manhattan plot, looks rather noisy and this can largely be attributed to the sample size
 
 ### Heritability explained
 
@@ -746,6 +756,16 @@ The heritability explained under an additive model for gout was similar to that 
 ### GWAS and selection
 
 There was limited selection for gout and urate associated loci in the \gls{gbr} population
+
+difference between the loci from the ukbb/gbr combination versus the poly/poly combination.
+
+- ukbb/gbr combo had differences even between the ihs/nsl, only 3? were consistent (what could ADAM10) do?
+- poly had many consistent genes between the ihs and nsl
+- mostly driven by TON - is this due to the TON pop being very high in gout?
+- poly has the ibsp/pkd2/abcg2 region as being influencial
+    - ibsp = bone density?, pkd2 is kidney related I think, and abcg2 is well recognised for gout
+    - PPCDC possible malarial link? how could the malaria bit be linked to the gout bit?
+        - also looks like it might be a western polynesian loci
 
 polynesian gwas and selection in wp, PPCDC has something to do with malaria "oocyst development and the production of sporozoites" - https://parasitesandvectors.biomedcentral.com/articles/10.1186/s13071-016-1860-3
 
@@ -766,9 +786,11 @@ lbsp has soemthing to do with bones and urate? http://ard.bmj.com.ezproxy.otago.
     - the selection results could be because of higher than general population prevalenvce of gout in the cohort
     - reduced markers used
 
-- EUR selection/gwas
-    - the greatly reduced number of markers because the selection results were calculated in the coreexome markers
+<!-- - EUR selection/gwas -->
+    <!-- - the greatly reduced number of markers because the selection results were calculated in the coreexome markers -->
 
+
+One of the limiting factors for the combination of the UK Biobank \gls{gwas} with the selection statistics is that the selection statistics were calculated for a greatly reduced number of markers compared to the markers available in the \gls{gwas}, as the \gls{gwas} had been imputed. 
 
 > Maybe bring up the current discussion about the gcta for the use of heritability versus ldak?
 
