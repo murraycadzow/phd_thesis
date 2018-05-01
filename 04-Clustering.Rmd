@@ -1,5 +1,7 @@
 # Clustering of Selection Statistics {#clustering}
 
+\glsresetall
+
 <!--
 the upper_sig_stats and  lower_sig_stats have a window size of 100 kb so therefore the genes that it says are in those windows might not apply to the 10 kb windows used for the clustering
 

@@ -1,5 +1,7 @@
 # Positive Selection in Polynesian Populations {#selectionResults}
 
+\glsresetall
+
 ```{r source, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(phdFunctions)
