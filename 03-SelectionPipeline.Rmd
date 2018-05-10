@@ -1531,9 +1531,12 @@ The pathway gene-set enrichment analysis from Enrichr on the KEGG 2016 pathways 
 
 ##### Selection from haplotypic statistics in \gls{nzm}.
 
-From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{nzm} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. Looking at the genes represented by the most extreme 100 \gls{ihs} and \gls{nsl} markers there were 30 genes for \gls{ihs}, and 40 genes for \gls{nsl}. There were 12 genes in common between the two sets. _CTNNA3_ had five markers in the top 100 for \gls{ihs}, and was also the gene for \gls{nzm} that had the most overall significant markers for both \gls{ihs} and \gls{nsl}. There were 40 genes that had at least 20 populations with significant markers for \gls{xpehh} in only NZM from the Polynesian populations, only one (_PAX5_) of which was associated with obesity [@melka2012genome].
+From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{nzm} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. Looking at the genes represented by the most extreme 100 \gls{ihs} and \gls{nsl} markers there were 30 genes for \gls{ihs}, and 40 genes for \gls{nsl}. There were 12 genes in common between the two sets. _CTNNA3_ had five markers in the top 100 for \gls{ihs}, and was also the gene for \gls{nzm} that had the most overall significant markers for both \gls{ihs} and \gls{nsl}. There were 40 genes that had at least 20 populations with significant markers for \gls{xpehh} in only NZM from the Polynesian populations, only one (_PAX5_) of which was associated with obesity [@melka2012genome]. There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'NZM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL") %>% NROW() %>% num_to_word()` genes, _LYST_, _PHIP_, _CTNNA3_, _RAD51AP2_, _SUPT3H_, _EPB41L4A_, _RAD51B_, and _VSNL1_, that had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1^st^ percentile from three or more statistics from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}.
 
-Four genes, _CTNNA3_, _RAD51AP2_, _SUPT3H_, and _VSNL1_, had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1^st^ percentile from four or more statistics from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}.
+```{r, eval = FALSE}
+bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'NZM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL")
+```
+
 
 > xpehh results?
 
@@ -1922,15 +1925,7 @@ q[q %in% genelists$genename]
 
 ##### Consecutive regions of score depression in \gls{ton}
 
-> check
-
 There were no consecutively depressed score regions that intersected genes associated with urate, \gls{t2d}, kidney disease, or metabolic syndrome. There was one region that intersected the obesity associated gene _CCR3_ for \gls{td} and was 260 kb in length at chr3:46035002-46295001. There were three regions with consecutively depressed score that also had significant markers for \gls{ihs} or \gls{nsl} in \gls{ton}. \gls{td} had two regions. The first similar to \gls{sam}, was at chr10:76685002-76985001 and spanned 300 kb and had three significant markers for \gls{ihs} and four for \gls{nsl} in _KAT6B_, three markers for both \gls{ihs} and \gls{nsl} in _SAMD8_, and two markers each for \gls{ihs} and \gls{nsl} in _DUSP13._ The second region at chr17:56125002-56415001 was 290 kb and had a single significant marker for \gls{ihs} in both _EPX_ and _LPO_. \gls{flf} had a slightly shifted region that also covered _EPX_ and _LPO_, but also included _RNF43_. All three genes had a single significant marker each for \gls{ihs}. The region was at chr17:56205002-56455001 and was 250 kb in length.
-
-
-
-
-
-
 
 <!-- ##### FST -->
 
@@ -1939,16 +1934,12 @@ There were no consecutively depressed score regions that intersected genes assoc
 
 <!-- - TD main processes: "cellular process", "metabolic process" -->
 <!-- - FWD main processes: "cellular process", "metabolic process" -->
-<!-- - FLD main processes: "cellular process", "metabolic process" -->
 <!-- - FLF main processes: "cellular process", "metabolic process" -->
 <!-- - ZE main processes: "cellular process", "metabolic process" -->
 <!-- - ihs main processes: "cellular process", "metabolic process" -->
 <!-- - nsl main processes: "cellular process", "metabolic process" -->
 <!-- - all main processes: "cellular process", "metabolic process" -->
 <!-- - all overrepresentation test: nothing -->
-
-
-
 
 <!-- From all of the intra population -->
 
@@ -1965,9 +1956,6 @@ There were no consecutively depressed score regions that intersected genes assoc
 <!-- - 3 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()` -->
 <!-- - 2 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()` -->
 <!-- - 1 stats: `r lower_sig_stats %>% filter(pop %in% c('TON')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()` -->
-
-
-
 
 
 <!-- no urate, t2d, kd, or metsyn -->
@@ -1995,89 +1983,10 @@ consec_lower_regions %>% filter( pop == 'TON') %>% inner_join(., bind_rows(sig_i
 <!--         - LPO ihs -->
 <!--         - RNF43 ihs -->
 
-
-
-(ref:upsetTON) TON Upset Plot
-
-```{r upsetTon, fig.cap = '(ref:upsetTON)', eval = FALSE}
-UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            iHS = sig_ihs_val %>% filter(pop == 'TON', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
-                            nSL =sig_nsl_val %>% filter(pop == 'TON', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
-              order.by = c("freq", "degree"), nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5, nintersects = NA)
-```
-
-
-```{r svgTONupset, include = FALSE, eval = FALSE}
-svg(filename = 'images/03_selectionpipeline/ton_upset.svg')
-UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'TON', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            iHS = sig_ihs_val %>% filter(pop == 'TON', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
-                            nSL =sig_nsl_val %>% filter(pop == 'TON', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
-              order.by = c("freq", "degree"), nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5, nintersects = NA)
-dev.off()
-```
-
-```{r tonLPO,  fig.cap='(ref:tonLPO)', eval=FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("TON","LPO")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/tonLPO.png')
-knitr::include_graphics('images/03_selectionpipeline/tonLPO.png')
-```
-
-
-
-```{r tonNRXN3, fig.cap='(ref:tonNRXN3)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("TON","NRXN3")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/tonNRXN3.png')
-knitr::include_graphics('images/03_selectionpipeline/tonNRXN3.png')
-```
-
-```{r tonCENPP, fig.cap='(ref:tonCENPP)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("TON","CENPP")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/tonCENPP.png')
-knitr::include_graphics('images/03_selectionpipeline/tonCENPP.png')
-```
-
-
-```{r tonSH3RF1, fig.cap='(ref:tonSH3RF1)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("TON","SH3RF1")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/tonSH3RF1.png')
-knitr::include_graphics('images/03_selectionpipeline/tonSH3RF1.png')
-```
-
-```{r tonSUPT3H, fig.cap='(ref:tonSUPT3H)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("TON","SUPT3H")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/tonSUPT3H.png')
-knitr::include_graphics('images/03_selectionpipeline/tonSUPT3H.png')
-```
-
-
-
-
 <!-- - From the lower tail there were `r consec_lower_regions %>% filter(stat == 'Tajima.D', pop == 'TON') %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` regions of extended significant windows for \gls{td}, `r consec_lower_regions %>% filter(stat == 'Fay.Wu.H', pop == 'TON') %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fwh}, `r consec_lower_regions %>% filter(stat == 'Fu.Li.D', pop == 'TON') %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{fld}, `r consec_lower_regions %>% filter(stat == 'Fu.Li.F', pop == 'TON') %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{flf}, and `r consec_lower_regions %>% filter(stat == 'Zeng.E', pop == 'TON') %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce(ignore.strand = TRUE) %>% length()` for \gls{ze}. -->
-
-
-
-
-
-
-<!-- THADA Plot -->
-```{r tonTHADA, fig.cap='(ref:tonTHADA)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("TON","THADA")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/tonTHADA.png')
-knitr::include_graphics('images/03_selectionpipeline/tonTHADA.png')
-```
-
 
 <!-- Enrichr using 0.1 percentile -->
 
-<!-- FLD 1 pathway significant - olfactory transduction -->
 <!-- FLF 1 pathway significant - olfactory transduction -->
 
 <!-- ihs > 3.89, type 1 diabetes melitus was top hit but P = 0.079 -->
