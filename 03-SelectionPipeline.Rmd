@@ -342,8 +342,14 @@ ramos[["unknown"]] <- c("IL23R", "FCGR2B", "TNFSF4", "CR1", "ANTRX2", "TNIP1", "
 ```
 
 
-```{r}
-
+```{r, eval = FALSE}
+gene_extract <- function(from, stat){
+  tibble(from = from, stat = stat)
+}
+ramos
+joannalagadda_genes %>% purrr::map_dfr(., ~ .x) %>% gather("stat", gene) %>% mutate(from = 'joannalagadda')
+hider
+purrr::map_dfr(names(hider_genes), ~ hider_genes[.x] %>% purrr::map_dfr(., ~ tibble(from="hider", gene = .x))) %>% gather("stat", gene) %>% mutate(from = 'hider')
 ```
 
 
@@ -1184,9 +1190,8 @@ cim_99.9_stats_upper <- upper_sig_stats %>% left_join(., upper_sig_stats_binned,
 
 <!-- Functional classification of genes with markers that were significant for \gls{ihs} or \gls{nsl}, or genes that fell within the windows of the 1st percentile and had a value less than 0 for the frequency spectrum based statistics was done using PantherDB. Only \gls{td} had the main biological process as "Binding", and the second as "Catalytic activity". All other statistics each had "Cellular process" and "Metabolic process" as their first and second largest categories. There were no biological processes that were over represented from the gene list of all genes with possible positive selection. -->
 
-> need to redo the pathway enrichment for "all"
 
-Pathway gene-set enrichment analysis on gene lists for each statistic that met the significance thresholds was done using Enrichr. There was a total of 10 pathways that after multiple testing correction had significant p-values. Nine pathways were significant for the gene list from \gls{nsl} and had a heart and lung focus based on calcium ion movement in the form of genes for calcium transporters and voltage-gated calcium channels. There were five genes related to calcium that were in at least five of the pathway terms: _CACNA1D_, _ADCY9_, _SLC8A1_, _CACNA2D2_, _CACNA2D3._ There was a single pathway that was significant from the genes from the 1^st^ percentile of \gls{td} which was "bacterial invasion of epithelial cells".
+Pathway gene-set enrichment analysis on gene lists for each statistic that met the significance thresholds was done using Enrichr. There was a total of 10 pathways that after multiple testing correction had significant  P values (Table \@ref(tab:keggPath)). Nine pathways were significant for the gene list from \gls{nsl} and had a heart and lung focus based on calcium ion movement in the form of genes for calcium transporters and voltage-gated calcium channels. There were five genes related to calcium that were in at least five of the pathway terms: _CACNA1D_, _ADCY9_, _SLC8A1_, _CACNA2D2_, _CACNA2D3._ There was a single pathway that was significant from the genes from the 1^st^ percentile of \gls{td} which was "bacterial invasion of epithelial cells".
 
 
 ##### Consecutive regions of score depression in \gls{cim}
@@ -1503,7 +1508,7 @@ For the \gls{cim} population there were `r lower_sig_stats %>% filter(statname =
 
 #### New Zealand Maori
 
-The \gls{nzm} population had the largest number of genes intersecting windows from the 1^st^ percentile that were only reported in a single population for \gls{fwh}, \gls{flf}, and \gls{ze} out of the Polynesian populations.
+<!-- The \gls{nzm} population had the largest number of genes intersecting windows from the 1^st^ percentile that were only reported in a single population for \gls{fwh}, \gls{flf}, and \gls{ze} out of the Polynesian populations. -->
 
 
 <!-- - TD main processes "cellular process", "metabolic process" -->
@@ -1522,13 +1527,16 @@ The \gls{nzm} population had the largest number of genes intersecting windows fr
 <!-- The gene set over representation analysis using PantherDB had 'cellular component movement' with a fold-enrichment of 4.47 (P = 0.0486) and 'anatomical structure morphogenesis' with fold enrichment of 3.94 (P = 0.0288), as the only significant annotations, when all genes that met a threshold were used.  -->
 > need to redo the pathway enrichment for "all"
 
-The pathway gene-set enrichment analysis from Enrichr on the KEGG 2016 pathways had 31 pathways that were significant after multiple testing correction, this was the largest number of pathways out of the Polynesian populations. On average only 9.3% of a pathway was represented by the genes. Thirty were from the significant genes for \gls{nsl}, with many in common with \gls{cim} with calcium transporters and voltage gated calcium channels featuring in many pathways. Compared to the \gls{cim} pathway results, there were more hormone-based pathways that were significant, such as renin secretion, oxytocin signalling pathway, adrenergic signalling in cardiomyocytes, thyroid hormone synthesis, aldosterone synthesis and secretion, insulin secretion, and GnRH signalling pathway. Furthermore, diabetes-related pathways were significant such as type 2 diabetes mellitus, insulin secretion, and pancreatic secretion pathways. The genes that were significant made up about 10% of the genes in the pathways. The genes that were shared in the most pathways included two adenlyate cylases (_ADCY8_ and _ADCY9_), two phospholipase C genes (_PLCB1_ and _PLCB4_), and calcium voltage-gated channel subunits (_CACNA1C_ and _CACNA1D_). Similar to \gls{cim}, there was a single pathway that was significant from the \gls{td} list and that too was for bacterial invasion of epithelial cells.
+The pathway gene-set enrichment analysis from Enrichr on the KEGG 2016 pathways had `r kegg_sig %>% filter(pop == 'nzm') %>% NROW()` pathways that were significant after multiple testing correction, this was the largest number of pathways out of the Polynesian populations (Table \@ref(tab:keggPath)). On average only 9.3% of a pathway was represented by the genes. Thirty one pathways were from the significant genes for \gls{nsl}, with many in common with \gls{cim}. Calcium transporters and voltage gated calcium channels featured in many pathways that were in common. Compared to the \gls{cim} pathway results, there were more hormone-based pathways that were significant, such as renin secretion, oxytocin signalling pathway, adrenergic signalling in cardiomyocytes, thyroid hormone synthesis, aldosterone synthesis and secretion, insulin secretion, and GnRH signalling pathway. Furthermore, diabetes-related pathways were significant such as type 2 diabetes mellitus, insulin secretion, and pancreatic secretion pathways. The genes that were shared in the most pathways included two adenlyate cylases (_ADCY8_ and _ADCY9_), two phospholipase C genes (_PLCB1_ and _PLCB4_), and calcium voltage-gated channel subunits (_CACNA1C_ and _CACNA1D_). Similar to \gls{cim}, there was a single pathway that was significant from the \gls{td} list and that too was for bacterial invasion of epithelial cells.
 
 ##### Selection from haplotypic statistics in \gls{nzm}.
 
 From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{nzm} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. Looking at the genes represented by the most extreme 100 \gls{ihs} and \gls{nsl} markers there were 30 genes for \gls{ihs}, and 40 genes for \gls{nsl}. There were 12 genes in common between the two sets. _CTNNA3_ had five markers in the top 100 for \gls{ihs}, and was also the gene for \gls{nzm} that had the most overall significant markers for both \gls{ihs} and \gls{nsl}. There were 40 genes that had at least 20 populations with significant markers for \gls{xpehh} in only NZM from the Polynesian populations, only one (_PAX5_) of which was associated with obesity [@melka2012genome].
 
- 
+Four genes, _CTNNA3_, _RAD51AP2_, _SUPT3H_, and _VSNL1_, had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1^st^ percentile from four or more statistics from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}.
+
+> xpehh results?
+
 ```{r, eval = FALSE}
 q <- xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, 0)%>% arrange(genename) %>% mutate(rs = AFR + AMR + EAS + EUR + POL + SAS) %>% filter(rs >=20) %>% select(pop1, genename, rs) %>% spread(pop1, rs) %>% filter(is.na(CIM),!is.na(NZM), is.na(SAM), is.na(TON)) %>% pull(genename)
 q[q %in% genelists$genename]
@@ -1536,16 +1544,9 @@ q[q %in% genelists$genename]
 
 ##### Consecutive regions of score depression in \gls{nzm}
 
-> check
+The regions of consecutive depressed score from the 1^st^ percentile of windows that also contained markers with a significant \gls{ihs} or \gls{nsl} value covered three regions of the genome for \gls{nzm}. Two of the regions were for \gls{td}, the first was 270kb at chr2:24215002-24485001, and overlapped the region in \gls{cim}. It had a single significant marker for \gls{ihs} in each of _MFSD2B_/_FKBP1B_, and _FAM228B_. The second \gls{td} region was 260 kb at chr4:106555002-106815001 and had a single significant marker for \gls{nsl} in _INTS12_, and a single marker for both \gls{ihs} and \gls{nsl} in _SH3RF1_. A 200 kb region for \gls{flf} at chr2:179395002-179595001 had five significant markers in _TTN-AS1_ for \gls{ihs}.
 
-The regions of consecutive depressed score from the 1^st^ percentile of windows that also contained markers with a significant \gls{ihs} or \gls{nsl} value covered three regions of the genome for \gls{nzm}. Two of the regions were for \gls{td}, the first was 270kb at chr2:24215002-24485001, and overlapped the region in \gls{cim}. It had a single significant marker for \gls{ihs} in each of _MFSD2B_, _FKBP1B_, and _FAM228B_. The second \gls{td} region was 260 kb at chr4:106555002-106815001 and had a single significant marker for \gls{nsl} in _INTS12_, and a single marker for both \gls{ihs} and \gls{nsl} in _SH3RF1_. A 200 kb region for \gls{flf} at chr2:179395002-179595001 had five (XXX check) significant markers in _TTN-AS1_ for both \gls{ihs} and \gls{nsl}
-
-No consecutive regions intersected with genes associated with urate, kidney disease, or \gls{t2d}. There were 2 regions that intersected obesity-associated loci; for \gls{td} a 320 kb region at chr16:67145002-67465001 contained _KCTD19_, and for \gls{flf}, 220 kb at chr16:3555002-3775001 contained _NLRC3_. _EDC4_ which is associated with metabolic syndrome had slightly differing regions that covered it. \gls{td} was 330 kb spanning chr16:67775002-68105001, and \gls{flf} was 320 kb spanning chr16:67775002-68095001.
-
-
-Four genes, _CTNNA3_, _RAD51AP2_, _SUPT3H_, and _VSNL1_, had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1^st^ percentile from four or more statistics from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}.
-
-
+No consecutive regions of score depression intersected with genes associated with urate, kidney disease, or \gls{t2d}. There were 2 regions that intersected obesity-associated loci; for \gls{td} a 320 kb region at chr16:67145002-67465001 contained _KCTD19_, and for \gls{flf}, 220 kb at chr16:3555002-3775001 contained _NLRC3_. _EDC4_ which is associated with metabolic syndrome, had slightly differing regions that covered it. \gls{td} was 330 kb spanning chr16:67775002-68105001, and \gls{flf} was 320 kb spanning chr16:67775002-68095001.
 
 
 <!-- ##### FST -->
@@ -1603,7 +1604,6 @@ bind_rows(bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM')%>% select
 
 <!-- - TD main processes "cellular process", "metabolic process" -->
 <!-- - FWH main processes "cellular process", "metabolic process" -->
-<!-- - FLD main processes "cellular process", "metabolic process" -->
 <!-- - FLF main processes "cellular process", "metabolic process" -->
 <!-- - ZE main processes "cellular process", "metabolic process" -->
 <!-- - ihs main processes "cellular process", "metabolic process" -->
@@ -1620,10 +1620,6 @@ bind_rows(bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM')%>% select
 <!--     - chr4:106555002-106815001 w=260000 -->
 <!--         - INTS12 nsl -->
 <!--         - SH3RF1 ihs/nsl -->
-<!-- -fld -->
-<!--     - chr2:179325002-179665001 w=340000  -->
-<!--         - TTN-AS1 5x ihs -->
-<!--         - TTN 5x ihs -->
 <!-- - flf -->
 <!--     - chr2:179395002-179595001 w=200000 -->
 <!--         - TTN-AS1 5x ihs -->
@@ -1636,7 +1632,7 @@ bind_rows(bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM')%>% select
 
 <!-- metsyn -->
 <!-- td chr16:67775002-68105001 w=330000 EDC4 -->
-<!-- fld chr16:67785002-68045001 w=260000 EDC4 -->
+
 <!-- flf chr16:67775002-68095001 w=320000 EDC4 -->
 
 
@@ -1659,67 +1655,6 @@ UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'NZ
 <!-- - 3 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==3, !is.na(SYMBOL)) %>% NROW()` -->
 <!-- - 2 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==2, !is.na(SYMBOL)) %>% NROW()` -->
 <!-- - 1 stats: `r lower_sig_stats %>% filter(pop %in% c('NZM')) %>% select(SYMBOL, statname) %>% distinct() %>% group_by(SYMBOL) %>% tally() %>% filter(n ==1, !is.na(SYMBOL)) %>% NROW()` -->
-
-
-
-
-
-```{r nzmDNAH6, fig.cap='(ref:nzmDNAH6)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("NZM","DNAH6")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmDNAH6.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmDNAH6.png')
-```
-
-```{r nzmDNAH6consec, fig.cap='(ref:nzmDNAH6consec)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# g = "DNAH6"
-# #retrieve information of the gene of interest
-# 
-# wh <- genesymbol[g]
-# wh <- range(wh, ignore.strand = TRUE)
-# 
-# stat_plot <- bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM', genename == g)%>% mutate(pop = 'NZM', statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>%  select(SYMBOL = genename, chrom, chrom_start, chrom_end, statname) %>%  bind_rows(., consec_lower_regions %>% filter(pop == 'NZM', SYMBOL == g) %>% select('chrom'= seqnames, 'chrom_start' = start, 'chrom_end' = end, 'statname' = stat, SYMBOL) ) %>% GenomicRanges::GRanges() %>% ggbio::autoplot(., aes(fill = statname, colour = statname)) + theme(legend.position = 'top')
-# # hasAxis(stat_plot) <- TRUE
-# gene_plot <- ggbio::autoplot(Homo.sapiens::Homo.sapiens, which = wh, gap.geom = "chevron")
-# hasAxis(gene_plot) <- TRUE
-# ggbio::tracks(gene_plot, stat_plot) + ggtitle(paste(g, "consecutive low score"))
-
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmDNAH6consec.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmDNAH6consec.png')
-# rm(gene_plot, stat_plot, wh, g)
-```
-
-
-```{r nzmRGS3, fig.cap='(ref:nzmRGS3)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("NZM","RGS3")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmRGS3.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmRGS3.png')
-```
-
-```{r nzmCTNNA3, eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("NZM","CTNNA3")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmCTNNA3.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmCTNNA3.png')
-```
-
-```{r nzmRAD51AP2, eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("NZM","RAD51AP2")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmRAD51AP2.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmRAD51AP2.png')
-```
-
-
-```{r nzmVSNL1, eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("NZM","VSNL1")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmVSNL1.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmVSNL1.png')
-```
-
-
-```{r nzmSUMPT3H, fig.cap='(ref:nzmSUPT3H)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("NZM","SUPT3H")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/nzmSUPT3H.png')
-knitr::include_graphics('images/03_selectionpipeline/nzmSUPT3H.png')
-```
 
 
 
@@ -1748,10 +1683,6 @@ There were `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM
 In the upper tail there were `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that formed `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` continuous regions that met the significance threshold. These regions covered `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp and had `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, of which `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('NZM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fay.Wu.H', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` were only significant in the \gls{nzm} population for \gls{fwh}
 
 
-_Fu and Li's D_
-
-For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the lower tail threshold for significance and made `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` independent continuous regions covering `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp. In these regions there were `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, of which `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.D', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` were only significant in \gls{nzm} for \gls{fld}. In the upper tail there were `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the significance threshold. These windows made `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` independent continuous regions with a total of `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp containing `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, with `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('NZM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.D', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only meeting significance in \gls{nzm} for \gls{fld}.
-
 _Fu and Li's F_
 
 For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the lower tail threshold for significance and made `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` independent continuous regions covering `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp. In these regions there were `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, of which `r lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.F', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` were only significant in \gls{nzm} for \gls{flf}. In the upper tail there were `r upper_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the significance threshold. These windows made `r upper_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` independent continuous regions with a total of `r upper_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp containing `r upper_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, with `r upper_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('NZM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.F', !pop %in% c('NZM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only meeting significance in \gls{nzm} for \gls{flf}.
@@ -1779,9 +1710,9 @@ For the \gls{nzm} population there were `r lower_sig_stats %>% filter(statname =
 <!-- - all overrepresentation test: nothing -->
 
 <!-- There were no significant results after adjusting for multiple testing when performing the over representation analysis using PantherDB on all genes that had met a significance threshold for any of the intra population selection and neutrality statistics. For all of the intra-population statistics, the main biological functional classification was "cellular process". -->
-> need to redo the pathway enrichment for "all"
 
-Only two pathways were significant for the gene-set pathway enrichment analysis using Enrichr. The pathway term "ABC transporters" was significant for gene list from \gls{ihs} (adjusted P = 0.0128) with 9 of 44 genes. The second pathway that was significant was "long-term potentiation" and that was from the \gls{nsl} gene list (adjusted P = 0.0213) with 9 of 66 genes.
+
+Only two pathways were significant for the gene-set pathway enrichment analysis using Enrichr (Table \@ref(tab:keggPath)). The pathway term "ABC transporters" was significant for gene list from \gls{ihs} (adjusted P = 0.0128) with 9 of 44 genes. The second pathway that was significant was "long-term potentiation" and that was from the \gls{nsl} gene list (adjusted P = 0.0213) with 9 of 66 genes.
 
 
 ##### Selection from haplotypic statistics in \gls{sam}.
@@ -1866,83 +1797,12 @@ consec_lower_regions %>% filter( pop == 'SAM') %>% inner_join(., bind_rows(sig_i
 <!--         - SAMD8 2x ihs, 2x nsl -->
 <!--         - DUSP13 2x ihs, 2x nsl -->
 <!-- - flf -->
-<!--     - chr1:26465002-26665001 w=200000 -->
+<!--    - chr1:26465002-26665001 w=200000 -->
 <!--         - CNKSR1 nsl -->
 <!--         - AIM1L 2 x ihs, 3x nsl -->
-
-
-
 <!-- (ref:upsetSAM) Upset plot of number of genes that were significant between statistics for \gls{sam} -->
 
-```{r upsetSam, fig.cap = '(ref:upsetSAM)', eval = FALSE}
-UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            iHS = sig_ihs_val %>% filter(pop == 'SAM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
-                            nSL =sig_nsl_val %>% filter(pop == 'SAM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
-              order.by = c("freq","degree"), nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5 , nintersects = NA)
-```
 
-```{r svgSAMupset, include = FALSE, eval = FALSE}
-svg(filename = 'images/03_selectionpipeline/sam_upset.svg')
-  UpSetR::upset(fromList(list(`Tajima's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Tajima.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fay and Wu's H` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fay.Wu.H', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's D` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.D', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(), 
-                            `Fu and Li's F` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Fu.Li.F', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            `Zeng's E` = lower_sig_stats %>% filter(pop == 'SAM', statname == 'Zeng.E', !is.na(SYMBOL)) %>% .[['SYMBOL']] %>% unique(),
-                            iHS = sig_ihs_val %>% filter(pop == 'SAM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique(), 
-                            nSL =sig_nsl_val %>% filter(pop == 'SAM', !is.na(genename) & genename != "") %>% .[['genename']] %>% unique())), 
-              order.by = c("freq","degree"), nsets = 7, number.angles = 90, set_size.angles = 90, hjust = -0.25, vjust = 0.5 , nintersects = NA)
-  dev.off()
-```
-
-<!-- (ref:samCNTNAP5) Plot showing markers, genes and significant results for \gls{sam} at _CNTNAP5_ -->
-
-```{r samCNTNAP5, fig.cap='(ref:samCNTNAP5)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#retrieve information of the gene of interest
-# plot_gene("SAM","CNTNAP5")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/samCNTNAP5.png')
-knitr::include_graphics('images/03_selectionpipeline/samCNTNAP5.png')
-```
-
-
-```{r samSPAG16, fig.cap='(ref:samSPAG16)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("SAM","SPAG16")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/samSPAG16.png')
-knitr::include_graphics('images/03_selectionpipeline/samSPAG16.png')
-```
-
-```{r samSPECC1, fig.cap='(ref:samSPECC1)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("SAM","SPECC1")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/samSPECC1.png')
-knitr::include_graphics('images/03_selectionpipeline/samSPECC1.png')
-```
-
-```{r samSUPT3H, fig.cap='(ref:samSUPT3H)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("SAM","SUPT3H")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/samSUPT3H.png')
-knitr::include_graphics('images/03_selectionpipeline/samSUPT3H.png')
-```
-
-```{r samCTNNA3, fig.cap='(ref:samCTNNA3)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("SAM","CTNNA3")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/samCTNNA3.png')
-knitr::include_graphics('images/03_selectionpipeline/samCTNNA3.png')
-```
-
-```{r samCEP112, fig.cap='(ref:samCEP112)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("SAM","CEP112")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/samCEP112.png')
-knitr::include_graphics('images/03_selectionpipeline/samCEP112.png')
-```
-
-```{r samPARD3B, fig.cap='(ref:samPARD3B)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-# plot_gene("SAM","PARD3B")
-# ggsave(last_plot(), file = 'images/03_selectionpipeline/samPARD3B.png')
-knitr::include_graphics('images/03_selectionpipeline/samPARD3B.png')
-```
 
 
 <!-- - td most specific -->
@@ -1974,9 +1834,6 @@ There were `r lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM
 
 In the upper tail there were `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the threshold for significance. These windows formed `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` regions with a total of `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp. There were `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, of which `r upper_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('SAM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fay.Wu.H', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` were only from the \gls{sam} population for \gls{fwh}. 
 
-_Fu and Li's D_
-
-For the \gls{sam} population there were `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the lower tail threshold for significance and made `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` independent continuous regions covering `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp. In these regions there were `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, of which `r lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.D', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` were only significant in \gls{sam} for \gls{fld}. In the upper tail there were `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% NROW()` windows that met the significance threshold. These windows made `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% length()` independent continuous regions with a total of `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select(contains('chrom')) %>% distinct() %>% GenomicRanges::GRanges() %>% GenomicRanges::reduce() %>% GenomicRanges::width() %>% sum()/1e6` Mbp containing `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% select('SYMBOL') %>% distinct() %>% NROW()` genes, with `r upper_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('SAM')) %>% anti_join(., bind_rows(lower_sig_stats, upper_sig_stats) %>% filter(statname == 'Fu.Li.D', !pop %in% c('SAM')), by = "SYMBOL") %>% select(SYMBOL) %>% distinct() %>% NROW()` genes only meeting significance in \gls{sam} for \gls{fld}.
 
 _Fu and Li's F_
 
@@ -1988,12 +1845,6 @@ For the \gls{sam} population there were `r lower_sig_stats %>% filter(statname =
 ```
 
 
-
-```{r samCREB1, fig.cap='(ref:samCREB1)', eval= FALSE, message = FALSE, fig.height = 4, fig.width = 4}
-#plot_gene("SAM","CREB1")
-#ggsave(last_plot(), file = 'images/03_selectionpipeline/samCREB1.png')
-knitr::include_graphics('images/03_selectionpipeline/samCREB1.png')
-```
 
 
 <!-- Enrichr using the 0.1 percentile -->
