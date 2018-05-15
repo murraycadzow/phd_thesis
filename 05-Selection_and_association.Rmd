@@ -102,7 +102,7 @@ Individuals from the UK Biobank cohort were genotyped on an Axiom array with 820
 
 #### Gout definitions
 
-Four main classification criteria were used to define gout cases. _Hospital defined gout_ involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). _Self-report of gout_ was defined as reporting having gout at the time of the study interview. _Use of \gls{ult}_ used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukaemia or lymphoma (ICD-10 codes C81-C96). _Winnard defined gout_ was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
+Four main classification criteria were used to define gout cases. _Hospital defined gout_ involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). _Self-report of gout_ was defined as reporting having gout at the time of the study interview. _Use of \gls{ult}_ used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukaemia or lymphoma (ICD-10 codes C81-C96). _Winnard defined gout_ was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions in order to remove possible cases from the control cohort. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
 
 Confidence intervals for proportions of each gout definition out of the combination of all gout definitions were calculated using the \texttt{prop.test} function from the _stats_ package in R.
 
@@ -164,7 +164,7 @@ A \gls{gwas} was performed using logistic regression in Plink1.9b [@plink2; @Cha
 
 #### Heritabililty
 
-For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selecting 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto a continuous liability scale using the restricted maximum likelihood analysis in the GCTA software (v1.26.0, @Yang2011part) and a general population prevalence of gout of 2% (section \@ref(gctaHeritability)). The liability scale operates on a liability threshold model whereby an unseen continuous trait has a threshold above which one is a case [@Lee2011; @Zuk2012]. Heritability estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
+For each gout classification, the genetic component of heritability explained was calculated. This was done by first randomly selecting 10,000 controls and then combining this same subset with cases from each of the gout classifications. The genetic variance was calculated for each chromosome separately and then combined. The dichotomous case-control phenotype was transformed onto a continuous liability scale using the restricted maximum likelihood analysis function in the GCTA software (v1.26.0, @Yang2011part) and a general population prevalence of gout of 2% (section \@ref(gctaHeritability)). The liability scale operates on a liability threshold model whereby an unseen continuous trait has a threshold above which one is a case [@Lee2011; @Zuk2012]. Heritability estimates were compared using the formula h~1~ - h~2~ and the SE calculated using formula \@ref(eq:h2se).
 
 
 \begin{equation} 
@@ -174,7 +174,7 @@ For each gout classification, the genetic component of heritability explained wa
 
 ### Polynesian Gout GWAS
 
-A multi-cohort gout dataset was assembled by combining individuals from the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and the Ngati Porou Hauora Charitable Trust cohort. Genotyping on the Inifinium CoreExome v24 bead-chip was performed at the University of Queensland (Centre for Clinical Genomics) for the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and at AgResearch (Invermay Agricultural Centre) for the Ngati Porou Hauora Charitable Trust cohort. The genotype quality control procedures described in section \@ref(coreExomeQC) were applied per cohort, and then as necessary after combining the cohorts. The genotype quality control, and combining of cohorts were performed by Dr Tanya Major, Merriman Lab. \Glsfirst{pca} was performed on the combined dataset with the first 10 components outputted and used as covariates to adjust for population substructure in the \gls{gwas}.
+A multi-cohort gout dataset was assembled by combining individuals from the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and the Ng\tex{\={a}}ti Porou Hauora Charitable Trust cohort. Genotyping on the Infinium CoreExome v24 bead-chip was performed at the University of Queensland (Centre for Clinical Genomics) for the Genetics of Gout, Diabetes, and Kidney Disease in Aotearoa cohorts and at AgResearch (Invermay Agricultural Centre) for the Ng\tex{\={a}}ti Porou Hauora Charitable Trust cohort. The genotype quality control procedures described in section \@ref(coreExomeQC) were applied per cohort, and then as necessary after combining the cohorts. The genotype quality control, and combining of cohorts were performed by Dr Tanya Major, Merriman Lab. \Glsfirst{pca} was performed on the combined dataset with the first 10 components outputted and used as covariates to adjust for population substructure in the \gls{gwas}.
 
 ```{r, message = FALSE, warning = FALSE}
 poly_fam <- read_delim('~/data/PolyGwas/QC1_7-FullMerge1.0and1.1_ExDup_MattBrown_Czech-plus_polygoutAff.fam', delim = '\t', col_names = FALSE)
@@ -280,7 +280,8 @@ flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770
 uk_kot_t1 %>% 
   #mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  
   select(gout, SNP, grail_gene,OR, L95, U95) %>% 
-  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
+  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% filter(!(SNP %in% c('rs2231142','rs12498742'))) %>%
+  unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
               # mutate(gout = case_when(
               #   gout == 'hosp' ~ "Hospital", 
               #   gout == "self" ~ "Self Report", 
@@ -290,6 +291,23 @@ uk_kot_t1 %>%
               ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
               geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
 ```
+
+```{r}
+uk_kot_t1 %>% 
+  #mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  
+  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
+  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% filter(SNP %in% c('rs2231142','rs12498742')) %>% 
+  unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
+              # mutate(gout = case_when(
+              #   gout == 'hosp' ~ "Hospital", 
+              #   gout == "self" ~ "Self Report", 
+              #   gout == "selfult" ~ "Self Report or ULT",
+              #   gout == "ult" ~ "ULT",
+              #   gout == "winnard" ~ "Winnard")) %>% 
+              ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
+              geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
+```
+
 
 #### Heritability explained
 
