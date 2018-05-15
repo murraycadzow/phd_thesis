@@ -133,7 +133,7 @@ The frequency spectrum methods are based on finding deviations in the frequency 
 
 #### Tajima's _D_
 
-Tajima's _D_ [@Tajima1989] counts the number of segregating sites of individuals in a population and finds the ratio between polymorphisms and pair-wise individual comparisons. Tajima's _D_ is a test of the neutral hypothesis. The hypothesis is rejected when there is an excess of low frequency variants. A negative Tajima's _D_ is indicative of positive selection or weak negative selection but a negative value can also be attributed to population events such as populationexpansion. Positive values of Tajima's _D_ indicate an excess of intermediate frequency variants. An excess of intermediate frequency variants could also be attributed to balancing selection, population structure, or population bottlenecks [@Kreitman2000; @Nielsen2005; @nielsen2007recent]. The comparison of other polymorphisms, such as changes in \glspl{snp} vs changes in \gls{indel} numbers can provide further evidence for either selection or a population event, since population events should affect both \glspl{snp} and \glspl{indel} in an equal fashion. The direction of Tajima's _D_ after a population bottleneck depends on the strength and duration of the bottleneck and can generate similar Tajima's _D_ values that can be positive, negative or zero [@Fay1999]. After a population reduction or selective event it is expected the population will have excess rare alleles (recent, low frequency) as the population recovers, therefore Tajima's _D_ will be negative [@Barton1998]. Tajima's _D_ is sensitive to sequencing errors because they appear equivalent to low frequency variants [@Achaz2008].
+Tajima's _D_ [@Tajima1989] counts the number of segregating sites of individuals in a population and finds the ratio between polymorphisms and pair-wise individual comparisons. Tajima's _D_ is a test of the neutral hypothesis. The hypothesis is rejected when there is an excess of low frequency variants. A negative Tajima's _D_ is indicative of positive selection or weak negative selection but a negative value can also be attributed to population events such as population expansion. Positive values of Tajima's _D_ indicate an excess of intermediate frequency variants. An excess of intermediate frequency variants could also be attributed to balancing selection, population structure, or population bottlenecks [@Kreitman2000; @Nielsen2005; @nielsen2007recent]. The comparison of other polymorphisms, such as changes in \glspl{snp} vs changes in \gls{indel} numbers can provide further evidence for either selection or a population event, since population events should affect both \glspl{snp} and \glspl{indel} in an equal fashion. The direction of Tajima's _D_ after a population bottleneck depends on the strength and duration of the bottleneck and can generate similar Tajima's _D_ values that can be positive, negative or zero [@Fay1999]. After a population reduction or selective event it is expected the population will have excess rare alleles (recent, low frequency) as the population recovers, therefore Tajima's _D_ will be negative [@Barton1998]. Tajima's _D_ is sensitive to sequencing errors because they appear equivalent to low frequency variants [@Achaz2008].
 
 #### Fay and Wu's _H_
 
@@ -297,6 +297,11 @@ F can be thought of as the normalised difference between the average number of s
 Uric acid is a by product of purine metabolism. 
 Inflammatory response is triggered when the monosodium urate crystals interact with the innate and adaptive immune response and result in the generation of IL-1 @Rock2013
 
+
+### extra papers
+
+- \cite{Blekhman2008}
+- \cite{Blekhman2008}
 
 ### things to update
 
