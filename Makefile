@@ -9,7 +9,7 @@ compile_book : $(FILES)
 
 pdf_book : compile_book
 	mv _book/Thesis.pdf _book/Thesis_bookdown.pdf
-	sed 's/\\includegraphics{/\\includegraphics{_bookdown_files\//g'< _book/Thesis.tex  > Thesis.tex
+	sed 's/\\includegraphics{/\\includegraphics{_bookdown_files\//g'< _book/Thesis.tex > Thesis.tex 
 	#mv _bookdown_files/* .
 	cp -r images	_bookdown_files
 	pdflatex Thesis

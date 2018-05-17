@@ -1,6 +1,26 @@
 # Conclusions and Discussions
 
 
+Chapter 3 showed:
+
+- there was limited evidence of selection in metabolic disease
+- For gout there was limited evidence of selection, where there was it was not in the main effect loci for gout (slc2a9/abgc2) or the urate transporters
+- diabetes
+- obesity
+- metabolic syndrome
+- kidney disease
+
+-
+
+Chapter 4 showed
+
+Chapter 5 showed
+
+
+Overall
+
+
+
 summary of regions that were selected
 
 was gout/urate and other diseases under selection?
@@ -28,7 +48,7 @@ One of the limitations of using the gwas catalog is for gene associations
 - bias of the populations
 - genes that are involved might not be genome wide significant therefore missed
 
-
+the time frames for the statistics has a wide range, many of the differences that are being looked at are in the < 10kya time frame, so therefore some of these methods might not be entirely appropriate but also the nature of the chip data means that some of the newer methods aren't necessarily appliable. especially because the chip data is missing the very low frequency variants due to the bias of chip data hvaing both an ascertainment bias
 
 if it isn't selection, then what could explain the differences in the disease affections?
 

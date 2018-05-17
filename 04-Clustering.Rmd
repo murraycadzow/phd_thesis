@@ -9,6 +9,7 @@ the upper_sig_stats and  lower_sig_stats have a window size of 100 kb so therefo
 
 ```{r, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
 library(knitr)
 library(kableExtra)
 library(tidyverse)
@@ -53,7 +54,7 @@ This chapter investigates the idea that populations with shared ancestry will di
 - explain east/west split
 -->
 
-The history of Polynesian migration starts with migration out of Africa (50-100 kya, @Nielsen2017), tracking up to the Levant and Arabian peninsula (45-55 kya) and splitting into South Asia, Indonesia, and Australia (50kya,  @Kivisild1999; @Quintana-Murci1999). Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya, @Groucutt2015). <!--Lisa: The Pacific – or if you really are talking about Remote Oceania, you are talking about Lapita, which first appears in Near Oceania about 3300BP where they interact with the peoples who have been there for at least 40,000 years and then by 3,000 they are the first to establish settlement on the islands of New Caledonia, Vanuatu, Fiji, Samoa and Tonga. THEN around 1-1.2 kya we have the settlement of the rest of the Polynesian triangle, including the Cook Is avout 1,000 BP and New Zealand about 750 - 800 BP. --> The Pacific was settled in two events, the first was the settlement of Near Oceania (40 kya), this was followed by the settlement of Remote Oceania, reaching Western Polynesia (Samoa and Tonga) during the Lapita expansion (3 kya, @Matisoo-Smith2015; @Skoglund2016). Eastern Polynesia (including the Cook Islands) was then settled (1–1.2 kya, @Wilmshurst2011). The final region of the Polynesian triangle to be settled was that of \gls{nz} by \gls{nz} M\tex{\={a}}ori, occurring 800 ya [@Duggan2014; @Matisoo-Smith2015]. It is from this migration history that modern Polynesian populations come to have a shared common ancestry with modern East Asian populations.
+The history of Polynesian migration starts with migration out of Africa (50-100 kya, @Nielsen2017), tracking up to the Levant and Arabian peninsula (45-55 kya) and splitting into South Asia, Indonesia, and Australia (50kya, @Kivisild1999; @Quintana-Murci1999). Concurrently the migration  to Europe was occurring (45 kya). From South Asia the migration continued with the peopling of East Asia (20kya, @Groucutt2015). <!--Lisa: The Pacific – or if you really are talking about Remote Oceania, you are talking about Lapita, which first appears in Near Oceania about 3300BP where they interact with the peoples who have been there for at least 40,000 years and then by 3,000 they are the first to establish settlement on the islands of New Caledonia, Vanuatu, Fiji, Samoa and Tonga. THEN around 1-1.2 kya we have the settlement of the rest of the Polynesian triangle, including the Cook Is avout 1,000 BP and New Zealand about 750 - 800 BP. --> The Pacific was settled in two events, the first was the settlement of Near Oceania (40 kya), this was followed by the settlement of Remote Oceania, reaching Western Polynesia (Samoa and Tonga) during the Lapita expansion (3 kya, @Matisoo-Smith2015; @Skoglund2016). Eastern Polynesia (including the Cook Islands) was then settled (1–1.2 kya, @Wilmshurst2011). The final region of the Polynesian triangle to be settled was that of \gls{nz} by \gls{nz} M\tex{\={a}}ori, occurring 800 ya [@Duggan2014; @Matisoo-Smith2015]. It is from this migration history that modern Polynesian populations come to have a shared common ancestry with modern East Asian populations.
 
 <!--
 need something about what consitutes east and west polynesia and why that matters - doone in above and following paras
@@ -102,7 +103,9 @@ The dataset used in this chapter is the selection dataset consisting of 31 popul
 
 ### Admixture analysis
 
-Admixture analysis was performed on the independent genetic markers for the selection dataset. 
+Admixture analysis was performed on the independent genetic markers for the selection dataset. Admixture proportions were calculated using all of the populations in the selection dataset and cross-validation was used to identify the K value with the lowest error. Proportions were also calculated by first removing the \gls{amr} and \gls{pol} populations, calculating the K value that provided the lowest error, through cross-validation, and then projecting these ancestral populations onto the \gls{amr} and \gls{pol} populations. 
+
+> refer to admixture section of methods
 
 ### Frequency spectrum
 
@@ -150,7 +153,7 @@ eigen %>% ggplot(., aes(x = PC1, y = PC2, colour = super_pop)) + geom_point() + 
 
 (ref:eurPCA) Principal components 1 and 2 for populations of the European Super Population.
 
-```{r eurPCA, fig.cap = '(ref:eurPCA)', echo = FALSE}
+```{r eurPCA, fig.cap = '(ref:eurPCA)', echo = FALSE, fig.width = 5, fig.height = 3}
 #eigen %>% filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, colour = pop)) + geom_point() + theme_bw() + guides(colour = guide_legend(title = "Population"))
 
 eigen %>% filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(EUR = '#00BFC4')) + guides(shape = guide_legend(title = "Population"), colour = guide_legend(title = "Super Population")) + scale_shape_manual(values = c(CEU = 0, NZC = 1, GBR = 2, IBS = 3, FIN = 4, TSI = 5))
@@ -158,7 +161,7 @@ eigen %>% filter(super_pop == 'EUR') %>% ggplot(., aes(x = PC1, y = PC2, shape =
 
 (ref:polPCA) Principal components 2 and 6 for the Polynesian populations.
 
-```{r polPCA, fig.cap = '(ref:polPCA)', echo = FALSE}
+```{r polPCA, fig.cap = '(ref:polPCA)', echo = FALSE, fig.width = 5, fig.height= 3}
 eigen %>% filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape = pop, colour = super_pop)) + geom_point(size = 2) + theme_bw() + scale_color_manual(values = c(POL = '#619CFF')) + scale_shape_manual(values = c("CIM" = 0,"NZM" = 1, "TON" = 2, "SAM" = 3)) + guides(size = FALSE) + guides(shape = guide_legend(title = "Population"), colour = guide_legend(title = "Super Population"))
 ```
 
@@ -173,6 +176,31 @@ There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populat
 
 > K = 9 in the remove the admixed populations and use the ancestral proportions to work out the proportions in the admixed pops
 
+There were two analyses for admixture that were undertaken. The first was using all of the populations to calculate the number of ancestral populations
+
+The second analysis used the source 
+
+```{r, echo = FALSE}
+k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE) %>% full_join(.,  read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE) %>% rename( cv_proj = V2), by = "V1") %>% arrange(V1) %>% rename(K = V1, "CV Error" = V2, "Projection CV Error" = cv_proj)
+
+knitr::kable(k_cv, caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K. CV Projection is the admixture cross-validation error for different K values from projecting the components from 1000 Genomes Project populations of AFR, EAS, EUR, and SAS onto the populations of \\gls{amr} and \\gls{pol}.")
+```
+
+
+The cross validation of K from 1 to 15 resulted in K = 11 having the minimum cross validation error.
+
+
+```{r admixDataProjection, echo = FALSE}
+ref <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/reference_bootstrap.9.Q', stringsAsFactors = FALSE)
+ref_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/reference.fam', header = FALSE, stringsAsFactors = FALSE)
+names(ref_fam) <- c('FID','sample','PID','MID','SEX','AFF')
+ref_fam <- left_join(ref_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
+
+study <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.9.Q', stringsAsFactors = FALSE)
+study_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.fam', header = FALSE, stringsAsFactors = FALSE)
+names(study_fam) <- c('FID','sample','PID','MID','SEX','AFF')
+study_fam <- left_join(study_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
+```
 
 #### Whole chromosome clustering
 

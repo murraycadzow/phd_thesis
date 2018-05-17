@@ -14,6 +14,26 @@ library(phdFunctions)
 
 ## Electronic Supplements
 
+
+
+```{r, eval = FALSE}
+immunePol <- readRDS("Appendices/03-immunePol.RDS")
+ immunePol %>% #filter(genename %in% immune_keep) %>% 
+  mutate_all(., function(x){replace(x, x == 0, "")}) %>%
+  mutate(genename = map_chr(genename, ~ cell_spec(.x, italic = TRUE, format = 'latex'))) %>% 
+ kable(., caption = '(\\#tab:zhangImmune) Loci associated with various inflammatory and autoimmune diseases that showed signs of possible selection in Polynesian populations.', 
+       longtable = TRUE, booktabs = TRUE, escape = FALSE, linesep = '',
+       col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>%  kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
+   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
+                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
+                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
+                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+  # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+```
+
+
+
 ```{r, results = 'asis', eval = FALSE}
 # modify so that the full table comes out
 pander::pandoc.table(chr_summary %>% mutate(mean = sapply(mean, three_dp), sd = sapply(sd, three_dp), lower_1 = sapply(lower_1, three_dp), upper_99 = sapply(upper_99, three_dp), median = sapply(median, three_dp), min = sapply(min,three_dp), max = sapply(max, three_dp)) %>% arrange(chrom,pop,stat) %>% head() %>% data.frame(),  caption = '(\\#tab:selStatSummary) Summary of the selection test statistics for all populations and all autosomes', split.tables = 80, style = 'multiline', justify = 'lccrrrrrrr')
@@ -31,11 +51,6 @@ create_sel_stat_table("Tajima.D", "Mean Tajima's D")
 <!-- Fay and Wu's H Table -->
 ```{r meanFWHtable, results='asis', echo = FALSE, eval = FALSE}
 create_sel_stat_table("Fay.Wu.H", "Mean Fay and Wu's H")
-```
-
-<!-- Fu and Li D Table -->
-```{r meanFLDtable, results='asis', echo = FALSE, eval = FALSE}
-create_sel_stat_table("Fu.Li.D","Mean Fu and Li D")
 ```
 
 <!-- Fu and Li F Table -->
@@ -122,10 +137,6 @@ lower_sig_stats %>% filter(statname == 'Tajima.D', pop %in% c('CIM','NZM','SAM',
 lower_sig_stats %>% filter(statname == 'Fay.Wu.H', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fay.Wu.H', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr)%>%  write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03_fwhPol.csv', row.names = FALSE, quote = TRUE) # %>%  kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfwhPol) Loci that had a Fay and Wu's H in the lower tail that was only found in a Polynesian population")
 ```
 
-```{r fldPol, results = 'asis', warning = FALSE, echo = FALSE, eval = FALSE}
-lower_sig_stats %>% filter(statname == 'Fu.Li.D', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.D', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03_fldPol.csv', row.names = FALSE, quote = TRUE) # %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigfldPol) Loci that had a Fu and Li's D in the lower tail that was only found in a Polynesian population")
-```
-
 ```{r flfPol, results = 'asis', warning = FALSE, echo = FALSE, eval = FALSE}
 lower_sig_stats %>% filter(statname == 'Fu.Li.F', pop %in% c('CIM','NZM','SAM','TON')) %>% anti_join(., lower_sig_stats %>% filter(statname == 'Fu.Li.F', !pop %in% c('CIM','NZM','SAM','TON')), by = "SYMBOL") %>% select(chrom, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',') %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", "))%>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(chr) %>% select(-chr) %>% head() %>% kable(., booktab = TRUE, longtable = TRUE,caption = "(\\#tab:lowersigflfPol) Loci that had a Fu and Li's F in the lower tail that was only found in a Polynesian population")
 ```
@@ -154,7 +165,7 @@ create_sel_stat_table <- function(sel_stat, cap){
 
 
 ```{r, results = 'asis'}
-m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, `Disease Trait`, Reference) #%>% filter(Category != "Kidney Disease")
+m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% filter(!grepl(x = ref, pattern = 'NA')) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, `Disease Trait`, Reference)  #%>% filter(Category != "Kidney Disease")
 #colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
 #pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", keep.line.breaks = TRUE)
 
@@ -164,16 +175,16 @@ kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#t
   group_rows("Malaria", 155, 157) %>% 
   group_rows("Metabolic Syndrome", 158,161) %>% 
   group_rows("Neurological", 162, 191) %>% 
-  group_rows("Obesity", 192, 224) %>% group_rows("T2D", 225, 263) #%>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) 
+  group_rows("Obesity", 192, 224) %>% group_rows("T2D", 225, 262) #%>% group_rows("Metabolic Syndrome", 19,22) %>% group_rows("Obesity", 23, 55) %>% group_rows("T2D", 56, 94) 
 
 #
 ```
 
 
-```{r gwasgenes}
+```{r gwasgenes, message = FALSE}
 # genelists
 load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
-genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( urate_goutGR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, urate_goutGR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
+genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( gc_urate_gout_GR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
 genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE, longtable = TRUE)
 ```
 
@@ -195,8 +206,6 @@ global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filt
 ```
 
 
-
-
 ```{r gsTdTable, eval = TRUE, echo = FALSE}
 gs_td_table <- create_sel_summary_table("Tajima.D")
 gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
@@ -206,13 +215,6 @@ gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','
 gs_fwh_table <-create_sel_summary_table("Fay.Wu.H")
 
 gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
-```
-
-
-```{r, echo = FALSE, eval = FALSE}
-gs_fld_table <- create_sel_summary_table("Fu.Li.D")
-
-gs_fld_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFldTable) \\gls{fld} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
 ```{r, eval = TRUE, echo = FALSE}
@@ -246,15 +248,6 @@ read_csv('Appendices/04-fwh-pol-firstper-genes.csv', n_max = 0) %>% kable(format
 ```{r, message = FALSE}
 read_csv('Appendices/04-fwh-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhPosGenes) Genes intersecting the windows of the 99th percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
-
-```{r, eval = FALSE}
-read_csv('Appendices/04-fld-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFldNegGenes) Genes intersecting the windows of the 1st percentile \\gls{fld} in Polynesians') %>% footnote('Appendices/04-fld-pol-firstper-genes.csv', threeparttable = TRUE)
-```
-
-```{r, eval = FALSE}
-read_csv('Appendices/04-fld-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFldPosGenes) Genes intersecting the windows of the 99th percentile \\gls{fld} in Polynesians') %>% footnote('Appendices/04-fld-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
-```
-
 
 ```{r, message = FALSE}
 read_csv('Appendices/04-flf-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfNegGenes) Genes intersecting the windows of the 1st percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-firstper-genes.csv', threeparttable = TRUE)

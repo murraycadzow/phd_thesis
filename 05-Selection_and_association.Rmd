@@ -3,6 +3,7 @@
 \glsresetall
 
 ```{r assocLoad, include=FALSE, warning = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
 source('scripts/Annotate_genes.R')
 library(GenomicRanges)
 library(phdFunctions)
