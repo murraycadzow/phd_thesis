@@ -1028,7 +1028,7 @@ kegg_sig %>%
   distinct() %>% spread(stat, stat2, "") %>% unite(col = "Overlap",  c("td", "flf","ihs", "nsl")) %>% spread(pop, Overlap, "") %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+$', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_', replacement = ", " ))) %>% 
   mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% 
   select( term2, everything()) %>% 
-  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.", general_title = "") %>% kable_styling(., latex_options = 'scale_down', font_size = 10)   
+  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.", general_title = "") %>% kable_styling(., latex_options = 'scale_down', font_size = 10)   
 ```
 
 
@@ -2109,6 +2109,7 @@ superDiseaseGeneTab3 %>% kable(., col.names = c("Population","Super Pop.", rep(c
 \FloatBarrier
 
 ##### Urate and gout
+
 ```{r}
 g <- gc_urate_gout_GR$SYMBOL
 uratePol <- xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% g) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, "") %>% rename(pop = pop1) %>% full_join(., sig_ihs_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(ihs = n) %>% full_join(., sig_nsl_val %>% filter(!is.na(genename), genename != "", genename %in% g, pop %in% poly_pop) %>% select(pop, genename) %>% group_by(pop,genename) %>% tally(), by = c('pop','genename')) %>% rename(nsl = n) %>%full_join(., lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% g)%>% select(-contains('chrom')) %>% group_by(pop, SYMBOL, statname) %>% tally() %>% spread(statname, n), by = c('pop', 'genename' = 'SYMBOL') ) %>% arrange(genename)
@@ -2118,7 +2119,7 @@ uratePol <- xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue
 lower_sig_stats %>% filter(pop %in% poly_pop, SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% select(pop, SYMBOL, statname) %>% distinct()%>% spread(statname, statname, "") %>% arrange(SYMBOL)
 ```
 
-The `r gc_urate_gout_GR$SYMBOL %>% unique() %>% length()` loci identified in the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references) as being associated with urate and gout only had a small proportion with any evidence of possible selection. In the Polynesian populations, from the intra-population neutrality and selection statistics, there were `r uratePol %>% pull(genename) %>% unique() %>% length()` genes that had some evidence. However, there were only nine genes with haplotypic evidence, and only one gene (_RREB1_) that had both haplotypic and \gls{sfs}-based evidence. Overall, the Polynesian populations did not have more urate genes with evidence than the other populations (Table \@ref(tab:superDiseaseGenesTab)).
+The `r gc_urate_gout_GR$SYMBOL %>% unique() %>% length()` loci identified in the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references) as being associated with urate and gout only had a small proportion with any evidence of possible selection, `r uratePol %>% pull(genename) %>% unique() %>% length() ` in Polynesian populations. In the Polynesian populations, from the intra-population neutrality and selection statistics, there were `r uratePol %>% pull(genename) %>% unique() %>% length()` genes that had some evidence. However, there were only nine genes with haplotypic evidence, and only one gene (_RREB1_) that had both haplotypic and \gls{sfs}-based evidence. Overall, the Polynesian populations did not have more urate genes with evidence than the other populations (Table \@ref(tab:superDiseaseGenesTab)).
 
 The two main effect loci for serum urate, _SLC2A9_ and _ABCG2_ both had limited evidence of selection. _SLC2A9_ did not have any values for \gls{ihs} or \gls{nsl} because of an extended region of no recombination leading to a large gap in the reference genome which caused the \gls{ehh} calculation to be terminated. There was evidence with \gls{flf} which had windows from _SLC2A9_ in the 1^st^ percentile from \gls{ton}. This was also observed with the \gls{eas} populations of \gls{chb} and \gls{jpt}. For the Polynesian populations, _ABCG2_ only had significant results from \gls{ihs} and \gls{nsl} (at the same marker, rs2622626) for \gls{ton}. With \gls{ihs} the \gls{sas} populations of \gls{gih} and \gls{itu} also had significant values for rs2622626. For \gls{nsl}, along with \gls{gih}, and \gls{itu}, the other non-Polynesian populations that had a significant value was the \gls{eas} population \gls{jpt}, and the \gls{afr} population of \gls{yri}. Rs2622626 is associated with both urate and gout [@Kottgen2013]. There were no Polynesian populations with values in the 1^st^ percentile for the frequency-based statistics, and only \gls{esn} had windows that met the threshold for \gls{fwh}. 
 
@@ -2236,7 +2237,6 @@ bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(genename %in% gc_urate_gout_GR$SY
 ```
 
 <!-- > Genes to point out: ALDH16A1, ~~BCAS3~~, ~~IGFR1~~, LRP2, ~~RREB1~~ -->
-\newpage
 
 ##### Obesity
 
@@ -2326,7 +2326,7 @@ c("ABO", "ARL15", "CCR3", "COL6A1", "ERBB4") # Poly:
 
 
 
-There were `r length(unique(obesity_GR$SYMBOL))` obesity-associated loci with three loci in common with urate and gout from the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references). The Polynesian populations had about 10% of the obesity-associated genes showing some evidence of possible selection (Table \@ref(tab:superDiseaseGenesTab)). As a super population, the Polynesian populations had fewer obesity-associated genes that were significant for \gls{ihs} or \gls{nsl} compared to the other super populations. Genes that were associated with obesity and had evidence across multiple populations or many significant results are included in Table \@ref(tab:obesityPol). Ten loci had evidence in all four Polynesian populations, from a combination of haplotypic and \gls{sfs} statistics, these were _ABO_, _ARL15_, _CCR2_, _CCR3_, _COL6A1_, _ERBB4_, _LEKR1_, _PPP2R3A_, _RABEP1_, _SLC39A8_, and _ZBTB38_. _ABO_ is discussed further in subsection \@ref(malariaRes) in the context of malaria. There were nine obesity associated loci that of the Polynesian populations, the Eastern Polynesian populations had either the entire or the largest signal, these were _ADAMTS9_, _ADCY9_, _BTNL2_, _CCNJL_, _DNAH10_, _GDF5_, _LY86_, _MTIF3_, and _PCSK5_. Conversely, eleven loci had their entire or largest signal in the Western Polynesian populations, these were _BDNF_, _CTSS_, _FER_, _FAM13A_, _GPRC5B_, _GRID1_, _JAZF1_, _LRP1B_, _PARK2_, _PEPD_, and _TRIP11_. Four of the loci, _ADAMTS9_, _ARL15_, _JAZF1_, and _PEPD_ were also associated with \gls{t2d}. _FTO_ did have a single marker (rs4396532) that was significant for \gls{ihs} in \gls{nzm}.
+There were `r length(unique(obesity_GR$SYMBOL))` obesity-associated loci with three loci in common with urate and gout from the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references). The Polynesian populations had about 30% (`r obesityPol %>% pull(genename) %>% unique() %>% length() `) of the obesity-associated genes showing some evidence of possible selection (Table \@ref(tab:superDiseaseGenesTab)). As a super population, the Polynesian populations had fewer obesity-associated genes that were significant for \gls{ihs} or \gls{nsl} compared to the other super populations. Genes that were associated with obesity and had evidence across multiple populations or many significant results are included in Table \@ref(tab:obesityPol). Ten loci had evidence in all four Polynesian populations, from a combination of haplotypic and \gls{sfs} statistics, these were _ABO_, _ARL15_, _CCR2_, _CCR3_, _COL6A1_, _ERBB4_, _LEKR1_, _PPP2R3A_, _RABEP1_, _SLC39A8_, and _ZBTB38_. _ABO_ is discussed further in subsection \@ref(malariaRes) in the context of malaria. There were nine obesity associated loci that of the Polynesian populations, the Eastern Polynesian populations had either the entire or the largest signal, these were _ADAMTS9_, _ADCY9_, _BTNL2_, _CCNJL_, _DNAH10_, _GDF5_, _LY86_, _MTIF3_, and _PCSK5_. Conversely, eleven loci had their entire or largest signal in the Western Polynesian populations, these were _BDNF_, _CTSS_, _FER_, _FAM13A_, _GPRC5B_, _GRID1_, _JAZF1_, _LRP1B_, _PARK2_, _PEPD_, and _TRIP11_. Four of the loci, _ADAMTS9_, _ARL15_, _JAZF1_, and _PEPD_ were also associated with \gls{t2d}. _FTO_ did have a single marker (rs4396532) that was significant for \gls{ihs} in \gls{nzm}.
 
 A contiguously depressed score region was in \gls{cim} at chr12:124195002-124505001 for \gls{flf} that covered _DNAH10_, _ZNF664_, and _CCDC92_. Another region in \gls{cim} had a region at chr16:3545002-3795001 and intersected _NLRC3_. For \gls{td} there were two regions of contiguous score depression that intersected obesity-associated loci, the first in \gls{nzm} at chr16:67145002-67465001 intersected _KCTD19._ The second was in \gls{ton} covered _CCR3_ at chr3:46035002-46295001.
 
@@ -2467,7 +2467,7 @@ pol_fst %>%
 ```
 
 <!-- > genes to point out: ~~ARL15~~,CCR2, ~~CCR3~~, ~~DNAH10~~, ~~ERBB4~~, ~~FER~~, FHIT, ~~JAZF1~~, ~~LRP1B~~, ~~PEPD~~, TRIP11 -->
-\newpage
+
 
 ##### Type 2 diabetes
 
@@ -2490,7 +2490,7 @@ c("ADAMTS9", "PSMD6", "SSR1")# eastern
 c("BCL11A", "JAZF1", "KCNJ11", "PEPD")# western
 ```
 
-\Gls{t2d} is a co-morbidity of hyperuricemia, and had `r length(unique(t2d_GR$SYMBOL))` genes associated from \gls{gwas} in the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references), with one gene in common with urate-associated loci, and 16 genes in common with obesity. For the Polynesian populations there were `r lower_sig_stats %>% filter(SYMBOL %in% t2d_GR$SYMBOL, pop %in% poly_pop) %>% select(SYMBOL) %>% distinct() %>% NROW()` loci that were intersected by windows in the 1^st^ percentile of a frequency based statistic. There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% select(SYMBOL = genename, pop) %>% filter(SYMBOL %in% t2d_GR$SYMBOL, pop %in% poly_pop) %>% select(SYMBOL) %>% distinct() %>% NROW()` genes that had a marker with a significant value for \gls{ihs} or \gls{nsl}. The genes that showed evidence of possible selection across multiple Polynesian populations and statistics are shown in Table \@ref(tab:t2dPol). There were five genes that showed evidence across all Polynesian populations, these were _ARL15_, _LPP_, _PTPRD_, _SND1_, and _THADA._ Four genes had evidence that was mostly in the Eastern Polynesian populations, these were _ADAMTS9_, _PSMD6_, _SSR1_, and _ZFAND6_. And the genes that mostly had evidence in the Western Polynesians were _BCL11A_, _JAZF1_, _KCNJ11_, and _PEPD_. As previously mentioned _ADAMTS9_, _ARL15_, _JAZF1_, and _PEPD_ were also associated with obesity.
+\Gls{t2d} is a co-morbidity of hyperuricemia, and had `r length(unique(t2d_GR$SYMBOL))` genes associated from \gls{gwas} in the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references), with one gene in common with urate-associated loci, and 16 genes in common with obesity. For the Polynesian populations there were `r t2dPol %>% pull(genename) %>% unique() %>% length() ` genes total, with `r lower_sig_stats %>% filter(SYMBOL %in% t2d_GR$SYMBOL, pop %in% poly_pop) %>% select(SYMBOL) %>% distinct() %>% NROW()` loci that were intersected by windows in the 1^st^ percentile of a frequency based statistic. There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% select(SYMBOL = genename, pop) %>% filter(SYMBOL %in% t2d_GR$SYMBOL, pop %in% poly_pop) %>% select(SYMBOL) %>% distinct() %>% NROW()` genes that had a marker with a significant value for \gls{ihs} or \gls{nsl}. The genes that showed evidence of possible selection in the Polynesian populations are shown in Table \@ref(tab:t2dPol). There were five genes that showed evidence across all Polynesian populations, these were _ARL15_, _LPP_, _PTPRD_, _SND1_, and _THADA._ Four genes had evidence that was mostly in the Eastern Polynesian populations, these were _ADAMTS9_, _PSMD6_, _SSR1_, and _ZFAND6_. And the genes that mostly had evidence in the Western Polynesians were _BCL11A_, _JAZF1_, _KCNJ11_, and _PEPD_. As previously mentioned _ADAMTS9_, _ARL15_, _JAZF1_, and _PEPD_ were also associated with obesity.
 
 There were no regions of consecutive score depression for any of the \gls{sfs} based intra-population statistics for any of the Polynesian populations.
 
@@ -2610,7 +2610,7 @@ consec_lower_regions %>% filter(SYMBOL %in% t2d_GR$SYMBOL, pop %in% poly_pop) %>
 <!-- ALR15, FTO, GRB14, HMGA2, MC4R, TCF7L2 are all shared with obesity -->
 <!-- ADAMATS9, CDKAL1, ITGB6, JAZF1 too -->
 <!-- > genes to point out ARL15, BCL11A, JAZF1, LPP, PTPRD, RREB1, THADA, ZFAND6 -->
-\newpage
+
 
 ##### Kidney disease
 
@@ -2638,7 +2638,7 @@ kdPol <- xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %
 rm(g)
 ```
 
-There were `r length(unique(kd_GR$SYMBOL))` genes that were associated with kidney disease from the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references). Four genes had markers that were significant for \gls{ihs} in the Polynesian populations. \gls{nzm} had 3 markers in _PHTF2_, \gls{sam} had one marker in _DDX1_, and \gls{ton} had one marker in each of _GP2_ and _WDR37_. None of these loci also had windows from the \gls{sfs}-based statistics that were also significant. \gls{nzm} had a single marker that was significant for \gls{nsl} in _PHTF2_. \gls{sam} had a single significant marker for \gls{nsl} in _PRKAG2_, a urate locus mentioned previously. _WDR72_ had two markers each in \gls{ton} and \gls{sam} that were significant for \gls{nsl}. There were no regions of consecutive score depression that intersected with kidney disease associated genes.
+There were `r length(unique(kd_GR$SYMBOL))` genes that were associated with kidney disease from the \gls{gwas} catalog (see Table \@ref(tab:gwascatref) for references) with `r kdPol %>% pull(genename) %>% unique() %>% length() ` genes having possible evidence of selection in Polynesian populations. Four genes had markers that were significant for \gls{ihs} in the Polynesian populations (Table \@ref(tab:kdPol)). \gls{nzm} had 3 markers in _PHTF2_, \gls{sam} had one marker in _DDX1_, and \gls{ton} had one marker in each of _GP2_ and _WDR37_. None of these loci also had windows from the \gls{sfs}-based statistics that were also significant. \gls{nzm} had a single marker that was significant for \gls{nsl} in _PHTF2_. \gls{sam} had a single significant marker for \gls{nsl} in _PRKAG2_, a urate locus mentioned previously. _WDR72_ had two markers each in \gls{ton} and \gls{sam} that were significant for \gls{nsl}. There were no regions of consecutive score depression that intersected with kidney disease associated genes.
 
 ```{r, eval = TRUE}
 kdPol %>%  mutate_all(., function(x){replace(x, x == 0, "")}) %>%
@@ -2661,7 +2661,7 @@ xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter
 
 <!-- SETDB1 - wp vs afr eas -->
 <!-- ANXA9 - wp vs amr, eas, eur -->
-\newpage
+
 
 ##### Metabolic syndrome
 
@@ -2681,7 +2681,9 @@ metsynPol <- xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalu
 rm(g)
 ```
 
-In the \gls{gwas} catalog, there were `r length(unique(metsyn_GR$SYMBOL))` genes associated with metabolic syndrome (see Table \@ref(tab:gwascatref) for references). _APOA5_, also associated with obesity, had a significant marker in each of \gls{nzm} and \gls{ton} for \gls{ihs}. \gls{sam} has a marker that was significant in both \gls{ihs} and \gls{nsl} in _DGKB_. As previously mentioned, \gls{nzm} had a significant marker for \gls{ihs} in _FTO_, which was also associated with obesity and \gls{t2d}.
+In the \gls{gwas} catalog, there were `r length(unique(metsyn_GR$SYMBOL))` genes associated with metabolic syndrome (see Table \@ref(tab:gwascatref) for references). 
+In total, `r metsynPol %>% pull(genename) %>% unique() %>% length() ` loci had some evidence in the Polynesian populations of selection (Table \@ref(tab:metsynTab)) 
+_APOA5_, also associated with obesity, had a significant marker in each of \gls{nzm} and \gls{ton} for \gls{ihs}. \gls{sam} has a marker that was significant in both \gls{ihs} and \gls{nsl} in _DGKB_. As previously mentioned, \gls{nzm} had a significant marker for \gls{ihs} in _FTO_, which was also associated with obesity and \gls{t2d}.
 
 In the Eastern Polynesian populations there was a region of consecutive score depression for \gls{td} that intersected _EDC4_ at chr16:67835002-68115001 for \gls{cim}, and chr16:67775002-68105001 for \gls{nzm}. \gls{nzm} also had a similar region for \gls{flf}, chr16:67775002-68095001.
 
@@ -2732,11 +2734,7 @@ rm(res)
 <!-- - SLC2A13 xpehh all poly pops vs nearly all other pops and ihs -->
 <!-- - no regions of consecutive score depression -->
 <!-- - DLG2 cim/sam/ton 1 xpehh pop each and all had 10-12 windows for fwh -->
-Urate has associations with neurological disease, such as the potential as a biomarker for the progression of Parkinson's disease [@Wen2017]. Loci that were associated with the neurological diseases of Parkinson's disease and Alzheimer's disease from the \gls{gwas} catalog did not intersect with any regions of consecutive score depression of any \gls{sfs}-based statistic. 
-
-> extra locus info
-
-Another locus, _CERS6_, had each Polynesian population with significant \gls{xpehh} markers with nearly all populations from the \gls{afr}, \gls{amr}, \gls{eur} super population groups and approximately half of the populations from both \gls{eas} and \gls{sas} super populations. A third locus that had significant \gls{xpehh} markers for all Polynesian populations was _SLC2A13_. All Polynesian populations had significant \gls{xpehh} markers with most populations from \gls{amr} and \gls{eas} super populations. \gls{nzm}, \gls{cim}, and \gls{sam} also had significant markers with nearly all populations of the \gls{sas} and \gls{eur}. Only \gls{nzm} had significant markers with the \gls{afr} populations. All Polynesian populations had significant markers for \gls{nsl} at _SLC2A13_, and also for \gls{ihs} except for \gls{cim}. _VPS13_ had both Eastern Polynesian populations with two significant \gls{ihs} markers, and windows from the 1^st^ percentile for \gls{flf} (six windows), and \gls{ze} (nine windows for \gls{nzm} and 11 for \gls{cim}).
+Urate has associations with neurological disease, such as the potential as a biomarker for the progression of Parkinson's disease [@Wen2017]. Loci that were associated with the neurological diseases of Parkinson's disease and Alzheimer's disease from the \gls{gwas} catalog did not intersect with any regions of consecutive score depression of any \gls{sfs}-based statistic. _LRRK2_ had significant \gls{xpehh} for all Polynesian populations with at least one population from each of the super populations. The Western Polynesin populations also had markers with significant \gls{ihs} and \gls{nsl} (Table \@ref(neurologicalPol1)). Another locus, _CERS6_, had each Polynesian population with significant \gls{xpehh} markers with nearly all populations from the \gls{afr}, \gls{amr}, \gls{eur} super population groups and approximately half of the populations from both \gls{eas} and \gls{sas} super populations. A third locus that had significant \gls{xpehh} markers for all Polynesian populations was _SLC2A13_. All Polynesian populations had significant \gls{xpehh} markers with most populations from \gls{amr} and \gls{eas} super populations. \gls{nzm}, \gls{cim}, and \gls{sam} also had significant markers with nearly all populations of the \gls{sas} and \gls{eur}. Only \gls{nzm} had significant markers with the \gls{afr} populations. All Polynesian populations had significant markers for \gls{nsl} at _SLC2A13_, and also for \gls{ihs} except for \gls{cim}. _VPS13_ had both Eastern Polynesian populations with two significant \gls{ihs} markers, and windows from the 1^st^ percentile for \gls{flf} (six windows), and \gls{ze} (nine windows for \gls{nzm} and 11 for \gls{cim}).
 
 
 ```{r, eval = TRUE}
@@ -2854,7 +2852,7 @@ immunePol <- xpehh %>%
   rename(nsl = n) %>% 
   left_join(., lower_sig_stats %>% select(-contains('chrom')) %>% group_by(pop, SYMBOL, statname) %>% tally() %>% spread(statname, n), by = c('pop', 'genename' = 'SYMBOL')) %>% 
   arrange(genename) %>% mutate_all(., function(x){replace(x, is.na(x), 0)}) 
- #saveRDS(immunePol, file = 'Appendices/03-immunePol.RDS')
+ saveRDS(immunePol, file = 'Appendices/03-immunePol.RDS')
 rm(g)
 ```
 > check
@@ -2867,7 +2865,7 @@ All four Polynesian populations had significant \gls{xpehh} values with populati
 
 _CCR2_ and _FCHSD2_ had a higher number of significant results in the Eastern Polynesian populations, whereas _CDH23_ and _JAZF1_ had a higher number of significant results in the Western Polynesian populations. _CCR2_ and _CCR3_ were also associated with obesity, _ARL15_ and _JAZF1_ were associated with obesity and \gls{t2d}, _LPP_ and _THADA_ were associated \gls{t2d}, and _RREB1_ was associated with urate and \gls{t2d}. Some of the genes had very high numbers of windows from the 1^st^ percentile for \gls{td} intersect with them, such as _RAD51B_ which was a consecutively depressed score region for \gls{sam}, and _XKR6_, which was a consecutively depressed score region for \gls{cim}, \gls{sam} and \gls{ton} populations. 
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 #moved through to supplementary
  immunePol %>% #filter(genename %in% immune_keep) %>% 
   mutate_all(., function(x){replace(x, x == 0, "")}) %>%
@@ -3079,7 +3077,14 @@ effect of phasing when polynesian populations aren't represented in the 1000 gen
 
 One of the primary objectives of this chapter were to investigate regions that were under selection in Polynesian populations. From the intra-population statistics used, there were between 866 and 974 genes identified in the Polynesian populations that had both intra-population haplotypic and \gls{sfs} statistics that were in the 1^st^ percentile. The regions with possible evidence of selection showed that comparative to the other super populations, the Polynesian populations had the fewest genes (111) that only had evidence within the Polynesian super population, whereas the African populations had the largest number of genes (457) that only had evidence in the African super population (Figure \@ref(fig:superUpset)). The Polynesian populations had similar distributions of the \gls{sfs}-based statistics (explored more in Chapter 4).
 
-Pathway analysis on the regions with possible selection in the Polynesian populations revealed that many of the genes that had evidence were involved with various forms of cell signalling, with many related to calcium channels. The gene _CNTN4_ had the highest number of significant markers in \gls{cim} and 3^rd^ most in \gls{nzm} for \gls{ihs}. This particular locus hasn't been associated with urate at a genome-wide significance level, however there is evidence of a potential association [@Chittoor2016]. 
+Pathway analysis on the regions with possible selection in the Polynesian populations revealed that many of the genes that had evidence were involved with various forms of cell signalling, with many related to calcium channels. 
+
+> The majority of the pathways that had significant enrichment were from the genes that had significant \gls{nsl} markers. 
+
+> There was similarity between the pathways of the Eastern Polynesian populations, with many of the pathways in common being cardiac realted. These pathways, such as adrenergic signalling in cardio myocytes, calcium signalling pathway, hypertrophic cardiomyopathy, and vascular smooth muscle contraction all had  
+
+
+The gene _CNTN4_ had the highest number of significant markers in \gls{cim} and 3^rd^ most in \gls{nzm} for \gls{ihs}. This particular locus hasn't been associated with urate at a genome-wide significance level, however there is evidence of a potential association [@Chittoor2016]. 
 
 > What are the genes that were coming up? what are the pathways that they were in?
 
