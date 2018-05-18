@@ -2986,7 +2986,7 @@ _ABO_ was the only gene that had significant markers in all four Polynesian popu
 
 Both \gls{sam} and \gls{nzm} had \glspl{snp} that were significant for \gls{ihs} in _ATP2B4_, \gls{sam} had rs10494845, and \gls{nzm} had rs142206068. The malaria-associated variant was rs10900585 [@Timmann2012]. All three variants are in \gls{ld} (\gls{eas} R^2^ = 1.0).
 
-_DDC_ encodes dopa decarboxylase and has been nominally associated at a genome-wide threshold with malaria [@Jallow2009]. _DDC_ has also been associated with \gls{bmi} [@Locke2015]. \gls{nzm} had significant markers for \gls{xpehh} for nearly all other populations, \gls{cim} had fewer populations, but across all super population other than \gls{sas}. The \gls{nzm} had multiple markers within the malaria-associated gene, _DDC_, for \gls{nsl}. The markers were rs2060762, rs3807558, rs2329371, and rs1966839. The same markers in addition with rs11238131 and rs4580999 were significant for \gls{ihs}. A \gls{ld} matrix with marker positions is shown in Figure \@ref(fig:ldDDCnzm). The marker rs1966839 (reference/derived allele = T, alternative/ancestral allele = C) was in high LD (0.998) with the malaria-associated rs1451375 (reference/ancestral allele = C, alternative/derived = A) where the reference and alternative alleles correspond between the \glspl{snp} and both are intronic variants. Under a dominant model the A allele of rs1451375 is protective of severe malaria (OR = 0.75, CI = 0.66-0.85, P = 6 x 10-6, @Jallow2009).
+_DDC_ encodes dopa decarboxylase and has been nominally associated at a genome-wide threshold with malaria [@Jallow2009]. _DDC_ has also been associated with \gls{bmi} [@Locke2015]. \gls{nzm} had significant markers for \gls{xpehh} for nearly all other populations, \gls{cim} had fewer populations, but across all super population other than \gls{sas}. The \gls{nzm} had multiple markers within the malaria-associated gene, _DDC_, for \gls{nsl}. The markers were rs2060762, rs3807558, rs2329371, and rs1966839. The same markers in addition with rs11238131 and rs4580999 were significant for \gls{ihs}. A \gls{ld} matrix with marker positions is shown in Figure \@ref(tab:ddcLd). The marker rs1966839 (reference/derived allele = T, alternative/ancestral allele = C) was in high \gls{ld} (0.998) with the malaria-associated rs1451375 (reference/ancestral allele = C, alternative/derived = A) where the reference and alternative alleles correspond between the \glspl{snp} and both are intronic variants. Under a dominant model the A allele of rs1451375 is protective of severe malaria (OR = 0.75, CI = 0.66-0.85, P = 6 x 10-6, @Jallow2009).
 
 
 
@@ -3003,18 +3003,16 @@ sig_nsl_val %>% filter(genename %in% malaria_GR$SYMBOL) %>% select(-gene_chrom, 
 
 ```{r}
 # snps from sig_ihs_val, Jallow2009, and Manjurano2015 for DDC locus
-ddc_eas_r2 <- read.table(text = "RS_number	rs2060762	rs11238131	rs4580999	rs880028	rs3807558	rs6264	rs2329371	rs1451375	rs10249420	rs7803788	rs1966839
-rs2060762	1.0	0.6	0.449	0.07	0.688	NA	0.723	0.492	0.671	0.671	0.49
-rs11238131	0.6	1.0	0.585	0.01	0.68	NA	0.531	0.319	0.484	0.484	0.316
-rs4580999	0.449	0.585	1.0	0.089	0.674	NA	0.51	0.611	0.46	0.46	0.607
-rs880028	0.07	0.01	0.089	1.0	0.088	NA	0.061	0.016	0.064	0.064	0.016
-rs3807558	0.688	0.68	0.674	0.088	1.0	NA	0.744	0.497	0.69	0.69	0.495
-rs6264	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
-rs2329371	0.723	0.531	0.51	0.061	0.744	NA	1.0	0.707	0.923	0.923	0.698
-rs1451375	0.492	0.319	0.611	0.016	0.497	NA	0.707	1.0	0.769	0.769	0.988
-rs10249420	0.671	0.484	0.46	0.064	0.69	NA	0.923	0.769	1.0	1.0	0.76
-rs7803788	0.671	0.484	0.46	0.064	0.69	NA	0.923	0.769	1.0	1.0	0.76
-rs1966839	0.49	0.316	0.607	0.016	0.495	NA	0.698	0.988	0.76	0.76	1.0", header = TRUE)
+ddc_eas_r2 <- read.table(text = "RS_number	rs2060762	rs11238131	rs4580999	rs3807558	rs2329371	rs1451375	rs1966839
+rs2060762	1.0	0.6	0.449	0.688	0.723	0.492	0.49
+rs11238131	0.6	1.0	0.585	0.68	0.531	0.319	0.316
+rs4580999	0.449	0.585	1.0	0.674	0.51	0.611	0.607
+rs3807558	0.688	0.68	0.674	1.0	0.744	0.497	0.495
+rs2329371	0.723	0.531	0.51	0.744	1.0	0.707	0.698
+rs1451375	0.492	0.319	0.611	0.497	0.707	1.0	0.988
+rs1966839	0.49	0.316	0.607	0.495	0.698	0.988	1.0", header = TRUE)
+
+ddc_eas_r2 %>% dplyr::rename(`Rs number` = RS_number) %>% kable(format = 'latex', caption = '(\\#tab:ddcLd) Linkage disequillibrium in EAS populations (R^2^) between markers in _DDC_') %>% kableExtra::row_spec(0, angle = 90)
 ```
 
 
@@ -3022,7 +3020,7 @@ rs1966839	0.49	0.316	0.607	0.016	0.495	NA	0.698	0.988	0.76	0.76	1.0", header = T
 
 <!-- (rs2060762, rs11238131, rs3807558, rs2329371, and rs1966839) in \gls{nzm} at the _DDC_ locus with malaria (rs1451375), BMI, (rs10499694), and blood metabolite ratios (rs7809234). -->
 
-```{r ldDDCnzm, fig.cap= '(ref:ldDDCnzm)', eval = TRUE}
+```{r ldDDCnzm, fig.cap= '(ref:ldDDCnzm)', eval = FALSE}
 knitr::include_graphics('images/03_selectionpipeline/LDplot_EAS_DDC_nzm_ihs_extras.png')
 ```
 
@@ -3094,12 +3092,14 @@ When looking at genes that have been associated with urate, gout and related co-
 <!-- - many of the pathways were involved with cell signalling/communication so are vital for life -->
 
 ```{r, eval = FALSE}
-cim_nzm_shared_kegg <- kegg_sig %>% filter(pop %in% c("cim", 'nzm')) %>% select(Term, pop, stat, Genes) %>% spread(pop, Genes) %>% filter(!(is.na(cim) | is.na(nzm)))
-cim_nzm_shared_kegg %>% select(-nzm) %>% mutate(cim = str_split(cim, ";")) %>% select(cim) %>% purrr::map_dfr(., ~ map_dfr(.x, ~ tibble(gene = .x, pop = 'cim'))) %>% group_by(gene) %>% tally() %>% arrange(desc(n))
+cim_nzm_shared_kegg <- kegg_sig %>% filter(pop %in% c("cim", 'nzm')) %>% select(Term, pop, stat, Genes) %>% filter(stat == 'nsl') %>% spread(pop, Genes) %>% filter(!(is.na(cim) | is.na(nzm)))
+full_join(cim_nzm_shared_kegg %>% select(-nzm) %>% mutate(cim = str_split(cim, ";")) %>% select(cim) %>% purrr::map_dfr(., ~ map_dfr(.x, ~ tibble(gene = .x, pop = 'cim'))) %>% group_by(gene) %>% tally() %>% arrange(desc(n)),
 
+
+cim_nzm_shared_kegg %>% select(-cim) %>% mutate(nzm = str_split(nzm, ";")) %>% select(nzm) %>% purrr::map_dfr(., ~ map_dfr(.x, ~ tibble(gene = .x, pop = 'nzm'))) %>% group_by(gene) %>% tally() %>% arrange(desc(n)), by = 'gene')
 ```
 
-
+The genes from the \gls{nsl} significant pathways that were in common between \gls{cim} and \gls{nzm} were CACNA1D, ADCY9, SLC8A1, CACNA2D3, ITPR1, MYLK
 
 ### Selection of Urate Associated Genes
 
