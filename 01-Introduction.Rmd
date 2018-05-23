@@ -268,9 +268,11 @@ In contrast to Fay and Wu's H and Tajima's D, which compares either high or low 
 
 @Ferretti2017 explains how to interpret in the the form of trees
 
-### Fu and Li's D and F
+### Fu and Li's and F
 
-Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species [@Fu1993].
+> check this is correct
+
+Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species [@Fu1993]. \gls{fld} calculates a ratio of singletons to the intermediate frequency variants. \gls{flf} is a normalised for of \gls{fld}. 
 
 
 
@@ -311,7 +313,7 @@ Inflammatory response is triggered when the monosodium urate crystals interact w
 [] remove vgwas?
 [] zengs e
 [] cadzow2016 and minster2017 paper for metabolic selection in polynesian
-[]
+[] new papers
 
 
 <!-- papers that have used empirical distribution: -->
