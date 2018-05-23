@@ -1552,16 +1552,7 @@ No contiguous regions of score depression intersected with genes associated with
 <!-- ##### FST -->
 
 <!-- ##### Notes -->
-```{r, eval = FALSE}
-p <- "NZM"
 
-(nzm_nsl_100 <- sig_nsl_val %>% filter(pop == p) %>% arrange(desc(abs(statvalue))) %>% head(n=100) %>% group_by(genename) %>% tally() %>% arrange(desc(n)))
-
-(nzm_ihs_100 <- sig_ihs_val %>% filter(pop == p) %>% arrange(desc(abs(statvalue))) %>% head(n=100) %>% group_by(genename) %>% tally() %>% arrange(desc(n)))
-
-inner_join(nzm_nsl_100, nzm_ihs_100, by = 'genename' ) %>% mutate(total = n.x + n.y) %>% arrange(desc(total))
-rm(p)
-```
 
 
 <!-- From all of the intra population -->
@@ -1722,9 +1713,9 @@ Only two pathways were significant for the gene-set pathway enrichment analysis 
 ```{r, eval=FALSE}
 p <- "SAM"
 
-(sam_nsl_100 <- sig_nsl_val %>% filter(pop == p) %>% arrange(desc(abs(statvalue))) %>% head(n=100) %>% group_by(genename) %>% tally() %>% arrange(desc(n)))
+(sam_nsl_100 <- sig_nsl_val %>% filter(pop == p) %>% mutate(r = min_rank(desc(abs(statvalue)))) %>% filter(r <= 100) %>% group_by(genename) %>% tally() %>% arrange(desc(n)))
 
-(sam_ihs_100 <- sig_ihs_val %>% filter(pop == p) %>% arrange(desc(abs(statvalue))) %>% head(n=100) %>% group_by(genename) %>% tally() %>% arrange(desc(n)))
+(sam_ihs_100 <- sig_ihs_val %>% filter(pop == p) %>% mutate(r = min_rank(desc(abs(statvalue)))) %>% filter(r <= 100) %>% group_by(genename) %>% tally() %>% arrange(desc(n)))
 
 inner_join(sam_nsl_100, sam_ihs_100, by = 'genename' ) %>% mutate(total = n.x + n.y) %>% arrange(desc(total))
 rm(p)
@@ -1732,7 +1723,7 @@ rm(p)
 
 From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs_val %>% filter(pop == "SAM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "SAM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{sam} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "SAM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop != "SAM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. The genes with the most significant markers for \gls{ihs} were _CDH23_ and _CNTN5_ with 12 significant markers each. The gene with the most significant markers for \gls{nsl} was _CDH23_ with 16 markers. Looking at the most extreme 100 markers for \gls{nsl} there were 35 genes represented, _SNX29_ had the most with three markers (rs350277, rs7201595, and rs12931604). For \gls{ihs}, the gene with the most markers in the most extreme 100 was _C11orf65_, with three (). There was a total of 39 genes represented. Between the top markers for both \gls{ihs} and \gls{nsl} there were 10 genes that were in common (_SNX29_, _LINC00693_, _BANK1_, _DLC1_, _DUSP13_, _HBE1_, _HBG2_, _MYCBP2_, _NLRP1_, and _SAMD8_). 
 
-There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'SAM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL") %>% NROW() %>% num_to_word()` genes that had windows from at least three of the frequency-based statistics and also had at least a single significant marker for either \gls{ihs} or \gls{nsl}. The genes were _DISP1_ (2 \gls{ihs} markers), _PARD3B_ (one \gls{ihs} and \gls{nsl} marker each), _C4orf45_ (one \gls{ihs} and \gls{nsl} marker each), _NEK1_ (one \gls{ihs} marker), _CNTNAP2_ (three each for \gls{ihs} and \gls{nsl}), _CTNNA3_ (one \gls{ihs} marker and five \gls{nsl} markers), _CEP112_ (one \gls{ihs} and \gls{nsl} marker each), _CNTNAP5_ (2 \gls{nsl} markers), _SUPT3H_ (one \gls{nsl} marker), and _DGKI_ (one \gls{nsl} marker). \gls{xpehh} had 19 genes that had at least 20 populations with significant markers in only \gls{sam} from the Polynesian populations but none had been associated with urate or related co-morbidities.
+There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'SAM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL") %>% NROW() %>% num_to_word()` genes that had windows from at least three of the frequency-based statistics and also had at least a single significant marker for either \gls{ihs} or \gls{nsl}. The genes were _DISP1_ (\gls{ihs}: rs2789931 and rs2789954), _PARD3B_ (\gls{ihs} and \gls{nsl}: rs13000345), _C4orf45_ (\gls{ihs} and \gls{nsl}: rs11722868), _NEK1_ (\gls{ihs}: rs4235024), _CNTNAP2_ (\gls{ihs}: rs2620441, rs2249958, and rs17170777; \gls{nsl}: rs2249958, rs17170777, and rs10255956), _CTNNA3_ (\gls{ihs}: rs1948946; \gls{nsl} rs4297361,rs1948946, rs2764813, rs2394324, and rs10823054), _CEP112_ (\gls{ihs}: rs11652795; \gls{nsl} rs1373074), _CNTNAP5_ (\gls{nsl}: rs314710 and rs2602647), _SUPT3H_ (\gls{nsl}: rs9472376), and _DGKI_ (\gls{nsl}: rs12056089). \gls{xpehh} had 19 genes that had at least 20 populations with significant markers in only \gls{sam} from the Polynesian populations but none had been associated with urate or related co-morbidities.
 
 ```{r, eval = FALSE}
 bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'SAM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL")
@@ -1764,7 +1755,7 @@ q[q %in% genelists$genename]
 
 ##### Contiguous regions of score depression in \gls{sam}
 
-There were no contiguous depressed score regions that intersected with genes associated with urate, obesity, \gls{t2d}, kidney disease, or metabolic syndrome. Regions of contiguously depressed score that also had significant markers for \gls{ihs} or \gls{nsl} in \gls{sam} covered three regions of the genome across two statistics. \gls{td} had two regions, the first was 400 kb at chr4:170025002-170425001 and had a single significant marker for \gls{ihs} in _NEK1_. The second region was 300 kb in length and was found at chr10:76685002-76985001. It had two markers that were significant for \gls{ihs} and three for \gls{nsl} in _KAT6B_, two markers each for \gls{ihs} and \gls{nsl} at _SAMD8_, and two markers each fro \gls{ihs} and \gls{nsl} for DUSP13. \gls{flf} had a single 200 kb region at chr1:26465002-26665001 that had a single significant marker for \gls{nsl} in _CNKSR1_, and two markers for \gls{ihs} and three for \gls{nsl} in _AIM1L._
+There were no contiguous depressed score regions that intersected with genes associated with urate, obesity, \gls{t2d}, kidney disease, or metabolic syndrome. Regions of contiguously depressed score that also had significant markers for \gls{ihs} or \gls{nsl} in \gls{sam} covered three regions of the genome across two statistics. \gls{td} had two regions, the first was 400 kb at chr4:170025002-170425001 and had a single significant marker for \gls{ihs} (rs4235024) nearby in _NEK1_. The second region was 300 kb in length and was found at chr10:76685002-76985001. It had significant markers in _KAT6B_ (\gls{ihs} and \gls{nsl}:rs3213967), and in _SAMD8/DUSP13_ (\gls{ihs} and \gls{nsl}: rs7912300 and rs10824274). \gls{flf} had a single 200 kb region at chr1:26465002-26665001 that had a single significant marker for \gls{nsl} in _CNKSR1_ (rs2783633), and two markers for \gls{ihs} and three for \gls{nsl} in _AIM1L_ (\gls{ihs} and \gls{nsl}:rs11247916 and rs10751735; \gls{nsl}: rs4659431). 
 
 
 
