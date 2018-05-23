@@ -1230,6 +1230,11 @@ consec_lower_regions %>% filter( pop == 'CIM') %>% inner_join(., bind_rows(sig_i
 
 Within the most extreme 100 \gls{ihs} values, there were 37 genes. For \gls{nsl} there was 45 genes. Eighteen of these genes were in common, with _C11orf65_ and _CNTN4_ having at least five significant \glspl{snp} each. The gene with the most significant \glspl{snp} out of any population was _CNTN4_ in \gls{cim} with 27 markers having a significant \gls{ihs} score. The only other population with more than two significant \glspl{snp} was \gls{nzm} with 14. There were four genes represented in the top 100 markers that were associated with obesity or \gls{t2d}, these were: _ADCY9_, _ARL15_, _PSMD6_, and _ZFAND6_. In total there were `r sig_ihs_val %>% filter(pop == "CIM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "CIM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{cim} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "CIM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop !="CIM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. There were 57 genes that had at least 20 populations with significant markers for \gls{xpehh} in only \gls{cim} from the Polynesian populations. _ARL15_ was associated with obesity and \gls{t2d} [@shungin2015genetic; @mahajan2014genome] and _RREB1_ was associated with \gls{t2d} and urate [@mahajan2014genome; @Kottgen2013]. 
 
+```{r, out.extra='angle=90', fig.cap = '(ref:cimHapMan)', fig.width = 7}
+bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'CIM') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(.) + facet_grid(statid~.)
+```
+
+(ref:cimHapMan) Manhattan plot for significant markers in \gls{cim} for both \gls{ihs} and \gls{nsl}
 
 <!-- ihs C11orf65 (6), ATM (5) CNTN4 (5),  -->
 <!-- ADCY9 (obesity), ARL15 (obesity, t2d), PSMD6 (t2d), ZFAND6 (t2d) -->
@@ -1520,6 +1525,12 @@ The pathway gene-set enrichment analysis from Enrichr on the KEGG 2016 pathways 
 
 From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r sig_ihs_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_ihs_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` genes that were only significant in \gls{nzm} for \gls{ihs}, and `r sig_nsl_val %>% filter(pop == "NZM") %>% select(genename) %>% anti_join(., sig_nsl_val %>% filter(pop != "NZM") %>% select(genename), by = 'genename') %>% distinct() %>% NROW()` for \gls{nsl}. Looking at the genes represented by the most extreme 100 \gls{ihs} and \gls{nsl} markers there were 30 genes for \gls{ihs}, and 40 genes for \gls{nsl}. There were 12 genes in common between the two sets (_CTNNA3_, _WWOX_, _KCNS3_, _NRXN1_, _ADAM29_, _VSNL1_, _BCCIP_, _BICD1_, _DHX32_, _SLC35F2_, _STAU2_, and _TENM3_). _CTNNA3_ had five markers in the top 100 for \gls{nsl} (rs2441727, rs12220315, rs1911341, rs2660024, and rs10997250), and was also the gene for \gls{nzm} that had the most overall significant markers for both \gls{ihs} and \gls{nsl}. There were 40 genes that had at least 20 populations with significant markers for \gls{xpehh} in only NZM from the Polynesian populations, only one (_PAX5_) of which was associated with obesity [@melka2012genome]. There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'NZM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL") %>% NROW() %>% num_to_word()` genes, _LYST_, _PHIP_, _CTNNA3_, _RAD51AP2_, _SUPT3H_, _EPB41L4A_, _RAD51B_, and _VSNL1_, that had at least one significant marker for \gls{ihs} or \gls{nsl}, and also had a window in the 1^st^ percentile from three or more statistics from \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}.
 
+```{r, out.extra='angle=90', fig.cap = '(ref:nzmHapMan)', fig.width = 7}
+bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(.) + facet_grid(statid~.)
+```
+
+(ref:nzmHapMan) Manhattan plot for significant markers in \gls{nzm} for both \gls{ihs} and \gls{nsl}
+
 ```{r, eval = FALSE}
 bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'NZM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL")
 ```
@@ -1725,6 +1736,13 @@ From the haplotypic tests for selection (\gls{ihs} and \gls{nsl}) there were `r 
 
 There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'SAM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL") %>% NROW() %>% num_to_word()` genes that had windows from at least three of the frequency-based statistics and also had at least a single significant marker for either \gls{ihs} or \gls{nsl}. The genes were _DISP1_ (\gls{ihs}: rs2789931 and rs2789954), _PARD3B_ (\gls{ihs} and \gls{nsl}: rs13000345), _C4orf45_ (\gls{ihs} and \gls{nsl}: rs11722868), _NEK1_ (\gls{ihs}: rs4235024), _CNTNAP2_ (\gls{ihs}: rs2620441, rs2249958, and rs17170777; \gls{nsl}: rs2249958, rs17170777, and rs10255956), _CTNNA3_ (\gls{ihs}: rs1948946; \gls{nsl} rs4297361,rs1948946, rs2764813, rs2394324, and rs10823054), _CEP112_ (\gls{ihs}: rs11652795; \gls{nsl} rs1373074), _CNTNAP5_ (\gls{nsl}: rs314710 and rs2602647), _SUPT3H_ (\gls{nsl}: rs9472376), and _DGKI_ (\gls{nsl}: rs12056089). \gls{xpehh} had 19 genes that had at least 20 populations with significant markers in only \gls{sam} from the Polynesian populations but none had been associated with urate or related co-morbidities.
 
+
+```{r, out.extra='angle=90', fig.cap = '(ref:samHapMan)', fig.width = 7}
+bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(.) + facet_grid(statid~.)
+```
+
+(ref:samHapMan) Manhattan plot for significant markers in \gls{sam} for both \gls{ihs} and \gls{nsl}
+
 ```{r, eval = FALSE}
 bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'SAM')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL")
 ```
@@ -1893,7 +1911,8 @@ bind_rows(bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'TON')%>% select
 <!-- Functional classification using PantherDB for the significant windows from the 1st percentile for the frequency spectrum selection and neutrality tests, and the significant \gls{ihs} and \gls{nsl} each individually, had the main biological process classification as "cellular process" and the second main classification as 'metabolic process'. Combining all the significant genes from any -->
 
 
-Pathway enrichment analysis from the Enrichr KEGG 2016 pathways had `r kegg_sig %>% filter(pop == 'ton') %>% select(Term) %>% distinct() %>% NROW()` different pathways that were significant after multiple testing correction (Table \@ref(tab:keggPath)). Of the \gls{sfs} based methods, only \gls{flf} had a significant pathway and this was "Olfactory transduction". There were two pathway terms that were significant from the \gls{ihs} results, these were "ABC transporters" and "ECM-receptor interaction". These were also significant in the \gls{nsl} results, along with another eight terms (Table \@ref(tab:keggPath)). Five of the significant pathway terms were only significant in \gls{ton} out of the Polynesian populations.
+Pathway enrichment analysis from the Enrichr KEGG 2016 pathways had `r kegg_sig %>% filter(pop == 'ton') %>% select(Term) %>% distinct() %>% NROW()` different pathways that were significant after multiple testing correction (Table \@ref(tab:keggPath)). Of the \gls{sfs} based methods, only \gls{flf} had a significant pathway and this was "Olfactory transduction". There were two pathway terms that were significant from the \gls{ihs} results, these were "ABC transporters" and "ECM-receptor interaction". These were also significant in the \gls{nsl} results, along with another eight terms (Table \@ref(tab:keggPath)). 
+The genes that were included in the "ABC transporters" pathway from the significant markers of both \gls{ihs} and \gls{nsl} were: , _ABCC8_, _TAP2_, _ABCA9_, _ABCA8_, and _ABCG2_. From only \gls{ihs} markers _ABCA5_  _ABCA6_, _ABCC5_ _ABCB_ were included, and from only \gls{nsl} markers, _ABCB8_ was included. Genes wth significant markers for both \gls{ihs} and \gls{nsl} in the "ECM-receptor interaction" pathway included _COL4A2_, _ITGB5_, _ITGA1_, _ITGA2_, _SPP1_ and _ITGB6_. From only \gls{ihs} markers _LAMA5_, _TNXB_, _TNC_, _COL6A3_, and _HMMR_ were included, and from only \gls{nsl} makers, _COL4A1_, and _ITGA9_ were inlcuded. Five of the significant pathway terms were only significant in \gls{ton} out of the Polynesian populations.
 
 
 ##### Selection from haplotypic statistics in \gls{ton}.
@@ -1914,6 +1933,12 @@ In total there were `r sig_ihs_val %>% filter(pop == "TON") %>% select(genename)
 
 Combining the genes with at least a single significant marker for either \gls{ihs} or \gls{nsl} with the windows in the 1^st^ percentile for at least three frequency-based intra-population selection and neutrality statistics had `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'TON', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'TON')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL") %>% NROW() %>% num_to_word()` genes that met this criteria. They were C4orf45, _SUPT3H_, _CTNNA3_, _SAMD8_, _EXT2_, _LPO_, and _NRXN3._
 
+
+```{r, out.extra='angle=90', fig.cap = '(ref:tonHapMan)', fig.width = 7}
+bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'TON') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(.) + facet_grid(statid~.)
+```
+
+(ref:tonHapMan) Manhattan plot for significant markers in \gls{ton} for both \gls{ihs} and \gls{nsl}
 
 ```{r, eval = FALSE}
 bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'TON', genename != "")%>% select(pop, "SYMBOL" = genename ) %>% distinct() %>% inner_join(., lower_sig_stats %>% filter(pop == 'TON')%>% select(pop, SYMBOL, statname) %>% distinct() %>% filter(!is.na(SYMBOL)) %>% group_by(SYMBOL) %>% tally() %>% filter(n >= 3), by = "SYMBOL")
