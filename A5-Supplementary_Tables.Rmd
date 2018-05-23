@@ -15,21 +15,27 @@ library(phdFunctions)
 ## Electronic Supplements
 
 
+```{r}
+sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
+sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
+```
+
+
+```{r}
+hider_regions_found <- readRDS('data/03-hider-regions-found.RDS')
+hider_regions_found %>% mutate_at(4:NCOL(.), funs(replace_na(., '-'))) %>% mutate(chr = as.numeric(str_sub(chrom, 4)))%>% arrange(chr, chrom_start) %>% select(-chr) %>% kable(., col.names = c("Chrom","Start", "End", "\\gls{td} Region", "\\gls{td} Present","\\gls{fwh} Region", "\\gls{fwh} Present", "\\gls{flf} Region", "\\gls{flf} Present", '\\gls{ihs} Region', '\\gls{ihs} Present'), format = 'latex', booktabs = TRUE, longtable = TRUE, linesep ='', caption = '(\\#tab:hiderRegionsFound)', escape = FALSE) %>% column_spec(4:11, width = "5em") %>% kable_styling(latex_options = c('repeat_header'),font_size = 8) %>% landscape()
+```
+```{r ramos}
+ramos <- list()
+ramos[["ceu"]] <- c("ALMS1P", "DGUOK", "PARD3B", "KCNIP4", "HLA", "PRKCH", "HIF1A", "IRF4", "TECRL", "CTNNA3", "WWOX", "RABEP1", "NUP88", "COMMD10", "SEMA6A", "ALDH7A1", "SNRPC", "UHRF1BP1", "OSBPL8", "GRM5", "NTNG2", "SETX", "GRHL2")
+ramos[["yri"]] <- c("TNFRSF14", "MMEL1", "MAGI3", "PTPN22", "TLR5", "XCR1", "CCR3", "CCDC66", "ARHGEF3", "SLC2A9", "KCNIP4", "ARHGAP31", "CD80", "IL2", "IL21", "TPR3", "HLA", "CCDC167", "MIR4462", "PRSS54", "PRDM1", "ATG5", "TRAF3IP2", "PAK7PRKCH", "HIF1A", "HIP1")
+ramos[["asi"]] <- c("NCF2", "RGL1", "PELI1", "HLA", "BCAS3", "NACA2", "CNTN6", "BTLA", "MRPS22", "COMMD10", "SEMA6A", "GTF2I", "KIAA0391", "FAM171A1", "KDM4C", "XKR6", "BLK", "LSMEM1", "NPM1P14")
+ramos[["unknown"]] <- c("IL23R", "FCGR2B", "TNFSF4", "CR1", "ANTRX2", "TNIP1", "PTTG1", "VARS", "LSM2", "IKZF1", "IRF8", "TYK2", "CLEC16A", "CIITA", "ITGAM", "ITGAX", "SH2B3", "NAA25", "CD5", "PTGER4")
+```
 
 ```{r, eval = FALSE}
-immunePol <- readRDS("Appendices/03-immunePol.RDS")
- immunePol %>% #filter(genename %in% immune_keep) %>% 
-  mutate_all(., function(x){replace(x, x == 0, "")}) %>%
-  mutate(genename = map_chr(genename, ~ cell_spec(.x, italic = TRUE, format = 'latex'))) %>% 
- kable(., caption = '(\\#tab:zhangImmune) Loci associated with various inflammatory and autoimmune diseases that showed signs of possible selection in Polynesian populations.', 
-       longtable = TRUE, booktabs = TRUE, escape = FALSE, linesep = '',
-       col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>%  kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
-   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
-  # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+(sig_ihs_val %>% filter(pop == 'CEU', genename %in% ramos[['ceu']])%>% mutate(pop = 'CEU', statname = case_when(statid == 20 ~ "nSL", statid == 26 ~ "iHS"), chrom = paste0('chr',chrom)) %>% select(SYMBOL = genename, chrom, statname) %>% distinct()) 
+
 ```
 
 
@@ -77,7 +83,7 @@ global_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/1
 ```
 
 ```{r, echo = FALSE}
-global_summary  %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(stat, super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>% arrange(stat,super_pop, pop) %>%  data.frame() %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-gsTable.csv', row.names = FALSE, quote = FALSE)} %>% head(0) %>% kable(., caption = '(\\#tab:gsTable) Global Summary Table', format = 'latex', booktabs = TRUE) %>% footnote(general = "Appendices/03-gsTable.csv")
+global_summary  %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), by = 'pop') %>% arrange(super_pop) %>% select(stat, super_pop, pop, mean, sd, min, lower_1,median,upper_99, max)  %>% arrange(stat,super_pop, pop) %>%  data.frame() %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-gsTable.csv', row.names = FALSE, quote = FALSE)} %>% head(0) %>% kable(., caption = '(\\#tab:gsTable) Global Summary Table', format = 'latex', booktabs = TRUE) %>% kable_styling(font_size = 8) %>% footnote(general = "Appendices/03-gsTable.csv")
 ```
 
 ```{r, warning =TRUE}
@@ -107,13 +113,13 @@ lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chro
 ```
 
 ```{r}
-sig_ihs_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_ihs_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
+
 sig_ihs_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, iHS = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-ihs-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:ihsPolgenes) All genes that had a significant iHS value in Polynesian populations.') %>% kableExtra::footnote("Appendices/03-ihs-Pol.csv", threeparttable = TRUE)
 rm(sig_ihs_val)
 ```
 
 ```{r}
-sig_nsl_val <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/sig_nsl_values_with_genes_14-11-2017.RDS') %>% filter(abs(statvalue) > 2.6 )
+
 sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, nSL = statvalue) %>% arrange(chrom, chrom_start, Pop) %T>% {write.csv(., file = "Appendices/03-nsl-Pol.csv", row.names = FALSE, quote = FALSE)}  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:nslPolgenes) All genes that had a significant nSL value in Polynesian populations.') %>% kableExtra::footnote("Appendices/03-nsl-Pol.csv", threeparttable = TRUE)
 rm(sig_nsl_val)
 ```
@@ -126,6 +132,23 @@ xpehh %>% filter(!is.na(genename) & genename != "")%>% select(Pop1 = pop1,Pop2 =
   }  %>% head(0) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:xpehhPolgenes) All genes that had a significant XP-EHH value in Polynesian populations.') %>% kableExtra::footnote("Appendices/03-xpehh-Pol.csv", threeparttable = TRUE)
 rm(xpehh)
 ```
+
+```{r, eval = TRUE}
+immunePol <- readRDS("Appendices/03-immunePol.RDS")
+ immunePol %>% #filter(genename %in% immune_keep) %>% 
+  mutate_all(., function(x){replace(x, x == 0, "")}) %>%
+  mutate(genename = map_chr(genename, ~ cell_spec(.x, italic = TRUE, format = 'latex'))) %>% 
+ kable(., caption = '(\\#tab:zhangImmune) Loci associated with various inflammatory and autoimmune diseases that showed signs of possible selection in Polynesian populations.', 
+       longtable = TRUE, booktabs = TRUE, escape = FALSE, linesep = '',
+       col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>%  kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
+   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
+                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
+                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
+                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+  # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+```
+
 
 
 ```{r tdPol, results = 'asis', warning = FALSE, eval = FALSE}
@@ -231,6 +254,16 @@ gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','
 
 
 #### Polynesian windows for clustering of the extremes
+
+```{r}
+eigen <- read.table('~/data/NZ_coreExome_1kgp/PCA/indiv_pops/NZ_1KGP_allchr_indep_eigen.pca.evec', stringsAsFactors = FALSE)
+
+eigen <- eigen %>% select("sample" = V1, everything()) %>% left_join(., panel, by = 'sample') %>% filter(!pop %in% c('WPN','EPN','NAD'))
+names(eigen)[2:11] <- paste0("PC",1:10)
+
+
+```
+
 
 ```{r, message = FALSE}
 read_csv('Appendices/04-td-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdNegGenes) Genes intersecting the windows of the 1st percentile \\gls{td} in Polynesians') %>% footnote("Appendices/04-td-pol-firstper-genes.csv", threeparttable = TRUE)
