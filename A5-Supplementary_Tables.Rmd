@@ -8,7 +8,7 @@ library(kableExtra)
 library(phdFunctions)
 #select <- dplyr::select
 
-
+poly_pop <- c("CIM","NZM","SAM","TON")
 ```
 # Appendix E
 
@@ -129,7 +129,44 @@ sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>%
 
 ### Significant \gls{ihs} and \gls{nsl} markers in Polynesian populations
 
-```{r}
+```{r, eval = TRUE, message = FALSE}
+# process for creating table:
+# load all ihs/nsl data
+# filter to be only loci that had a significant result in any ihs/nsl from the poly pops
+# apply bolding to the cells based on the populations and if significant (value > 2.6)
+# spread out the columns to be pop1_ihs pop2_ihs pop2_nsl pop2_nsl etc
+
+
+# poly_ihs <-list.files(path = '~/data/NZ_coreExome_1kgp/haplotype/poly_ihs_nsl_norm/ihs', full.names = TRUE) %>% 
+# purrr::map_df(., ~read_delim(.x,delim = "\t" , col_names = FALSE) %>% select(marker = X1, chrom_start = X2, af = X4, ihs= X7, sig = X8) %>% mutate(pop = str_sub(str_split(.x, pattern = "/")[[1]][9], 1, 3), chrom = str_split(.x, pattern = "/")[[1]][9] %>% str_split(., pattern=fixed(".")) %>% purrr::map_chr(., 1) %>% str_sub(., 4) %>% as.numeric()))
+# 
+# poly_nsl <-list.files(path = '~/data/NZ_coreExome_1kgp/haplotype/poly_ihs_nsl_norm/nsl', full.names = TRUE) %>% 
+# purrr::map_df(., ~read_delim(.x,delim = "\t" , col_names = FALSE) %>% select(marker = X1, chrom_start = X2, af = X4, nsl= X7, sig = X8) %>% mutate(pop = str_sub(str_split(.x, pattern = "/")[[1]][9], 1, 3), chrom = str_split(.x, pattern = "/")[[1]][9] %>% str_split(., pattern=fixed(".")) %>% purrr::map_chr(., 1) %>% str_sub(., 4) %>% as.numeric()))
+# 
+# ihsnsl_table <- full_join(
+#   left_join(bind_rows(sig_ihs_val,sig_nsl_val) %>% 
+#               filter(pop %in% poly_pop) %>% select(chrom, chrom_start) %>% distinct(), poly_ihs, by = c("chrom", "chrom_start")) %>%
+#     mutate(ihs = if_else(abs(ihs) > 2.6, cell_spec(three_dp(ihs), bold = TRUE, format = 'latex'), three_dp(ihs))) %>% 
+#     select(-af, -sig) %>% filter(!is.na(pop)) %>% spread(pop, ihs),
+#   left_join(bind_rows(sig_ihs_val,sig_nsl_val) %>% 
+#               filter(pop %in% poly_pop) %>% select(chrom, chrom_start) %>% distinct(), poly_nsl, by = c("chrom", "chrom_start")) %>%
+#     mutate(nsl = if_else(abs(nsl) > 2.6, cell_spec(three_dp(nsl), bold = TRUE, format = 'latex'), three_dp(nsl))) %>% 
+#     select(-af, -sig)%>% filter(!is.na(pop)) %>% spread(pop, nsl), by = c("chrom", 'chrom_start',"marker"), 
+#   suffix = c('_ihs', '_nsl')) %>% 
+#   mutate_at(vars(contains('_ihs'),contains('_nsl')), funs(case_when(is.na(.) ~ "-", TRUE ~ .))) %>%
+#   select(chrom, position = chrom_start, marker, everything()) %>%
+#   rename(Chromosome = chrom, Position = position, Marker = marker, 'CIM iHS' = CIM_ihs, 'NZM iHS' = NZM_ihs, 'SAM iHS' = SAM_ihs, 'TON iHS' = TON_ihs, 'CIM nSL' = CIM_nsl, 'NZM nSL' = NZM_nsl, 'SAM nSL' = SAM_nsl, 'TON nSL' = TON_nsl)
+# saveRDS(object = ihsnsl_table, file='Appendices/03-ihsnsl_table.RDS')
+
+ihsnsl_table <- readRDS(file='Appendices/03-ihsnsl_table.RDS')
+ihsnsl_table%>%  
+  head() %>% 
+  kable(., booktabs = TRUE, linesep = "", escape = FALSE,format = 'latex', 
+        caption = '(\\#tab:ihsnslPolGenes) Significant markers for iHS and nSL in Polynesian populations.') %>% kable_styling(latex_options = 'scale_down', font_size = 8)
+```
+
+
+```{r, eval = FALSE}
 full_join(sig_ihs_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, iHS = statvalue) %>% arrange(chrom, chrom_start, Pop)%>% spread(Pop, iHS), sig_nsl_val %>% filter(superpop == 'POL', !is.na(genename) & genename != "") %>% select(Pop = pop, chrom, chrom_start, chrom_end, genename, nSL = statvalue) %>% arrange(chrom, chrom_start, Pop) %>% spread(Pop, nSL), by = c("chrom", "chrom_start", "chrom_end", "genename"), suffix= c("_ihs", "_nsl")) %>% select(-chrom_end) %>% rename(position = chrom_start) %>% mutate_at(vars(contains('_ihs'),contains('_nsl')), funs(three_dp)) %>% mutate_at(vars(contains('_ihs'),contains('_nsl')), funs(case_when(. == "NA" ~ "", TRUE ~ .))) %>% left_join(., markers %>% select(chrom, chrom_start, marker), by = c('chrom', "position" = 'chrom_start')) %>% select(chrom, position, marker, everything()) %>%  rename(Chromosome = chrom, Position = position, Marker = marker, 'Gene Name' = genename, 'CIM iHS' = CIM_ihs, 'NZM iHS' = NZM_ihs, 'SAM iHS' = SAM_ihs, 'TON iHS' = TON_ihs, 'CIM nSL' = CIM_nsl, 'NZM nSL' = NZM_nsl, 'SAM nSL' = SAM_nsl, 'TON nSL' = TON_nsl)%>%  head() %>% kable(., booktabs = TRUE, linesep = "", format = 'latex', caption = '(\\#tab:ihsnslPolGenes) Significant markers for iHS and nSL in Polynesian populations.') %>% kable_styling(latex_options = 'scale_down', font_size = 8)
 
 rm(sig_ihs_val)
@@ -139,11 +176,21 @@ rm(sig_nsl_val)
 ### Significant \gls{xpehh} markers in Polynesian populations
 
 ```{r, eval = TRUE, message=FALSE, results='hold'}
-xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
-xpehh %>% filter(!is.na(genename) & genename != "")%>% select(Pop1 = pop1,Pop2 = pop2, chrom, chrom_start, chrom_end,XPEHH = xpehh_value, Genename = genename)  %>% arrange(chrom, chrom_start, Pop1, Pop2) %T>% 
+xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% 
+  filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
+
+xpehh %>% filter(!is.na(genename) & genename != "")%>% mutate(xpehh_value =three_dp(xpehh_value)) %>% 
+  select(Pop1 = pop1,Pop2 = pop2, chrom, chrom_start, chrom_end,XPEHH = xpehh_value, Genename = genename)  %>% arrange(chrom, chrom_start, Pop1, Pop2) %T>% 
   {
   #write.csv(., file = "Appendices/03-xpehh-Pol.csv", row.names = FALSE, quote = FALSE)
-  } %>% group_by(Pop1) %>% mutate(grouped_id = row_number()) %>% spread(Pop2, XPEHH) %>% select(-grouped_id, -chrom_end)%>% rename(Population = Pop1, Chromsome = chrom, Position = chrom_start) %>%   head(20) %>% kable(., booktabs = TRUE, format = 'latex', caption = '(\\#tab:xpehhPolgenes) Genes that had a significant XP-EHH values in Polynesian populations.') %>% column_spec(column = 1:3, width = '5em') %>% column_spec(column = 5:36, width = '3em')%>%  kableExtra::kable_styling(font_size = 6)%>% kableExtra::footnote("Appendices/03-xpehh-Pol.csv", threeparttable = TRUE) %>% landscape()
+  } %>% group_by(Pop2, chrom, chrom_start, chrom_end, Genename) %>% mutate(grouped_id = row_number()) %>% ungroup() %>% spread(Pop2, XPEHH) %>% arrange(chrom, chrom_start, Pop1) %>% 
+  select(-grouped_id, -chrom_end) %>% 
+  dplyr::rename(Population = Pop1, Chromsome = chrom, Position = chrom_start) %>%   head(20) %>% 
+  kable(., booktabs = TRUE, format = 'latex',linesep = "", 
+        caption = '(\\#tab:xpehhPolgenes) Genes that had a significant XP-EHH values in Polynesian populations.') %>% 
+  column_spec(column = 1:3, width = '4em') %>% column_spec(column = 5:36, width = '2em')%>%  
+  kableExtra::kable_styling(font_size = 6)%>% 
+  kableExtra::footnote("Appendices/03-xpehh-Pol.csv", threeparttable = TRUE) %>% landscape()
 rm(xpehh)
 ```
 
@@ -210,7 +257,7 @@ m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %
 #colnames(m) <- c("Disease\nTrait", "Reported\nGenes","Reference")  
 #pander::pandoc.table(m, split.cells = 30 , caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", keep.line.breaks = TRUE)
 
-kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE) %>% 
+kable(m %>% select(-Category), escape = FALSE, linesep = "", format = 'latex',caption = "(\\#tab:gwascatref) GWAS catalog studies used. Disease trait as specified in GWAS catalog", booktabs = TRUE, longtable = TRUE) %>% kable_styling(latex_options = c("repeat_header"), full_width = TRUE, font_size = 8) %>% 
   group_rows("Auto-immunity and Auto-inflammatory", 1, 128) %>% 
   group_rows("Gout and Urate",129,146) %>% group_rows("Kidney Disease",147,154) %>% 
   group_rows("Malaria", 155, 157) %>% 
@@ -226,7 +273,7 @@ kable(m %>% select(-Category), escape = FALSE, format = 'latex',caption = "(\\#t
 # genelists
 load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
 genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( gc_urate_gout_GR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
-genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE, longtable = TRUE)
+genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE, longtable = TRUE, linesep="") %>% kable_styling(latex_options = 'repeat_header', font_size = 8)
 ```
 
 
