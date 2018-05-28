@@ -206,9 +206,9 @@ immunePol <- readRDS("Appendices/03-immunePol.RDS")
        col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>%  kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
    kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
   # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 ```
 
