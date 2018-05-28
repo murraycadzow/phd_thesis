@@ -146,8 +146,8 @@ extract_sig_super <- function(superpopname){
 
 
 #Calculate the genome wide DHS regions using a threshold of at least 60 cell lines having a score > 400
-dhs_clusters <- readr::read_delim('~/data/UCSC_DNase1HypersensitivityClusters/hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeRegDnaseClustered/wgEncodeRegDnaseClusteredV3.bed.gz', delim = '\t', col_names = c("chrom","chromStart","chromEnd","name","score","sourceCount","sourceIds","sourceScores")) %>% data.frame()
-dhs_regions <- dhs_clusters %>% filter(sourceCount > 60 & score > 400) %>% GRanges()
+#dhs_clusters <- readr::read_delim('~/data/UCSC_DNase1HypersensitivityClusters/hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeRegDnaseClustered/wgEncodeRegDnaseClusteredV3.bed.gz', delim = '\t', col_names = c("chrom","chromStart","chromEnd","name","score","sourceCount","sourceIds","sourceScores")) %>% data.frame()
+#dhs_regions <- dhs_clusters %>% filter(sourceCount > 60 & score > 400) %>% GRanges()
 
 
 # for working out where variants were
