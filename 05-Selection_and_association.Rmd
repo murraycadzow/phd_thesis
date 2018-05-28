@@ -103,7 +103,7 @@ Individuals from the UK Biobank cohort were genotyped on an Axiom array with 820
 
 #### Gout definitions
 
-Four main classification criteria were used to define gout cases. _Hospital defined gout_ involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). _Self-report of gout_ was defined as reporting having gout at the time of the study interview. _Use of \gls{ult}_ used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukaemia or lymphoma (ICD-10 codes C81-C96). _Winnard defined gout_ was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions in order to remove possible cases from the control cohort. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
+Four main classification criteria were used to define gout cases. _Hospital defined gout_ involved either a primary or secondary hospital diagnosis for gout (ICD-10 code M10, including sub-codes). _Self-report of gout_ was defined as reporting having gout at the time of the study interview with a nurse, in response to the question "In the touch screen you selected that you have been told by a doctor that you have other serious illnesses or disabilities, could you now tell me what they are?"^[http://biobank.ctsu.ox.ac.uk/crystal/docs/Interview.pdf accessed 28 May 2018]. _Use of \gls{ult}_ used self-report data for the use of allopurinol, febuxostat, or sulphinpyrazone, and not having a hospital diagnosis of leukaemia or lymphoma (ICD-10 codes C81-C96). _Winnard defined gout_ was based on @Winnard2012 and consisted of a hospital diagnosis of gout, or self report of gout specific medication (\gls{ult} or colchicine). The largest number of people were classified through either self-report or the use of urate lowering therapy (Figure \@ref(fig:ukbbupsetplot)). Additional exclusion criteria were applied to participants not classified as having gout from these definitions in order to remove possible cases from the control cohort. The criteria were cortico-steroidal use, non-steroidal anti-inflammatory drug use or probenicid use. 
 
 Confidence intervals for proportions of each gout definition out of the combination of all gout definitions were calculated using the \texttt{prop.test} function from the _stats_ package in R.
 
@@ -211,7 +211,7 @@ There were a total of `r ukbb_n$n_gout` individuals that had any classification 
 The prevalence of gout from all definitions was `r round(ukbb_n$n_gout/ukbb_n$n_control *100,1)`%. This ranged from the lowest prevalence of gout of 0.36%, from the hospital diagnosis definition, through to the highest of 2.18%, by self-report of gout or \gls{ult} usage in the study population (Table \@ref(tab:ukbbprev)).
 
 ```{r, results = 'asis'}
-  ukbio_gout %>% summarise(n = n(), `Male (\\%)` = round((1-sum(sex)/NROW(.))*100,2), `Mean Age (SD)` = paste0(round(mean(age, na.rm = TRUE),2), " (",round(sd(age, na.rm = TRUE),2), ")" )  , `Mean BMI (SD)` = paste0(round(mean(bmi, na.rm = TRUE),2), " (", round(sd(bmi, na.rm = TRUE),2),")"),  Febuxostat = sum(febuxostat, na.rm = TRUE), Allopurinol = sum(allopurinol, na.rm = TRUE), Sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), Colchicine = sum(colchicine, na.rm = TRUE), Hospital = sum(gouthosp, na.rm =TRUE), `Self-report` = sum(goutself, na.rm=TRUE), Winnard = sum(goutwinnard, na.rm = TRUE), ULT = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>% dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants in the UK Biobank.", format = "latex", escape = FALSE, col.names = c("", "Case", "Control"), align = 'lcc') %>% group_rows(., "Gout medication", 5, 8) %>% group_rows(., "Gout classification", 9, 12) %>% footnote(general = "Mean age is reported in years. BMI is reported in kg/m\\\\textsuperscript{2}", escape = FALSE, general_title = FALSE) %>% kable_styling(latex_options = 'hold_position')
+  ukbio_gout %>% summarise(n = n(), `Male (\\%)` = round((1-sum(sex)/NROW(.))*100,2), `Mean Age (SD)` = paste0(round(mean(age, na.rm = TRUE),2), " (",round(sd(age, na.rm = TRUE),2), ")" )  , `Mean BMI (SD)` = paste0(round(mean(bmi, na.rm = TRUE),2), " (", round(sd(bmi, na.rm = TRUE),2),")"),  Febuxostat = sum(febuxostat, na.rm = TRUE), Allopurinol = sum(allopurinol, na.rm = TRUE), Sulphinpyrazone = sum(sulphinpyrazone, na.rm = TRUE), Colchicine = sum(colchicine, na.rm = TRUE), Hospital = sum(gouthosp, na.rm =TRUE), `Self-report` = sum(goutself, na.rm=TRUE), Winnard = sum(goutwinnard, na.rm = TRUE), ULT = sum(goutult, na.rm=TRUE) ) %>% t() %>% data.frame() %>% mutate(var = rownames(.)) %>% dplyr::slice(., -1) %>% select(var, 'Case' = 1, 'Control' = 2) %>% kable(., booktabs = TRUE, caption = "(\\#tab:ukbbclin) Clinical details of participants in the UK Biobank.", format = "latex", escape = FALSE, col.names = c("", "Case", "Control"), align = 'lcc') %>% group_rows(., "Gout medication", 5, 8) %>% group_rows(., "Gout classification", 9, 12) %>% footnote(general = "Mean age is reported in years. BMI is reported in kg/m\\\\textsuperscript{2}", escape = FALSE, general_title = "") %>% kable_styling(latex_options = 'hold_position')
 ```
 
 (ref:ukbbupsetplot) An "upset plot" showing the number of samples (left) and intersections (upper) for the different classification criteria.
@@ -262,20 +262,36 @@ kot_bim <- read_delim('data/Ukbiobank/kottgen_ukbb_alleles.txt', col_names = c("
 uk_kot_psig <- uk_kot_t1 %>% select(-file, -TEST, -SE, -NMISS,-STAT, -POS) %>% mutate(P_bac = P) %>% mutate(P = purrr::map_chr(P, ~ format_p_md(p = .x, format = 'latex'))) %>% arrange(P) %>% select(-grail_gene, -OR, -CHR) %>%group_by(gout) %>% mutate(P_sig = P_bac < (0.05/NROW(.)), P_gw = P_bac < 5e-8 ) %>% summarise( P_gw = sum(P_gw),P_exp = sum(P_sig)) %>% filter(gout != 'all')%>% gather("sig", "value",2:3) %>% spread(gout, value) %>% rename("SNP" = sig) %>% mutate_all(as.character) %>% mutate(A1 = "", REF ="",ALT ="")
 ```
 
-Analysis of the 30 reported urate-associated \glspl{snp} from @Kottgen2013 revealed similar odds ratios for all gout definitions (Figure \@ref(fig:kotplot), Table \@ref(tab:ukbbkot)). Experiment-wide significance was defined as P < `r as.character(signif(0.05/30,2))`, and genome-wide significance as P < 5x10^-8^ [@Fadista2016]. There were differing numbers of \glspl{snp} that had a significant association with gout, both at genome- and the experiment-wide thresholds between the gout definitions used. Meeting genome-wide significance, there were five \glspl{snp} (one in each of _ABCG2_, _GCKR_, _SLC17A3_, _SLC22A12_, and _SLC2A9_) for both the self-reported gout or \gls{ult} usage definition and the self-reported gout definition, four \glspl{snp} (_ABCG2_, _GCKR_, _SLC22A12_, and _SLC2A9_) for the \gls{ult} usage definition, three \glspl{snp} (_ABCG2_, _GCKR_, and _SLC2A9_) for the Winnard definition, and two \glspl{snp} (_ABCG2_ and _SLC2A9_) for the hospital diagnosis definition. For all definitions, the effect size and strength of association was larger for _ABCG2_ than _SLC2A9_. At the experiment-wide significance threshold, there were 13 \glspl{snp} for the self-reported gout or \gls{ult} use definition, 12 \glspl{snp} for the self-reported gout definition, 11 for \gls{ult} use definition, 10 for the Winnard definition, and three \glspl{snp} for the hospital diagnosis definition.
+Analysis of the 30 reported urate-associated \glspl{snp} from @Kottgen2013 revealed similar odds ratios for all gout definitions (Figures \@ref(fig:kotplot) and \@ref(fig:kotplot2), Table \@ref(tab:ukbbkot)). Experiment-wide significance was defined as P < `r as.character(signif(0.05/30,2))`, and genome-wide significance as P < 5x10^-8^ [@Fadista2016]. There were differing numbers of \glspl{snp} that had a significant association with gout, both at genome- and the experiment-wide thresholds between the gout definitions used. Meeting genome-wide significance, there were five \glspl{snp} (one in each of _ABCG2_, _GCKR_, _SLC17A3_, _SLC22A12_, and _SLC2A9_) for both the self-reported gout or \gls{ult} usage definition and the self-reported gout definition, four \glspl{snp} (_ABCG2_, _GCKR_, _SLC22A12_, and _SLC2A9_) for the \gls{ult} usage definition, three \glspl{snp} (_ABCG2_, _GCKR_, and _SLC2A9_) for the Winnard definition, and two \glspl{snp} (_ABCG2_ and _SLC2A9_) for the hospital diagnosis definition. For all definitions, the effect size and strength of association was larger for _ABCG2_ than _SLC2A9_. At the experiment-wide significance threshold, there were 13 \glspl{snp} for the self-reported gout or \gls{ult} use definition, 12 \glspl{snp} for the self-reported gout definition, 11 for \gls{ult} use definition, 10 for the Winnard definition, and three \glspl{snp} for the hospital diagnosis definition.
 
 
 ```{r, nkotsig}
 n_kot_sig <- uk_kot_t1 %>% group_by(gout) %>% summarise(gw = sum(P < 5e-8), ew = sum(P < 0.05/30))
 ```
 
+```{r kotplot, fig.cap= '(ref:kotplot)', warning = FALSE}
+flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770152", "rs7193778", "rs164009", "rs653178","rs2078267", "rs478607", "rs12498742")
+uk_kot_t1 %>% 
+  #mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  
+  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
+  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% filter(SNP %in% c('rs2231142','rs12498742')) %>% 
+  unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
+              # mutate(gout = case_when(
+              #   gout == 'hosp' ~ "Hospital", 
+              #   gout == "self" ~ "Self Report", 
+              #   gout == "selfult" ~ "Self Report or ULT",
+              #   gout == "ult" ~ "ULT",
+              #   gout == "winnard" ~ "Winnard")) %>% 
+              ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
+              geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
+```
+
+(ref:kotplot) Plot showing ORs (95% CI) for the two largest effect \glspl{snp} reported in @Kottgen2013 based on gout definitions, rs2231142 and rs12498742. Original Kottgen reported ORs are shown as red circles. The reported Kottgen OR was inverted to maintain consistency of reported effect allele (A1) for rs12498742.
 
 
+(ref:kotplot2) Plot showing ORs (95% CI) for the 28 \glspl{snp} reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles. The reported Kottgen OR was inverted to maintain consistency of reported effect allele (A1) for the following markers: rs2307394, rs2079742, rs7224610, rs7188445, rs1178977, rs6770152, rs7193778, rs164009, rs653178, rs2078267 and rs478607.
 
-
-(ref:kotplot) Plot showing ORs (95% CI) for the 30 \glspl{snp} reported in @Kottgen2013 based on gout definitions. Original Kottgen reported ORs are shown as red circles. The reported Kottgen OR was inverted to maintain consistency of reported effect allele (A1) for the following markers: rs2307394, rs2079742, rs7224610, rs7188445, rs1178977, rs6770152, rs7193778, rs164009, rs653178, rs2078267, rs478607, and rs12498742.
-
-```{r kotplot, fig.height=7, fig.cap = '(ref:kotplot)', warning = FALSE}
+```{r kotplot2, fig.height=7, fig.cap = '(ref:kotplot2)', warning = FALSE}
 
 flip = c("rs2307394", "rs2079742", "rs7224610", "rs7188445","rs1178977", "rs6770152", "rs7193778", "rs164009", "rs653178","rs2078267", "rs478607", "rs12498742")
 uk_kot_t1 %>% 
@@ -293,21 +309,7 @@ uk_kot_t1 %>%
               geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
 ```
 
-```{r}
-uk_kot_t1 %>% 
-  #mutate(OR = ifelse(SNP %in% flip, 1/OR, OR), L95 = ifelse(SNP %in% flip, 1/L95, L95), U95 = ifelse(SNP %in% flip, 1/U95, U95))  %>%  
-  select(gout, SNP, grail_gene,OR, L95, U95) %>% 
-  bind_rows(., kot_t1 %>% mutate(gout = "Kottgen") %>% select(gout, SNP, grail_gene, OR) %>% mutate(OR = ifelse(SNP %in% flip, 1/OR, OR) )) %>% filter(SNP %in% c('rs2231142','rs12498742')) %>% 
-  unite("SNP", c("grail_gene", "SNP"), sep = '\n') %>% mutate(highlight = ifelse(gout == "Kottgen", "b","a")) %>% filter(gout != 'all') %>% mutate(gout = factor(gout, ordered = TRUE)) %>% mutate(gout = forcats::fct_relevel(gout, "Kottgen", "self","ult","hosp","winnard","selfult"))%>% mutate(gout = forcats::fct_recode(gout, "Hospital" = "hosp", "Self Report" = 'self', "Self Report or ULT" = 'selfult', "ULT" = "ult", "Winnard" = "winnard" )) %>% 
-              # mutate(gout = case_when(
-              #   gout == 'hosp' ~ "Hospital", 
-              #   gout == "self" ~ "Self Report", 
-              #   gout == "selfult" ~ "Self Report or ULT",
-              #   gout == "ult" ~ "ULT",
-              #   gout == "winnard" ~ "Winnard")) %>% 
-              ggplot(data = ., aes(x = gout, y = OR, shape = highlight, colour = highlight)) + 
-              geom_point() + facet_wrap(~SNP) + geom_linerange(aes(x = gout, ymin = L95, ymax = U95)) +geom_hline(yintercept = 1) +theme_bw() + theme(axis.text.x = element_text(angle=-90, vjust = 0.5, hjust = 0)) + theme(axis.title = element_blank(), legend.position = 'none') + scale_color_manual(values = c("black","red")) 
-```
+
 
 
 #### Heritability explained
@@ -340,7 +342,7 @@ uk_kot_t1 %>%
 
 \FloatBarrier
 
-### GWAS results
+### GWAS results {#gwasResults}
 
 
 ```{r, message = FALSE, warning = FALSE}
@@ -729,9 +731,11 @@ polyhaplogwas <- bind_rows(poly_p05_ihs2, poly_p05_nsl2) %>%
 
 Combining the results of the \gls{gwas} for gout in Polynesians with the results of the \gls{ihs} analysis produced a single marker that met the threshold of an |\gls{ihs}| > 2.6 and a \gls{gwas} P < 5 x 10^-8^; that \gls{snp} was rs2725215, located in _PKD2._ Rs2725215 also had a |\gls{nsl}| > 2.6. Both \gls{ihs} and \gls{nsl} thresholds were only met for \gls{ton}. There were `r poly_p05_ihs2 %>%  NROW()` \glspl{snp} that had a \gls{gwas} P < 0.05 and an |\gls{ihs}| > 2; this reduced to `r polyhaplogwas %>% filter(statid == 'ihs') %>% NROW()` at the combined threshold of |\gls{ihs}| > 2 and P < 2 x 10^-4^ (Table \@ref(tab:polyhaplogwas)). Combining the \gls{nsl} results with the \gls{gwas}, there were `r poly_p05_nsl2 %>% NROW()` \glspl{snp} that had a \gls{gwas} P < 0.05 and a |\gls{nsl}| > 2; this reduced to `r polyhaplogwas %>% filter(statid == 'nsl') %>% NROW()` at the combined threshold of |\gls{nsl}| > 2 and P < 2 x 10^-4^ (Table \@ref(tab:polyhaplogwas)).
  
-At the combined threshold of |\gls{ihs}| > 2 or |\gls{nsl}| > 2 and a \gls{gwas} P < 2 x 10^-4^, there were seven \glspl{snp}, located within  _IBSP_, _PKD2_, _ABCG2_ and _PPCDC_, found with both \gls{ihs} and \gls{nsl} (Table \@ref(tab:polyhaplogwas)). _CHN2/CPVL_ and _SLC39A11_ only had \glspl{snp} that met the \gls{nsl} threshold. Out of all of the \glspl{snp} that met the combined threshold, ten \glspl{snp} has evidence from both \gls{ihs} and \gls{nsl}. Rs12908919 (_PPCDC_) was the only \gls{snp} that showed significance in multiple populations (\gls{sam} and \gls{ton}) and had support from both \gls{ihs} and \gls{nsl} (Table \@ref(tab:polyhaplogwas)), whereas, there were six \glspl{snp} that had support from only the \gls{ton} population, for both \gls{ihs} and \gls{nsl}. The loci represented were different to the \glspl{snp} in the European ancestry \gls{gwas} and selection analysis.
+At the combined threshold of |\gls{ihs}| > 2 or |\gls{nsl}| > 2 and a \gls{gwas} P < 2 x 10^-4^, there were seven \glspl{snp}, located within  _IBSP_, _PKD2_, _ABCG2_ and _PPCDC_, found with both \gls{ihs} and \gls{nsl} (Table \@ref(tab:polyhaplogwas)). _CHN2/CPVL_ and _SLC39A11_ only had \glspl{snp} that met the \gls{nsl} threshold. Out of all of the \glspl{snp} that met the combined threshold, ten \glspl{snp} had evidence from both \gls{ihs} and \gls{nsl}. Rs12908919 (_PPCDC_) was the only \gls{snp} that showed significance in multiple populations (\gls{sam} and \gls{ton}) and had support from both \gls{ihs} and \gls{nsl} (Table \@ref(tab:polyhaplogwas)), whereas, there were six \glspl{snp} that had support from only the \gls{ton} population, for both \gls{ihs} and \gls{nsl}. The loci represented were different to the \glspl{snp} in the European ancestry \gls{gwas} and selection analysis.
 
 The region containing _IBSP_, _PKD2_, and _ABCG2_ had multiple \glspl{snp} that met the suggestive significance threshold. Of those, six \glspl{snp} had evidence of both selection and association (Figure \@ref(fig:locusZoom), Table \@ref(tab:polyhaplogwas)). The selection signal came only from the Western Polynesian populations, with no indication in the Eastern Polynesian populations of selection in this region. The recombination rate in this region had intermittent small spikes, with three of the variants in _PDK2_ having an \gls{ld} R^2^ > 0.4 with rs2231142 (calculated using \gls{eas}). These variants also had an association with gout that met the suggestive significance threshold.
+
+> Tony: have any of the genes in tables 5.[67] beed implicated in other phenotypes?
 
 (ref:locusZoom) Locus zoom plot of Polynesian gout \gls{gwas} results for the region chr4:88,600,000-89,200,000, covering _IBSP_, _PKD2_, and _ABCG2_. Points indicate SNP association with gout by genomic position in the Polynesian gout GWAS. Linkage disequilibrium with rs2231142 is indicated by colour. Recombination rate in the East Asian super population of the 1000 Genomes Project is indicated by the blue line. The dashed line indicates the Genome-wide significance threshold P = 5 x 10^-8^.
 
