@@ -9,7 +9,7 @@ the upper_sig_stats and  lower_sig_stats have a window size of 100 kb so therefo
 
 ```{r, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = FALSE)
 library(knitr)
 library(kableExtra)
 library(tidyverse)
@@ -168,6 +168,9 @@ eigen %>% filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape =
 There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPCA)), this indicated that the use of \gls{snp} array versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations were split into Eastern and Western Polynesian sub-groups with \gls{pc} 6 (Figure \@ref(fig:polPCA)).
 
 
+> in supplemental include an all by all plot?
+
+
 #### Admixture analysis
 
 > what does the admixture analysis add?
@@ -180,8 +183,8 @@ There were two analyses for admixture that were undertaken. The first was using 
 
 The second analysis used the source 
 
-```{r, echo = FALSE}
-k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE) %>% full_join(.,  read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE) %>% rename( cv_proj = V2), by = "V1") %>% arrange(V1) %>% rename(K = V1, "CV Error" = V2, "Projection CV Error" = cv_proj)
+```{r, echo = FALSE, eval = TRUE}
+k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE) %>% full_join(.,  read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE) %>% dplyr::rename( cv_proj = V2), by = "V1") %>% arrange(V1) %>% dplyr::rename(K = V1, "CV Error" = V2, "Projection CV Error" = cv_proj)
 
 knitr::kable(k_cv, caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K. CV Projection is the admixture cross-validation error for different K values from projecting the components from 1000 Genomes Project populations of AFR, EAS, EUR, and SAS onto the populations of \\gls{amr} and \\gls{pol}.")
 ```
@@ -205,6 +208,13 @@ study_fam <- left_join(study_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN'
 #### Whole chromosome clustering
 
 Clustering on the full chromosome results for all chromosomes from PopGenome (Figure \@ref(fig:multichrplot)) did not group the populations of each super population together, with the exception of \gls{fwh}, which grouped all super populations, although it split the \gls{amr} populations into two subgroups. \gls{td} grouped the \gls{eur} and most of the \gls{sas} super populations, and had smaller sub-super population groupings of two to three populations. \Gls{cim}, \gls{nzm}, and \gls{sam} were grouped with two \gls{amr} populations, (\gls{pel} and \gls{mxl}), and this group was the least similar to the others. There was no clear pattern to the clustering order of \gls{flf}, although it did have a few small groups of the same super population of no more than three individual populations. The \gls{cim} and \gls{sam} populations were grouped together in both of statistics. \Gls{ze} clustered the \gls{afr} populations together and this cluster was the least similar to the other populations. There was also a grouping of the \gls{eas} populations which had the Western Polynesian populations as part of it.
+
+```{r superGlobalSummary, echo = FALSE, results = 'asis'}
+global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_summary_superpop_popgenome_filtered_3ns_resized.6-11-2017.RDS') %>% filter(stat != 'Fu.Li.D')
+global_super_summary %>%filter(stat != "n.segregating.sites") %>% mutate(stat = sapply(stat, stat_to_short)) %>% mutate(stat = sapply(stat, short_to_latex)) %>% kable(., caption ='(\\#tab:superGlobalSummary) Summary statistics for the intrapopulation frequency spectrum statistics by super population.', digits = 3, booktabs =TRUE, escape = FALSE, col.names = c("Super Population", "Statistic","Mean","SD","Min","1st Percentile","Median","99th Percentile","Max"), format = 'latex') %>% kableExtra::kable_styling(latex_options = 'scale_down')
+```
+
+> need to reference table \@ref(tab:superGlobalSummary) somewhere in this chapter
 
 <!--
 - td had eur cluste, nzm-cim, most of a sas, but the other populations are in groups of 2-3, the pol group is quite disimilar to the rest
@@ -388,7 +398,7 @@ refer to figure
 
 #### Tajima's _D_ 
 
-##### Tajima's _D_ distributions
+##### Tajima's _D_ distributions {#tdDist}
 
 The distributions of the genome-wide \gls{td} values showed that there were differences between each population (Figure \@ref(fig:tdDensity)). The \gls{td} means for the Polynesian populations were the smallest of the super populations at `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()` (SD `r global_super_summary %>% filter(super_pop == 'POL', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`) with `r gs_td_table %>% filter(pop == 'CIM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'CIM') %>% .[["sd"]] %>% three_dp()`) for \gls{cim}, `r gs_td_table %>% filter(pop == 'NZM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'NZM') %>% .[["sd"]] %>% three_dp()`) for \gls{nzm}, `r gs_td_table %>% filter(pop == 'SAM') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'SAM') %>% .[["sd"]] %>% three_dp()`) for \gls{sam}, and `r gs_td_table %>% filter(pop == 'TON') %>% .[["mean"]] %>% three_dp()` (SD `r gs_td_table %>% filter(pop == 'TON') %>% .[["sd"]] %>% three_dp()`) for \gls{ton} (Table \@ref(tab:gsTdTable)). The means of the Polynesian populations were lower than all of the other populations except \gls{pel} and \gls{mxl}, indicating that overall the Polynesian populations had a higher proportion of low frequency to intermediate frequency variants. The \gls{sas} populations had the highest mean \gls{td} overall at `r global_super_summary %>% filter(super_pop == 'SAS', stat == 'Tajima.D') %>% .[["mean"]] %>% three_dp()` (SD `r global_super_summary %>% filter(super_pop == 'SAS', stat == 'Tajima.D') %>% .[["sd"]] %>% three_dp()`). The \gls{afr} populations were the only populations with the 1^st^ percentile above zero, but also had the smallest overall maximum value of `r global_super_summary %>% filter(super_pop == 'AFR', stat == 'Tajima.D') %>% .[["max"]] %>% three_dp()`. The \gls{eur} populations had the highest maximum \gls{td} value at `r global_super_summary %>% filter(super_pop == 'EUR', stat == 'Tajima.D') %>% .[["max"]] %>% three_dp()`. The smallest \gls{td} value of `r gs_td_table %>% filter(min(min) == min) %>% .[['min']] %>% three_dp()` came from the \gls{khv} population of the \gls{eas} super population. The \gls{afr} population had the smallest range (`r td_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['range']] %>% three_dp()`), whereas the \gls{eas} super population had the largest (`r td_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['range']] %>% three_dp()`). The \gls{pol} population had the second largest (`r td_super_pop_means %>% filter(super_pop == 'POL') %>% .[['range']] %>% three_dp()`). A right shifted distribution of \gls{td} can be attributed to ascertainment bias from using a \gls{snp} array, where there is a bias against low frequency markers.
 
@@ -529,7 +539,7 @@ Specifically focusing on the `r NROW(genelists)` genes that were associated with
 #### Fay and Wu's _H_
 
 
-##### Fay and Wu's _H_ distributions
+##### Fay and Wu's _H_ distributions {#fwhDist}
 
 Comparing genome-wide \gls{fwh} revealed that the \gls{pol} super population had the lowest mean (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['mean']] %>% three_dp()`), 1^st^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['lower_1']] %>% three_dp()`), median (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['median']] %>% three_dp()`), 99^th^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['upper_99']] %>% three_dp()`), and maximum values (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['max']] %>% three_dp()`) (Figure \@ref(fig:fwhDensity)). Within the \gls{pol} group, the minimum \gls{fwh} value for a Polynesian population was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. \gls{eas} was the second lowest for mean (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['mean']] %>% three_dp()`), 1^st^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['lower_1']] %>% three_dp()`), median (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['median']] %>% three_dp()`), and 99^th^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['upper_99']] %>% three_dp()`), but had the largest maximum (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['max']] %>% three_dp()`). The \gls{eur} super population had both the smallest minimum and largest range (`r fwh_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['range']] %>% three_dp()`). The \gls{afr} super population were the only group to have a positive mean (`r fwh_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['mean']] %>% three_dp()`), they also had the smallest range and variation (SD `r fwh_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['sd']] %>% three_dp()`). This indicates that the \gls{afr} populations have a deficit of moderate-to-high frequency derived alleles, whereas the \gls{pol} and \gls{eas} populations have the most windows with the highest excess of moderate-to-high frequency derived alleles.
 
@@ -636,7 +646,7 @@ fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains
 
 #### Fu and Li's _F_
 
-##### Fu and Li's distributions
+##### Fu and Li's distributions {#flfDist}
 
 The distributions of \gls{flf} were all centred above zero, with the lowest mean being that of \gls{pol} at `r flf_super_pop_means %>% filter(super_pop == 'POL') %>% .[['mean']] %>% three_dp()` (Figure \@ref(fig:flfDensity)). The \gls{pol} populations also had the lowest 1^st^ percentile (`r flf_super_pop_means %>% filter(super_pop == 'POL') %>% .[['lower_1']] %>% three_dp()`), median (`r flf_super_pop_means %>% filter(super_pop == 'POL') %>% .[['median']] %>% three_dp()`), and 99^th^ percentile (`r flf_super_pop_means %>% filter(super_pop == 'POL') %>% .[['upper_99']] %>% three_dp()`). Conversely, the \gls{sas} populations had the highest mean (`r flf_super_pop_means %>% filter(super_pop == 'SAS') %>% .[['mean']] %>% three_dp()`), median (`r flf_super_pop_means %>% filter(super_pop == 'SAS') %>% .[['median']] %>% three_dp()`), and were equal with the \gls{afr} populations with the highest minimum (`r flf_super_pop_means %>% filter(super_pop == 'SAS') %>% .[['min']] %>% three_dp()`). The \gls{afr} populations were the only group to have a positive 1^st^ percentile (`r flf_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['lower_1']] %>% three_dp()`). The \gls{eas} populations had the lowest minimum (`r flf_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['min']] %>% three_dp()`), but the highest 99^th^ percentile (`r flf_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['upper_99']] %>% three_dp()`) and the largest range (`r flf_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['range']] %>% three_dp()`). This pattern was similar to what was seen with \gls{td}.
 
@@ -746,7 +756,8 @@ flf_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains
 #### Zeng's _E_
 
 
-##### Zeng's _E_ distributions
+##### Zeng's _E_ distributions {#zeDist}
+
 Similar to \gls{td}, all of the distributions for \gls{ze} appear to have been shifted to the right (Figure \@ref(fig:zeDensity)). The \gls{afr} populations had the lowest overall distribution, with the lowest mean (`r ze_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['mean']] %>% three_dp()`), 1^st^ percentile (`r ze_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['lower_1']] %>% three_dp()`), median (`r ze_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['median']] %>% three_dp()`), 99^th^ percentile (`r ze_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['upper_99']] %>% three_dp()`), maximum (`r ze_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['max']] %>% three_dp()`), and range (`r ze_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['range']] %>% three_dp()`). The \gls{eur} populations that had the lowest minimum (`r ze_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['min']] %>% three_dp()`) and the highest maximum (`r ze_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['max']] %>% three_dp()`), which also meant the largest range (`r ze_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['range']] %>% three_dp()`). The highest mean of `r ze_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['mean']] %>% three_dp()` was from \gls{eas}. The \gls{pol} populations had the second highest mean (`r ze_super_pop_means %>% filter(super_pop == 'POL') %>% .[['mean']] %>% three_dp()`), median (`r ze_super_pop_means %>% filter(super_pop == 'POL') %>% .[['median']] %>% three_dp()`), 99^th^ percentile (`r ze_super_pop_means %>% filter(super_pop == 'POL') %>% .[['upper_99']] %>% three_dp()`), and maximum (`r ze_super_pop_means %>% filter(super_pop == 'POL') %>% .[['max']] %>% three_dp()`). 
  
 
@@ -2158,11 +2169,11 @@ ze_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% select(contains(
 
 
 
-### Limitations
+### Limitations {#chap4limit}
 
 <!-- > Detection of selection on polygenic traits... -->
 
-The technical limitations of this dataset based on the markers from the CoreExome \gls{snp} array raised in Section \@ref(chap3limit) apply to this analysis too. Particular to the analysis in this chapter is how the clusters were determined. The \texttt{cutree} method implemented in R [@RCoreTeam2017] that was used to slice the dendrograms, creating the groups used to assess the proportions and exclusivity of the clustering was relatively crude and did not always agree with the clusters that were 'visually apparent' in the dendrogram, although 'visually apparent' could be partially attributed to confirmation bias. Hierarchical clustering was chosen as the clustering algorithm over K-means because the branching nature could be thought of as a metaphor for the population migration histories. It is also possible that different linkage and distance criteria for the clustering algorithm may have produced different clusters, however, any differences in clusters would likely be minor.
+The technical limitations of this dataset based on the markers from the CoreExome \gls{snp} array raised in Section \@ref(chap3limit) apply to this analysis too. Particular to the analysis in this chapter is how the clusters were determined. The \texttt{cutree} method implemented in R [@RCoreTeam2017] that was used to slice the dendrograms, creating the groups used to assess the proportions and exclusivity of the clustering was relatively crude and did not always agree with the clusters that were 'visually apparent' in the dendrogram, although 'visually apparent' could be partially attributed to confirmation bias. Hierarchical clustering was chosen as the clustering algorithm over K-means because the branching nature could be thought of as a metaphor for the population migration histories. It is also possible that different linkage and distance criteria for the clustering algorithm may have produced different clusters, however, any differences in clusters would likely be minor (data not shown).
 
 <!-- give this a test and might then might be able to "data not shown" -->
 
