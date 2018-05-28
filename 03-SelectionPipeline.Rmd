@@ -1032,7 +1032,7 @@ kegg_sig %>%
   distinct() %>% spread(stat, stat2, "") %>% unite(col = "Overlap", c("td", "flf","ihs", "nsl")) %>% spread(pop, Overlap, "") %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+$', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_', replacement = ", " ))) %>% 
   mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% 
   select( term2, everything()) %>% 
-  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.", general_title = "") %>% kable_styling(., latex_options = 'scale_down', font_size = 10)
+  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(., latex_options = 'scale_down', font_size = 10) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.", general_title = "") 
 ```
 
 
@@ -2187,16 +2187,16 @@ Table \@ref(tab:uratePol) shows all urate and gout associated genes that had any
 uratePol %>% 
   mutate_all(., function(x){replace(x, is.na(x), "")}) %>% select(genename, pop, everything()) %>%
   mutate(genename = map_chr(genename, ~ cell_spec(.x, italic = TRUE, format = 'latex'))) %>% 
-  kable(., caption = '(\\#tab:uratePol) Urate and gout associated loci that showed signs of possible selection in Polynesian populations', col.names = c('Gene','Population','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), 
+  kable(., caption = '(\\#tab:uratePol) Urate and gout associated loci that showed signs of possible selection in Polynesian populations.', col.names = c('Gene','Population','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), 
         booktabs = TRUE, format ='latex', longtable = TRUE, escape = FALSE, linesep = '') %>% 
   kableExtra::row_spec(0, angle = 90) %>% 
   add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>% 
   kable_styling(latex_options = 'repeat_header', font_size = 8) %>% 
   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE) # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE) # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 rm(g)
 ```
 
@@ -2397,9 +2397,9 @@ obesityPol %>%
   kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)# %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)# %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 ```
 
 
@@ -2559,9 +2559,9 @@ t2dPol %>% mutate_all(., function(x){replace(x, x == 0, "")}) %>%
  kable_styling(latex_options = "repeat_header", font_size = 8) %>%
 kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
 ```
 
 
@@ -2697,15 +2697,15 @@ There were `r length(unique(kd_GR$SYMBOL))` genes that were associated with kidn
 ```{r, eval = TRUE}
 kdPol %>% mutate_all(., function(x){replace(x, x == 0, "")}) %>%
   mutate(genename = map_chr(genename, ~ cell_spec(.x, italic = TRUE, format = 'latex'))) %>% 
-  kable(., caption = '(\\#tab:kdPol) Kidney disease-associated loci that showed signs of possible selection in Polynesian populations', longtable = TRUE, format = 'latex', escape = FALSE, booktabs = TRUE,
+  kable(., caption = '(\\#tab:kdPol) Kidney disease-associated loci that showed signs of possible selection in Polynesian populations.', longtable = TRUE, format = 'latex', escape = FALSE, booktabs = TRUE,
         col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", "Fu \\& Li's F", "Tajima's D"," Zeng's E")) %>% 
   kableExtra::row_spec(0, angle = 90) %>% 
   add_header_above(., c("","","XP-EHH" = 6, rep("",6)))%>%  kable_styling(latex_options = "repeat_header", font_size = 8) %>% 
    kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
 ```
 
 
@@ -2756,9 +2756,9 @@ metsynPol %>% mutate_all(., function(x){replace(x, x == 0, "")}) %>%
   kable_styling(latex_options = "repeat_header", font_size = 8) %>% 
   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
 ```
 
 
@@ -2844,9 +2844,9 @@ neuroPol %>% mutate_all(., function(x){replace(x, is.na(x), 0)}) %>% #filter(gen
         col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H"," Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>% kable_styling(latex_options = "repeat_header", font_size = 8) %>% 
    kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
                                    "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. Fay and Wu's H,",
-                                   " Fu and Li's F, Tajima's D, and Zeng's E are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = TRUE)
+                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
+                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
+                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
 ```
 
 <!-- xpehh interesting genes -->
@@ -3026,8 +3026,9 @@ rm(g)
 ```
 
 ```{r, eval = FALSE}
-xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% malaria_GR$SYMBOL) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, "")%>% arrange(genename) %>% kable(., caption = 'Number of populations by super population, with significant xpehh for malaria associated genes', booktabs = TRUE)
+xpehh %>% select(-popid1, -popid2, -posid, -experimentid, -statvalue) %>% filter(pop1 %in% c("CIM","NZM","SAM","TON"), xpehh_value > 0) %>% filter(genename %in% malaria_GR$SYMBOL) %>% select(pop1,pop2, genename) %>% distinct() %>% left_join(., panel %>% select(pop2 = pop, super_pop) %>% distinct(), by = 'pop2') %>% group_by(pop1, super_pop, genename) %>% tally() %>% spread(super_pop, n, "")%>% arrange(genename) %>% kable(., caption = 'Number of populations by super population, with significant xpehh for malaria associated genes.', booktabs = TRUE)
 ```
+
 
 
 
@@ -3045,23 +3046,6 @@ _ABO_ was the only gene that had significant markers in all four Polynesian popu
 
 Both \gls{sam} and \gls{nzm} had \glspl{snp} that were significant for \gls{ihs} in _ATP2B4_, \gls{sam} had rs10494845, and \gls{nzm} had rs142206068, both were in favour of the derived allele haplotype. The malaria-associated variant was rs10900585 [@Timmann2012]. All three variants were not in \gls{ld} with each other (\gls{eas} R^2^ = 0.00).
 
-
-
-_DDC_ encodes dopa decarboxylase and has been nominally associated at a genome-wide threshold with malaria [@jallow2009genome]. _DDC_ has also been associated with \gls{bmi} [@Locke2015]. \gls{nzm} had significant markers for \gls{xpehh} for nearly all other populations, \gls{cim} had fewer populations, but across all super population other than \gls{sas}. The \gls{nzm} had multiple markers within the malaria-associated gene, _DDC_, for \gls{nsl}. The markers were rs2060762, rs3807558, rs2329371, and rs1966839. The same markers in addition with rs11238131 and rs4580999 were significant for \gls{ihs}. A \gls{ld} matrix with marker positions is shown in Table \@ref(tab:ddcLd). The marker rs1966839 (reference/derived allele = T, alternative/ancestral allele = C) had scores from \gls{ihs} and \gls{nsl} in favour of the ancestral allele and was in high \gls{ld} (0.988) with the malaria-associated rs1451375 (reference/ancestral allele = C, alternative/derived = A) where the reference and alternative alleles correspond between the \glspl{snp}, and both are intronic variants. Under a dominant model the A allele of rs1451375 is protective of severe malaria (OR = 0.75, CI = 0.66-0.85, P = 6 x 10-6, @jallow2009genome) and corresponded with the ancestral allele of rs1966839.
-
-
-
-
-<!-- rs7803788, rs880028, rs10249420 are from Manjurano2015 -->
-
-
-
-
-```{r, eval = FALSE}
-sig_nsl_val %>% filter(genename %in% malaria_GR$SYMBOL) %>% select(-gene_chrom, -statid) %>% left_join(., markers, by = c('chrom','chrom_start'))
-```
-
-
 ```{r}
 # snps from sig_ihs_val, Jallow2009, and Manjurano2015 for DDC locus
 ddc_eas_r2 <- read.table(text = "RS_number	rs2060762	rs11238131	rs4580999	rs3807558	rs2329371	rs1451375	rs1966839
@@ -3076,9 +3060,30 @@ rs1966839	0.49	0.316	0.607	0.495	0.698	0.988	1.0", header = TRUE)
 ddc_eas_r2 %>% dplyr::rename(`Rs number` = RS_number) %>% kable(format = 'latex', caption = '(\\#tab:ddcLd) Linkage disequillibrium in EAS populations (R\\textsuperscript{2}) between markers in \\textit{DDC}.', escape = FALSE, booktabs = TRUE) %>% kableExtra::row_spec(0, angle = 90)
 ```
 
-
-
 (ref:ldDDCnzm) Linkage disequilibrium of \gls{ihs} significant SNPs 
+
+_DDC_ encodes dopa decarboxylase and has been nominally associated at a genome-wide threshold with malaria [@jallow2009genome]. _DDC_ has also been associated with \gls{bmi} [@Locke2015]. \gls{nzm} had significant markers for \gls{xpehh} for nearly all other populations, \gls{cim} had fewer populations, but across all super population other than \gls{sas} (Table \@ref(tab:ddcxpehh)). The \gls{nzm} had multiple markers within the malaria-associated gene, _DDC_, for \gls{nsl}. The markers were rs2060762, rs3807558, rs2329371, and rs1966839. The same markers in addition with rs11238131 and rs4580999 were significant for \gls{ihs}. A \gls{ld} matrix with marker positions is shown in Table \@ref(tab:ddcLd). The marker rs1966839 (reference/derived allele = T, alternative/ancestral allele = C) had scores from \gls{ihs} and \gls{nsl} in favour of the ancestral allele and was in high \gls{ld} (0.988) with the malaria-associated rs1451375 (reference/ancestral allele = C, alternative/derived = A) where the reference and alternative alleles correspond between the \glspl{snp}, and both are intronic variants. Under a dominant model the A allele of rs1451375 is protective of severe malaria (OR = 0.75, CI = 0.66-0.85, P = 6 x 10-6, @jallow2009genome) and corresponded with the ancestral allele of rs1966839.
+
+
+```{r}
+xpehh %>% filter(genename == 'DDC', pop1 %in% poly_pop) %>% select(-1:-6, -contains('gene'), -chrom_end) %>% spread(pop2, xpehh_value) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% select(marker, chrom_start,pop1, ACB, ASW, ESN, GWD, LWK, MSL, YRI, CLM, MXL, PEL, PUR, CDX, CHB, CHS, JPT, KHV, CEU, FIN, GBR, IBS, NZC, TSI, BEB, GIH, ITU, PJL, STU) %>% arrange(chrom_start, pop1) %>% mutate_at(4:30, three_dp) %>% mutate_at(4:30, funs(case_when(. == "NA"~ "", TRUE ~ .))) %>%rename(Position = chrom_start, Marker = marker, Population = pop1) %>% kable(., booktabs = TRUE, linesep = '', format = 'latex', escape = FALSE, caption  = '(\\#tab:ddcxpehh) Markers with significant XP-EHH in Polynesian populations at \\textit{DDC} on chromosome 7.') %>% add_header_above(.,c(rep("",3), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "SAS" = 5))%>% kable_styling(latex_options = "scale_down") %>% landscape()
+```
+
+<!-- rs7803788, rs880028, rs10249420 are from Manjurano2015 -->
+
+
+
+
+```{r, eval = FALSE}
+sig_nsl_val %>% filter(genename %in% malaria_GR$SYMBOL) %>% select(-gene_chrom, -statid) %>% left_join(., markers, by = c('chrom','chrom_start'))
+```
+
+
+
+
+
+
+
 
 <!-- (rs2060762, rs11238131, rs3807558, rs2329371, and rs1966839) in \gls{nzm} at the _DDC_ locus with malaria (rs1451375), BMI, (rs10499694), and blood metabolite ratios (rs7809234). -->
 
@@ -3125,15 +3130,15 @@ effect of phasing when polynesian populations aren't represented in the 1000 gen
 
 ### Identifying regions under selection in Polynesian populations
 
-One of the primary objectives of this chapter were to investigate regions that were under selection in Polynesian populations. From the intra-population statistics used, there were between 866 and 974 genes identified in the Polynesian populations that had both intra-population haplotypic and \gls{sfs} statistics that were in the 1^st^ percentile. The regions with possible evidence of selection showed that comparative to the other super populations, the Polynesian populations had the fewest genes (111) that only had evidence within the Polynesian super population, whereas the African populations had the largest number of genes (457) that only had evidence in the African super population (Figure \@ref(fig:superUpset)). The Polynesian populations had similar distributions of the \gls{sfs}-based statistics (explored more in Chapter 4).
+One of the primary objectives of this chapter were to investigate regions that were under selection in Polynesian populations. From the intra-population statistics used, there were between 866 and 974 genes identified in the Polynesian populations that had both intra-population haplotypic and \gls{sfs} statistics that were in the 1^st^ percentile. The regions with possible evidence of selection showed that compared to the other super populations, the Polynesian populations had the fewest genes (111) that only had evidence within the Polynesian super population, whereas the African populations had the largest number of genes (457) that only had evidence in the African super population (Figure \@ref(fig:superUpset)). The Polynesian populations had similar distributions of the \gls{sfs}-based statistics (explored more in Chapter 4).
 
-Pathway analysis on the regions with possible selection in the Polynesian populations revealed that many of the genes that had evidence were involved with various forms of cell signalling, with many related to calcium channels, especially in the Eastern Polynesian populations (sections \@ref(cimPath) and \@ref(nzmPath)). The majority of the pathways that had significant enrichment were from the genes that had significant \gls{nsl} markers. There was similarity between the pathways of the Eastern Polynesian populations, with many of the pathways in common being cardiac related. These pathways, such as adrenergic signalling in cardio myocytes, calcium signalling pathway, hypertrophic cardiomyopathy, and vascular smooth muscle contraction all had calcium channels as the main set of genes that were selected. The genes in common with these pathways were _CACNA1D_ (Calcium Voltage-Gated Channel Subunit Alpha1 D) which is associated with blood pressure [@Lu2015], _CACNA2D2_ (Calcium Voltage-Gated Channel Auxiliary Subunit Alpha2delta 2) - also associated with blood pressure [@Warren2017], _CACNA2D3_ (Calcium Voltage-Gated Channel Auxiliary Subunit Alpha2delta 3) - has an association with gout [@Lai2012] but has not been replicatedin other studies, and _SLC8A1_ (Solute Carrier Family 8 Member A1) which is associated with cardiac electrical activity time intervals [@Arking2014].
+Pathway analysis on the regions with possible selection in the Polynesian populations revealed that many of the genes that had evidence were involved with various forms of cell signalling, with many related to calcium channels, especially in the Eastern Polynesian populations (sections \@ref(cimPath) and \@ref(nzmPath)). The majority of the pathways that had significant enrichment were from the genes that had markers significant for \gls{nsl}. There was similarity between the pathways of the Eastern Polynesian populations, with many of the pathways in common being cardiac related. These pathways, such as adrenergic signalling in cardio myocytes, calcium signalling pathway, hypertrophic cardiomyopathy, and vascular smooth muscle contraction all had calcium channels as the main set of genes that were selected (sections \@ref(cimPath) and \@ref(nzmPath)). The genes in common with these pathways were _CACNA1D_ (Calcium Voltage-Gated Channel Subunit Alpha1 D) which is associated with blood pressure [@Lu2015], _CACNA2D2_ (Calcium Voltage-Gated Channel Auxiliary Subunit Alpha2delta 2) - also associated with blood pressure [@Warren2017], _CACNA2D3_ (Calcium Voltage-Gated Channel Auxiliary Subunit Alpha2delta 3) - has an association with gout [@Lai2012] but has not been replicated in other studies, and _SLC8A1_ (Solute Carrier Family 8 Member A1) which is associated with cardiac electrical activity time intervals [@Arking2014].
 
-In the Western Polynesian populations the only pathway that was in common between \gls{sam} and \gls{ton} was ABC transporters. There are two genes belonging to the ABC transporters group that have an association with urate and gout, with a strong effect at _ABCG2_ in Western Polynesian populations [@Phipps-Green2010], and more recently there were Western Polynesian specific variants, such as rs972711951, found in _ABCC4_ [@Tanner2017].
+In the Western Polynesian populations the only pathway that was in common between \gls{sam} and \gls{ton} was ABC transporters. There was only one gene in the ABC transporters pathway that had an association with urate and gout from the \gls{gwas} catalog. The gene was _ABCG2_, which has a strong effect for gout in Western Polynesian populations [@Phipps-Green2010] and also had haplotypic evidence in \gls{ton} with \gls{ihs}. One of the other genes in this pathway was _ABCC4_ which recently had Western Polynesian specific variants, such as rs972711951, identified and associated with gout [@Tanner2017]. There was evidence of selection at _ABCC4_ in \gls{cim}, \gls{nzm}, and \gls{sam} (Table \@ref(tab:ihsnslPolGenes)).
 
-The gene _CNTN4_ had the highest number of significant markers in \gls{cim} and 3^rd^ most in \gls{nzm} for \gls{ihs}. This particular locus hasn't been associated with urate at a genome-wide significance level, however there is evidence to suggest there may be an association [@Chittoor2016], but this wasn't observed with gout in either of the European or Polynesian \gls{gwas} analyses (section \@ref(gwasResults)). 
+The gene _CNTN4_, encoding Contactin 4, had the highest number of significant markers in \gls{cim} and 3^rd^ most in \gls{nzm} for \gls{ihs}. This particular locus hasn't been associated with urate at a genome-wide significance level, however there is evidence to suggest there may be an association [@Chittoor2016], but this wasn't observed with gout in either of the European or Polynesian \gls{gwas} analyses performed in chapter 5 (section \@ref(gwasResults)). There has also been prior selective evidence for this locus in the Biaka Pygmy and Bantu populations, but not in more closely related populations of the Polynesian populations [@pickrell2009signals].
 
-When looking at genes that have been associated with urate, gout and related co-morbidities, there is no apparent difference in the number of genes showing signs of selection in Polynesian populations, when compared to the other populations (Table \@ref(tab:superDiseaseGenesTab)). However, there were differences between the Eastern and Western Polynesian populations for the \gls{ihs} and \gls{nsl} results. There was also evidence of selection in loci that were associated with malaria and were also associated with \gls{t2d} and obesity.
+When looking at genes that have been associated with urate, gout and related co-morbidities, there is no apparent difference in the number of genes showing signs of selection in Polynesian populations, when compared to the other populations (Table \@ref(tab:superDiseaseGenesTab)). However, there were differences between the Eastern and Western Polynesian populations for the \gls{ihs} and \gls{nsl} results, supporting the differences in ancestral background. There was also evidence of selection in loci that were associated with malaria and were also associated with \gls{t2d} and obesity. Suggestive of a role in infectious disease applying selective pressure.
 
 
 <!-- - there is evidence of selection in urate associated loci in the Polynesian populations -->
@@ -3162,11 +3167,11 @@ cim_nzm_shared_kegg %>% select(-cim) %>% mutate(nzm = str_split(nzm, ";")) %>% s
 
 ### Selection of Urate Associated Genes
 
-The second objective was to investigate regions associated with urate, gout and related co-morbidities for evidence of selection in the Polynesian populations. There was evidence for selection in urate associated loci. However, the evidence did not appear to be specific for urate itself, but for loci that are involved in more general metabolic pathways. The main effect loci identified through \gls{gwas}, _SLC2A9_ and _ABCG2_, had limited evidence of positive selection. _ABCG2_ had a significant marker (rs2622626) with \gls{ihs} and \gls{nsl} and only in \gls{ton} from the Polynesian populations, the only other populations were \gls{gih} and \gls{itu} from the \gls{sas} super population. This marker showing significance however might be due to the gout prevalence of the \gls{ton} sample population which was 54%, the same result is not seen in closest population with the most similar ancestral background, \gls{sam}, where the prevalence of gout in the sample population was much lower at 12%.
+The second objective was to investigate regions associated with urate, gout and related co-morbidities for evidence of selection in the Polynesian populations. There was evidence for selection in urate associated loci. However, the evidence did not appear to be specific for urate itself, but for loci that are involved in more general metabolic pathways. The main effect loci identified through \gls{gwas}, _SLC2A9_ and _ABCG2_, had limited evidence of positive selection. _ABCG2_ had a significant marker (rs2622626) with \gls{ihs} and \gls{nsl} and only in \gls{ton} from the Polynesian populations, the only other populations were \gls{gih} and \gls{itu} from the \gls{sas} super population. This marker showing significance however might be due to the gout prevalence of the \gls{ton} sample population which was 54%, the same result is not seen in closest population with the most similar ancestral background, \gls{sam}, where the prevalence of gout in the sample population was much lower at 12%. Although rs2622626 has not previously been associated with gout in East Asian populations [@zhang2016associations], nor did it have an assocation in the gout gwas analysis in chapter 5.
 
-Only _RREB1_ and _IGFR1_ had haplotypic evidence with \gls{xpehh} across multiple other populations. The other gene of note that didn't have haplotypic evidence, but did have multiple windows in the 1^st^ percentile across multiple statistics and all Polynesian populations was _BCAS3._ _BCAS3_ had been previously identified as selected in @Grossman2013. _RREB1_ was also associated with obesity and \gls{t2d} traits. @Zhang2013a had reported a variant nearby to _RREB1_ (rs675209) as having evidence of selection but this particular marker was absent from the CoreExome chip.
+Only _RREB1_ and _IGFR1_ had haplotypic evidence with \gls{xpehh} across multiple other populations. The other gene of note that didn't have haplotypic evidence, but did have multiple windows in the 1^st^ percentile across multiple statistics and all Polynesian populations was _BCAS3._ _BCAS3_ had been previously identified as selected in @Grossman2013. _RREB1_ was also associated with obesity and \gls{t2d} traits. @Zhang2013a had reported a variant nearby to _RREB1_ (rs675209) as having evidence of selection but this particular marker was absent from the CoreExome \gls{snp} array.
 
-There was a similar situation with obesity, \gls{t2d}, kidney disease, and metabolic syndrome where it was found that there were multiple loci that had evidence of possible selection. The number of genes that had possible evidence of selection was similar in the Polynesian populations to that of the other populations. An interesting point however, was the Western Polynesian populations had the fewest genes associated with \gls{t2d} identified with \gls{ihs} or \gls{nsl} than all the other populations, despite Polynesian populations having a high prevalence of \gls{t2d} [@Winnard2013]. 
+There was a similar situation with obesity, \gls{t2d}, kidney disease, and metabolic syndrome where it was found multiple loci had evidence of possible selection. The number of genes that had possible evidence of selection was similar in the Polynesian populations to that of the other populations. An interesting point however, was the Western Polynesian populations had the fewest genes associated with \gls{t2d} identified with \gls{ihs} or \gls{nsl} than all the other populations, despite Polynesian populations having a high prevalence of \gls{t2d} [@Winnard2013]. 
 
 Other complex diseases in which urate is implicated, such as the neurological, and, inflammatory and autoimmune diseases, also showed multiple genes that showed evidence of selection. One of the 'themes' that appeared was that genes were often involved in multiple diseases or gene lists, and often involved with the immune system. 
 
@@ -3182,15 +3187,15 @@ Other complex diseases in which urate is implicated, such as the neurological, a
 
 ### Thrifty gene hypothesis
 
-There was no evidence of selection in either of the previously identified loci of _PPARGC1A_ and _CREBRF_ in Polynesian populations. The CoreExome chip did not have rs8192678, but it did have rs1873532 which was in high \gls{ld} (\gls{eas} R^2^ = 0.976). The lack of evidence was consistent with the results of @Cadzow2016 for _PPARGC1A_ where there was no indication of selection from frequency- or haplotype-based methods. 
+There was no evidence of selection in either of the previously identified loci of _PPARGC1A_ and _CREBRF_ in Polynesian populations. The CoreExome \gls{snp} array did not have rs8192678, but it did have rs1873532 which was in high \gls{ld} (\gls{eas} R^2^ = 0.976). The lack of evidence was consistent with the results of @Cadzow2016 for _PPARGC1A_ where there was no indication of selection from frequency- or haplotype-based methods. 
 
-No selection signal was observed at _CREBRF_ in any of the Polynesian populations that were tested. One reason for this is that the CoreExome chip did not have the specific variants (rs12513649 and rs373863828) reported in @Minster2016. Downstream from _CREBRF_ there was a consistent signal with what had been reported. This was only found in the Western Polynesian populations and the populations of the \gls{eas} super population so suggests that had the dataset contained the variants that it would have been possible to detect. However, without the two markers reported in @Minster2016 it is unable to be determined if _CREBRF_ had evidence of selection from the CoreExome data.
+No selection signal was observed at _CREBRF_ in any of the Polynesian populations that were tested. One reason for this is that the CoreExome \gls{snp} array did not have the specific variants (rs12513649 and rs373863828) reported in @Minster2016. Downstream from _CREBRF_ there was a consistent signal with what had been reported. This was only found in the Western Polynesian populations and the populations of the \gls{eas} super population so suggests that had the dataset contained the variants that it would have been possible to detect. However, without the two markers reported in @Minster2016 it is unable to be determined if _CREBRF_ had evidence of selection from the CoreExome data.
 
 The pathway analysis of genes that were in the extremes for the different selection and neutrality statistics showed that pathways involved with cell signalling were the main results for the Polynesian populations, rather than metabolic pathways. The genes that indicated selection, even for obesity and \gls{t2d}, which are traditionally thought of as being the thrifty phenotype, were genes that were largely either neurological or involved in the immune system.
 
-\gls{nzm} did have significant results for two diabetes related pathways, "Type II diabetes mellitus_Homo sapiens_hsa04930" and "Insulin secretion_Homo sapiens_hsa04911", however, only up to 10% of the pathways had genes that met the significance thresholds. Of the genes that were part of those pathways, up to 50% were genes that encoded subunits of a voltage-gated calcium channel. 
+\gls{nzm} did have significant results for two diabetes related pathways, "Type II diabetes mellitus_Homo sapiens_hsa04930" and "Insulin secretion_Homo sapiens_hsa04911", however, only up to 10% of the pathways had genes that met the significance thresholds. Of the genes that were part of those pathways, up to 50% were genes that encoded subunits of voltage-gated calcium channels. 
 
-As discussed in @Gosling2014, the thrifty gene hypothesis in the context of the Pacific does not fit with the anthropological history, and from this analysis it appears to have no to minimal support from the loci that exhibit signals of possible selection. [@Ayub2014c] had a similar finding with respect to \gls{t2d}. While some individual loci show some signs of selection, it appears as if selection at \gls{t2d} loci is not the case.
+As discussed in @Gosling2014, the thrifty gene hypothesis in the context of the Pacific does not fit with the anthropological history, and from this analysis it appears to have no to minimal support from the loci that exhibit signals of possible selection. @Ayub2014c had a similar finding with respect to \gls{t2d}. While some individual loci show some signs of selection, it appears as if selection at \gls{t2d} loci is not the case.
 
 <!-- ihs = 2.94 -->
 
@@ -3205,9 +3210,9 @@ As discussed in @Gosling2014, the thrifty gene hypothesis in the context of the 
 
 ### Malaria
 
-Response to infectious challenge is a key mechanism that has been thought of as a selective pressure. Malarial infection provided a possible challenge to which urate may have been subjected to selective pressure as such provided a viable candidate due to the involvement of urate with malarial resistance [@GallegoDelgado2014]. There is also evidence of malaria in the prehistory skeletal remains of the western Pacific islands [@buckley2006predators]. Six loci that were associated with malaria and identified from the \gls{gwas} catalog were investigated for having signals of selection. Three of these genes did have evidence of selection in the Polynesian populations. Two loci that had evidence had also been identified as being associated with obesity and \gls{t2d}. _ABO_ and _ATP2B4_ did not have strong evidence, and it came from only \gls{ihs}. _ATP2B4_ encodes a plasma membrane calcium transporter, another calcium related gene with evidence of selection in \gls{nzm}, also sharing similarity with the many of the genes in the pathways from the pathway enrichment, in that they too were calcium channels. _DDC_ on the other hand had comparatively strong haplotypic evidence in the Eastern Polynesian populations. \gls{nzm} had significant \gls{xpehh} results with every other non-Polynesian population and had six significant markers for \gls{ihs}, three of which were in the top 400 most extreme scores. Rs1966839 in _DDC_ was in near perfect \gls{ld} with the malaria associated intronic variant rs1451375 [@jallow2009genome].
+Response to infectious challenge is a key mechanism that has been thought of as a selective pressure. Malarial infection provided a possible challenge to which urate may have been subjected to selective pressure as such provided a viable candidate due to the involvement of urate with malarial resistance [@GallegoDelgado2014]. There is also evidence of malaria in the prehistory skeletal remains of the western Pacific islands [@buckley2006predators]. Three loci that were associated with malaria and identified from the \gls{gwas} catalog were investigated for having signals of selection. Two genes that had evidence of selection in the Polynesian populations had also been identified as being associated with obesity and \gls{t2d}. _ABO_ and _ATP2B4_ did not have strong evidence, and it came from only \gls{ihs}. _ATP2B4_ encodes a plasma membrane calcium transporter, another calcium related gene with evidence of selection in \gls{nzm}, also sharing similarity with the many of the genes in the pathways from the pathway enrichment, in that they too were calcium channels. _DDC_ on the other hand, which had a nominally genome-wide significant assocation with malaria, had comparatively strong haplotypic evidence in the Eastern Polynesian populations. \gls{nzm} had significant \gls{xpehh} results with every other non-Polynesian population and had six significant markers for \gls{ihs}, three of which were in the top 400 most extreme scores. Rs1966839 in _DDC_ was in near perfect \gls{ld} with the malaria associated intronic variant rs1451375 [@jallow2009genome] and the protective allele corresponded with the allele with the displaying a possible signal of selection.
 
-From the obesity \gls{gwas} associated gene list, there was _ADCY9_, which had a very strong signal for \gls{ihs} for 7 markers in \gls{cim} and 2 markers in \gls{nzm}, that were the only populations with significant \gls{ihs} values. A variant, rs10775349, in _ADCY9_ has been associated with malaria in a candidate gene approach but not in \gls{gwas} [@Maiga2013].
+From the obesity \gls{gwas} associated gene list, there was _ADCY9_, which had a very strong signal for \gls{ihs} for 7 markers in \gls{cim} and 2 markers in \gls{nzm}, that were the only populations with significant \gls{ihs} values. The variant rs10775349 in _ADCY9_ had been associated with malaria in a candidate gene approach but not in \gls{gwas} [@Maiga2013].
 
 <!-- rs879620 associated with bmi -->
 
@@ -3215,17 +3220,17 @@ From the obesity \gls{gwas} associated gene list, there was _ADCY9_, which had a
 
 ### Study Limitations {#chap3limit}
 
-There were some technical limitations of the study that influenced the results obtained. The use of a \gls{snp} chip meant that there was an ascertainment bias built into the markers observed [@nielsen2007recent]. The quality control process for the CoreExome \gls{snp} chip also has a bias against singletons and low minor allele frequency \glspl{snp} [@Guo2014]. The effect of this was seen in the right shifting of the distributions of the intra-population frequency based statistics of \gls{td}, \gls{flf}, and \gls{ze}, all of which make use of low frequency or singleton variants in their calculations (Table \@ref(tab:superGlobalSummary)). This shift was not observed in \gls{fwh} which compared the ratio of high frequency derived and ancestral allele variants with the intermediate frequency variants. The shift was seen in \gls{td}, however with the African populations being shifted to the right, such that the first percentile for many was above zero. The intermediate and high frequency variants being over represented compared to the actual situation and will also have had an impact on the haplotypic statistics due to haplotypes that have low-frequency variants being altered.
+There were some technical limitations of the study that influenced the results obtained. The use of a \gls{snp} array meant that there was an ascertainment bias built into the markers observed [@nielsen2007recent]. The quality control process for the CoreExome \gls{snp} array also has a bias against singletons and low minor allele frequency \glspl{snp} [@Guo2014]. The effect of this was seen in the right shifting of the distributions of the intra-population frequency based statistics of \gls{td}, \gls{flf}, and \gls{ze}, all of which make use of low frequency or singleton variants in their calculations (Table \@ref(tab:superGlobalSummary)). This shift was not observed in \gls{fwh} which compared the ratio of high frequency derived and ancestral allele variants with the intermediate frequency variants. The shift was seen in \gls{td}, however with the African populations being shifted to the right, such that the first percentile for many was above zero. The intermediate and high frequency variants being over represented compared to the actual situation and will also have had an impact on the haplotypic statistics due to haplotypes that have low-frequency variants being altered. The data and further discussion of regarding the statistic distributions can be found in chapter 4 (sections \@ref(tdDist), \@ref(fwhDist), \@ref(flfDist), \@ref(zeDist), and \@ref(chap4limit)). The effect of using \gls{snp} array data and not sequence data, differing markers, marker density, and differing window sizes all contributed to the up-to 65% replication of previously identified regions. For the frequency based statistics there was also only a \gls{fdr} less than 10% in the Polynesian populations for the 1^st^ percentile of \gls{td} and \gls{fwh}. By focussing on regions that had multiple windows or multiple statistics the chance of it being a false positive should be reduced.
 
-Another technical limitation that affected the haplotypes was phasing. The phasing of the haplotypes for the Polynesian populations made use of the 1000 Genomes Project reference haplotype panel for probabilistic phasing and could not make use of trios. This panel does not contain Polynesian-specific haplotypes and so the phasing would be influenced by this. While the majority of common haplotypes will be represented in this panel, haplotypes that are Polynesian-specific are not and this introduces incorrect genotypes. The phasing uncertainty is also not taken into account for any of the methods, this will influence the haplotypic methods of selection. 
+Another technical limitation that affected the haplotypes was phasing. The phasing of the haplotypes for the Polynesian populations made use of the 1000 Genomes Project reference haplotype panel for probabilistic phasing and could not make use of trios. This panel does not contain Polynesian-specific haplotypes and so the phasing would be influenced by this. While the majority of common haplotypes will be represented in this panel, haplotypes that are Polynesian-specific are not, and this introduces incorrect haplotypes. The phasing uncertainty was unable to be taken into account for any of the methods, this will influence the haplotypic methods of selection. 
 
-With the adaptation of the selection and neutrality tests into genome-wide usage, specifically the sliding window approach, there was the need to balance the number of segregating sites with the window size [@Pybus2014]. This balance is entirely influenced by \gls{snp} density with whole genome (re)sequence data offering 78 million bi-allelic \glspl{snp} in the 1000 Genomes Project Phase 3. However, the CoreExome \gls{snp} chip data had lower density at `r lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>% mean() %>% round_dp(., 0)` \glspl{snp}/kbp. This means that window size needs to increase for \gls{snp} chip data in order to have the same number of segregating sites. However, as window size increases it also reduces the resolution of the genome and with it the ability to associate a window with particular genomic features.
+With the adaptation of the selection and neutrality tests into genome-wide usage, specifically the sliding window approach, there was the need to balance the number of segregating sites with the window size [@Pybus2014]. This balance is entirely influenced by \gls{snp} density with whole genome (re)sequence data offering 78 million bi-allelic \glspl{snp} in the 1000 Genomes Project Phase 3. However, the CoreExome \gls{snp} array data had lower density at `r lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>% mean() %>% round(., 0) ` \glspl{snp}/kbp. This means that window size needs to increase for \gls{snp} array data in order to have the same number of segregating sites. However, as window size increases it also reduces the resolution of the genome and with it the ability to associate a window with particular genomic features.
 
-There was also a higher likelihood of a longer gene being reported as significant due to more windows overlapping the genic region. Not only that, but the window size meant that \glspl{snp} not in the window might not even be near the actual window i.e. -45 and +45 kb away from the edge of the defined window in the worst case. This would lead to some difficulty in definitive location. The flip side to this was that it allows for upstream and downstream effects of a \gls{snp} to be incorporated. There was a trade off between \gls{snp} density and window size. There were `r NROW(markers)` bi-allelic \gls{snp} markers used in this analysis from the CoreExome chip. This was less than the other projects such as the HapMap project, and considerably less than the sequence data that the 1000 Genomes Project used. The marker density may have been able to be improved up though the imputation of the missing markers using a haplotype reference panel. Ideally this analysis would have had a higher marker density, however it was decided that it was best to remain unimputed due to both the haplotype uncertainty at the phasing step and the Polynesian populations not being represented in the reference panel. An example of why having Polynesian haplotypes represented is the finding of @Minster2016, where the variant (rs373863828) had no appreciable allele frequency outside of Polynesia. Implications from the marker density used are the number of \glspl{snp} per window was lower than in other studies and specifically when looking at the degradation of haplotypes there is the possibility for early truncation due to lack of data.
+There was also a higher likelihood of a longer gene being reported as significant due to more windows overlapping the genic region. Not only that, but the window size meant that \glspl{snp} not in the window might not be near the actual window i.e. -45 and +45 kb away from the edge of the defined window in the worst case. This would lead to some difficulty in definitive location. The flip side to this was that it allows for upstream and downstream effects of a \gls{snp} to be incorporated. There was a trade off between \gls{snp} density and window size. There were `r NROW(markers) %>% formatC(., format = 'f', big.mark = ',', digits = 0)` bi-allelic \gls{snp} markers used in this analysis from the CoreExome \gls{snp} array. This was less than the other projects such as the HapMap project, and considerably less than the sequence data that the 1000 Genomes Project used. The marker density may have been able to be improved up though the imputation of the missing markers using a haplotype reference panel. Ideally this analysis would have had a higher marker density, however it was decided that it was best to remain unimputed due to both the haplotype uncertainty at the phasing step, and the Polynesian populations not being represented in the haplotype reference panel used for phasing and imputation. An example of why having Polynesian haplotypes represented is important, is the finding of @Minster2016, where the variant (rs373863828) had no appreciable allele frequency outside of Polynesia. Implications from the marker density used are the number of \glspl{snp} per window was lower than in other studies and specifically when looking at the degradation of haplotypes there is the possibility for early truncation due to lack of data.
 
 The method itself of using the empirical distribution and selecting the extremes for a statistic to determine the region under selection does have precedence [@voight2006map; @Hider2013; @Jonnalagadda2017], however, this does assume that selection had occurred. The underlying null distribution of the genome is also unknown. It does need to be acknowledged that using the extremes of the distribution is likely to lead to many false positives [@Teshima2006]. This was somewhat mitigated in this study by using the permutations of the actual data to calculate the expected \gls{fdr}. Having internal replication within super populations also helps to reduce the \gls{fdr}, for the Polynesian populations this consisted of the Eastern and Western Polyesnia population pairings.
 
-Allele frequency methods, and also the haplotypic methods may get confounded by the gout prevalences of the Polynesian sample sets, especially the \gls{cim} and \gls{ton} sets, where the prevalence is up to five-fold higher than the general population prevalence for those populations. Loci that showed evidence in multiple populations that did not have this enrichment for the disease trait would be expected to have more credibility. This is important to consider to for the co-morbidities of gout too, given the commonalities in associated genes.
+Allele frequency methods, and also the haplotypic methods may get confounded by the gout prevalences of the Polynesian sample sets, especially the \gls{cim} and \gls{ton} sets, where the prevalence of gout was up to five-fold higher than the general population prevalence for those populations. Loci that showed evidence in multiple populations that did not have this enrichment for the disease trait would be expected to have more credibility. This is important to consider for the co-morbidities of gout too, given the commonalities in associated genes.
 
 One of the limitations of using the \gls{gwas} catalog to create gene lists for conditions is that there is a heavy over representation of genes that are associated to disease in Europeans due to the overall bias to \gls{gwas} research being conducted in European populations [@Haga2010; @Popejoy2016]. This can mean that population-specific associations are missed [@Weissglas-Volkov2013; @Minster2016]. Genes that are associated with a condition can also be missed if they do not reach genome-wide significance in a \gls{gwas} but in a candidate gene approach are significant for instance _ADCY9_ being nominally significant for \gls{bmi} at a genome-wide level but only significant for malaria in a candidate gene approach. 
 
