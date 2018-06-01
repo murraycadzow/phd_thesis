@@ -103,13 +103,12 @@ The dataset used in this chapter is the selection dataset consisting of 31 popul
 
 ### Admixture analysis
 
-Admixture analysis was performed on the independent genetic markers for the selection dataset. Admixture proportions were calculated using all of the populations in the selection dataset and cross-validation was used to identify the K value with the lowest error. Proportions were also calculated by first removing the \gls{amr} and \gls{pol} populations, calculating the K value that provided the lowest error, through cross-validation, and then projecting these ancestral populations onto the \gls{amr} and \gls{pol} populations. 
+Admixture analysis was performed on the independent genetic markers for the selection dataset. Admixture proportions were calculated using all of the populations in the selection dataset and cross-validation was used to identify the K value with the lowest error for values of K from 1 to 15. Proportions were also calculated by first removing the \gls{amr} and \gls{pol} populations, calculating the K value that provided the lowest error, through cross-validation, and then projecting these ancestral populations onto the \gls{amr} and \gls{pol} populations, again for values of K from 1 to 15. For futher information refer to section \@ref(admixture).
 
-> refer to admixture section of methods
 
 ### Frequency spectrum
 
-Tajima's _D_, Fay and Wu's _H_, Fu and Li's _F_, Zeng's _E_, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014] for each chromosome. Aside from F~ST~, these statistics were also calculated as per section \@ref(popgenomeMethods) to generate non-overlapping windows of 10 kb. For each selection test statistic, windows were ordered by test statistic value, and the 1^st^ and 99^th^ percentiles of the distribution were calculated. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows in the 1^st^ or 99^th^ percentiles, across all populations. Hierarchical clustering using the value calculated for each whole chromosome (i.e., treating the start and end of the chromosome as the window boundary) used the statistic value itself to create the distance matrix. The distance measure used was Euclidean distance and the linkage criteria was "complete linkage" for both sets of clustering. Accuracy of the clustering was assessed by descending the dendrogram until six groups, one for each super population, could be made, and then calculating the maximum proportion of the individual populations of the same super population assigned to the same cluster. Exclusivity of each cluster was calculated using the proportion of populations from a given super population compared to the total number of individual populations assigned that cluster. For example, if a cluster consisted of eight populations, two from super population A and six from super population B, then the exclusivity of the cluster would be 0.25 for super population A, and 0.75 for super population B. F~ST~ was calculated pair-wise for all populations for each chromosome.
+\Gls{td}, \gls{fwh}, \gls{flf}, \gls{ze}, and F~ST~ were all calculated using PopGenome v2.2.3 [@Pfeifer2014] for each chromosome. Aside from F~ST~, these statistics were also calculated as per section \@ref(popgenomeMethods) to generate non-overlapping windows of 10 kb. For each selection test statistic, windows were ordered by test statistic value, and the 1^st^ and 99^th^ percentiles of the distribution were calculated. For the windowed  approach, hierarchical clustering was then performed on a binary matrix derived from the presence or absence of the windows in the 1^st^ or 99^th^ percentiles, across all populations. Hierarchical clustering using the value calculated for each whole chromosome (i.e., treating the start and end of the chromosome as the window boundary) used the statistic value itself to create the distance matrix. The distance measure used was Euclidean distance and the linkage criteria was "complete linkage" for both sets of clustering. Accuracy of the clustering was assessed by descending the dendrogram until six groups, one for each super population, could be made, and then calculating the maximum proportion of the individual populations of the same super population assigned to the same cluster. Exclusivity of each cluster was calculated using the proportion of populations from a given super population compared to the total number of individual populations assigned that cluster. For example, if a cluster consisted of eight populations, two from super population A and six from super population B, then the exclusivity of the cluster would be 0.25 for super population A, and 0.75 for super population B. F~ST~ was calculated pair-wise for all populations for each chromosome.
 
 ### Extended haplotype homozygosity {#haplocluster}
 
@@ -139,16 +138,21 @@ Disease associated markers and their annotated genes were downloaded from the \g
 
 > need to explain why K = 6 for the rest of the analysis
 
-\Glsentrydescplural{pc} for the merged \gls{1kgp} data and the New Zealand samples showed in the first two components that the \gls{afr}, \gls{eur}, \gls{sas} super populations all formed separate groupings. \gls{eas} and \gls{pol} were extremely similar in \gls{pc} 1 but the \gls{pol} populations were spread with \gls{pc} 2, with the majority of the spread being accounted for by the Eastern Polynesian populations whereas the Western Polynesian populations had a tight grouping at -0.025 on \gls{pc} 2, slightly below the \gls{eas} group. This can be observed when PC6 is used to separate the Polynesian populations (Figure \@ref(fig:polPCA)).
+The genetic variation captured by \gls{pca} was plotted to visualise the relationship of individuals to one another (Figure \@ref(fig:allpopPCA)). Starting from \gls{pc} 1, each subsequent \gls{pc} captured less of the variation than the previous. \Glsentrydescplural{pc} for the merged \gls{1kgp} data and the New Zealand samples showed in the first two components (which capture the most variation) that the \gls{afr}, \gls{eur}, \gls{sas} super populations all formed separate groupings. \Gls{pc} 1 was responsible for separating the \gls{afr} populations from the others, and \gls{pc} 2 was largely responsible for separating the \gls{eur} and \gls{sas} from each other, and from the \gls{eas} and \gls{pol} populations. The \gls{eas} and \gls{pol} populations were extremely similar in \gls{pc} 1 but the \gls{pol} populations were spread with \gls{pc} 2, with the majority of the spread being accounted for by the Eastern Polynesian populations whereas the Western Polynesian populations had a tight grouping at -0.025 on \gls{pc} 2, slightly below the \gls{eas} group. This can be observed when \gls{pc} 6 is used to separate the Polynesian populations (Figure \@ref(fig:polPCA)). \Gls{pc} 3 separated the \gls{pol} populations from the \gls{eas} populations (Figure \@ref(fig:allpopPCA) B) and \gls{pc} 4 separated the \gls{amr} and \gls{sas} populations (Figure \@ref(fig:allpopPCA) C). The admixture of the \gls{amr} populations was evident in \gls{pc} 1 with a large spread centered with the \gls{eur} populations. The first four \gls{pc} indicated that the six super populations could form super population clusters based on the genetic variation.
 
-(ref:allpopPCA) Principal components 1 and 2 for all populations, coloured by super population grouping.
+(ref:allpopPCA) A) Principal components 1 and 2 for all populations. B) Principal components 1 and 3 for all populations. C) Principal components 1 and 4 for all populationsColoured by super population grouping.
 
-```{r allpopPCA, fig.cap = '(ref:allpopPCA)', echo = FALSE}
+```{r allpopPCA, fig.cap = '(ref:allpopPCA)', echo = FALSE, fig.height = 7, fig.width=5, fig.align='center'}
 eigen <- read.table('~/data/NZ_coreExome_1kgp/PCA/indiv_pops/NZ_1KGP_allchr_indep_eigen.pca.evec', stringsAsFactors = FALSE)
 
 eigen <- eigen %>% select("sample" = V1, everything()) %>% left_join(., panel, by = 'sample') %>% filter(!pop %in% c('WPN','EPN','NAD'))
 names(eigen)[2:11] <- paste0("PC",1:10)
-eigen %>% ggplot(., aes(x = PC1, y = PC2, colour = super_pop)) + geom_point() + theme_bw() + guides(colour = guide_legend(title = "Super Population"))
+pc12 <- eigen %>% ggplot(., aes(x = PC1, y = PC2, colour = super_pop)) + geom_point() + theme_bw() + guides(colour = guide_legend(title = "Super Population", ncol = 6, title.position = 'top')) + theme(legend.position = 'bottom', axis.text.x = element_blank(), axis.title.x = element_blank())
+pc13 <- eigen %>% ggplot(., aes(x = PC1, y = PC3, colour = super_pop)) + geom_point() + theme_bw() + theme(legend.position = 'none', axis.text.x = element_blank(), axis.title.x = element_blank())
+pc14 <- eigen %>% ggplot(., aes(x = PC1, y = PC4, colour = super_pop)) + geom_point() + theme_bw()+ theme(legend.position = 'none') + scale_y_continuous(breaks = c(-0.06, -0.04,-0.02, 0, 0.02, 0.04, 0.06))
+leg <- cowplot::get_legend(pc12)
+top_row <- cowplot::plot_grid(pc12 + theme(legend.position = 'none'), pc13, pc14 , nrow = 3, labels = c("A","B", "C"), align = 'v', rel_heights = c(1,1,1.2))
+cowplot::plot_grid(top_row, leg, nrow=2, ncol = 1, rel_heights = c(1,.1))
 ```
 
 (ref:eurPCA) Principal components 1 and 2 for populations of the European Super Population.
@@ -168,7 +172,6 @@ eigen %>% filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape =
 There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populations (Figure \@ref(fig:eurPCA)), this indicated that the use of \gls{snp} array versus sequence data wasn't a major source of variability in the dataset. In the combined dataset the Polynesian populations were split into Eastern and Western Polynesian sub-groups with \gls{pc} 6 (Figure \@ref(fig:polPCA)).
 
 
-> in supplemental include an all by all plot?
 
 
 #### Admixture analysis
@@ -179,18 +182,42 @@ There was no distinction between the \gls{ceu}, \gls{gbr}, and \gls{nzc} populat
 
 > K = 9 in the remove the admixed populations and use the ancestral proportions to work out the proportions in the admixed pops
 
-There were two analyses for admixture that were undertaken. The first was using all of the populations to calculate the number of ancestral populations
+Admixture analysis is another method to infer the number of ancestral populations that contribute to current populations by modelling the probability of the observed genotypes using proportions of ancestral populations and the population allele frequencies [@Alexsander2009] 
 
-The second analysis used the source 
+
+
+There were two analyses for admixture that were undertaken. The first was using all of the populations to calculate the number of ancestral populations. Five-fold cross-validation was used to identify the K value with the lower cross-validation error. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)).
+
+
+```{r admixData, echo = FALSE}
+ref <- read.table('~/data/NZ_coreExome_1kgp/admixture/NZ_1KGP_allchr_admix.11.Q', stringsAsFactors = FALSE)
+ref_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/NZ_1KGP_allchr_admix.fam', header = FALSE, stringsAsFactors = FALSE)
+names(ref_fam) <- c('FID','sample','PID','MID','SEX','AFF')
+ref_fam <- left_join(ref_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
+
+```
+
+
+(ref:admix) Proportions of ancestral populations as inferred from ADMIXTURE using K = 11.
+
+```{r, echo = FALSE, fig.height = 9, fig.width = 6, fig.cap = '(ref:admix)'}
+# barplot of the reference proportions
+cbind(ref_fam, ref) %>% gather(., "V","Q",9:NCOL(.)) %>% mutate(V = forcats::as_factor(V)) %>% mutate(super_sample = paste0(super_pop,'_',sample), facet_pop = paste(super_pop, pop)) %>% ggplot(., aes(x = super_sample, y = Q)) + geom_bar(stat = "identity", position = 'stack', aes(fill = V), width = 1) + facet_wrap(super_pop~pop, scales = "free_x", ncol = 6, shrink = TRUE) + theme_bw() + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + scale_y_continuous(expand = c(0,0)) 
+rm(ref,ref_fam)
+```
+
+
+
+The second analysis used source populations of \gls{afr}, gls{eur}, \gls{eas}, \gls{sas} to calculate the 
+
+ K = 9 provided the smallest error and so was used as the input reference ancestry proportions to be projected onto the populations of \gls{amr} and \gls{pol}.
 
 ```{r, echo = FALSE, eval = TRUE}
 k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE) %>% full_join(.,  read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE) %>% dplyr::rename( cv_proj = V2), by = "V1") %>% arrange(V1) %>% dplyr::rename(K = V1, "CV Error" = V2, "Projection CV Error" = cv_proj)
 
-knitr::kable(k_cv, caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K. CV Projection is the admixture cross-validation error for different K values from projecting the components from 1000 Genomes Project populations of AFR, EAS, EUR, and SAS onto the populations of \\gls{amr} and \\gls{pol}.")
+knitr::kable(k_cv, caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K. Projection CV error is the admixture cross-validation error for different K values from projecting the components from 1000 Genomes Project populations of \\gls{afr}, \\gls{eas}, \\gls{eur}, and \\gls{sas} onto the populations of \\gls{amr} and \\gls{pol}.")
 ```
 
-
-The cross validation of K from 1 to 15 resulted in K = 11 having the minimum cross validation error.
 
 
 ```{r admixDataProjection, echo = FALSE}
@@ -204,6 +231,9 @@ study_fam <- read.table('~/data/NZ_coreExome_1kgp/admixture/projected/study.fam'
 names(study_fam) <- c('FID','sample','PID','MID','SEX','AFF')
 study_fam <- left_join(study_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','POL')), by = 'sample')
 ```
+
+
+
 
 #### Whole chromosome clustering
 
@@ -1909,7 +1939,7 @@ over50per2 <- readRDS('data/04-over50per2.RDS')
 
 #### Random windows
 
-It is possible that obtaining the population groupings by clustering the most extreme windows for each statistic, could have occurred by chance. To assess this, 10,000 iterations of random resampling of 2500 windows per population was undertaken, and these windows were then clustered. This was done so that the extreme tail clustering could be compared to the random windows to see if the extreme window clustering performed better in exclusivity and proportion of super population clustering than by drawing windows at random. The maximum proportion of populations being clustered into their designated super population was then calculated when the tree was cut to have six groups (K = 6), one for each super population. The mean proportion of populations grouped into their super population was less than 0.5 for all super populations, with an overall mean of 0.282 (Table \@ref(tab:randtab)). This compared to a mean proportion of 0.916 for the clustering of the extreme windows. Other values of K were also tested for K = 9, and K = 11. They both had higher mean exclusivities (K = 9: 0.367, K = 11: 0.424) than K = 6, due to more possible individual clusters. The extra values of K were selected based on the lowest cross-validation errors for the calculations using all populations, and the calculations omitting the \gls{amr} and \gls{pol} populations (section \@ref(admixture)). The remainder of this section will report on K = 6.
+It is possible that obtaining the population groupings by clustering the most extreme windows for each statistic, could have occurred by chance. To assess this, 10,000 iterations of random resampling of 2500 windows per population was undertaken, and these windows were then clustered. This was done so that the extreme tail clustering could be compared to the random windows to see if the extreme window clustering performed better in exclusivity and proportion of super population clustering than by drawing windows at random. The maximum proportion of populations being clustered into their designated super population was then calculated when the tree was cut to have six groups (K = 6), one for each super population. The mean proportion of populations grouped into their super population was less than 0.5 for all super populations, with an overall mean of 0.282 (Table \@ref(tab:randtab)). This compared to a mean proportion of 0.916 for the clustering of the extreme windows. Other values of K were also tested for K = 9, and K = 11, based on the results of the admixture analysis. They both had higher mean exclusivities (K = 9: 0.367, K = 11: 0.424) than K = 6, due to more possible individual clusters. The extra values of K were selected based on the lowest cross-validation errors for the calculations using all populations, and the calculations omitting the \gls{amr} and \gls{pol} populations (section \@ref(admixture)). The remainder of this section will report on K = 6.
 <!-- explain CV a little more in a sentence -->
 
 Not a single random draw grouped the all individual populations into all of their respective super populations. Only the populations of the \gls{afr} and \gls{eur} super populations did not each get fully grouped into a cluster. Grouping at least 50% of a super population was at best `r round(rand_tab %>% summarise(max = max(prop50)), digits = 0) %>% pull(max)`% of the draws but for the larger super populations (\gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas}) it was on average `r round(rand_tab %>% filter(!super %in% c('POL','AMR'))%>% summarise(mean = mean(prop50)), digits = 0) %>% pull(mean)`% of the draws. There were only `r over50per %>% NROW() %>% num_to_word()` random draws that had all super populations each having half or more of their individual populations assigned the same group. The mean exclusivity of the random draws was low, ranging from `r min(excl_tab$mean) %>% sprintf('%.2f', .)` to `r max(excl_tab$mean) %>% sprintf('%.2f', .)` and there were no random draws in which the Polynesian populations were all grouped together as a Polynesian exclusive cluster.
