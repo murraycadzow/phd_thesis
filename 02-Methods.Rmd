@@ -232,9 +232,9 @@ smartpca.perl \
 
 ### Admixture analysis {#admixture}
 
-Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [\@ref]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies.
+Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [@Pritchard2000]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies.
 
-Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with a marker \gls{ld} R^2^ > 0.1. This was done using Plink v1.9b4.9. Following this, cross validation was performed to find the best value of K (number of ancestral populations), for values of K from 1 to 15. K = 11 had the lowest cross-validation error (Table \@ref(tab:admixCV)). The default of 5-fold cross-validation was used, where-by the data were partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
+Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with a marker \gls{ld} R^2^ > 0.1. This was done using Plink v1.9b4.9. Following this, cross validation was performed to find the best value of K (number of ancestral populations), for values of K from 1 to 15. The default of 5-fold cross-validation was used, where-by the data were partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
 
 ```{r admixture k, engine = 'bash', eval = FALSE}
 # Combine the chromosomes
@@ -266,7 +266,7 @@ grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 
 
 
-Admixture ancestry proportions were also calculated using only the populations of \gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas} and cross-validation error calculated for values of K from 1 to 15. The default of 5-fold cross-validation was used. K = 9 provided the smallest error and so was used as the input reference ancestry proportions to be projected onto the populations of \gls{amr} and \gls{pol}. The following code was used to calculate the cross-validation errors and then project the admixture components for the K with the lowest cross-validation error onto the \gls{pol} and \gls{amr} populations.
+Admixture ancestry proportions were also calculated using only the populations of \gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas} and cross-validation error calculated for values of K from 1 to 15. The default of 5-fold cross-validation was used. The following code was used to calculate the cross-validation errors and then project the admixture components for the K with the lowest cross-validation error onto the \gls{pol} and \gls{amr} populations.
 
 ```{bash, eval = FALSE}
 # to project 1000 genomes onto the Polynesians
