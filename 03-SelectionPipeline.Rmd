@@ -4,7 +4,7 @@
 
 ```{r source, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(cache = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
 knitr::opts_chunk$set(cache.path = "cache/")
 
 library(phdFunctions)
@@ -435,11 +435,10 @@ SNTG1,8,5,9,5,6
 SPAG4,0,-(1),-,-,0
 SYT1,-,-,-,-,6', header = TRUE, stringsAsFactors = FALSE, sep = ',') %>% 
 kable(., caption = "(\\#tab:voightTab) List of genes used as positive controls for detection of significant \\gls{ihs} regions.", booktabs = TRUE, format = 'latex', escape = TRUE) %>% 
-  kableExtra::footnote(general = c("Number of SNPs that were significant", 
-                                   "for iHS, dashes indicate absence in \\\\cite{voight2006map}.",
+  kableExtra::footnote(general = c("Number of SNPs that were significant for iHS, dashes indicate absence in \\\\cite{voight2006map}.",
                                    "Brackets indicate number of significant SNPs in the ",
                                    "CoreExome data, but was not in the population as reported ",
-                                   "in \\\\cite{voight2006map}."), general_title = "", escape= FALSE)
+                                   "in \\\\cite{voight2006map}."), general_title = "", escape= FALSE, threeparttable = TRUE)
 ```
 
 
@@ -1032,7 +1031,7 @@ kegg_sig %>%
   distinct() %>% spread(stat, stat2, "") %>% unite(col = "Overlap", c("td", "flf","ihs", "nsl")) %>% spread(pop, Overlap, "") %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+$', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_', replacement = ", " ))) %>% 
   mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% 
   select( term2, everything()) %>% 
-  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(., latex_options = 'scale_down', font_size = 10) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.", general_title = "") 
+  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(., latex_options = 'scale_down', font_size = 10) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.", general_title = "", threeparttable = TRUE) 
 ```
 
 
@@ -2192,11 +2191,7 @@ uratePol %>%
   kableExtra::row_spec(0, angle = 90) %>% 
   add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>% 
   kable_styling(latex_options = 'repeat_header', font_size = 8) %>% 
-  kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE) # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+  kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE) # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 rm(g)
 ```
 
@@ -2395,11 +2390,7 @@ obesityPol %>%
   kableExtra::row_spec(0, angle = 90) %>%
   add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>% 
   kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
-  kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)# %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
+  kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE)# %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 ```
 
 
@@ -2557,11 +2548,7 @@ t2dPol %>% mutate_all(., function(x){replace(x, x == 0, "")}) %>%
  kableExtra::row_spec(0, angle = 90) %>% 
  add_header_above(., c("","","XP-EHH" = 6, rep("",6)))%>% 
  kable_styling(latex_options = "repeat_header", font_size = 8) %>%
-kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
+kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE)
 ```
 
 
@@ -2701,11 +2688,7 @@ kdPol %>% mutate_all(., function(x){replace(x, x == 0, "")}) %>%
         col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", "Fu \\& Li's F", "Tajima's D"," Zeng's E")) %>% 
   kableExtra::row_spec(0, angle = 90) %>% 
   add_header_above(., c("","","XP-EHH" = 6, rep("",6)))%>%  kable_styling(latex_options = "repeat_header", font_size = 8) %>% 
-   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
+   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE)
 ```
 
 
@@ -2754,11 +2737,7 @@ metsynPol %>% mutate_all(., function(x){replace(x, x == 0, "")}) %>%
   kableExtra::row_spec(0, angle = 90) %>% 
   add_header_above(., c("","","XP-EHH" = 3, rep("",6)))%>%  
   kable_styling(latex_options = "repeat_header", font_size = 8) %>% 
-  kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
+  kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE)
 ```
 
 
@@ -2842,11 +2821,7 @@ neuroPol %>% mutate_all(., function(x){replace(x, is.na(x), 0)}) %>% #filter(gen
   kable(., caption = '(\\#tab:neurologicalPol1) Neurological disease associated loci that showed signs of possible selection in Polynesian populations.',
         booktabs = TRUE, escape = FALSE, longtable = TRUE, linesep = '',
         col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H"," Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>% kable_styling(latex_options = "repeat_header", font_size = 8) %>% 
-   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
+   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE)
 ```
 
 <!-- xpehh interesting genes -->

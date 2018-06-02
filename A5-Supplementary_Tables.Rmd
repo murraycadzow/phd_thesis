@@ -204,11 +204,7 @@ immunePol <- readRDS("Appendices/03-immunePol.RDS")
  kable(., caption = '(\\#tab:zhangImmune) Loci associated with various inflammatory and autoimmune diseases that showed signs of possible selection in Polynesian populations.', 
        longtable = TRUE, booktabs = TRUE, escape = FALSE, linesep = '',
        col.names = c('Population','Gene','AFR','AMR','EAS','EUR','POL','SAS','iHS','nSL',"Fay \\& Wu's H", " Fu \\& Li's F", "Tajima's D"," Zeng's E"), format = 'latex') %>% kableExtra::row_spec(0, angle = 90) %>% add_header_above(., c("","","XP-EHH" = 6, rep("",6))) %>%  kable_styling(latex_options = "repeat_header", font_size = 6) %>% 
-   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at", 
-                                   "least one marker sigificant in the gene. Integrated haplotype homozygosity",
-                                   "score and nSL are the number of significant markers. \\\\gls{fwh},",
-                                   " \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows",
-                                   " intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE)
+   kableExtra::footnote(general = c("XP-EHH is the number of populations from the super population that had at least one marker sigificant in the gene. Integrated haplotype homozygosity score and nSL are the number of significant markers. \\\\gls{fwh}, \\\\gls{flf}, \\\\gls{td}, and \\\\gls{ze} are the number of windows intersecting the gene that met the lower threshold."), general_title = "", escape = FALSE, threeparttable = TRUE)
   # %>% filter((AFR > 0 | AMR >0 | EAS > 0 | ihs > 0 | nsl > 0) & (!is.na(Fay.Wu.H) | !is.na(Fu.Li.D)| !is.na(Fu.Li.F) | !is.na(Tajima.D) | !is.na(Zeng.E)))
 ```
 
@@ -234,6 +230,12 @@ lower_sig_stats %>% filter(statname == 'Zeng.E', pop %in% c('CIM','NZM','SAM','T
 \FloatBarrier
 
 ## Chapter 4 Tables
+
+```{r, echo = FALSE, eval = TRUE}
+k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE) %>% full_join(.,  read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE) %>% dplyr::rename( cv_proj = V2), by = "V1") %>% arrange(V1) %>% dplyr::rename(K = V1, "CV Error" = V2, "Projection CV Error" = cv_proj)
+
+k_cv %>% select(1:2) %>% mutate(`CV Error` = formatC(`CV Error`, digits = 4, format ='f')) %>%knitr::kable(., caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K.", format = 'latex') 
+```
 
 ```{r}
 create_gwas_cat_table <-function(){
