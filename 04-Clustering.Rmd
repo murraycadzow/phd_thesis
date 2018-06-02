@@ -576,8 +576,23 @@ create_sums('td_pos') %>% filter(POL_SAM + POL_TON == ALLsum & ALLsum == 2) %>% 
 ##### Metabolic disease-associated genes
 
 <!-- > not sure how best to represent the genes listed in this section and the equivalent ones for other stats -->
+```{r}
+td_met <- list()
+td_met$neg_pol <- td_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum > 0) %>% pull(SYMBOL) %>% unique()
 
-Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, and metabolic syndrome from the \gls{gwas} catalog (Tables \@ref(tab:gwascatref) and \@ref(tab:gwasgenes)), from the clustering of the extremes, there were a total of XXX 31 genes that had at least one of the Polynesian populations having at least one window in the 1^st^ percentile. This dropped to XXX 14 genes that had windows in the 1^st^ percentile for at least one Polynesian, but may also have been in the 1^st^ percentile of other populations. Some examples of this were _CCR3_, which had windows in the 1^st^ percentile for all four Polynesian populations, and the same windows were also in the 1^st^ percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1^st^ percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99^th^ percentile there were no windows from the Polynesian populations that intersected the metabolic disease associated genes.
+td_met$neg_not_only_pol <-  td_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum < ALLsum, !(SYMBOL %in% td_neg_no_pol_genes )) %>% pull(SYMBOL) %>% unique()
+
+
+td_met$pos_pol <- td_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum > 0) %>% pull(SYMBOL) %>% unique()
+
+# genes that were in polynesians but also other populations
+td_met$pos_not_only_pol <-  td_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum < ALLsum, !(SYMBOL %in% td_pos_no_pol_genes )) %>% pull(SYMBOL) %>% unique()
+```
+
+
+Specifically focusing on the `r NROW(genelists)` genes that were associated with urate, gout, obesity, \gls{t2d}, kidney disease, and metabolic syndrome from the \gls{gwas} catalog (Tables \@ref(tab:gwascatref) and \@ref(tab:gwasgenes)), from the clustering of the extremes, there were a total of `r td_met$neg_pol %>% length()`  genes that had at least one of the Polynesian populations having at least one window in the 1^st^ percentile. This dropped to `r td_met$neg_not_only_pol %>% length()`  genes that had windows in the 1^st^ percentile for at least one Polynesian population, and also in the 1^st^ percentile of other populations. Some examples of this were _CCR3_, which had windows in the 1^st^ percentile for all four Polynesian populations, and the same windows were also in the 1^st^ percentile as the \gls{eas} populations of \gls{cdx} and \gls{khv}. _ARL15_ had windows that were only from the four Polynesian populations. And _DNAH10_ had windows that were in the 1^st^ percentile of the \gls{eas} populations except \gls{cdx}, as well as the Eastern Polynesian populations, \gls{cim} and \gls{nzm}. In the 99^th^ percentile there were `r td_met$pos_pol %>% length()` genes associated with the metabolic diseases that had windows in the Polynesian populations, of those, `r td_met$pos_not_only_pol %>% length()` genes had windows in the 99th percentile for Polynesians and the 99^th^ percentile of other populations. Some examples include _ADCY3_ which had multiple windows with \gls{pol}, \gls{eur}, \gls{eas}, and \gls{sas}. And _NEGR1_ which had windows from both the \gls{eas} and \gls{pol} populations.
+
+
 
 
 #### Fay and Wu's _H_
@@ -684,7 +699,20 @@ The 1^st^ percentile has many of the regions in the Polynesian populations in co
 
 ##### Metabolic disease-associated genes
 
-Of the genes that were in the windows of the 1^st^ percentile, there were `r fwh_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the list of genes of metabolic disease associated genes and also had windows that intersected them from the Polynesian populations. Thirteen of those genes were for windows from Polynesian populations, as well as others. Some examples of these genes were _RASA2_ and _ERBB4_, and both are associated with obesity traits and involved in signalling pathways. _RASA2_ had windows only from \gls{cim} and \gls{nzm}. _ERBB4_ had windows from all four Polynesian populations, as well as the populations of \gls{eas} - except \gls{jpt}. There were `r fwh_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the 99^th^ percentile that were also in the list of genes of metabolic disease associated genes. Some examples of genes that had windows in both Polynesian and other populations in the 99^th^ percentile include _SHROOM3_, _RBMS1_, and _UBE2E2_. _SHROOM3_ was an example of a gene that had windows in common from all the other super populations, except \gls{eas}. _RBMS1_ had multiple windows for across all Polynesian populations, but not other super populations. And _UBE2E2_ had multiple windows across the Polynesian populations, as well as the populations of \gls{eas} and \gls{sas}. _SHROOM3_ was an example of a gene associated with kidney disease, with its role being in the development of the kidney [@Khalili2016]. 
+```{r}
+fwh_met <- list()
+fwh_met$neg_pol <- fwh_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum > 0) %>% pull(SYMBOL) %>% unique()
+
+fwh_met$neg_not_only_pol <-  fwh_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum < ALLsum, !(SYMBOL %in% fwh_neg_no_pol_genes )) %>% pull(SYMBOL) %>% unique()
+
+
+fwh_met$pos_pol <- fwh_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum > 0) %>% pull(SYMBOL) %>% unique()
+
+# genes that were in polynesians but also other populations
+fwh_met$pos_not_only_pol <-  fwh_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum < ALLsum, !(SYMBOL %in% fwh_pos_no_pol_genes )) %>% pull(SYMBOL) %>% unique()
+```
+
+Of the genes that were in the windows of the 1^st^ percentile, there were `r fwh_met$neg_pol %>% length()` genes that were in the list of genes of metabolic disease associated genes and also had windows that intersected them from the Polynesian populations. Thirteen of those genes were for windows from Polynesian populations, as well as others. Some examples of these genes were _RASA2_ and _ERBB4_, and both are associated with obesity traits and involved in signalling pathways. _RASA2_ had windows only from \gls{cim} and \gls{nzm}. _ERBB4_ had windows from all four Polynesian populations, as well as the populations of \gls{eas} - except \gls{jpt}. There were `r fwh_met$pos_pol %>% length()` genes that were in the 99^th^ percentile that were also in the list of genes of metabolic disease associated genes. Some examples of genes that had windows in both Polynesian and other populations in the 99^th^ percentile include _SHROOM3_, _RBMS1_, and _UBE2E2_. _SHROOM3_ was an example of a gene that had windows in common from all the other super populations, except \gls{eas}. _RBMS1_ had multiple windows for across all Polynesian populations, but not other super populations. And _UBE2E2_ had multiple windows across the Polynesian populations, as well as the populations of \gls{eas} and \gls{sas}. _SHROOM3_ was an example of a gene associated with kidney disease, with its role being in the development of the kidney [@Khalili2016]. 
 
 
 ```{r, eval = FALSE}
@@ -892,6 +920,19 @@ ze_no_pol_genes <- txdb_gene_annotate(create_sums('ze_pos') %>% filter(POLsum ==
 
 <!-- create df from the clustering results to be able to pull numbers out of for number of windows per population for each statistic, and for the proportion of pops being clustered -->
 ##### Metabolic associated diseases
+
+```{r}
+ze_met <- list()
+ze_met$neg_pol <- ze_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum > 0) %>% pull(SYMBOL) %>% unique()
+
+ze_met$neg_not_only_pol <-  ze_neg_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum < ALLsum, !(SYMBOL %in% ze_neg_no_pol_genes )) %>% pull(SYMBOL) %>% unique()
+
+
+ze_met$pos_pol <- ze_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum > 0) %>% pull(SYMBOL) %>% unique()
+
+# genes that were in polynesians but also other populations
+ze_met$pos_not_only_pol <-  ze_pos_pol_genes %>% filter( SYMBOL %in% genelists$genename) %>% select(contains('chrom'),SYMBOL, ALLsum, AFRsum, EURsum, SASsum, EASsum, POLsum, contains("EAS"), contains("POL")) %>% arrange(desc(POLsum)) %>% filter(POLsum < ALLsum, !(SYMBOL %in% ze_pos_no_pol_genes )) %>% pull(SYMBOL) %>% unique()
+```
 
 There were `r ze_neg_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` genes that were in the list of genes of metabolic disease associated genes and also had windows in the 1^st^ percentile, that intersected them from the Polynesian populations. Some examples of these genes are _MACF1_, _AGBL4_, _DACH1_, and _RBMS1_. _MACF1_ had windows that were in the 1^st^ percentile of all populations. _AGBL4_ and _DACH1_ had windows in nearly every population except for most \gls{afr} populations. _RBMS1_ was only in the 1^st^ percentile for the Western Polynesian populations \gls{sam} and \gls{ton}. Windows of the 99^th^ percentile in the Polynesian populations that intersected the metabolic disease associated genes tended to also be found in the populations of \gls{eas}, and many also were in common with all other populations but not many were in common with the \gls{afr} populations. There were `r ze_pos_pol_genes %>% filter(SYMBOL %in% genelists$genename) %>% pull(SYMBOL) %>% unique() %>% length()` of genes that were in the 99^th^ percentile for Polynesians. Some examples were _CHST8_, _ERBB4_, _FHIT_, _PTPRD_, and _HMGA2_. _CHST8_ had windows that were in the 99^th^ percentile for the four Polynesian populations, as well as the populations of \gls{eas} with a couple of populations of both \gls{sas} and \gls{eur} too. _ERBB4_ had windows that were in both \gls{pol} and \gls{eas} populations. _FHIT_ had windows for the Western Polynesian populations, \gls{sam} and \gls{ton} and most of the populations from \gls{eas} and \gls{sas}. _PTPRD_ had windows from the Eastern Polynesian populations of \gls{cim} and \gls{nzm}, these windows were also in common with populations mostly from \gls{eur}, while some other windows were in common with the Eastern Polynesian populations and \gls{afr}. _HMGA2_ had windows in all of the super populations except \gls{afr}.
 
