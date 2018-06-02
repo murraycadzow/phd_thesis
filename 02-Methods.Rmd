@@ -266,9 +266,9 @@ grep CV log* | cut -d':' -f1,3 |tr -d ':' | sed 's/log\|\.out//g' > CV_error.txt
 
 
 
-Admixture ancestry proportions were also calculated using only the populations of \gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas} and cross-validation error calculated for values of K from 1 to 15. The default of 5-fold cross-validation was used. The following code was used to calculate the cross-validation errors and then project the admixture components for the K with the lowest cross-validation error onto the \gls{pol} and \gls{amr} populations.
+<!-- Admixture ancestry proportions were also calculated using only the populations of \gls{afr}, \gls{eas}, \gls{eur}, and \gls{sas} and cross-validation error calculated for values of K from 1 to 15. The default of 5-fold cross-validation was used. The following code was used to calculate the cross-validation errors and then project the admixture components for the K with the lowest cross-validation error onto the \gls{pol} and \gls{amr} populations. -->
 
-```{bash, eval = FALSE}
+```{bash, eval = FALSE, echo = FALSE}
 # to project 1000 genomes onto the Polynesians
 
 #create reference population
