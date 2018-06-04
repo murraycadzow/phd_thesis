@@ -366,6 +366,100 @@ read_csv('Appendices/04-ze-pol-firstper-genes.csv', n_max = 0) %>% kable(format 
 read_csv('Appendices/04-ze-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZePosGenes) Genes intersecting the windows of the 99th percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
 
-#### Random window and gene lists proportion and exclusivity tables
+#### Clustered regions from significant markers for \gls{ihs} and \gls{nsl}
+
+```{r}
+clus_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-15-12-2017.RDS')
+clus_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-15-12-2017.RDS')
+```
+
+```{r}
+full_join(clus_ihs, clus_nsl, by = c('pop','chrom','ClusterID'), suffix = c(" iHS", " nSL")) %>% dplyr::rename(Population = pop) %T>% {write_csv(., path = 'Appendices/04-ihs-nsl-significant-marker-clusters.csv', col_names = TRUE)} %>% head(0) %>% kable(., caption = '(\\#tab:hapclustab) Positions of regions created by clustering significant markers for iHS or nSL by population') %>% footnote("Appendices/04-ihs-nsl-significant-marker-clusters.csv", threeparttable = TRUE)
+```
+
+\FloatBarrier
+
+#### Clustered median centered metabolic disease genes
 
 
+```{r load_gene_clus, include = FALSE}
+# brings in objects called {gc_urate_gout,urate_gout,kd,metsyn,obesity,t2d}_GR, 
+source("~/Git_repos/bookdown_thesis/scripts/Annotate_genes.R")
+load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
+load('~/data/NZ_coreExome_1kgp/100kbWindow_intra/gene_clustering_filtered_3ns-16-4-2018.RData')# brings in objects called gout, obesity, t2d, metsyn
+names(gout) <- c('mat_d','prop')
+names(t2d) <-  c('mat_d','prop')
+names(obesity) <- c('mat_d','prop')
+names(metsyn) <- c('mat_d','prop')
+names(kd) <- c('mat_d','prop')
+```
+
+##### Gout
+
+```{r, message = FALSE}
+s <- "Tajima.D"
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:gouttdgeneclus) Tajima's D for windows at gout associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+```{r, message = FALSE}
+s <- "Fay.Wu.H"
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutfwhgeneclus) Fay and Wu's H for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+
+```{r, message = FALSE}
+s <- "Fu.Li.F"
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutflfgeneclus) Fu and Li's F for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+```{r, message = FALSE}
+s <- "Zeng.E"
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutflfgeneclus) Zeng's E for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+
+##### Obesity
+
+```{r, message = FALSE}
+s <- "Tajima.D"
+obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:obesitytdgeneclus) Tajima's D for windows at obesity associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+```{r, message = FALSE}
+s <- "Fay.Wu.H"
+obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:obesityfwhgeneclus) Fay and Wu's H for windows at obesity associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+
+```{r, message = FALSE}
+s <- "Fu.Li.F"
+obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:obesityflfgeneclus) Fu and Li's F for windows at obesity associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+```{r, message = FALSE}
+s <- "Zeng.E"
+obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:obesityflfgeneclus) Zeng's E for windows at obesity associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+##### Type 2 diabetes
+
+```{r, message = FALSE}
+s <- "Tajima.D"
+t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dtdgeneclus) Tajima's D for windows at t2d associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+```{r, message = FALSE}
+s <- "Fay.Wu.H"
+t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dfwhgeneclus) Fay and Wu's H for windows at t2d associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+
+```{r, message = FALSE}
+s <- "Fu.Li.F"
+t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dflfgeneclus) Fu and Li's F for windows at t2d associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
+
+```{r, message = FALSE}
+s <- "Zeng.E"
+t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dflfgeneclus) Zeng's E for windows at t2d associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% landscape()
+```
