@@ -36,7 +36,7 @@ A partial or incomplete sweep occurs when part way through a sweep the selective
 
 In order to determine if a selective event has occurred, one can attempt to find what are termed “signatures of selection”. Population differentiation can sometimes be indicative of a selective event. If extreme levels of differentiation are observed at a locus between populations, this can be interpreted as evidence of positive selection. Regions of the genome that have a reduction in variability in a population can be the effect of a selective sweep. A third example of a signature of selection are deviations in the frequency spectrum for alleles beyond what would be considered possible under neutrality [@Przeworski2002]. A key signature of positive selection is the increase in proportion of high frequency variants [@fay2000hitchhiking].
 
-Assuming a background of neutrality means that there needs to be a way to identify variants under selection as opposed to population demographics, such as bottlenecks or expansions. In the case of Polynesian settlement, there is evidence for a founder effect which will need to be considered when interpreting selection results [@Kayser2006a]. It is for this reason that the unique features of a selective event need to be able to be identified from other possible features such as population demography or admixture. Population events and demography affect the entire genome, whereas selection acts on a localised region [@Stajich2005]. To be able to recreate demography, the choice in the \glspl{snp} used is important as there is chance for a large ascertainment bias if \glspl{snp} are only selected from a small number of populations [@Wall2008]. The \glspl{snp} used also need to be sampled away from genic areas.
+Assuming a background of neutrality means that there needs to be a way to identify variants under selection as opposed to population demographic events, such as bottlenecks or expansions. In the case of Polynesian settlement, there is evidence for a founder effect which will need to be considered when interpreting selection results [@Kayser2006a]. It is for this reason that the unique features of a selective event need to be able to be identified from other possible features such as population demography or admixture. Population events and demography affect the entire genome, whereas selection acts on a localised region [@Stajich2005]. To be able to recreate demography, the choice in the \glspl{snp} used is important as there is chance for a large ascertainment bias if \glspl{snp} are only selected from a small number of populations [@Wall2008]. The \glspl{snp} used also need to be sampled away from genic areas.
 
 ## Methods
 
@@ -70,6 +70,10 @@ _Frequency Spectrum_
 Tajima's _D_          Within              < 250,000 years     @Tajima1989
 
 Fay and Wu's _H_      Within              < 80,000 years      @fay2000hitchhiking
+
+Fu and Li's _F_       Within                                  @Fu1993
+
+Zeng's _E_            Within                                  @Zeng2006
 
 F~ST~                 Between             < 50-70,000 years   @Weir1984
 
@@ -112,16 +116,28 @@ There are a few methods that are different derivations and applications of looki
 
 #### Integrated Haplotype Homozygosity Score
 
-\Gls{ihs} [@voight2006map] starts with \gls{ehh} which is the probability that 2 chromosomes are carrying a core haplotype are homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity  meaning all haplotypes are the same. The \gls{ehh} value versus distance is integrated to find the area under \gls{ehh} curve until \gls{ehh} decays to 0.05. This \gls{ihh} is calculated based on the ancestral or derived allele and annotated as \gls{ihh} or \gls{ihh}d. The unstandarised \gls{ihs} is calculated by ln(iHHa \ iHHd). Standardisation of \gls{ihs} is done by (ln(iHHa /iHHd ) - E p [ln(iHHa /iHHd )] ) / SD p [ln(iHHa /iHHd )], where the expectations and standard deviation of ln(iHHa /iHHd ) are estimated from the empirical distribution of SNPs whose derived allele frequency p matches the frequency at the core \gls{snp}[@voight2006map]. Large positive values indicate long haplotypes carrying the ancestral allele. \Gls{ihs} identifies variants under selection driven to intermediate frequencies.
+\Gls{ihs} [@voight2006map] starts with \gls{ehh} which is the probability that 2 chromosomes are carrying a core haplotype are homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity  meaning all haplotypes are the same. The \gls{ehh} value versus distance is integrated to find the area under \gls{ehh} curve until \gls{ehh} decays to 0.05. This \gls{ihh} is calculated based on the ancestral or derived allele and annotated as \gls{ihh} or \gls{ihh}d. The unstandarised \gls{ihs} is calculated in equation \@ref(eq:ihs). Standardisation of \gls{ihs} is shown in equation \@ref(eq:stdihs), where the expectations and standard deviation of equation \@ref(eq:ihs) are estimated from the empirical distribution of SNPs whose derived allele frequency p matches the frequency at the core \gls{snp}[@voight2006map]. Large positive values indicate long haplotypes carrying the ancestral allele. \Gls{ihs} identifies variants under selection driven to intermediate frequencies.
 
-\begin{equation*} 
+\begin{equation} 
 \ln{\frac{iHHa}{iHHd}}
-\end{equation*}
+(\#eq:ihs)
+\end{equation}
+
+\begin{equation} 
+\ln{\frac{iHHa}{iHHd}} - \frac{E p [\ln{\frac{iHHa}{iHHd}}] }{ SD p [\ln{\frac{iHHa}{iHHd}}] }
+(\#eq:stdihs)
+\end{equation}
+
 
 #### Cross Population Extended Haplotype Homozygosity
 
-\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iES) which is then used as a log ratio (ln(Rsb)) between populations ln(iES pop1 /iES pop2 ) at a single site. Recombination rate is mostly conserved within populations so provides an internal control in Rsb for effects of heterogeneous 
+\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iES) which is then used as a log ratio (ln(Rsb)) between populations at a single site (equation \@ref(eq:xpehh). Recombination rate is mostly conserved within populations so provides an internal control in Rsb for effects of heterogeneous 
 recombination rates. Extreme values of Rsb indicate a slower decay of \gls{ehh} in one population compared to the other. \Gls{xpehh} relies on the breakdown of \gls{ld} over time and has weak power to detect selective sweeps that were historical and ended thousands of generations ago [@Chen2010]. F~ST~ is better than \gls{xpehh} for differential selection between closely related populations because haplotype-based signals are mostly shared between geographically similar populations [@pickrell2009signals]. 
+
+\begin{equation} 
+\ln{\frac{iES pop1}{iES pop2}}
+(\#eq:xpehh)
+\end{equation}
 
 #### Number of Segragating Sites by Length
 
@@ -135,21 +151,39 @@ The frequency spectrum methods are based on finding deviations in the frequency 
 
 Tajima's _D_ [@Tajima1989] counts the number of segregating sites of individuals in a population and finds the ratio between polymorphisms and pair-wise individual comparisons. Tajima's _D_ is a test of the neutral hypothesis. The hypothesis is rejected when there is an excess of low frequency variants. A negative Tajima's _D_ is indicative of positive selection or weak negative selection but a negative value can also be attributed to population events such as population expansion. Positive values of Tajima's _D_ indicate an excess of intermediate frequency variants. An excess of intermediate frequency variants could also be attributed to balancing selection, population structure, or population bottlenecks [@Kreitman2000; @Nielsen2005; @nielsen2007recent]. The comparison of other polymorphisms, such as changes in \glspl{snp} vs changes in \gls{indel} numbers can provide further evidence for either selection or a population event, since population events should affect both \glspl{snp} and \glspl{indel} in an equal fashion. The direction of Tajima's _D_ after a population bottleneck depends on the strength and duration of the bottleneck and can generate similar Tajima's _D_ values that can be positive, negative or zero [@Fay1999]. After a population reduction or selective event it is expected the population will have excess rare alleles (recent, low frequency) as the population recovers, therefore Tajima's _D_ will be negative [@Barton1998]. Tajima's _D_ is sensitive to sequencing errors because they appear equivalent to low frequency variants [@Achaz2008].
 
+#### Fu and Li's and F
+
+Fu and Li's _F_ is the comparison of the number of derived singleton mutations and the mean pairwise difference between sequences [@Fu1993]. It can be calculated both with or without an outgroup (F^\*^), with Fu and Li's F^\*^ having the greatest power of the Fu and Li statistics [@Fu1993; @Ramirez-Soriano2008].
+
+
 #### Fay and Wu's _H_
 
 Fay and Wu's _H_ is sensitive to \glspl{snp} rising to moderate to high frequency and uses an out group to determine the derived/ancestral state of the allele. A positive value indicates a deficit in derived moderate to high frequency \glspl{snp}. A negative value indicates an excess of derived moderate to high frequency \glspl{snp}. Fay and Wu's _H_ rejects neutrality when there is an excess of high but not low frequency variants. An increase in the proportion of high frequency variants compared to intermediate frequency variants is a unique signature of positive selection [@fay2000hitchhiking]. Fay and Wu's _H_ can be used in regions of low recombination to distinguish hitch-hiking from neutral or background selection where it is expected there will be the same level of intermediate to high frequency variants.
 
+#### Zeng's E
+
+In contrast to Fay and Wu's H and Tajima's D, which compares either high or low frequency variants with intermediate frequency variants, Zeng's E compares the low and high frequency variants [@Zeng2006]. After a selective sweep, the lower frequency variants are expected to 'bounce back' faster than the higher frequency variants. The E test is not sensitive to population subdivision. A negative value for E is indicative of a selective sweep, but a rapid population expansion can also produce a negative value.
+
+> @Ferretti2017 explains how to interpret in the the form of trees
+
 #### F~ST~
 
-F~ST~ is a population differentiation metric that measures the differences in heterogenity of a sub-population compared to a global population. Initially created by @Wright1951, as an inbreeding coefficient for inbreeding as a whole in a population, F~ST~ = (F~IT~ – F~IS~)/ (1 – F~IS~) where F~IT~ is the inbreeding coefficient for the individual in the total population and F~IS~ is the inbreeding coefficient for inbreeding of the individual in the subpopulation. These fixation indices are ways of summarising population structure. Selection will act to drive an allele to fixation, whereas immigration usually reduces the frequency. When the selective advantage is strong, selection will be the dominant force on the locus, however, when the selective advantage is weak the allele will reduce in frequency and disappear. Cockerham [@Cockerham1969; @Cockerham1973] equated $\theta$ (population genetic differentiation) with F~ST~ and so now F~ST~ was not just for population structure but differentiation. The fixation indices were further developed by @Weir1984 to add weightings in the calculation for population sizes. F~ST~ values fall between 0 and 1, each represents the fixation of an allele. Large differences in F~ST~ values are indicative of population differentiation, suggesting directional selection at that locus, whereas small differences in F~ST~ indicates that the populations are similar. F~ST~ can have high variation in neighbouring loci under neutrality [@Weir2005]. Unless populations are closely related such as northwest and southeast Europeans [@Price2008a], the noise will drown out the signal and identification of genome-wide significance in F~ST~ will be difficult. @Weir2005 suggested taking a sliding window approach to help improve the signal to noise ratio.
+F~ST~ is a population differentiation metric that measures the differences in heterogenity of a sub-population compared to a global population. Initially created by @Wright1951, as an inbreeding coefficient for inbreeding as a whole in a population (equation \@ref(eq:fst)), where F~IT~ is the inbreeding coefficient for the individual in the total population and F~IS~ is the inbreeding coefficient for inbreeding of the individual in the subpopulation. These fixation indices are ways of summarising population structure. Selection will act to drive an allele to fixation, whereas immigration usually reduces the frequency. When the selective advantage is strong, selection will be the dominant force on the locus, however, when the selective advantage is weak the allele will reduce in frequency and disappear. Cockerham [@Cockerham1969; @Cockerham1973] equated $\theta$ (population genetic differentiation) with F~ST~ and so now F~ST~ was not just for population structure but differentiation. The fixation indices were further developed by @Weir1984 to add weightings in the calculation for population sizes. F~ST~ values fall between 0 and 1, each represents the fixation of an allele. Large differences in F~ST~ values are indicative of population differentiation, suggesting directional selection at that locus, whereas small differences in F~ST~ indicates that the populations are similar. F~ST~ can have high variation in neighbouring loci under neutrality [@Weir2005]. Unless populations are closely related such as northwest and southeast Europeans [@Price2008a], the noise will drown out the signal and identification of genome-wide significance in F~ST~ will be difficult. @Weir2005 suggested taking a sliding window approach to help improve the signal to noise ratio.
+
+\begin{equation} 
+F_{ST} = \frac{F_{IT}{-}F_{IS}}{1{-}F_{IS}}
+(\#eq:fst)
+\end{equation}
 
 F~ST~ has been used in multiple studies as evidence for natural selection [@Akey2012; @myles2007identification; @pickrell2009signals]. @Akey2012 used F~ST~ at individual loci and compared this to the distributions for the genome, chromosome and gene levels. The use of the empirical distribution to compare to F~ST~ for each \gls{snp} controlled for the effects of demography. F~ST~ as a method for detecting selection was developed further into di, which is a function of pair-wise F~ST~ between population i and the remaining populations [@Akey2010]. Outside of the human context F~ST~ has been a very popular method of reporting both population structure and evidence of selection [@Akey2010; @Hancock2011; @Qanbari2011; @Wei2015b].
+
+#### Population branching statistic
 
 #### Selection by Conditional Coalescent Tree
 
 Selection by conditional coalescent tree (SCCT; @Wang2014) detects recent positive selection by searching for an imbalance of genetic variants and conditions these on the allele frequencies of the candidate loci. SCCT pinpoints the causal variant more accurately by using a method that is based on the conditional coalescent tree method from @Wiuf1999, where haplotypes are partitioned into two subgroups according to the allelic state at a particular locus, it is assumed one subgroup carries the derived allele at the particular locus and the other subgroup carries the ancestral allele. The coalescence of a sample of haplotypes conditioning on the particular mutation means each group should coalesce together individually before the two subgroups coalesce. This is a similar idea to that of extended haplotype homozygosity used by \gls{ihs} and the results of \gls{ihs} and SCCT tends to be similar. The selection statistic (S) is based on comparing the lineage lengths of the two groups. Under neutrality S approaches $\theta$, with significant departures from $\theta$ being considered evidence of positive selection. When natural selection has a strong hitch hiking effect on a selectively favoured allele, SCCT (and \gls{ihs}) is more powerful than Tajima's _D_, Fay and Wu’s _H_, and measuring change in derived allele frequency (see \@ref:daf). In most cases the power of SCCT is equivalent to \gls{ihs} except when selection is very strong, in which case \gls{ihs} has more power [@Wang2014]. The power of SCCT can be improved by increasing the sample size. SCCT performs moderately to population demographic events (such as bottlenecks) and out performs Tajima's _D_ and \gls{ihs} in false discovery rate, but Fay and Wu's _H_ performed the best [@Wang2014].
 
-#### $\Delta$DAF (ref:daf)
+#### $\Delta$DAF {#daf}
 
 Change in derived allele frequency ($\Delta$DAF) is similar to F~ST~ in that it looks at population differentiation. The derived allele is determined through the use of an ancestral outgroup such as chimpanzees when used in human populations. $\Delta$DAF measures the absolute difference in the derived allele frequency between two populations [@Grossman2010] and has greater power to detect sweeps, both partial and complete, and outperforms \gls{xpehh} for partial sweeps [@Colonna2014]. $\Delta$DAF was originally part of the composite of multiple sites statistic [@Grossman2010] but has also been used as a standalone metric in humans [@Colonna2014; @Gudbjartsson2015] and in other species such as cattle [@Randhawa2014] to measure differentiation.
 
@@ -172,7 +206,13 @@ Composite of Multiple Signals (CMS) is a combination metric composed of \gls{ihs
 
 #### Meta-analysis of Multiple Tests
 
-Meta-analysis of Multiple Tests (meta-SS; @Utsunomiya2013; @Utsunomiya2015) is only able to combine selection statistics that generate P-values. It uses an adapted version of a weighted  Stouffer method to combine Z-transformed P-values. For each marker from each test i the respective P-value is transformed into a Z score by Z~i~ = - $\phi$ -1(1 - $\pi$), where $\phi$ is the normal cumulative density function. Each test is weighted (w~i~) to 1/n where n is the number of comparisons. The combined statistic of k tests, for each \gls{snp} in each population is defined as
+Meta-analysis of Multiple Tests (meta-SS; @Utsunomiya2013; @Utsunomiya2015) is only able to combine selection statistics that generate P-values. It uses an adapted version of a weighted  Stouffer method to combine Z-transformed P-values. For each marker from each test i the respective P-value is transformed into a Z score by Z~i~ = - $\phi$ -1(1 - $\pi$), where $\phi$ is the normal cumulative density function. Each test is weighted (w~i~) to 1/n where n is the number of comparisons. The combined statistic of k tests, for each \gls{snp} in each population is defined in equation \@ref(eq:metass).
+
+\begin{equation} 
+meta\-SS = \frac{\sum\limits_{i =1}^k {\omega_i Z_i}}{\sqrt{\sum\limits_{i =1}^k {\omega_i}^2}}
+(\#eq:metass)
+\end{equation}
+
 
 #### Composite Selection Signals
 
@@ -180,9 +220,9 @@ Composite of Selection Signals is similar to meta-SS, where by it is a method fo
 
 ### Power
 
-Power to detect selected sites can be very limited if the site is not an outlier from empirical methods [Teshima2006]. A key consideration when selecting a particular method for detecting selection is the limitations the method has on power to detect a selective event such as starting and final allele frequency of the variant after a sweep. Tajima's _D_ is most powered for low and intermediate frequency variants [@Simonsen1995] whereas Fay and Wu's _H_ is most powered for intermediate and high frequency variants. Some methods such as \gls{ihs}, are good for detection of middle frequency variants. \Gls{xpehh}, on the other hand is most powered at the fixation ends of the spectrum. \gls{xpehh}, because it is correlated with \gls{ld}, lacks power to detect ancient selective events [@Chen2010].  Sample size is another factor to consider. \Gls{ihs} has modest reduction of power when reducing samples until approximately 40 chromosomes. \gls{xpehh} can maintain power to about 20 chromosomes, so long as the reference population is a fixed size. The grouping of similar genetic populations may be an option to increase power with low sample sizes [@pickrell2009signals]). For F~ST~, power to detect selection should be sufficient if samples > 1/F~ST~ [@Bhatia2013a; @Bhatia2011]
+Power to detect selected sites can be very limited if the site is not an outlier from empirical methods [@Teshima2006]. A key consideration when selecting a particular method for detecting selection is the limitations the method has on power to detect a selective event such as starting and final allele frequency of the variant after a sweep. Tajima's _D_ is most powered for low and intermediate frequency variants [@Simonsen1995] whereas Fay and Wu's _H_ is most powered for intermediate and high frequency variants.  Some methods such as \gls{ihs}, are good for detection of middle frequency variants. \Gls{xpehh}, on the other hand is most powered at the fixation ends of the spectrum. \gls{xpehh}, because it is correlated with \gls{ld}, lacks power to detect ancient selective events [@Chen2010].  Sample size is another factor to consider. \Gls{ihs} has modest reduction of power when reducing samples until approximately 40 chromosomes. \gls{xpehh} can maintain power to about 20 chromosomes, so long as the reference population is a fixed size. The grouping of similar genetic populations may be an option to increase power with low sample sizes [@pickrell2009signals]). For F~ST~, power to detect selection should be sufficient if samples > 1/F~ST~ [@Bhatia2013a; @Bhatia2011]
 
-Power of a statistic also needs to be considered for the type of selective sweep that may have occurred, such is the case with nSL, which has similar power to detect selection to \gls{ihs}, but performs better for larger starting allele frequencies. It also outperforms \gls{ihs} in power in both hard and soft sweep scenarios [@Ferrer-Admetlla2014]. When it comes to picking up demographic events, haplotype tests are useful at detecting recent and more moderate bottlenecks, frequency spectrum tests (such as Fay and Wu's _H_/ Tajima's _D_) have best power for detecting moderately old severe bottlenecks [@Depaulis2003].
+Power of a statistic also needs to be considered for the type of selective sweep that may have occurred, such is the case with \gls{nsl}, which has similar power to detect selection to \gls{ihs}, but performs better for larger starting allele frequencies. It also outperforms \gls{ihs} in power in both hard and soft sweep scenarios [@Ferrer-Admetlla2014]. When it comes to picking up demographic events, haplotype tests are useful at detecting recent and more moderate bottlenecks, frequency spectrum tests (such as Fay and Wu's _H_/ Tajima's _D_) have best power for detecting moderately old severe bottlenecks [@Depaulis2003]. Whereas Zeng's _E_ and Fu and Li's _F_ have the most power during population expansion [@Zeng2006;@Ramirez-Soriano2008].
 
 ### Challenges
 
@@ -253,26 +293,17 @@ Hyperuricaemia can be caused by diet, genetic predisposition or under-excretion 
 
 Variability in serum urate explained by the main urate loci _SLC2A9_ and _ABCG2_, expressed in the kidney, is 3.4%. Twenty six other loci associated with serum urate explain a further 3.6% of the variance [@Kottgen2013]. The heritability of serum uric acid ranges from 40 - 70% [@Nath2007; @Yang2005]. This difference in explained variability and total heritability leaves a large component yet to be explained. This missing heritability could be reduced through identifying additional variance attributed to non-additive effects.
 
-The benefits of urate are in line with the categories found to be enriched by selection in genome wide scans. Urate has an anti-oxidant in blood, acting to protect not just erythrocytes but also T and B lymphocites and macrophages [@Ames1981]. Urate has also been hypothesised to have had a survival advantage during the Miocene period, when a series of mutations in urate oxidase is thought to have occurred, leading to elevated urate. Hyperuricaemia enables blood pressure to be maintained under low salt dietary conditions [@Watanabe2002]. Later in life elevated serum urate is associated with increased cognitive function [@Euser2009]. Uric acid also activates the NLRP3 inflammasome which plays an important role in systemic infection and sepsis [@Opitz2009]. The role of urate in these situations show that while hyperuricaemia is now considered as contributing to disease, in the past it may have influenced longevity and survival, therefore increasing reproductive success and been a phenotype having undergone selection. 
+The benefits of urate are in line with the categories found to be enriched by selection in genome wide scans. Urate has an anti-oxidant in blood, acting to protect not just erythrocytes but also T and B lymphocites and macrophages [@Ames1981]. Urate has also been hypothesised to have had a survival advantage during the Miocene period, when a series of mutations in urate oxidase is thought to have occurred, leading to elevated urate. Hyperuricaemia enables blood pressure to be maintained under low salt dietary conditions [@Watanabe2002]. Later in life elevated serum urate is associated with increased cognitive function [@Euser2009]. Urate also activates the NLRP3 inflammasome which plays an important role in systemic infection and sepsis [@Opitz2009]. The role of urate in these situations show that while hyperuricaemia is now considered as contributing to disease, in the past it may have influenced longevity and survival, therefore increasing reproductive success and been a phenotype having undergone selection. 
 
-Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia against a unique genetic background of the Polynesians provides an excellent opportunity to study the role that selection might have played and the effect on these metabolic conditions.
+Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia against a unique genetic background of Polynesians populations provides an excellent opportunity to study the role and effects that selection might have played on these metabolic conditions.
 
 
 ## Extras
 
 A nice little summary of some of the stats http://citeseerx.ist.psu.edu/viewdoc/download?rep=rep1&type=pdf&doi=10.1.1.210.4017
 
-### Zeng's E
+#
 
-In contrast to Fay and Wu's H and Tajima's D, which compares either high or low frequency variants with intermediate frequency variants, Zeng's E compares the low and high frequency variants [@Zeng2006]. After a selective sweep, the lower frequency variants are expected to 'bounce back' faster than the higher frequency variants. The E test is not sensitive to population subdivision. A negative vaue for E is indicative of a selective sweep, but a rapid population expansion 
-
-@Ferretti2017 explains how to interpret in the the form of trees
-
-### Fu and Li's and F
-
-> check this is correct
-
-Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species [@Fu1993]. \gls{fld} calculates a ratio of singletons to the intermediate frequency variants. \gls{flf} is a normalised for of \gls{fld}. 
 
 
 
@@ -308,11 +339,17 @@ Inflammatory response is triggered when the monosodium urate crystals interact w
 ### things to update
 
 [] need some newer references eg cell paper about diving adapation, minster2017
+
 [] update to have the appropriate statistics that were actually used
+
 [] section about introgression?
+
 [] remove vgwas?
+
 [] zengs e
+
 [] cadzow2016 and minster2017 paper for metabolic selection in polynesian
+
 [] new papers
 
 
