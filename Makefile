@@ -44,8 +44,9 @@ pdf : preview
 clean : 
 	@rm -f  Thesis.Rmd Thesis.md Thesis.rds Thesis.tex Thesis.log Thesis.lof Thesis.bbl Thesis.toc Thesis.out Thesis.lot Thesis.ist Thesis.glsdefs Thesis.gls Thesis.glo Thesis.glg Thesis.blg Thesis.aux Thesis.alg Thesis.acr Thesis.acn tmp-*.tex
 	@rm -r _book/ _bookdown_files/
-	@rm -r 0[1-7]_*_{cache,files}/
+	@rm -r 0[1-7]_*_{cache,files}
 
 .PHONY : clean_md
 clean_md:
-	@rm -f _book/*.md
+	@rm -f _book/*.md Thesis.md
+
