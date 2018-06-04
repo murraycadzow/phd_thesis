@@ -89,7 +89,7 @@ shapeit2 \
 
 #### PopGenome {#popgenomeMethods}
 
-The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was min(1^st^ percentile, 0). The upper significance threshold was max(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0, because they are biologically impossible.
+The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was min(1^st^ percentile, 0). The upper significance threshold was max(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0, because they are biologically impossible.
 
 The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf} file where possible for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf}, and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele, dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population for \gls{fwh} was set to be that of the Ancestor sample so that the ancestral allele would be used in the calculation.
 
@@ -528,9 +528,9 @@ left_join(markers, marker_loc, by = c("chrom" = "chrom", "chrom_start" = "pos", 
 
 ```
 
-### Polynesian Gout \gls{gwas} dataset
+<!-- ### Polynesian Gout \gls{gwas} dataset -->
 
-> will be inserted once it is finalised
+<!-- > will be inserted once it is finalised -->
 
 ```{r, warning= FALSE, message = FALSE, echo = FALSE}
 ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for samples that were genotyped on the CoreExome platform by genetic ancestry.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Western Polynesian" = 2)) %>% kable_styling(latex_options = 'scale_down')
