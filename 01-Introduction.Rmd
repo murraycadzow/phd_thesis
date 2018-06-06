@@ -119,24 +119,29 @@ There are a few methods that are different derivations and applications of looki
 \Gls{ihs} [@voight2006map] starts with \gls{ehh} which is the probability that 2 chromosomes are carrying a core haplotype are homogenous to the distance x, 0 is no homozygosity meaning all haplotypes are different, 1 is complete homozygosity  meaning all haplotypes are the same. The \gls{ehh} value versus distance is integrated to find the area under \gls{ehh} curve until \gls{ehh} decays to 0.05. This \gls{ihh} is calculated based on the ancestral or derived allele and annotated as \gls{ihh} or \gls{ihh}d. The unstandarised \gls{ihs} is calculated in equation \@ref(eq:ihs). Standardisation of \gls{ihs} is shown in equation \@ref(eq:stdihs), where the expectations and standard deviation of equation \@ref(eq:ihs) are estimated from the empirical distribution of SNPs whose derived allele frequency p matches the frequency at the core \gls{snp}[@voight2006map]. Large positive values indicate long haplotypes carrying the ancestral allele. \Gls{ihs} identifies variants under selection driven to intermediate frequencies.
 
 \begin{equation} 
-\ln{\frac{iHHa}{iHHd}}
+iHS_{unstd} = \ln{\frac{iHH_a}{iHH_d}}
 (\#eq:ihs)
 \end{equation}
 
 \begin{equation} 
-\ln{\frac{iHHa}{iHHd}} - \frac{E p [\ln{\frac{iHHa}{iHHd}}] }{ SD p [\ln{\frac{iHHa}{iHHd}}] }
+iHS_{std} = \ln{\frac{iHH_A}{iHH_D}} - \frac{E_p [\ln{\frac{iHH_A}{iHH_D}}] }{ SD_p [\ln{\frac{iHH_A}{iHH_D}}] }
 (\#eq:stdihs)
 \end{equation}
 
 
 #### Cross Population Extended Haplotype Homozygosity
 
-\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iES) which is then used as a log ratio (ln(Rsb)) between populations at a single site (equation \@ref(eq:xpehh). Recombination rate is mostly conserved within populations so provides an internal control in Rsb for effects of heterogeneous 
+\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iHH) which is then used as a log ratio between populations at a single site (equation \@ref(eq:xpehh) and in a standardised form (equation \@ref(eq:xpehhstd)). Recombination rate is mostly conserved within populations so provides an internal control in Rsb for effects of heterogeneous 
 recombination rates. Extreme values of Rsb indicate a slower decay of \gls{ehh} in one population compared to the other. \Gls{xpehh} relies on the breakdown of \gls{ld} over time and has weak power to detect selective sweeps that were historical and ended thousands of generations ago [@Chen2010]. F~ST~ is better than \gls{xpehh} for differential selection between closely related populations because haplotype-based signals are mostly shared between geographically similar populations [@pickrell2009signals]. 
 
 \begin{equation} 
-\ln{\frac{iES pop1}{iES pop2}}
+ XPEHH_{unstd} = \ln{\frac{iHH_A}{iHH_B}}
 (\#eq:xpehh)
+\end{equation}
+
+\begin{equation} 
+ XPEHH_{std} = \frac{\ln{\frac{iHH_A}{iHH_B}} - E [ \ln{\frac{iHH_A}{iHH_B}} ]}{ SD [ \ln{\frac{iHH_A}{iHH_B}} ]}
+(\#eq:xpehhstd)
 \end{equation}
 
 #### Number of Segragating Sites by Length
@@ -156,15 +161,18 @@ Tajima's _D_ [@Tajima1989] counts the number of segregating sites of individuals
 Fu and Li's _F_ is the comparison of the number of derived singleton mutations and the mean pairwise difference between sequences [@Fu1993]. It can be calculated both with or without an outgroup (F^\*^), with Fu and Li's F^\*^ having the greatest power of the Fu and Li statistics [@Fu1993; @Ramirez-Soriano2008].
 
 
+
 #### Fay and Wu's _H_
 
 Fay and Wu's _H_ is sensitive to \glspl{snp} rising to moderate to high frequency and uses an out group to determine the derived/ancestral state of the allele. A positive value indicates a deficit in derived moderate to high frequency \glspl{snp}. A negative value indicates an excess of derived moderate to high frequency \glspl{snp}. Fay and Wu's _H_ rejects neutrality when there is an excess of high but not low frequency variants. An increase in the proportion of high frequency variants compared to intermediate frequency variants is a unique signature of positive selection [@fay2000hitchhiking]. Fay and Wu's _H_ can be used in regions of low recombination to distinguish hitch-hiking from neutral or background selection where it is expected there will be the same level of intermediate to high frequency variants.
 
 #### Zeng's E
 
-In contrast to Fay and Wu's H and Tajima's D, which compares either high or low frequency variants with intermediate frequency variants, Zeng's E compares the low and high frequency variants [@Zeng2006]. After a selective sweep, the lower frequency variants are expected to 'bounce back' faster than the higher frequency variants. The E test is not sensitive to population subdivision. A negative value for E is indicative of a selective sweep, but a rapid population expansion can also produce a negative value.
+In contrast to Fay and Wu's H and Tajima's D, which compares either high or low frequency variants with intermediate frequency variants, Zeng's E compares the low and high frequency variants [@Zeng2006]. After a selective sweep, the lower frequency variants are expected to 'bounce back' faster than the higher frequency variants. The E test is not sensitive to population subdivision. A negative value for Zeng's _E_ is indicative of a selective sweep, but a rapid population expansion can also produce a negative value.
 
-> @Ferretti2017 explains how to interpret in the the form of trees
+<!-- > equation? -->
+
+<!-- > @Ferretti2017 explains how to interpret in the the form of trees -->
 
 #### F~ST~
 
@@ -175,7 +183,7 @@ F_{ST} = \frac{F_{IT}{-}F_{IS}}{1{-}F_{IS}}
 (\#eq:fst)
 \end{equation}
 
-F~ST~ has been used in multiple studies as evidence for natural selection [@Akey2012; @myles2007identification; @pickrell2009signals]. @Akey2012 used F~ST~ at individual loci and compared this to the distributions for the genome, chromosome and gene levels. The use of the empirical distribution to compare to F~ST~ for each \gls{snp} controlled for the effects of demography. F~ST~ as a method for detecting selection was developed further into di, which is a function of pair-wise F~ST~ between population i and the remaining populations [@Akey2010]. Outside of the human context F~ST~ has been a very popular method of reporting both population structure and evidence of selection [@Akey2010; @Hancock2011; @Qanbari2011; @Wei2015b].
+F~ST~ has been used in multiple studies as evidence for natural selection [@Akey2012; @myles2007identification; @pickrell2009signals]. @Akey2012 used F~ST~ at individual loci and compared this to the distributions for the genome, chromosome and gene levels. The use of the empirical distribution to compare to F~ST~ for each \gls{snp} controlled for the effects of demography. F~ST~ as a method for detecting selection was developed further into di, which is a function of pair-wise F~ST~ between population i and the remaining populations [@Akey2010]. Outside of the human context F~ST~ has been a very popular method of reporting both population structure and evidence of selection [@Akey2010; @Hancock2011; @Qanbari2011; @Wei2015b]. Population branching statistic is a F~ST~ based statistic that involves the use of an outgroup to compare estimates in divergence time between populations [@Yi2010b].
 
 #### Population branching statistic
 
@@ -274,7 +282,7 @@ Pathways have been hypothesised to be involved in the genic adaptation of popula
 
 ### Genome-wide Selection
 
-Genome wide selection in humans has been investigated by @sabeti2006positive, @pickrell2009signals,@voight2006map, @Hancock2008, the 1000 Genomes Project Consortium [@1KGP2010;@1KGP2012], @Grossman2010, and @Colonna2014. The population datasets used involved @Hapmap2005 , Human Genome Diversity Project [@Cann2002; @Rosenburg2002] and @1KGP2010. The 1000 Genomes Project Consortium [@1KGP2010; @1KGP2012] reported genome wide diversification between main population groups based on F~ST~ and $\Delta$\gls{daf}. Genome wide mean F~ST~ was found to only be a maximum of 8%, however several thousand SNPs had large F~ST~ indicating local population adaptation [@1KGP2010]. The analysis also found 139 non-synonymous SNPs with large frequency differences between populations. Investigation of the \gls{1kgp} data set was also performed by @Colonna2014. Using $\Delta$\gls{daf}, it was found that sites of high population differentiation ($\Delta$\gls{daf} > 0.7 between and > 0.25 within continents) clustered together, the same was found for sites of low differentiation. Genes containing highly differentiated sites were likely to also have additional evidence of positive selection in a third. 
+Genome wide selection in humans has been investigated by @sabeti2006positive, @pickrell2009signals,@voight2006map, @Hancock2008, the 1000 Genomes Project Consortium [@1KGP2010;@1KGP2012;@1KGP2015snp], @Grossman2010, @Colonna2014, and @Mallick2016. The population datasets used involved @Hapmap2005 , Human Genome Diversity Project [@Cann2002; @Rosenburg2002] and @1KGP2010. The 1000 Genomes Project Consortium [@1KGP2010; @1KGP2012; @1KGP2015snp] reported genome wide diversification between main population groups based on F~ST~ and $\Delta$\gls{daf}. Genome wide mean F~ST~ was found to only be a maximum of 8%, however several thousand SNPs had large F~ST~ indicating local population adaptation [@1KGP2010]. The analysis also found 139 non-synonymous SNPs with large frequency differences between populations. Investigation of the \gls{1kgp} data set was also performed by @Colonna2014. Using $\Delta$\gls{daf}, it was found that sites of high population differentiation ($\Delta$\gls{daf} > 0.7 between and > 0.25 within continents) clustered together, the same was found for sites of low differentiation. Genes containing highly differentiated sites were likely to also have additional evidence of positive selection in a third. 
 
 There was also a high association of highly differentiated sites with genes and gene regulatory elements. Genes that often return as having significant selection statistics when comparing populations are involved in skin pigmentation [@Grossman2010; @1KGP2010; @voight2006map], metabolism of sugars [@tang2007new; @voight2006map], drug metabolism [@tang2007new], immune system [@Grossman2010; @tang2007new], and climate adaptation [@Hancock2008]. Genes that play a role in adaptation to climate extremes are likely to play a role in metabolic disorders that make up metabolic syndrome [@Hancock2008]. In contrast, variation in metabolic related genes can lead to elite phenotypes in athletes [@Ahmetov2009a].
 
@@ -284,7 +292,6 @@ The inclusion of Oceanic populations in multi-population studies has had a focus
 
 Large population comparison studies have used Oceanic populations but analyses were limited to Melanesians and Papuan populations because of their inclusion in the Human Genome Diversity Project [@Cann2002]. The Melanesian and Papuan populations are often used to infer the genetics of Polynesian populations. This extrapolation doesn't take into account the current ancestry predictions of Polynesians populations being more closely related to Asian/Taiwanese Aboriginal populations than Melanesian groups, and the presence of European admixture [@Friedlaender2008]. The genomic DNA and mitochondrial DNA suggest Polynesians have East Asian ancestry, with a large male Melanesian admixture [@Kayser2008a]. There has been limited analyses of selection in Polynesian populations beyond @Kimura2008, where 24 Tongan samples in conjunction with other populations were analysed using both F~ST~ and a modified \gls{ehh} test. Regions with evidence of having been selected in the Tongans were potential candidates for increased fat, muscle and bone masses.
 
-> @Cadzow2016 and @Minster2016
 
 ### Gout and Metabolic Syndrome {#goutMetSyn}
 
@@ -309,7 +316,7 @@ Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia agai
 
 A nice little summary of some of the stats http://citeseerx.ist.psu.edu/viewdoc/download?rep=rep1&type=pdf&doi=10.1.1.210.4017
 
-#
+
 
 
 
