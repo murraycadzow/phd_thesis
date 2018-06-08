@@ -1,4 +1,4 @@
-# Selection and Association Studies
+# Selection and Association Studies {#selGwas}
 
 \glsresetall
 
@@ -96,6 +96,8 @@ As has been previously mentioned (sections \@ref(goutMetSyn), \@ref(chap4Intro))
 <!-- In the case of gout, for which hypericaemia is a prerequisite, if loci under selection had been associated with urate could the selection signal be used to boost the association signal? -->
 
 ### Objectives
+
+The objectives of this chapter are to:
 
 - Test performance of gout definitions on \gls{gwas}
 - Investigate the use of selection statistics in conjunction with \gls{gwas}
@@ -364,7 +366,7 @@ uk_kot_t1 %>%
 
 <!-- Kottgen refs 10-12 put heritability explained for serum urate at 40-70%. Kottgen reported heritability explained in serum urate loci that were adjusted for age and sex from 0.27 to 0.41. -->
 
-\FloatBarrier
+
 
 ### GWAS results {#gwasResults}
 
@@ -708,7 +710,7 @@ ukbb_p05_nsl2 %>% filter(abs(statvalue) > 2.6, P< 0.05) %>% ggplot(., aes(x = -l
 
 
 
-#### Polynesian \gls{gwas} and haplotypic selection in Polynesian populations
+#### Polynesian GWAS and haplotypic selection in Polynesian populations
 
 
 ```{r polyhaplogwassetup, message = FALSE, warning = FALSE}
@@ -884,7 +886,7 @@ Heritability estimates for the variance attributed to the additive effects of co
 
 
 
-### \gls{gwas} and selection
+### GWAS and selection
 
 The main peak of association in the Manhattan plots (Figures \@ref(fig:manhatSelfUltAgeSexBmi) and \@ref(fig:polyManhat)) for the \gls{gwas} analyses of both the UK Biobank, and the New Zealand Polynesians was _ABCG2_, this was consistent with previous \gls{gwas} analyses for gout, compared to \gls{gwas} for serum urate which has the strongest association with _SLC2A9_ [@Kottgen2013; @Okada2012; @nakayama2017gwas]. Combining the haplotypic selection results for \gls{ihs} and \gls{nsl} from the \gls{gbr} population with the UK Biobank gout \gls{gwas} showed additional evidence at _SLC22A12_, _PTPN11_, _SLC17A3_, _SLC17A4_ , and _ADAM10_. However, from the \gls{gwas} those genes had already met the suggestive significance threshold of P < 10^-5^. All except _ADAM10_ had previously been reported as being significant at a genome-wide threshold for association with serum urate levels [@Kottgen2013]. _ADAM10_ had not been previously associated at a genome-wide threshold with either gout or serum urate levels, but had previously been reported as a strong candidate for positive selection [@Deschamps2016]. _ADAM10_ is involved in the innate immune system with the Notch signalling pathway, but also becomes down-regulated during interaction with the extracellular proteins PfSEL1/PfSEL2 of _P. falciparum_ [@Singh2009]. The strength of association weakened in the replication UK Biobank cohort for all loci that had been identified, with most becoming showing no signs of significance except _SLC22A12_, which increased in strength of association.
 
