@@ -8,7 +8,8 @@ bookdown::pdf_book:
   citation_package: natbib
   template: null
   pandoc_args: --top-level-division=chapter
-  toc_depth: 4
+  toc: no
+  #toc_depth: 4
   #toc_unnumbered: yes
   #toc_appendix: yes
   quote_footer: ["\\VA{", "}{}"]
