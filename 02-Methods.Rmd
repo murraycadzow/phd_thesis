@@ -31,7 +31,7 @@ a <- '## "stx2A; shiga-like toxin II A subunit encoded by bacteriophage BP-933W;
 a
 ```
 
-This chapter will describe the methods and datasets used in this thesis. Section \@ref(methods) covers the methods used for the preparation of the datasets, such as haplotype phasing, \gls{pca}, and file format conversions, as well as the methods used for the analysis of the datasets, such as the calculation of selection statistics. Section \@ref(datasets) contains a description of the two main data sources that were used and how they were transformed for the analysis.
+This chapter describes the methods and datasets used in this thesis. Section \@ref(methods) covers the methods used for the preparation of the datasets, such as haplotype phasing, \gls{pca}, and file format conversions, as well as the methods used for the analysis of the datasets, such as the calculation of selection statistics. Section \@ref(datasets) contains a description of the two main data sources that were used and how they were transformed for the analysis.
 
 
 ## Methods {#methods}
@@ -42,7 +42,7 @@ All genomic resources and co-ordinates reported in this project use the human ge
 
 Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype at any given position in the genome. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes by recombination. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}, Table \@ref(tab:refDatasets)) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
 
-Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel (Table \@ref(tab:refDatasets). There were two steps involved for phasing of genotypes. The first was to check the markers in each data set were matched with the markers in the reference haplotypes. Markers would be marked for exclusion by this step for reasons such as the marker was not in the reference panel, or if the marker had different allele types to that in the reference panel. An example of this step is in the following code.
+Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel (Table \@ref(tab:refDatasets)). There were two steps involved for phasing of genotypes. The first was to check the markers in each data set were matched with the markers in the reference haplotypes. Markers were marked for exclusion by this step for reasons such as the marker not being in the reference panel, or if the marker had different allele types to that in the reference panel. An example of this step is provided in the following code.
 
 ```{bash, eval = FALSE, echo =TRUE}
 # Check alignment of markers against reference haplotypes
@@ -89,9 +89,11 @@ shapeit2 \
 
 #### PopGenome {#popgenomeMethods}
 
-The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was min(1^st^ percentile, 0). The upper significance threshold was max(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0, because they are biologically impossible.
+The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was $min$(1^st^ percentile, 0). The upper significance threshold was $max$(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0, because they are biologically impossible.
 
-The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf} file where possible for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf}, and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele, dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population for \gls{fwh} was set to be that of the Ancestor sample so that the ancestral allele would be used in the calculation.
+<!-- XXX explain briefly how to get -ve fst -->
+
+The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf} file where possible, for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf}, and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele, dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population for \gls{fwh} was set to be that of the Ancestor sample so that the ancestral allele would be used in the calculation.
 
 
 #### SelectionTools {#selectionTools}
@@ -159,11 +161,11 @@ Gene
 ```
 
 
-### Disease associated gene Lists {#diseaselist}
+### Disease associated gene lists {#diseaselist}
 
-In order to create lists of genes that were associated with urate, gout, obesity, \gls{t2d}, metabolic syndrome, and kidney disease, disease trait entries were downloaded from the \gls{gwas} catalog^[gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv https://www.ebi.ac.uk/gwas/ accessed 19 June 2017] [@MacArthur2017]. Entries were then filtered for P < 5x10^-8^. From the filtered results, the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Entries were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data, keywords were used to select rows relating to each trait of interest from the "disease trait" column. Gout and urate used The keywords "urate" and "gout" were used for gout and urate, "obesity" and "body mass" used for obesity, "diabetes" used for \gls{t2d}, and "syndrome" used for metabolic syndrome. The keywords "kidney" and "renal" were used for kidney disease with entries removed that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". 
+In order to create lists of genes that were associated with urate, gout, obesity, \gls{t2d}, metabolic syndrome, and kidney disease, disease trait entries were downloaded from the \gls{gwas} catalog^[gwas_catalog_v1.0.1-associations_e89_r2017-06-19.tsv https://www.ebi.ac.uk/gwas/ accessed 19 June 2017] [@MacArthur2017]. The file was a rectangular format, with rows for each study result, and columns such as reference paper, disease trait, association statistics, and mapped genes. Entries were then filtered for P < 5x10^-8^. From the filtered results, the kidney disease gene list was created by filtering the "disease trait" column to select rows with the keywords "kidney" or "renal". Entries were then removed that had the keywords "transplant", "carcinoma", "Type", "stones", "gout", "related", or "Diabetic kidney disease". For the gout, urate, obesity, \gls{t2d}, and metabolic syndrome gene lists the following keywords were used on the "disease trait" column to select rows of the P-value filtered data: "metabolic syndrome", "obesity", "diabetes", "urate", "gout", "body mass", and "lipid traits". This subset was then filtered to remove rows containing these keywords in the "disease trait" column: "child", "erectile", "lean", "autoantibodies", "gestational", "cancer", "psychopharmacol", "metaformin", "metformin", "obstructive", "interaction", "asthmatics", "omega", "pain", "cataracts", "time", "bilirubin", "chain", "thyroid", "zhi", "Type 1", or "cystic". From this filtered data, keywords were used to select rows relating to each trait of interest from the "disease trait" column. The keywords "urate" and "gout" were used for gout and urate, "obesity" and "body mass" used for obesity, "diabetes" used for \gls{t2d}, and "syndrome" used for metabolic syndrome. The keywords "kidney" and "renal" were used for kidney disease, with entries removed that had keywords of "transplant", "carcinoma","type", "stones","gout", "related", and "Diabetic kidney disease". 
 
-Additional gene lists were created for malaria, auto-immune and auto-inflammatory diseases, and neurological diseases. The keyword "malaria" was used to filter the disease trait column to create the malaria gene list. The auto-immune and auto-inflammatory gene list was based on diseases that were listed in Table 2 of @Zhang2013a. The following keywords were filtered for in the disease trait column: "Crohn's disease", 'Celiac disease', "Ulcerative colitis", "Inflammatory bowel disease", "Type 1 diabetes", "Rheumatoid arthritis", "Multiple sclerosis", "Psoriasis", "Systemic lupus erythematosus", "Primary biliary cirrhosis", and "Vitiligo". Finally, a gene list for genes associated with neurological diseases was created by filtering the disease trait column for the keywords "Parkinson's disease" and "Alzheimer's disease". All keyword matching was case-insensitive. The code used for the creation of the gene lists is found in Appendix \@ref(gwascatlist). A list of the traits for each category can be found in Table \@ref(tab:gwascatref) and a list of the genes and what category they are from is in Table \@ref(tab:gwasgenes). 
+Additional gene lists were created for malaria, auto-immune and auto-inflammatory diseases, and neurological diseases. The keyword "malaria" was used to filter the disease trait column to create the malaria gene list. The auto-immune and auto-inflammatory gene list was based on diseases that were listed in Table 2 of @Zhang2013a. The following keywords were filtered for in the disease trait column: "Crohn's disease", 'Celiac disease', "Ulcerative colitis", "Inflammatory bowel disease", "Type 1 diabetes", "Rheumatoid arthritis", "Multiple sclerosis", "Psoriasis", "Systemic lupus erythematosus", "Primary biliary cirrhosis", and "Vitiligo". Finally, a list of genes associated with neurological diseases was created by filtering the disease trait column for the keywords "Parkinson's disease" and "Alzheimer's disease". All keyword matching was case-insensitive. The code used for the creation of the gene lists is found in Appendix \@ref(gwascatlist). A list of the traits for each category can be found in Table \@ref(tab:gwascatref) and a list of the genes and what category they are from is in Table \@ref(tab:gwasgenes). 
 
 
 ```{r markdown2, eval = FALSE, include = FALSE}
@@ -182,7 +184,7 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 \Glsdesc{pca} is a statistical dimension reduction technique that transforms potentially correlated variables into a linear and non-correlated set of variables. In a genetic context \gls{pca} is used to reduce variation at many thousands of markers into a handful of components that represent the majority of the variation of the data [@Patterson2006]. The components are ordered such that the first \gls{pc} captures the most variation, with each subsequent component capturing less. These components often, but not necessarily, represent population differences and population substructure.
 
-To calculate the principal components of the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file using BCFtools v1.3.1 and then the independent markers were identified using Plink v1.9b4.9, using a sliding window to remove markers that had a marker \gls{ld} R^2^ > 0.2, using windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. The following code was used to accomplish these steps.
+\gls{pca} was used to identify the genetic ancestry of the samples from the Genetics of Gout in Aotearoa study to be used in the selection analysis (section \@ref(selectionDataset)). It was also used in the clustering analysis to identify the genetic groupings for the populations (section \@ref(pcaresults)). To calculate the principal components of the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file with BCFtools v1.3.1, and then the independent markers were identified via Plink v1.9b4.9, using a sliding window to remove markers that had a marker \gls{ld} R^2^ > 0.2, with windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. The following code was used to accomplish these steps.
 
 ```{r eigenstrat code, engine='bash', eval = FALSE}
 #combine the chromosomes
@@ -232,9 +234,9 @@ smartpca.perl \
 
 ### Admixture analysis {#admixture}
 
-Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [@Pritchard2000]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies.
+Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [@Pritchard2000]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies. Admixture analysis was performed to estimate the number of ancestral populations that that contributed to the populations used in the selection analysis. It was also used because the Polynesian populations have varying degrees of admixture [\@ref].
 
-Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with a marker \gls{ld} R^2^ > 0.1. This was done using Plink v1.9b4.9. Following this, cross validation was performed to find the best value of K (number of ancestral populations), for values of K from 1 to 15. The default of 5-fold cross-validation was used, where-by the data were partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
+Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with a marker \gls{ld} R^2^ > 0.1. This was done using Plink v1.9b4.9. Following this, cross validation was performed to find the best value of K (number of ancestral populations), for values of K from 1 to 15. The default of 5-fold cross-validation was used, whereby the data were partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
 
 ```{r admixture k, engine = 'bash', eval = FALSE}
 # Combine the chromosomes
@@ -325,14 +327,15 @@ admixture -s 123456 -P study.bed 9
 
 Heritability analysis is a method for determining what proportion of phenotypic variation can be attributed to environmental effects (non-heritable) and genetic effects (heritable) [@Visscher2008]. There are two measures of heritability, the first is known as broad-sense heritability (H^2^) and is the ratio of the total genetic variance to the total phenotypic variance. The second measure is narrow-sense heritability (h^2^) and is the ratio of the genetic variance attributed to an additive genetic model to the total genetic variance.
 
-The \gls{gcta} v1.26.0 [@Yang2011] was used to calculate the proportion of genetic heritability explained for gout. First the UK Biobank genetic data (section \@ref(ukbbdata)) were subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%. The following code was used to calculate the \gls{grm} and partition the genetic heritability by chromosome.
+The \gls{gcta} v1.26.0 software [@Yang2011] was used to calculate the proportion of genetic heritability explained for gout. First the UK Biobank genetic data (section \@ref(ukbbdata)) were subsetted to only contain gout cases and controls and the genome partitioned into chromosomes. A \gls{grm} was created for each chromosome. The genetic variance explained was calculated for each chromosome using restricted maximum likelihood analysis and a general population prevalence for gout of 2%. The following code was used to calculate the \gls{grm} and partition the genetic heritability by chromosome.
 
 
 ```{r, engine='bash', eval=FALSE}
 
 # load fam into R
 # sample(10000, fam[AFF == controls]) -> controls.txt
-# awk '{if($6 == 2){print $1"\t"$2}}' < condition.fam | cat - controls.txt > ids_keep.txt
+# cat condition.fam | 
+# awk '{if($6 == 2){print $1"\t"$2}}' | cat - controls.txt > ids_keep.txt
 
 # Subset samples
 for i in $(seq 1 22)
@@ -393,7 +396,7 @@ done
 <!-- Analysis Type: PANTHER Overrepresentation Test (release 20170413) -->
 <!-- - annotation set = pnather GO-slim biological process -->
 
-Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016]. The pathway enrichment results were based on the \gls{kegg} 2016 table, which is a long standing database, curated by a small group of experts. A significance threshold for a pathway was set at P < 0.05 after Benjamini-Hochberg adjustment for multiple hypothesis testing, as provided by Enrichr.
+Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp.pharm.mssm.edu/Enrichr/] [@Chen2013b; @Kuleshov2016]. The pathway enrichment results were based on the \gls{kegg} 2016 table, which is a long-standing database, curated by a small group of experts [@Kanehisa2017]. A significance threshold for a pathway was set at P < 0.05 after Benjamini-Hochberg adjustment [@Benjamini1995] for multiple hypothesis testing, as provided by Enrichr.
 
 <!-- The p-value is computed from the Fisher exact test which is a proportion test that assumes a binomial distribution and independence for probability of any gene belonging to any set -->
 
@@ -405,6 +408,8 @@ Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp
 
 
 ## Datasets {#datasets}
+
+The following sections describe the genomic datasets used in this thesis.
 
 ### 1000 Genomes Project Phase 3
 
@@ -419,18 +424,18 @@ urldate = {2015-08-18}
 }
 -->
 
-The \glsdesc{1kgp} was an international consortium that was established in 2007 to provide a comprehensive record of human genetic variation. The project consisted of three main data phases. A pilot phase that whole-genome sequenced 179 individuals from four populations at low coverage (2-4x), along with high coverage sequencing for two trios (mother, father, and child), and exon targeted sequencing for 697 individuals from seven populations [@1KGP2010]. The second main data phase provided sequencing data for 1092 individuals from 14 populations. This sequencing data set was a combination of low coverage whole-genome and exon sequencing [@1KGP2012]. The third main phase (Phase 3) was a dataset consisting of low coverage whole-genome sequencing, deep exome sequencing, and dense \gls{snp} array genotyping for 2504 individuals from 26 populations [@1KGP2015snp]. The 1000 Genomes data set used in this thesis was the Phase 3 release^[ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ accessed 20 March 2017].
+The \glsdesc{1kgp} was an international consortium that was established in 2007 to provide a comprehensive record of human genetic variation [@siva2008]. The project consisted of three main data phases. A pilot phase that whole-genome sequenced 179 individuals from four populations at low coverage (2-4x), along with high coverage sequencing for two trios (mother, father, and child), and exon targeted sequencing for 697 individuals from seven populations [@1KGP2010]. The second main data phase provided sequencing data for 1092 individuals from 14 populations. This sequencing data set was a combination of low coverage whole-genome and exon sequencing [@1KGP2012]. The third main phase (Phase 3) was a dataset consisting of low coverage whole-genome sequencing, deep exome sequencing, and dense \gls{snp} array genotyping for 2504 individuals from 26 populations [@1KGP2015snp]. The 1000 Genomes data set used in this thesis was the Phase 3 release^[ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ accessed 20 March 2017].
 
 
 ```{r populations, results = 'asis', echo = FALSE}
 
-read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%  knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations used in the selection analysis.') %>% kableExtra::group_rows("African Super Population (AFR)", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR)", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS)", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR)", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)*", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS)", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study and are not 1000 Genomes Project populations", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
+read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%  knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations used in the selection analysis (n = 3004).') %>% kableExtra::group_rows("African Super Population (AFR) n = 661", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR) n = 347", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS) n = 504", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR) n = 603", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)* n = 400", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS) n = 489", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study. All others are from the 1000 Genomes Project.", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
 ```
 
 
 ### Genetics of Gout in Aotearoa study
 
-The genetics of Gout in Aotearoa study is a case-control cohort for gout, with recruitment mainly from the Auckland, Wellington, Christchurch and Dunedin regions of New Zealand. Participants were asked to fill in a questionnaire regarding demographic information, clinical information, and gout relevant food consumption at the time of recruitment. Gout cases fulfilled the \gls{acr} criteria [@Wallace1977a]. Controls self-reported no history of gout at the time of recruitment. All individuals gave written informed consent and ethical approval was obtained from the New Zealand multi-region ethics committee (MEC/105/10/130). Individuals from this study were genotyped on Illumina CoreExome v24 \gls{snp} arrays using DNA extracted from blood samples provided at the time of recruitment. Table \@ref(tab:clinInfoCE) provides the overall clinical characteristics for this cohort.
+The genetics of Gout in Aotearoa study is a case-control cohort for gout, with recruitment mainly from the Auckland, Wellington, Christchurch and Dunedin regions of New Zealand. Participants were asked to fill in a questionnaire regarding demographic information, clinical information, and gout-relevant food consumption at the time of recruitment. Gout cases fulfilled the \gls{acr} criteria [@Wallace1977a]. Controls self-reported no history of gout at the time of recruitment. All individuals gave written informed consent, and ethical approval was obtained from the New Zealand multi-region ethics committee (MEC/105/10/130). Individuals from this study were genotyped on Illumina CoreExome v24 \gls{snp} arrays using DNA extracted from blood samples provided at the time of recruitment. Table \@ref(tab:clinInfoCE) provides the overall clinical characteristics for this cohort.
 
 A subset of the individuals from this study were used to form four populations of Polynesian ancestry, two for East Polynesia (\gls{cim} and \gls{nzm}), and two for West Polynesia (\gls{sam} and \gls{ton}), and one population of European ancestry (\gls{nzc}). These sub-populations formed part of the selection analysis dataset described in section \@ref(selectionDataset)). 
 
@@ -552,7 +557,7 @@ ce_pop_table <- ce_populations_table()
 
 #### Sample selection
 
-\Glsentrydescplural{pc} were calculated for all individuals genotyped on the coreExome \gls{snp} array using SmartPCA (EIGENSOFT v6.0.1, see section \@ref(pca)) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported all grandparent ethnicities as unknown.
+A subset of the individuals were chosen to create representative sample Polynesian populations of similar size to the other populations in the \gls{1kgp} to be used in a comparison for the selection analyses. \Glsentrydescplural{pc} were calculated for all individuals genotyped on the CoreExome \gls{snp} array using SmartPCA (EIGENSOFT v6.0.1, see section \@ref(pca)) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported all grandparent ethnicities as unknown.
 
 \Glsdesc{pc} 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and \gls{pc} 4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of European, New Zealand M\tex{\={a}}ori, Cook Island M\tex{\={a}}ori, Samoan, and Tongan ancestry were used to define the threshold values, as they were most likely to represent the ancestral populations. The mean and SD for \gls{pc} 2 and \gls{pc} 4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean $\pm$ 2 SD for \gls{pc} 2 and \gls{pc} 4 for each corresponding self-report population group. Samples were filtered so that only those that lay within the thresholds remained. Population samples of 100 individuals were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc}, by randomly sampling from within each ancestry group (Figure \@ref(fig:cePCA)). To create a population sample that resembled the general population for gout prevalence, individuals were prioritised based on gout affection to reach population specific prevalences based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton}. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained (Table \@ref(tab:cePopTable)).
 
@@ -564,7 +569,7 @@ knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical i
 
 (ref:cePCA) Principal components 2 and 4 for individuals used in the selection analysis.
 
-```{r cePCA, fig.cap = '(ref:cePCA)', echo = FALSE, out.width = "70%"}
+```{r cePCA, fig.cap = '(ref:cePCA)', echo = FALSE, out.width = "70%",fig.align="center"}
 knitr::include_graphics('images/02_methods/pca_plot.png')
 ```
 
@@ -572,7 +577,7 @@ knitr::include_graphics('images/02_methods/pca_plot.png')
 
 #### Filter individuals and markers 
 
-To create a data set from which to calculate selection statistics, the subset of the Genetics of Aotearoa individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the \gls{1kgp} phase 3 release. This was done in order to have a common set of markers between all populations, making the populations comparable. Before the data sets could be combined there were a series of steps that were performed. The first step (code following) was to keep only the individuals who had been selected through \gls{pca} and had a genotyping rate of at least 95%. Due to software requirements, markers were filtered to remove \glspl{indel} so that only \glspl{snp} remained.
+To create a data set from which to calculate selection statistics, the subset of the Genetics of Aotearoa individuals genotyped on the Illumina CoreExome chip were combined with all of the individuals in the \gls{1kgp} phase 3 release. This was done in order to have a common set of markers between all populations, making the populations comparable. Before the data sets could be combined there were a series of steps that were performed. The first step (code following) was to keep only the individuals who had been selected through \gls{pca} and had a genotyping rate (percentage of all markers with genotypes) of at least 95%. Due to software requirements, markers were filtered to remove \glspl{indel} so that only \glspl{snp} remained.
 
 ```{r, engine = 'bash', eval = FALSE}
 parallel '
@@ -678,7 +683,7 @@ parallel '
     -m 2 \
     -M 2 \
     -v snps \
-    -o ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.biallelic_ce_1kg_matched.vcf.gz \
+    -o ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.biallelic_matched.vcf.gz \
     ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz 
   ' ::: $(seq 1 22)
 
@@ -690,7 +695,7 @@ parallel '
     -m 2 \
     -M 2 \
     -v snps \
-    -o NZ_coreExome.chr{}.norm.phased.biallelic_ce_1kg_matched.vcf.gz \
+    -o NZ_coreExome.chr{}.norm.phased.biallelic_matched.vcf.gz \
     QC1_7-plus_correctAff_norm.chr{}.phased.vcf.gz 
   ' ::: $(seq 1 22)
 
@@ -699,12 +704,12 @@ parallel
   'bcftools merge \
     -O z \
     -o NZ_1KGP.chr{}.phased.vcf.gz \
-    ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.biallelic_ce_1kg_matched.vcf.gz \
-    NZ_coreExome/NZ_coreExome.chr{}.norm.phased.biallelic_ce_1kg_matched.vcf.gz 
+    ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.biallelic_matched.vcf.gz \
+    NZ_coreExome/NZ_coreExome.chr{}.norm.phased.biallelic_matched.vcf.gz 
   ' ::: $(seq 1 22)
 ```
 
-Sample identifiers were then updated to match the panel file that described the population and super population an individual belonged to. The code following applies this step to each merged \gls{vcf} file.
+Sample identifiers were then updated to match the panel file that described the population and super population an individual belonged to. The  following code applies this step to each merged \gls{vcf} file.
 ```{r, engine = 'bash', eval = FALSE}
 # Combine FID and IID of CoreExome samples so they match the panel file
 for i in $(seq 1 22)
