@@ -89,9 +89,9 @@ shapeit2 \
 
 #### PopGenome {#popgenomeMethods}
 
-The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was $min$(1^st^ percentile, 0). The upper significance threshold was $max$(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0, because they are biologically impossible.
+The PopGenome package (v2.2.3, @Pfeifer2014) for R was used for the calculation of \gls{td}, \gls{fwh}, \gls{flf}, and \gls{ze}. Popgenome calculates the D\* and F\* version from @Fu1993 which do not require an outgroup that should be a closely related population or species. The selection and neutrality statistics were calculated using a sliding window approach with a window size of 100 kb and a slide of 10 kb. Windows that had fewer than four segregating sites were filtered out, and window co-ordinates were altered to be +/- 5 kb from the centre of the window. The empirical distribution for each statistic, for each population, was used to create a significance threshold. The lower threshold was $min$(1^st^ percentile, 0). The upper significance threshold was $max$(99^th^ percentile, 0). The greater or less than zero condition was to enable the interpretation of the selection and neutrality statistic results, as zero is the point at which these statistics indicate an excess or deficit of a particular allele frequency category. F~ST~ was also calculated in the same sliding window setup, and pair-wise between the Polynesian populations, and also the other populations. Negative F~ST~ values were set to 0 because F~ST~ is biologically bounded to [0,1]. Negative values occur when the variation within a population is larger than between populations.  
 
-<!-- XXX explain briefly how to get -ve fst -->
+
 
 The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf} file where possible, for use as the out-group population. A new sample identified as 'Ancestor' was included in the phased \gls{vcf}, and for each marker the genotype for this sample was set as the homozygote for either the reference or alternate allele, dependent on the ancestral allele matching, otherwise the Ancestor genotype was set to missing. When the phased \gls{vcf} files were loaded into PopGenome, populations were identified using panel files which were white-space delimited files with sample id, population, and super population as the columns. The out-group population for \gls{fwh} was set to be that of the Ancestor sample so that the ancestral allele would be used in the calculation.
 
@@ -234,7 +234,7 @@ smartpca.perl \
 
 ### Admixture analysis {#admixture}
 
-Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [@Pritchard2000]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies. Admixture analysis was performed to estimate the number of ancestral populations that that contributed to the populations used in the selection analysis. It was also used because the Polynesian populations have varying degrees of admixture [\@ref].
+Admixture arises when two populations that were previously separate, begin to interbreed, changing the allele frequencies in the new population [@Pritchard2000]. Genetic admixture analysis estimates the proportions and the variant frequencies of the ancestral populations that contributed to the admixture. This is often done to account for population structure in \gls{gwas} studies. Admixture analysis was performed to estimate the number of ancestral populations that that contributed to the populations used in the selection analysis. It was also used because the Polynesian populations have varying degrees of admixture [@Wollstein2010].
 
 Admixture analysis was performed using ADMIXTURE v1.3.0 [@Alexander2009]. \gls{vcf} files for all autosomes were concatenated and the independent markers were selected by a moving window of 50 kbp sliding by 10 markers and removing markers with a marker \gls{ld} R^2^ > 0.1. This was done using Plink v1.9b4.9. Following this, cross validation was performed to find the best value of K (number of ancestral populations), for values of K from 1 to 15. The default of 5-fold cross-validation was used, whereby the data were partitioned into five groups, with four used to train the model, and the fifth to test the model. This was repeated five times, using a different combination of the partitions each iteration. The following code was used to calculate the cross-validation errors.
 
@@ -487,7 +487,7 @@ Mean grandparent ancestry is the proportion of grandparents self-reported as bel
 #### CoreExome {#coreExomeQC}
 
 
-The Infinium CoreExome-24 bead-chip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. A subset of the individuals in the Genetics of Gout in Aotearoa study were genotyped on this platform at the University of Queensland (Centre for Clinical Genomics). Genotype quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines [\@ref]. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from GenomeStudio that had a call rate > 98%, markers were removed if the call-rate was < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. 
+The Infinium CoreExome-24 bead-chip is a genotyping platform available from Illumina and is comprised of a core set of 551,839 markers. A subset of the individuals in the Genetics of Gout in Aotearoa study were genotyped on this platform at the University of Queensland (Centre for Clinical Genomics). Genotype quality control was performed by Dr Tanya Major (Merriman Lab) following the protocol from @Guo2014 and the Illumina GenomeStudio best practice guidelines^[https://www.illumina.com/Documents/products/technotes/technote_infinium_genotyping_data_analysis.pdf accessed 18 January 2016]. Illumina’s GenomeStudio v2011.1 genotyping module v1.9.4 was used for the initial calling of genotypes. Samples were exported from GenomeStudio that had a call rate > 98%, markers were removed if the call-rate was < 95%. Individuals who had not reported their sex were assigned their genetic sex where possible. Individuals were removed where genetic and reported sex did not match. The cohort was checked for genotype consistency between duplicated markers, with duplicates subsequently removed. 
 <!-- Samples were also checked for outliers in heterozygosity and depression of genetic variation. -->
 
 Markers were subsetted to only include bi-allelic \glspl{snp}, with a final marker number of `r NROW(markers)` and density of `r lapply(1:22, function(x){diff(markers %>% filter(chrom ==x) %>% arrange(chrom_start) %>% pull(chrom_start))}) %>% unlist() %>% mean() %>% round_dp(., 0)` bp/marker. Relatedness between individuals was assessed through inheritance by state using Plink v1.9b3.32 and a pedigree of families created by Dr Tanya Major (Merriman lab) to identify family groups. Duplicates and first degree relations were excluded and single individuals were randomly selected from family groups identified through identity by state analysis, which determined the proportions of individual genomes that were identical in a pair-wise manner. 
@@ -563,7 +563,7 @@ A subset of the individuals were chosen to create representative sample Polynesi
 
 
 ```{r,echo = FALSE}
-knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations used in the selection analysis',align = 'lcrrrrrrrr', col.names = c("Population","n","Mean Age yrs (SD)","Sex (\\% Male)","Mean BMI kg/m\\textsuperscript{2} (SD)","Mean Waist cm (SD)","Diabetes (\\%)","Gout (\\%)", "Kidney Disease (\\%)","Heart Problems (\\%)"), booktabs = TRUE, format = 'latex', escape = FALSE ) %>% kable_styling(latex_options = 'scale_down')
+knitr::kable(data.frame(ce_pop_table), caption = '(\\#tab:cePopTable) Clinical information for New Zealand Populations used in the selection analysis',align = 'lcrrrrrrrr', col.names = c("Population","n","Mean Age yrs (SD)","Sex (\\% Male)","Mean BMI kg/m\\textsuperscript{2} (SD)","Mean Waist cm (SD)","Diabetes (\\%)","Gout (\\%)", "Kidney Disease (\\%)","Heart Problems (\\%)"), booktabs = TRUE, format = 'latex', escape = FALSE ) %>% column_spec(column = c(3:10), width = '3.5em') %>% kable_styling(latex_options = 'scale_down')
 ```
  
 
@@ -683,7 +683,7 @@ parallel '
     -m 2 \
     -M 2 \
     -v snps \
-    -o ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.biallelic_matched.vcf.gz \
+    -o ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.matched.vcf.gz \
     ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz 
   ' ::: $(seq 1 22)
 
@@ -695,7 +695,7 @@ parallel '
     -m 2 \
     -M 2 \
     -v snps \
-    -o NZ_coreExome.chr{}.norm.phased.biallelic_matched.vcf.gz \
+    -o NZ_coreExome.chr{}.norm.phased.matched.vcf.gz \
     QC1_7-plus_correctAff_norm.chr{}.phased.vcf.gz 
   ' ::: $(seq 1 22)
 
@@ -704,8 +704,8 @@ parallel
   'bcftools merge \
     -O z \
     -o NZ_1KGP.chr{}.phased.vcf.gz \
-    ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.biallelic_matched.vcf.gz \
-    NZ_coreExome/NZ_coreExome.chr{}.norm.phased.biallelic_matched.vcf.gz 
+    ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.matched.vcf.gz \
+    NZ_coreExome/NZ_coreExome.chr{}.norm.phased.matched.vcf.gz 
   ' ::: $(seq 1 22)
 ```
 
