@@ -28,7 +28,7 @@
 \newcommand{\elandscape}{\end{landscape}}
 \newcommand{\tex}[1]{#1}
 
-\usepackage[acronym,style=super,nogroupskip]{glossaries}
+\usepackage[acronym,style=super,nogroupskip,nonumberlist]{glossaries}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{tabu}
@@ -61,3 +61,5 @@
  % For generating glossaries:
 \include{./glossary/glossary}
 \makeglossaries
+%\makenoidxglossaries
+%\printglossary[type=\acronymtype]
