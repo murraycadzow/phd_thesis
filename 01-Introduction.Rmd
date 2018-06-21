@@ -13,7 +13,7 @@ This chapter will set the scene and background for the basis of the research pre
 
 The Polynesian triangle is defined as the the geographic region in the Pacific Ocean bounded by \Gls{nz} in the southwest, Hawaii in the north, and Easter Island in the east [@Barcham2009]. The settlement history of this region begins with the Out of Africa migration approximately 50-100 thousand \gls{ya} [@Nielsen2017]. This migration flowed up the Levant and Arabian peninsula (45-55 k\gls{ya}) and then split into a migration to South Asia, Indonesia, and Australia (50 k\gls{ya}, @Kivisild1999; @Quintana-Murci1999), and a migration into Europe was under way 45 k\gls{ya}. From South Asia, the migration continued into East Asia (20 k\gls{ya}, @Groucutt2015). 
 
-Near Oceania is the geographic region from New Guinea and the Bismark Archipelago, through to the Solomon Islands in the east, with the remainder of the Pacific Islands east from the Reef/Santa Cruz group, southeast of the Solomon Island being Remote Oceania [@Matisoo-Smith2018]. The settlement of Near Oceania occurred first (40 k\gls{ya}), and was followed by the settlement of Remote Oceania, which reached as far as Samoan and Tonga (Western Polynesia) as part of the Lapita expansion (3 k\gls{ya}, @Matisoo-Smith2015; @Skoglund2016). After this settlement, the peopling of the Eastern Polynesia (including the Cook Islands) was 1-1.2 k\gls{ya} [@Wilmshurst2011] and then finally, the settlement of \glsdesc{nz} by \gls{nz} M\tex{\={a}}ori 800 \gls{ya} [@Duggan2014;@Matisoo-Smith2015].
+Near Oceania is the geographic region from New Guinea and the Bismark Archipelago, through to the Solomon Islands in the east, with the remainder of the Pacific Islands east from the Reef/Santa Cruz group, southeast of the Solomon Island being Remote Oceania [@Matisoo-Smith2018]. The settlement of Near Oceania occurred first (40 k\gls{ya}), and was followed by the settlement of Remote Oceania, which reached as far as Samoan and Tonga (Western Polynesia) as part of the Lapita expansion (3 k\gls{ya}, @Matisoo-Smith2015; @Skoglund2016). After this settlement, came the peopling of the Eastern Polynesia (including the Cook Islands) (1-1.2 k\gls{ya}; @Wilmshurst2011) and then finally, the settlement of \glsdesc{nz} by \gls{nz} M\tex{\={a}}ori 800 \gls{ya} [@Duggan2014;@Matisoo-Smith2015].
 
 In the 1950's and 60's there was a rural to urban migration of the Polynesian populations, for mostly economic reasons. As part of this, many individuals and families relocated from Samoa, Tonga, and the Cook Islands to New Zealand in search of work, and now the populations in New Zealand largely out-number the populations of their islands of origin [@MatisooSmith2012highway]. Within \glsdesc{nz}, the largest number of Polynesian people is found within the Auckland region [@Barcham2009].
 
@@ -33,9 +33,9 @@ Hyperuricaemia can be caused by diet, genetic predisposition or under-excretion 
 
 ## Genetic variation
 
-Genetic variation is the differences in the DNA sequence that occur between individuals of a species. Types of genetic variation include, \glsdesc{snp} which are single base changes (or polymorphisms), and \glspl{indel}. \Glspl{indel} are either additional DNA, or DNA that had been lost, and can be short (a single base, up to approximately 100 base pairs) or long (kilobases to megabases) at which point that can also become structural variants. Other types of genetic variation include copy number variation (alterations in the number of copies of a gene from what would be expected from the ploidy of the organism), and re-arrangements such as translocations - segments of DNA moving to different chromosomes, or inversions - segments of DNA that are excised, inverted, and reinserted at the same location on the chromosome. Within population based genetic studies, such as case-control association studies, the prominent type of genetic variation that is studied are \glspl{snp}. 
+Genetic variation is the differences in the DNA sequence that occur between individuals of a species. Types of genetic variation include, \gls{snp} which are single base changes (or polymorphisms), and \glspl{indel}. \Glspl{indel} are either additional DNA, or DNA that had been lost, and can be short (a single base, up to approximately 100 base pairs) or long (kilobases to megabases) at which point that can also become structural variants. Other types of genetic variation include copy number variation (alterations in the number of copies of a gene from what would be expected from the ploidy of the organism), and re-arrangements such as translocations - segments of DNA moving to different chromosomes, or inversions - segments of DNA that are excised, inverted, and reinserted at the same location on the chromosome. Within population based genetic studies, such as case-control association studies, the prominent type of genetic variation that is studied are \glspl{snp}. 
 
-Common methodologies of genotyping, to determine the genetic variation of an individual, is either by \gls{snp} array  or sequencing. \Gls{snp} arrays contain fluorescent probes designed for specific genetic variants that bind to DNA samples and based on the fluorescence, enable a genotype to be determined [Wang1998;@Gunderson2005]. Sequencing technologies, such as the short read sequencing performed by the next-generation sequencers, take DNA and randomly fragment it, then determine the bases sequentially in the fragment to approximately 150 bp from the start to create a 'read' [@Metzker2010]. The reads are then aligned to a reference genome and at each base of the genome a genotype is called by using the distribution of bases from reads overlapping that position [@Li2008; @mckenna2010genome]. One of the key differences between \gls{snp} arrays and sequencing is that \gls{snp} arrays capture known variation, whereas sequencing allows for unknown genetic variants to be genotyped.
+Common methodologies of genotyping, to determine the genetic variation of an individual, is either by \gls{snp} array  or sequencing. \Gls{snp} arrays contain fluorescent probes designed for specific genetic variants that bind to DNA samples and based on the fluorescence, enable a genotype to be determined [@Wang1998;@Gunderson2005]. Sequencing technologies, such as the short read sequencing performed by the next-generation sequencers, take DNA and randomly fragment it, then determine the bases sequentially in the fragment to approximately 150 bp from the start to create a 'read' [@Metzker2010]. The reads are then aligned to a reference genome and at each base of the genome a genotype is called by using the distribution of bases from reads overlapping that position [@Li2008; @mckenna2010genome]. One of the key differences between \gls{snp} arrays and sequencing is that \gls{snp} arrays capture known variation, whereas sequencing allows for unknown genetic variants to be genotyped.
 
 ## Natural selection
 
@@ -158,7 +158,7 @@ The ratio of non-synonymous to synonymous mutations is called the K~a~/K~s~ rati
 
 #### HKA
 
-The HKA test [@Hudson1987] compares between and within populations the polymorphism and divergence of two or more loci, and uses this to establish if a loci has been under selection, since variation within, and diversity between, species under neutrality should be based only on the mutation rate.
+The HKA test [@Hudson1987] compares between and within populations the polymorphism and divergence of two or more loci, and uses this to establish if a loci has been under selection, since variation within, and diversity between, species under neutrality should be based only on the mutation rate. The assumption that mutation rates at neutral loci is constant over time is important, as if it changes, it will affect the difference between the polymorphism and divergence. In practice the HKA test is powered for recent selection events, however, in practice it is difficult to find a putatively neutral locus [@Zhai2009].
 
 ### Haplotypic methods
 
@@ -181,15 +181,15 @@ iHS_{std} = \ln{\frac{iHH_D}{iHH_A}} - \frac{E_p [\ln{\frac{iHH_D}{iHH_A}}] }{ S
 
 #### Cross population extended haplotype homozygosity
 
-\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iHH) which is then used as a log ratio between populations at a single site (equation \@ref(eq:xpehh)) and in a standardised form (equation \@ref(eq:xpehhstd)). Recombination rate is mostly conserved within populations, so provides an internal control in \gls{xpehh} for effects of heterogeneous recombination rates. Extreme values of \gls{xpehh} indicate a slower decay of \gls{ehh} in one population compared to the other. \Gls{xpehh} relies on the breakdown of \gls{ld} over time and has weak power to detect selective sweeps that were historical and ended thousands of generations ago [@Chen2010]. F~ST~ is better than \gls{xpehh} for differential selection between closely related populations because haplotype-based signals are mostly shared between geographically similar populations [@pickrell2009signals]. 
+\Gls{xpehh}, created by @tang2007new, is also known as Rsb. \Gls{xpehh} was designed for use with \gls{snp} data rather than sequence. \Gls{xpehh} lacks power to detect intermediate frequency variants but is designed to detect variants that are near fixation or completely fixed. The \gls{ehh} of \gls{snp} site (EHHS), integrates to sum the area under the decay by distance in \gls{ehh} (iHH) which is then used as a log ratio between populations at a single site (equation \@ref(eq:xpehh)) and in a standardised form (equation \@ref(eq:xpehhstd)), with 1 and 2 indicating the population. Recombination rate is mostly conserved within populations, so provides an internal control in \gls{xpehh} for effects of heterogeneous recombination rates. Extreme values of \gls{xpehh} indicate a slower decay of \gls{ehh} in one population compared to the other. \Gls{xpehh} relies on the breakdown of \gls{ld} over time and has weak power to detect selective sweeps that were historical and ended thousands of generations ago [@Chen2010]. F~ST~ is better than \gls{xpehh} for differential selection between closely related populations because haplotype-based signals are mostly shared between geographically similar populations [@pickrell2009signals]. 
 
 \begin{equation} 
- XPEHH_{unstd} = \ln{\frac{iHH_A}{iHH_B}}
+ XPEHH_{unstd} = \ln{\frac{iHH_1}{iHH_2}}
 (\#eq:xpehh)
 \end{equation}
 
 \begin{equation} 
- XPEHH_{std} = \frac{\ln{\frac{iHH_A}{iHH_B}} - E [ \ln{\frac{iHH_A}{iHH_B}} ]}{ SD [ \ln{\frac{iHH_A}{iHH_B}} ]}
+ XPEHH_{std} = \frac{\ln{\frac{iHH_1}{iHH_2}} - E [ \ln{\frac{iHH_1}{iHH_2}} ]}{ SD [ \ln{\frac{iHH_1}{iHH_2}} ]}
 (\#eq:xpehhstd)
 \end{equation}
 
@@ -361,22 +361,9 @@ Elevated prevalence of metabolic syndrome co-morbidities and hyperuricaemia agai
 
 ## Research purpose and aims
 
-This thesis seeks to understand selection in the context of Polynesian populations, and the effect it may have played in the metabolic disease burden that is present in these populations. There are three research chapters, each with their own aims.
+This thesis seeks to understand selection in the context of Polynesian populations, and the effect it may have played in the metabolic disease burden that is present in these populations. There are three research chapters, each with their own aims. In Chapter \@ref(selectionResults): "Positive Selection in Polynesian Populations", the aims were to discover and characterise regions that have undergone selection in Polynesian populations. In Chapter \@ref(clustering): "Clustering of Selection Statistics", the aims were to investigate potential shared ancestry regions that are relevant to urate and metabolic disease. And in Chapter \@ref(selGwas): "Selection and Association Studies", the aims were to investigate the use of gout definition in genetic association studies, and the use of selection statistics in conjunction with \gls{gwas} results. 
 
-Chapter \@ref(selectionResults): "Positive Selection in Polynesian Populations" aims to discover and characterise regions that have undergone selection in Polynesian populations. The specific aims for this chapter were: 
-
-- Investigate regions that are under selection in the Polynesian populations
-- Investigate regions previously associated with urate, \gls{t2d}, obesity, kidney disease, and metabolic syndrome for signatures of selection
-
-Chapter \@ref(clustering): "Clustering of Selection Statistics" aims to investigate potential shared ancestry regions that are relevant to urate and metabolic disease. The aims for this chapter were:
-
-- Determine if neutrality and selection tests can be used to group populations.
-- Investigate genetic loci associated with gout, urate, \gls{t2d}, obesity, kidney disease, and metabolic syndrome and their potential shared selective histories.
-
-Chapter \@ref(selGwas): "Selection and Association Studies" aims to investigate the use of gout definition in genetic association studies, and the combination of selection statistics with \gls{gwas}. The specific aims for this chapter were:
-
-- Test performance of gout definitions on \gls{gwas}
-- Investigate the use of selection statistics in conjunction with \gls{gwas}
+It is hoped that the investigation of genetic selection in Polynesian populations will further understanding to the cause of health disparities due to metabolic disease in these populations.
 
 
 <!-- ## Extras -->
