@@ -40,7 +40,7 @@ All genomic resources and co-ordinates reported in this project use the human ge
 
 ### Phasing {#phase}
 
-Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype at any given position in the genome. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes by recombination. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}, Table \@ref(tab:refDatasets)) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
+Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype at any given position in the genome. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes by recombination. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}, see section \@ref(1kgpdesc) and Table \@ref(tab:refDatasets)) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
 
 Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel (Table \@ref(tab:refDatasets)). There were two steps involved for phasing of genotypes. The first was to check the markers in each data set were matched with the markers in the reference haplotypes. Markers were marked for exclusion by this step for reasons such as the marker not being in the reference panel, or if the marker had different allele types to that in the reference panel. An example of this step is provided in the following code.
 
@@ -98,67 +98,12 @@ The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf}
 
 #### SelectionTools {#selectionTools}
 
-SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Within each population, markers were filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of P > 10^-6^ [@Wigginton2005]. Markers were converted into "ancestral" or "derived" by comparing alleles to the homo sapiens ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
+SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Within each population, markers were filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of P > 10^-6^ [@Wigginton2005]. Markers were converted into "ancestral" or "derived" by comparing alleles to the \textit{homo sapiens} ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
 
 \gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014]. Markers with an \gls{ihs}, \gls{nsl} or \gls{xpehh} value > |2.6| met the threshold for significance, which was equivalent to approximately 1% of the most extreme values.
 
 Significant markers were also clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R, where nearby \glspl{snp} were assigned the same group identifier. The search radius used was 200 kb and the minimum number of points for a cluster was one. Cluster regions were created by taking both the minimum and maximum position for each group identifier, population, and chromosome.
 
-
-
-```{r markdown1, eval = FALSE, include = FALSE}
-Table: (\#tab:seltoolStats) 
-
-
-| Statistic | Program | Window Size | Reference |
-|:----------------|:------------:|:-------------:|:---------------|
-| _Window based_ | | | |
-| Tajima's D | Vcftools | 30 kb | @Tajima1989|
-| Fay and Wu's H | Variscan | 30 kb | @fay2000hitchhiking|
-| Fu and Li's D | Variscan | 30 kb | @Fu1993|
-| Fu and Li's F | Variscan | 30 kb | @Fu1993|
-| $\eta$ (total number of mutations) |Variscan| 30 kb | |
-| $\eta$~E~ (number of external mutations) |Variscan| 30 kb | |
-| $\pi$ |Variscan| 30 kb | |
-| S |Variscan| 30 kb | |
-| mean F~ST~ | Vcftools| | |
-| _Haplotype Based_ | | | |
-| sL by allele | Selscan | | |
-| sL1 | Selscan | | |
-| unstandardised nSL |Selscan | | |
-| standardised nSL |Selscan | | |
-| ihh by allele | Selscan | | |
-| unstandardised iHS | Selscan | | |
-| standardised iHS | Selscan norm | | |
-| iHH by population 1 | Selscan | | |
-| iHH population 2 | Selscan | | |
-| unstandardised XP-EHH | Selcan | | |
-| standardised XP-EHH | Selscan norm | | |
-| _Frequency_ | | | |
-| Minor allele frequency | | | |
-| Derived allele frequency | | | |
-
-<!--
-- Tajima's D (Vcftools) [@Tajima1989]|
-- Fay and Wu's H  (Variscan) [@fay2000hitchhiking]|
-- Fu and Li's D | Variscan  [@Fu1993]|
-- Fu and Li's F | Variscan | 30 kb | [@Fu1993]|
-- Eta (variscan) total (minimum number) number of mutations ($\eta$) 
-- Eta E (variscan) number of external mutations ie number of derived singletons
-- Pi (variscan) nucleotide diversity ($\pi$)
-- S (variscan) number of segregating sites
-- mean F~ST~ Vcftools
-
-Haplotype based
-
-- 
-
-
-
-Gene
-- Ka/Ks
--->
-```
 
 
 ### Disease associated gene lists {#diseaselist}
@@ -184,7 +129,7 @@ Custom Views were created to join the supplemental tables to the main tables.
 
 \Glsdesc{pca} is a statistical dimension reduction technique that transforms potentially correlated variables into a linear and non-correlated set of variables. In a genetic context \gls{pca} is used to reduce variation at many thousands of markers into a handful of components that represent the majority of the variation of the data [@Patterson2006]. The components are ordered such that the first \gls{pc} captures the most variation, with each subsequent component capturing less. These components often, but not necessarily, represent population differences and population substructure.
 
-\gls{pca} was used to identify the genetic ancestry of the samples from the Genetics of Gout in Aotearoa study to be used in the selection analysis (section \@ref(selectionDataset)). It was also used in the clustering analysis to identify the genetic groupings for the populations (section \@ref(pcaresults)). To calculate the principal components of the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file with BCFtools v1.3.1, and then the independent markers were identified via Plink v1.9b4.9, using a sliding window to remove markers that had a marker \gls{ld} R^2^ > 0.2, with windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. The following code was used to accomplish these steps.
+\gls{pca} was used to identify the genetic ancestry of the samples from the Genetics of Gout in Aotearoa study to be used in the selection analysis (section \@ref(selectionDataset)). It was also used in the clustering analysis to identify the genetic groupings for the populations (section \@ref(pcaresults)). To calculate the principal components of the genetic data, all populations and chromosomes were combined into a single \gls{vcf} file with BCFtools v1.3.1, and then the independent markers were identified via Plink v1.9b4.9, using a sliding window to remove markers that had an inter-marker \gls{ld} R^2^ > 0.2, with windows of 50 kb and a slide of 5 markers. The first 10 principle components were calculated using smartPCA v13050 from Eigensoft v6.0.1 [@Price2006]. The following code was used to accomplish these steps.
 
 ```{r eigenstrat code, engine='bash', eval = FALSE}
 #combine the chromosomes
@@ -411,7 +356,7 @@ Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp
 
 The following sections describe the genomic datasets used in this thesis.
 
-### 1000 Genomes Project Phase 3
+### 1000 Genomes Project Phase 3 {#1kgpdesc}
 
 <!--
 @misc{1kgp_ftp,
@@ -429,7 +374,7 @@ The \glsdesc{1kgp} was an international consortium that was established in 2007 
 
 ```{r populations, results = 'asis', echo = FALSE}
 
-read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%  knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations used in the selection analysis (n = 3004).') %>% kableExtra::group_rows("African Super Population (AFR) n = 661", 1,7) %>% kableExtra::group_rows("Ad Mixed American Super Population (AMR) n = 347", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS) n = 504", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR) n = 603", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)* n = 400", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS) n = 489", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study. All others are from the 1000 Genomes Project.", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
+read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%  knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations used in the selection analysis (n = 3004).') %>% kableExtra::group_rows("African Super Population (AFR) n = 661", 1,7) %>% kableExtra::group_rows("Admixed American Super Population (AMR) n = 347", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS) n = 504", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR) n = 603", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)* n = 400", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS) n = 489", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study. All others are from the 1000 Genomes Project.", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
 ```
 
 
@@ -559,7 +504,7 @@ ce_pop_table <- ce_populations_table()
 
 A subset of the individuals were chosen to create representative sample Polynesian populations of similar size to the other populations in the \gls{1kgp} to be used in a comparison for the selection analyses. \Glsentrydescplural{pc} were calculated for all individuals genotyped on the CoreExome \gls{snp} array using SmartPCA (EIGENSOFT v6.0.1, see section \@ref(pca)) using 2858 ancestry informative markers (@Guo2014 supplementary material). The first 10 eigenvectors were outputted, with no outlier removal or population size limit. Individuals were removed who did not match between self reported ethnicity of grandparents and their genetic ancestry, or if they had self reported all grandparent ethnicities as unknown.
 
-\Glsdesc{pc} 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and \gls{pc} 4 had the best separation of East Polynesian from West Polynesian populations. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of European, New Zealand M\tex{\={a}}ori, Cook Island M\tex{\={a}}ori, Samoan, and Tongan ancestry were used to define the threshold values, as they were most likely to represent the ancestral populations. The mean and SD for \gls{pc} 2 and \gls{pc} 4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean $\pm$ 2 SD for \gls{pc} 2 and \gls{pc} 4 for each corresponding self-report population group. Samples were filtered so that only those that lay within the thresholds remained. Population samples of 100 individuals were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc}, by randomly sampling from within each ancestry group (Figure \@ref(fig:cePCA)). To create a population sample that resembled the general population for gout prevalence, individuals were prioritised based on gout affection to reach population specific prevalences based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton}. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained (Table \@ref(tab:cePopTable)).
+\Glsdesc{pc} 2 was identified as providing the best separation of European ancestry from Polynesian ancestry, and \gls{pc} 4 had the best separation of East Polynesian from West Polynesian ancestry. Individuals were then filtered for European or Polynesian ancestry. Individuals reporting 4 grandparents of European, New Zealand M\tex{\={a}}ori, Cook Island M\tex{\={a}}ori, Samoan, and Tongan ancestry were used to define the threshold values, as they were most likely to represent the ancestral populations. The mean and SD for \gls{pc} 2 and \gls{pc} 4 were calculated for the individuals who had self reported four grandparents of the same ethnicity. Thresholds were then applied using the four grandparent population mean $\pm$ 2 SD for \gls{pc} 2 and \gls{pc} 4 for each corresponding self-report population group. Samples were filtered so that only those that lay within the thresholds remained. Population samples of 100 individuals were created by using genetic ancestry for the following populations: \glsdesc{nzm}, \glsdesc{cim}, \glsdesc{sam}, \glsdesc{ton}, and \glsdesc{nzc}, by randomly sampling from within each ancestry group (Figure \@ref(fig:cePCA)). To create a population sample that resembled the general population for gout prevalence, individuals were prioritised based on gout affection to reach population specific prevalences based on @Winnard2013 of 2.3% for \gls{nzc}, 7.7% for \gls{nzm}, and 8.6% for \gls{cim}, \gls{sam}, and \gls{ton}. Final sample population prevalence of 2.0% (\gls{nzc}), 7.0% (\gls{nzm}), 45.0% (\gls{cim}), 12.0% (\gls{sam}), and 54.0% (\gls{ton}) were obtained for gout (Table \@ref(tab:cePopTable)).
 
 
 ```{r,echo = FALSE}
@@ -731,7 +676,7 @@ done
 
 ### UK Biobank {#ukbbdata}
 
-The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including sub-codes). The dataset was also filtered to individuals with a self reported an ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, or whose samples failed genotype quality control. The remaining individuals were eligible for inclusion in the \gls{gwas} performed in section \@ref(ukbbgwas).
+The UK Biobank is a collection of 500,000 individuals, mostly of European ancestry, from around the United Kingdom, aged between 40 and 69. It consists of genetic, health, and lifestyle information. The interim release dataset (approval number 12611) was downloaded in November 2015 and contained genotypes for 152,249 individuals. Gout affection was determined by self-report, or self-reported use of urate lowering therapy, or an International Classification of Diseases, Tenth Revision (ICD-10) code for gout (M10, including sub-codes). The dataset was also filtered to individuals with a self reported ethnic background of British, Irish, or 'any other white background'. Individuals were removed who had a mismatch between self-reported sex and genetic sex, or whose samples failed genotype quality control. The remaining individuals were eligible for inclusion in the \gls{gwas} performed in section \@ref(ukbbgwas).
 
 
 
