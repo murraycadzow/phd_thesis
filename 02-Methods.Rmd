@@ -40,7 +40,7 @@ All genomic resources and co-ordinates reported in this project use the human ge
 
 ### Phasing {#phase}
 
-Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype at any given position in the genome. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes by recombination. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}, see section \@ref(1kgpdesc) and Table \@ref(tab:refDatasets)) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
+Haplotype phasing is a method of establishing the parental origin of haplotypes. It looks for the co-location of alleles to form haplotypes. In diploids such as humans, there is a maternal and a paternal haplotype at any given position in the genome. Selection statistics such as \gls{ihs} require phased data in order to calculate the degradation of haplotypes by recombination. Phasing can be performed through the use of trios (parents and offspring), or it can be done through probabilistic phasing using large population haplotype reference panels (such as created from the \gls{1kgp}, see section \@ref(kgpdesc) and Table \@ref(tab:refDatasets)) and probabilistically determining the most likely haplotype(s) for an individual given a set of markers.
 
 Phasing was performed using SHAPEIT2 v2.r837 [@Delaneau2013] using the \gls{1kgp} reference haplotype panel (Table \@ref(tab:refDatasets)). There were two steps involved for phasing of genotypes. The first was to check the markers in each data set were matched with the markers in the reference haplotypes. Markers were marked for exclusion by this step for reasons such as the marker not being in the reference panel, or if the marker had different allele types to that in the reference panel. An example of this step is provided in the following code.
 
@@ -356,7 +356,7 @@ Gene set analysis was performed by inputting gene lists into Enrichr^[http://amp
 
 The following sections describe the genomic datasets used in this thesis.
 
-### 1000 Genomes Project Phase 3 {#1kgpdesc}
+### 1000 Genomes Project Phase 3 {#kgpdesc}
 
 <!--
 @misc{1kgp_ftp,
@@ -483,7 +483,7 @@ left_join(markers, marker_loc, by = c("chrom" = "chrom", "chrom_start" = "pos", 
 <!-- > will be inserted once it is finalised -->
 
 ```{r, warning= FALSE, message = FALSE, echo = FALSE}
-ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for samples that were genotyped on the CoreExome platform by genetic ancestry.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Western Polynesian" = 2)) %>% kable_styling(latex_options = 'scale_down')
+ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for samples that were genotyped on the CoreExome platform by genetic ancestry.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Western Polynesian" = 2)) %>% kable_styling(latex_options = 'scale_down') %>% footnote(general = "BP = blood pressure (mmHg). BMI = kg/m\\\\textsuperscript{2}", general_title = "", escape = FALSE)
 ```
 
 
