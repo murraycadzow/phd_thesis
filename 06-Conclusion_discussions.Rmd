@@ -2,8 +2,22 @@
 
 ## Summary
 
-This thesis set out to investigate the role of selection in Polynesian populations and the effects on urate and metabolic disease. There were three main objectives that were covered. 
+This thesis set out to investigate the role of selection in Polynesian populations and the effects on urate and metabolic disease. There were three main objectives that were covered. The first was to identify and characterise positive selection within Polynesian populations with regard to metabolic diseases such as gout, obesity, \gls{t2d}, kidney disease, and metabolic syndrome. The second was to investigate the shared ancestral history of Polynesian populations in genomic regions relevant to metabolic disease. And the third was to investigate the use of gout definition in association studies and to incorporate the use of selection statistics into association analyses.
 
+
+key findings for chapter 3:
+
+- 
+- 
+- malaria loci ABO/ATP2B4/DDC
+
+
+
+Chapter \ref(selectionResults) utilysed multiple selection and neutrality statistics, that were based on haplotypic and frequency spectrum methodologies to establish regions of the genome that exhibited 'signals of selection'. 
+
+Pathway analysis of the selected loci had...XXX
+
+Some of the strongest selection signals were from ...XXX
 
 <!-- Chapter \@ref(selectionResults): "Positive Selection in Polynesian Populations" aims to discover and characterise regions that have undergone selection in Polynesian populations. The specific aims for this chapter were:  -->
 <!-- - Investigate regions that are under selection in the Polynesian populations -->
@@ -18,7 +32,7 @@ The loci that were associated with urate that exhibited evidence of possible sel
 
 The other metabolic diseases of obesity, \gls{t2d}, kidney disease, and metabolic syndrome all had a number of associated loci that also had evidence of possible selection. Some of these loci were associated with multiple traits, and also had an immunicological function. This points to a potential relationship of these loci being influenced by pathogenic challenge, and as a result also influence the metabolic diseases. One example of this potential relationship could be loci that were associated with obesity and \gls{t2d}, that were also associated with malarial infection. One of the genes that was associated with malaria had  with one of the stongest \gls{ihs} signals 
 
-Possible evidence of selection at malaria associated loci. There is possible evidence of the Lapita people having malaria in skeletal remains [@Buckley].
+Possible evidence of selection at malaria associated loci. There are reports of the Lapita people having malaria in skeletal remains [@buckley2006predators].
 
 
 There was no evidence, for or against, _CREBRF_ or _PARGC1A_ to be able to determine if there had been selection at these loci, and therefore no conclusions about these loci as 'thrifty genes' was able to be made.
@@ -34,6 +48,18 @@ There was no evidence, for or against, _CREBRF_ or _PARGC1A_ to be able to deter
 <!-- - Determine if neutrality and selection tests can be used to group populations. -->
 <!-- - Investigate genetic loci associated with gout, urate, \gls{t2d}, obesity, kidney disease, and metabolic syndrome and their potential shared selective histories. -->
 
+key findings for chapter 4:
+
+- aggregate stats didn't cluster into super pops
+- the first 4 PCs split the populations into the super populations
+- admixture showed that the east and west were also different, with east being more admixed
+- extremes of the distributions clustered the populations
+- random windows did not
+- genelists, did cluster, but not specific to gene list
+- east pol pairs and west pol pairs most similar, and then as general pol pop
+- the eas super population was most similar to pol, consistent with the current migration history
+- baised distributions against singltons/low freq variants
+
 Chapter 4 was an investigation into the genetic similarities of populations. This chapter added to the evidence that the Polynesian populations had similarities to modern day East Asian populations, and from the migration and settlement histories have a shared ancestry. There was also evidence from all of the clustering methodologies that while the Polynesian populations were most similar to each other in a global context, there was in fact genetic differences between the East and West Polynesian populations.
 
 The selection and neutrality statistics showed that populations within a super population were most similar to one another, with the greatest differences being between super populations. There was also evidence of a shared ancestry in both the frequency spectrum of variants, as well as with haplotypes that was consistent with the Out of Africa migration and subsequent population movements. There was not however a specific signal for selection that appeared in the Polynesian populations for urate or any of the metabolic disease associated loci, but instead a commonality between the frequency spectrum of similar geographic populations. 
@@ -46,6 +72,14 @@ The extremes of the frequency based selection and neutrality statistics showed t
 <!-- Chapter \@ref(selGwas): "Selection and Association Studies" aims to investigate the use of gout definition in genetic association studies, and the combination of selection statistics with \gls{gwas}. The specific aims for this chapter were: -->
 <!-- - Test performance of gout definitions on \gls{gwas} -->
 <!-- - Investigate the use of selection statistics in conjunction with \gls{gwas} -->
+
+Key findings for chapter 5:
+
+- self-report gout or ult usage had best sensitivity and specificity
+- self-report gout or usage of ult was best definition when gold standard or acr not available
+- heritability of gout and serum urate similar in europeans
+- selection statistics could be used with gwas, but usefulness pretty low
+- no additional loci, beyond those already identified through gwas 
 
 
 Chapter 5 investigated the use of gout definition that was common amungst multi-purpose cohorts and assessed the performance of multiple definitions. It was found that the best definition was that of self-reported gout or self-report of \gls{ult} usage, when the \gls{acr} criteria or observation of urate crystals in the synovial fluid is not available. The use of selection statistics in prioritisation of \gls{gwas} loci revealed that there were several loci that had possible evidence of selection that were "in the noise" of the \gls{gwas} signal, however, these loci were limited to previously identified regions.
@@ -105,7 +139,7 @@ One of the limitations of using the gwas catalog is for gene associations
 - bias of the populations
 - genes that are involved might not be genome wide significant therefore missed
 
-Using the \gls{gwas} catalog provided a conveinent method to incorporate many of the known genetic associations found from \gls{gwas} into the selection analysis. There were a few effects from this approach that will have influenced the results in the analyses involving the \gls{gwas} catalog derived gene lists. First, is the associations were only for \gls{gwas}, and didn't report on associations that were found in a non-\gls{gwas} setting, such as candidate genes, so some true genetic associations may have been missed. The impact of this is likely to be small on the conclusions, given that one of the trends trying to be identified was a systematic selection signal across pathways (section \@ref(pathEnrich)), and given the number of genes in a pathway that showed signs of selection and the pathway sizes involved, missing a few loci per pathway is unlikely to have made this systematic selection signal appear. Second, there is the fact that a large proportion of the \gls{gwas} that have been done and reported in the \gls{gwas} catalog are for European populations [\@ref], and the focus of this research was in Polynesian populations, so there will be population specific associations that are missed. Again the impact of this is likely to be small.
+Using the \gls{gwas} catalog provided a conveinent method to incorporate many of the known genetic associations found from \gls{gwas} into the selection analysis. There were a few effects from this approach that will have influenced the results in the analyses involving the \gls{gwas} catalog derived gene lists. First, is the associations were only for \gls{gwas}, and didn't report on associations that were found in a non-\gls{gwas} setting, such as candidate genes, so some true genetic associations may have been missed. The impact of this is likely to be small on the conclusions, given that one of the trends trying to be identified was a systematic selection signal across pathways (section \@ref(pathEnrich)), and given the number of genes in a pathway that showed signs of selection and the pathway sizes involved, missing a few loci per pathway is unlikely to have made this systematic selection signal appear. Second, there is the fact that a large proportion of the \gls{gwas} that have been done and reported in the \gls{gwas} catalog are for European populations \hl{[\@ref]}, and the focus of this research was in Polynesian populations, so there will be population specific associations that are missed. Again the impact of this is likely to be small.
 
 the time frames for the statistics has a wide range, many of the differences that are being looked at are in the < 10kya time frame, so therefore some of these methods might not be entirely appropriate but also the nature of the chip data means that some of the newer methods aren't necessarily applicable. especially because the chip data is missing the very low frequency variants due to the bias of chip data having both an ascertainment bias
 
