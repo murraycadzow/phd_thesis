@@ -483,7 +483,7 @@ left_join(markers, marker_loc, by = c("chrom" = "chrom", "chrom_start" = "pos", 
 <!-- > will be inserted once it is finalised -->
 
 ```{r, warning= FALSE, message = FALSE, echo = FALSE}
-ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for samples that were genotyped on the CoreExome platform by genetic ancestry.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Western Polynesian" = 2)) %>% kable_styling(latex_options = 'scale_down') %>% footnote(general = "BP = blood pressure (mmHg). BMI = kg/m\\\\textsuperscript{2}", general_title = "", escape = FALSE)
+ce_clinical_table() %>% kable(., col.names = c("", rep(c("Control","Gout"), 3)), booktabs = TRUE, format = 'latex', caption = ' (\\#tab:clinInfoCE) Clinical information for samples that were genotyped on the CoreExome platform by genetic ancestry.', align = 'lrrrrrr') %>% add_header_above(., c("", "European" = 2, "Eastern Polynesian"= 2, "Western Polynesian" = 2)) %>% footnote(general = "BP = blood pressure (mmHg). BMI = body mass index (kg/m\\\\textsuperscript{2}).", general_title = "", escape = FALSE, threeparttable = TRUE)  %>% kable_styling(latex_options = 'scale_down')
 ```
 
 
