@@ -779,7 +779,7 @@ At the combined threshold of |\gls{ihs}| > 2 or |\gls{nsl}| > 2 and a \gls{gwas}
 
 The region containing _IBSP_, _PKD2_, and _ABCG2_ had multiple \glspl{snp} that met the suggestive significance threshold. Of those, six \glspl{snp} had evidence of both selection and association (Figure \@ref(fig:locusZoom), Table \@ref(tab:polyhaplogwas)). The selection signal came only from the Western Polynesian populations, with no indication in the Eastern Polynesian populations of selection in this region. The recombination rate in this region had intermittent small spikes, with three of the variants in _PDK2_ having an \gls{ld} R^2^ > 0.4 with rs2231142 (calculated using \gls{eas}). These variants also had an association with gout that met the suggestive significance threshold. Only the variants from _PKD2_ and _ABCG2_ replicated their association from the UK Biobank replication cohort.
 
-<!-- > \hl{Tony: have any of the genes in tables 5.[67] beed implicated in other phenotypes?} -->
+<!-- >Tony: have any of the genes in tables 5.[67] beed implicated in other phenotypes? -->
 
 (ref:locusZoom) Locus zoom plot of Polynesian gout \gls{gwas} results for the region chr4:88,600,000-89,200,000, covering _IBSP_, _PKD2_, and _ABCG2_. Points indicate SNP association with gout by genomic position in the Polynesian gout GWAS. Linkage disequilibrium with rs2231142 is indicated by colour. Recombination rate in the East Asian super population of the 1000 Genomes Project is indicated by the blue line. The dashed line indicates the Genome-wide significance threshold P = 5 x 10^-8^.
 
