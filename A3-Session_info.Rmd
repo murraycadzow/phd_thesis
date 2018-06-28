@@ -1,7 +1,0 @@
-# Appendix C
-
-## Session info
-
-```{r, echo = FALSE, results='markup'}
-devtools::session_info()
-```
