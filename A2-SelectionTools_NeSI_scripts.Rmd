@@ -176,15 +176,18 @@ DIR=$SLURM_SUBMIT_DIR
 module load Python/3.5.0-intel-2015a
 module load R/3.2.1-intel-2015a
 mkdir $TMP_DIR/${POP}
-#srun tar -C $TMP_DIR/${POP}/ -xzf $DIR/${POP}.tar.gz ${POP}.chr${i}_biallelic_coreExome_markers.vcf
-srun gzip -dc $DIR/${POP}.chr${i}.phased.vcf.gz > $TMP_DIR/${POP}/${POP}.chr${i}.phased.vcf
+#srun tar -C $TMP_DIR/${POP}/ \
+  -xzf $DIR/${POP}.tar.gz ${POP}.chr${i}_biallelic_coreExome_markers.vcf
+srun gzip -dc $DIR/${POP}.chr${i}.phased.vcf.gz >\
+  $TMP_DIR/${POP}/${POP}.chr${i}.phased.vcf
 cd $TMP_DIR/${POP}/
-  #srun cat ${POP}.chr${i}_biallelic_coreExome_markers.vcf | grep -v '^##contig' > ${POP}_chr${i}_coreExome.vcf
+  #srun cat ${POP}.chr${i}_biallelic_coreExome_markers.vcf |\
+    grep -v '^##contig' > ${POP}_chr${i}_coreExome.vcf
 srun python ~/.local/bin/selection_pipeline \
 -i ${POP}.chr${i}.phased.vcf \
 --phased-vcf \
 -c $i \
---config-file /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/unimputed_defaults_nesi_18-3-16.cfg \
+--config-file NZ_1KGP_unimputed/unimputed_defaults_nesi_18-3-16.cfg \
 --maf 0.01 \
 --hwe 0.000001 \
 --TajimaD 30 \
@@ -203,8 +206,8 @@ srun python ~/.local/bin/selection_pipeline \
 module unload Python/3.5.0-intel-2015a 
 module load Python/2.7.9-intel-2015a
 
-PIPELINE_DIR=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline
-RESOURCE_DIR=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles
+PIPELINE_DIR=MerrimanSelectionPipeline/selection_pipeline
+RESOURCE_DIR=MerrimanSelectionPipeline/referencefiles
 srun python $PIPELINE_DIR/haps_interpolate.py \
 --haps results/${POP}_aachanged.haps \
 --output ${POP}_genetic_dist.haps \
@@ -221,14 +224,14 @@ srun gzip $TMP_DIR/${POP}/results/*vcforig
 cd $TMP_DIR
 srun tar -czf ${POP}.chr${i}.tar.gz *
 mkdir -p  /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops_results/$POP
-srun cp $TMP_DIR/*.tar.gz /home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/Indiv_pops_results/${POP}/
+srun cp $TMP_DIR/*.tar.gz NZ_1KGP_unimputed/Indiv_pops_results/${POP}/
 ```
 
 ### unimputed_defaults_nesi-18-3-16.cfg
 
 This the config file that is used as part of selectionTools 1.1.
 
-**/home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/unimputed_defaults_nesi_18-3-16.cfg**
+**unimputed_defaults_nesi_18-3-16.cfg**
 ```
 #
 # Defaults config file for VCF process
@@ -242,38 +245,39 @@ This the config file that is used as part of selectionTools 1.1.
 
 [system]
 cores_avaliable = 1
-# Library settings do not change, the library folder are appended to the path when running the program#
+# Library settings do not change, the library folder are 
+# appended to the path when running the program#
 [environment]
-LD_LIBRARY_PATH=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/lib
-PERL5LIB=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/lib/perl5
+LD_LIBRARY_PATH=MerrimanSelectionPipeline/lib
+PERL5LIB=MerrimanSelectionPipeline/lib/perl5
 [selection_pipeline]
 selection_pipeline_executable = ~/.local/bin/selection_pipeline
 [vcftools]
-vcf_tools_executable = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/vcftools
-vcf_subset_executable = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/vcf-subset
-vcf_merge_executable = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/vcf-merge
-vcf_concat_executable = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/vcf-concat
+vcf_tools_executable = MerrimanSelectionPipeline/bin/vcftools
+vcf_subset_executable = MerrimanSelectionPipeline/bin/vcf-subset
+vcf_merge_executable = MerrimanSelectionPipeline/bin/vcf-merge
+vcf_concat_executable = MerrimanSelectionPipeline/bin/vcf-concat
 extra_args= 
 [genetic_map]
-genetic_map_dir= /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles/genetic_maps
+genetic_map_dir= MerrimanSelectionPipeline/referencefiles/genetic_maps
 genetic_map_prefix=genetic_map_chr?_combined_b37.txt
 [shapeit]
-shapeit_executable= /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/shapeit
+shapeit_executable= MerrimanSelectionPipeline/bin/shapeit
 extra_args =
 [impute2]
-impute_executable = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/impute2
-impute_map_dir= /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles/impute_ref
-impute_reference_dir= /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles/impute_ref
+impute_executable = MerrimanSelectionPipeline/bin/impute2
+impute_map_dir= MerrimanSelectionPipeline/referencefiles/impute_ref
+impute_reference_dir= MerrimanSelectionPipeline/referencefiles/impute_ref
 impute_map_prefix=genetic_map_chr?_combined_b37.txt
 impute_reference_prefix=ALL.chr?.integrated_phase1_v3.20101123.snps_indels_svs.genotypes.nomono
 extra_args = 
 [plink]
-plink_executable =/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/plink
+plink_executable =MerrimanSelectionPipeline/bin/plink
 extra_args = 
 [Rscript]
 rscript_executable = Rscript
-indel_filter = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/corescripts/haps_indel_and_maf_filter.R
-generate_rsb = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/corescripts/generate_rsb.R
+indel_filter = MerrimanSelectionPipeline/corescripts/haps_indel_and_maf_filter.R
+generate_rsb = MerrimanSelectionPipeline/corescripts/generate_rsb.R
 extra_args=
 [haps_scripts]
 haps_to_hapmap_script= /home/murray.cadzow/.local/bin/haps_to_hapmap
@@ -288,20 +292,21 @@ ancestral_fasta_header_regex =
 ancestral_fasta_file =
 ancestral_allele_script= /home/murray.cadzow/.local/bin/ancestral_annotation
 
-ancestral_fasta_dir=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/referencefiles/ancestral_ref/homo_sapiens_ancestor_GRCh37_e65
+ancestral_fasta_dir=MerrimanSelectionPipeline/referencefiles/ancestral_ref/\
+homo_sapiens_ancestor_GRCh37_e65
 ancestral_prefix=homo_sapiens_ancestor_?.fa
 [qctool]
-qctool_executable=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/qctool
+qctool_executable=MerrimanSelectionPipeline/bin/qctool
 [selscan]
-selscan_executable=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/selscan
+selscan_executable=MerrimanSelectionPipeline/bin/selscan
 [multicore_ihh]
-multicore_ihh = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/corescripts/multicore_iHH.R
+multicore_ihh = MerrimanSelectionPipeline/corescripts/multicore_iHH.R
 [variscan]
-variscan_executable = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/variscan
+variscan_executable = MerrimanSelectionPipeline/bin/variscan
 [java]
 java_executable = /usr/bin/java
 [beagle]
-beagle_jar = /home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/bin/beagle.jar
+beagle_jar = MerrimanSelectionPipeline/bin/beagle.jar
 vm_size = 4g
 ```
 
@@ -310,7 +315,7 @@ vm_size = 4g
 
 This script was used on the results generated by NZ_1KGP_unimputed/unimputed_selection_pipeline.sl. It ran selscan on the haplotype files to calculate \gls{ihs}.
 
-**/home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/run_selscan.sl**
+**run_selscan.sl**
 ```
 #!/bin/bash
 #SBATCH -J selscan_array
@@ -356,7 +361,7 @@ srun cp ${POP}.chr${i}.ihs.tar.gz $DIR/
 
 This script was used on the results generated by NZ_1KGP_unimputed/unimputed_selection_pipeline.sl. It ran selscan on the haplotype files to calculate \gls{nsl}.
 
-**/home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/run_nsl_selscan.sl**
+**run_nsl_selscan.sl**
   
 ```
 #!/bin/bash
@@ -376,7 +381,7 @@ DIR=$SLURM_SUBMIT_DIR
 
 srun tar -C $TMP_DIR -xzf ${POP}.chr${i}.tar.gz ${POP}/${POP}_${i}_selscan* 
 cd $TMP_DIR/$POP && \
-srun ~/uoo00008/selscan/src/selscan \
+srun selscan/src/selscan \
   --nsl \
   --hap ${POP}_${i}_selscan.selscanhaps \
   --map  ${POP}_${i}_selscan.selscanmap \
@@ -384,7 +389,7 @@ srun ~/uoo00008/selscan/src/selscan \
   --out ${TMP_DIR}/${POP}/${POP}_${i}
   
 mkdir $TMP_DIR/$POP/gap1mb
-srun ~/uoo00008/selscan/src/selscan \
+srun selscan/src/selscan \
   --nsl \
   --hap ${POP}_${i}_selscan.selscanhaps \
   --map  ${POP}_${i}_selscan.selscanmap \
@@ -403,7 +408,7 @@ srun cp ${POP}.chr${i}.nsl.tar.gz $DIR
 
 This script was used on the results generated by NZ_1KGP_unimputed/unimputed_selection_pipeline.sl. It ran selscan on the haplotype files to calculate \gls{xpehh}.
 
-**/home/murray.cadzow/uoo00008/NZ_1KGP_unimputed/run_xpehh.sl**
+**run_xpehh.sl**
 ```
 #!/bin/bash
 #SBATCH -J selscan_array
@@ -423,7 +428,7 @@ DIR=$SLURM_SUBMIT_DIR
 
 module load Python/2.7.8-goolf-1.5.14
 
-PIPELINE_DIR=/home/murray.cadzow/uoo00008/MerrimanSelectionPipeline/selection_pipeline
+PIPELINE_DIR=MerrimanSelectionPipeline/selection_pipeline
 
 srun tar -C $TMP_DIR -xzf \
   $DIR/${POP1}/${POP1}.chr${i}.tar.gz \
@@ -451,7 +456,7 @@ cd $TMP_DIR/${POP1}_${POP2} && \
   
   #srun tar -C $TMP_DIR -xzf ${POP1}_${POP2}.tar.gz \
     ${POP1}_${POP2}/*${i}.xpehh* ${POP1}_${POP2}/*${i}.*.xp*
-  cd $TMP_DIR && srun ~/uoo00008/selscan/src/selscan \
+  cd $TMP_DIR && srun selscan/src/selscan \
 --xpehh \
 --hap ${POP1}_${POP2}/${POP1}_${i}.matches_${POP2}.xpehh_selscanhaps \
 --map  ${POP1}_${POP2}/${POP1}_${POP2}_${i}.xpehh_selscanmap \
@@ -484,8 +489,8 @@ This bash script was used to extract the results from selectionTools 1.1 into a 
 
 ```{r, engine='bash', eval = FALSE}
 #!/bin/bash
-results_dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/dbload
-input_dir=/Volumes/BiochemXsan/scratch/merrimanlab/murray/working_dir/coreExome_selection/NZ_coreExome_1kgp/data/nesi_results
+results_dir=NZ_coreExome_1kgp/data/dbload
+input_dir=NZ_coreExome_1kgp/data/nesi_results
 
 # extract all the results files generated from the selection pipeline
 for i in $(seq 1 22)
@@ -493,32 +498,40 @@ do
     mkdir -p $results_dir/{daf,fawh,fixed_vcf,fst,ihs,kaks,nsl,tajd,xpehh}/chr${i}
     echo chr${i}
     echo ihs
-    parallel 'tar -C {3}/ihs/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.ihs.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/ihs/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: \
+      $(ls $input_dir/*/*chr${i}.ihs.tar.gz) ::: $results_dir
     echo nsl
-    parallel 'tar -C {3}/nsl/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.nsl.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/nsl/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: \
+      $(ls $input_dir/*/*chr${i}.nsl.tar.gz) ::: $results_dir
     echo tajd
-    parallel 'tar -C {3}/tajd/chr{1} -xzf {2} *taj_d --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/tajd/chr{1} -xzf {2} *taj_d --wildcards' ::: ${i} ::: \
+      $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
     mv $results_dir/tajd/chr${i}/*/results/* $results_dir/tajd/chr${i}/
     rmdir $results_dir/tajd/chr${i}/*/results
     echo fawh
-    parallel 'tar -C {3}/fawh/chr{1} -xzf {2} *faw --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/fawh/chr{1} -xzf {2} *faw --wildcards' ::: ${i} ::: \
+      $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
     mv $results_dir/fawh/chr${i}/*/results/* $results_dir/fawh/chr${i}/
     rmdir $results_dir/fawh/chr${i}/*/results
 
     echo daf
-    parallel 'tar -C {3}/daf/chr{1} -xzf {2} *aachanged.af --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/daf/chr{1} -xzf {2} *aachanged.af --wildcards' ::: ${i} \
+    ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
     mv $results_dir/daf/chr${i}/*/*.af $results_dir/daf/chr${i}/
     rename _aachanged.af ${i}_aachanged.af $results_dir/daf/chr${i}/*
     echo fixed_vcf
-    parallel 'tar -C {3}/fixed_vcf/chr{1} -xzf {2} *fixed.vcf --wildcards' ::: ${i} ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/fixed_vcf/chr{1} -xzf {2} *fixed.vcf --wildcards' ::: ${i} \
+    ::: $(ls $input_dir/*/*chr${i}.tar.gz) ::: $results_dir
     mv $results_dir/fixed_vcf/chr${i}/*/*vcf $results_dir/fixed_vcf/chr${i}/
     echo xpehh
-    parallel 'tar -C {3}/xpehh/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} ::: $(ls $input_dir/xpehh/*/*chr${i}_xpehh.tar.gz) ::: $results_dir
+    parallel 'tar -C {3}/xpehh/chr{1} -xzf {2} *out *log --wildcards' ::: ${i} \
+    ::: $(ls $input_dir/xpehh/*/*chr${i}_xpehh.tar.gz) ::: $results_dir
     
 done
 
 # calc the number of files for each population
-for pop in $(basename -a $(find $input_dir -type d | grep -v "xpehh" |grep [a-zA-Z] ) |grep -v "results")
+for pop in $(basename -a $(find $input_dir -type d |\
+      grep -v "xpehh" |grep [a-zA-Z] ) |grep -v "results")
 do
     echo ------ $pop -------
     echo ihs $(ls $results_dir/ihs/chr*/${pop}*out | wc -l)
@@ -541,7 +554,8 @@ done
 
 # clean up some of the extraction
 cd $results_dir/fixed_vcf/
-for pop in $(basename -a $(find $input_dir -type d | grep -v "xpehh" |grep [a-zA-Z] ) |grep -v "results")
+for pop in $(basename -a $(find $input_dir -type d | \
+      grep -v "xpehh" |grep [a-zA-Z] ) |grep -v "results")
 do
     rmdir chr*/$pop
 done
@@ -549,12 +563,14 @@ done
 # combine vcfs, run snpEff and create panel files
 parallel 'bgzip {} && tabix -f -p vcf {}.gz ' ::: $(ls */*vcf)
 mkdir combined
-parallel -j 6 'bcftools merge $(ls chr{}/*gz| grep "AMR\|AFR\|EUR\|EAS\|SAS\|POL") |\
+parallel -j 6 'bcftools merge $(ls chr{}/*gz| \
+    grep "AMR\|AFR\|EUR\|EAS\|SAS\|POL") |\
   bgzip -c > combined/combined_super_chr{}.vcf.gz' ::: $(seq 1 22)
-parallel -j 6 'bcftools merge $(ls chr{}/*gz | grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL") |\
+parallel -j 6 'bcftools merge $(ls chr{}/*gz | \
+    grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL") |\
   bgzip -c > combined/combined_chr{}.vcf.gz' ::: $(seq 1 22)
-parallel -j 16 'java -jar ~/Murray/src/snpEff4.2/snpEff/snpEff.jar \
-    -c ~/Murray/src/snpEff4.2/snpEff/snpEff.config \
+parallel -j 16 'java -jar snpEff4.2/snpEff/snpEff.jar \
+    -c snpEff4.2/snpEff/snpEff.config \
     -v GRCh37.75 \
     -strict \
     -stats chr{2}/{1}{2}.html chr{2}/{1}{2}_fixed.vcf.gz |\
@@ -585,7 +601,8 @@ done
 parallel -j 10 '
 for p1 in CIM NZC NZM TON SAM
 do      
-    for p2 in $(basename -a -s .panel *.panel | grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL")
+    for p2 in $(basename -a -s .panel *.panel | \
+        grep -v "AMR\|AFR\|EUR\|EAS\|SAS\|POL")
     do
        if [[ $p1 != $p2 ]]
            then
@@ -603,10 +620,11 @@ done
 cd $results_dir/ihs
 for pop in $(ls chr1/*out | cut -d'/' -f2 | cut -d'_' -f1 | sort -u)
 do 
-    ~/Murray/src/selscan/bin/linux/norm --ihs \
+    selscan/bin/linux/norm --ihs \
         --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
-    ~/Murray/src/selscan/bin/linux/norm \
-        --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
+    selscan/bin/linux/norm \
+        --ihs --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 \
+        --log ${pop}_gap1mb.log
 done
 
 # rename the ihs files to remove the underscore
@@ -624,9 +642,11 @@ cd $results_dir/nsl
 for pop in $(ls chr1/*out | cut -d'/' -f2 | cut -d'_' -f1 | sort -u) 
 do 
     ~/Murray/src/selscan/bin/linux/norm --ihs \
-        --files chr*/${pop}_*.out --crit-percent 0.99 --log ${pop}.log
+        --files chr*/${pop}_*.out --crit-percent 0.99 \
+        --log ${pop}.log
     ~/Murray/src/selscan/bin/linux/norm --ihs \
-        --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 --log ${pop}_gap1mb.log
+        --files chr*/gap1mb/${pop}_*.out --crit-percent 0.99 \
+        --log ${pop}_gap1mb.log
 done
 
 # rename and move the nsl files
@@ -647,10 +667,12 @@ do
     do
         if [[ $p1 != $p2 ]]
         then
-            ~/Murray/src/selscan/bin/linux/norm --xpehh \
-                --files chr*/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}.log
-            ~/Murray/src/selscan/bin/linux/norm --xpehh \
-                --files chr*/gap1mb/${p1}_${p2}*.out --crit-percent 0.99 --log ${p1}_${p2}_gap1mb.log
+            selscan/bin/linux/norm --xpehh \
+                --files chr*/${p1}_${p2}*.out --crit-percent 0.99 \
+                --log ${p1}_${p2}.log
+            selscan/bin/linux/norm --xpehh \
+                --files chr*/gap1mb/${p1}_${p2}*.out --crit-percent 0.99 \
+                --log ${p1}_${p2}_gap1mb.log
         fi
     done
 done
