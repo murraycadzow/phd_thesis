@@ -7,9 +7,9 @@ output:
 # bookdown::gitbook: default
  bookdown::pdf_book 
 documentclass: report #book
-bibliography: ["references.bib", "diseaseGR-12-3-2018.bib"]
+bibliography: ["references-nourl.bib", "diseaseGR-12-3-2018-nourl.bib"]
 #csl: chicago-author-date.csl
-biblio-style: otago
+biblio-style: biocriku #otago
 link-citations: true
 description: "A thesis to fulfil the requirements for the Doctor of Philosophy"
 ---
