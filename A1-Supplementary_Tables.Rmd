@@ -24,9 +24,9 @@ names(markers) <- c("chrom","chrom_start","marker","ref","alt")
 
 ### Hider Regions
 
-```{r, results='hold'}
+```{r}
 hider_regions_found <- readRDS('data/03-hider-regions-found.RDS')
-hider_regions_found %>% mutate_at(4:NCOL(.), funs(replace_na(., '-'))) %>% mutate(chr = as.numeric(str_sub(chrom, 4)))%>% arrange(chr, chrom_start) %>% select(-chr) %>% kable(., col.names = c("Chrom","Start", "End", "\\gls{td} Region", "\\gls{td} Present","\\gls{fwh} Region", "\\gls{fwh} Present", "\\gls{flf} Region", "\\gls{flf} Present", '\\gls{ihs} Region', '\\gls{ihs} Present'), format = 'latex', booktabs = TRUE, longtable = TRUE, linesep ='', caption = '(\\#tab:hiderRegionsFound)', escape = FALSE) %>% column_spec(4:11, width = "5em") %>% kable_styling(latex_options = c('repeat_header'),font_size = 8) %>% landscape()
+hider_regions_found %>% mutate_at(4:NCOL(.), funs(replace_na(., '-'))) %>% mutate(chr = as.numeric(str_sub(chrom, 4)))%>% arrange(chr, chrom_start) %>% select(-chr) %>% kable(., col.names = c("Chrom","Start", "End", "\\gls{td} Region", "\\gls{td} Present","\\gls{fwh} Region", "\\gls{fwh} Present", "\\gls{flf} Region", "\\gls{flf} Present", '\\gls{ihs} Region', '\\gls{ihs} Present'), format = 'latex', booktabs = TRUE, longtable = TRUE, linesep ='', caption = '(\\#tab:hiderRegionsFound) Regions from Hider et al 2013 that were replicated for selection. ', escape = FALSE) %>% column_spec(4:11, width = "5em") %>% kable_styling(latex_options = c('repeat_header'),font_size = 8) %>% landscape()
 ```
 
 ```{r ramos}
@@ -40,7 +40,7 @@ ramos[["unknown"]] <- c("IL23R", "FCGR2B", "TNFSF4", "CR1", "ANTRX2", "TNIP1", "
 
 
 
-```{r, echo = FALSE, results='hold'}
+```{r, echo = FALSE}
 # This is created by coreExome_100kb_windows_intra_filtered.Rmd
 chr_summary <- readRDS("~/data/NZ_coreExome_1kgp/100kbWindow_intra/filtered/100kbwindows_chr_summary_popgenome_filtered_3ns_resized.31-8-2017.RDS") %>% filter(stat != "Fu.Li.D")
 pops <- list()
@@ -75,20 +75,31 @@ upper_sig_stats <- bind_rows(lapply(names(upper_sig_stats), function(y){
 
 ```
 
+\FloatBarrier
+
 ### Genes in 1st percentile for Polynesian populations for frequency based statistics
 
-```{r intrasfsPol, results='hold'}
+```{r intrasfsPol, eval = FALSE}
 # create a table of all of the loci that had windows in the 1st percentile and < 0 in value
 lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chrom, statname, SYMBOL, pop) %>% distinct() %>% spread(., key=pop, value = pop) %>% replace_na(list(CIM = "", NZM = "", SAM = "", TON = "")) %>% unite(., col = Pop, c('CIM','NZM','SAM','TON'), sep = ',')  %>% mutate(Pop = stringr::str_replace_all(Pop, "[,]+", ',') %>% stringr::str_replace_all(., pattern = '^[,]+|[,]$', replacement = "") %>% stringr::str_replace_all(., ",", ", ")) %>% mutate(chr = as.numeric(sapply(chrom, function(x){strsplit(x, split = 'r')[[1]][2]}))) %>% arrange(statname, chr) %>% select(statname, everything(), -chr) %>% filter(!is.na(SYMBOL)) %>% mutate(stat = case_when(statname == "Tajima.D" ~ "Tajima's D", statname == "Fay.Wu.H" ~ "Fay and Wu's H", statname == "Fu.Li.F" ~ "Fu and Li's F", statname == "Zeng.E" ~ "Zeng's E" ))  %>% rename('Statistic' = statname, Chrom = chrom, 'Gene name' = SYMBOL, Population = Pop)  %T>% {write.csv(., file = '~/Git_repos/bookdown_thesis/Appendices/03-intrasfsPol.csv', row.names = FALSE, quote = TRUE)} %>% head(3) %>% kable(., caption = '(\\#tab:intrasfsPol) All genes that had a window in the 1st percentile and value < 0 from a Polynesian population', booktabs = TRUE, format = 'latex') %>% footnote(general = "Electronic Supplement: Appendices/03-intrasfsPol.csv", escape = FALSE, general_title = "")
 ```
 
+\begin{table}[ht]
+\caption{All genes that had a window in the 1st percentile and value < 0 from a Polynesian population. Table can be found in the electronic supplement as file Appendices/03-intrasfsPol.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:intrasfsPol}
+\end{table}
 
 
+
+\FloatBarrier
 
 
 ### Significant \gls{ihs} and \gls{nsl} markers in Polynesian populations
 
-```{r, eval = TRUE, message = FALSE}
+```{r, eval = FALSE, message = FALSE}
 # process for creating table:
 # load all ihs/nsl data
 # filter to be only loci that had a significant result in any ihs/nsl from the poly pops
@@ -118,16 +129,26 @@ lower_sig_stats %>% filter( pop %in% c('CIM','NZM','SAM','TON')) %>% select(chro
 # saveRDS(object = ihsnsl_table, file='Appendices/03-ihsnsl_table.RDS')
 
 ihsnsl_table <- readRDS(file='Appendices/03-ihsnsl_table.RDS')
+ihsnsl_table %>% write_csv(path = 'Appendices/03-ihsnsl_table.csv')
 ihsnsl_table%>%  
   head() %>% 
   kable(., booktabs = TRUE, linesep = "", escape = FALSE,format = 'latex', 
         caption = '(\\#tab:ihsnslPolGenes) Significant markers for iHS and nSL in Polynesian populations.') %>% kable_styling(latex_options = 'scale_down', font_size = 8)
 ```
 
+\begin{table}[ht]
+\caption{Significant markers for \gls{ihs} and \gls{nsl} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/03-ihsnsl-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:ihsnslPolGenes}
+\end{table}
+
+\FloatBarrier
 
 ### Significant \gls{xpehh} markers in Polynesian populations
 
-```{r, eval = TRUE, message=FALSE, results='hold'}
+```{r, eval = FALSE, message=FALSE, results='hold'}
 xpehh <- read_delim('~/data/NZ_coreExome_1kgp/haplotype/sig_xpehh_29-10-2017.csv', delim = ',') %>% 
   filter(!pop1 %in% c("POL","EPN","WPN", "NAD"), !pop2 %in% c("POL","EPN","WPN", "NAD")) %>% filter(abs(xpehh_value) > 2.6)
 
@@ -145,6 +166,14 @@ xpehh %>% filter(!is.na(genename) & genename != "")%>% mutate(xpehh_value =three
   kableExtra::footnote("Appendices/03-xpehh-Pol.csv", threeparttable = TRUE) %>% landscape()
 rm(xpehh)
 ```
+
+\begin{table}[ht]
+\caption{Genes that had a significant XP-EHH value in Polynesian populations. Table can be found in the electronic supplement as file Appendices/03-xpehh-Pol.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:xpehhPolgenes}
+\end{table}
 
 \FloatBarrier
 
@@ -167,10 +196,13 @@ immunePol <- readRDS("Appendices/03-immunePol.RDS")
 
 ## Chapter 4 Tables
 
+
+### Admixture cross-validation error
+
 ```{r, echo = FALSE, eval = TRUE}
 k_cv <- read.table('~/data/NZ_coreExome_1kgp/admixture/CV_error.txt', header = FALSE) %>% full_join(.,  read.table('~/data/NZ_coreExome_1kgp/admixture/projected/CV_error.txt', header = FALSE) %>% dplyr::rename( cv_proj = V2), by = "V1") %>% arrange(V1) %>% dplyr::rename(K = V1, "CV Error" = V2, "Projection CV Error" = cv_proj)
 
-k_cv %>% select(1:2) %>% mutate(`CV Error` = formatC(`CV Error`, digits = 4, format ='f')) %>%knitr::kable(., caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K.", format = 'latex') 
+k_cv %>% select(1:2) %>% mutate(`CV Error` = formatC(`CV Error`, digits = 4, format ='f')) %>%knitr::kable(., caption = "(\\#tab:admixCV) Admixture cross-validation (CV) error for different values of K.", format = 'latex', booktabs = TRUE) 
 ```
 
 ```{r}
@@ -188,7 +220,9 @@ create_sel_stat_table <- function(sel_stat, cap){
   knitr::kable(chr_summary %>% filter(stat == sel_stat) %>% ungroup() %>%  select(pop, chrom, mean) %>% spread(.,chrom, mean) %>% left_join(., panel %>% select(pop, super_pop) %>% distinct(), "pop") %>% select(pop, super_pop, 2:23) %>% arrange(super_pop, pop) %>% head(), align = c('l','c',rep('r', 22)), col.names = c("Population", "Super Population", paste0('Chr',1:22)), caption = cap, digits =  3)
 }
 ```
+\FloatBarrier
 
+### GWAS catalog studies and references table
 
 ```{r, results = 'asis'}
 m <- create_gwas_cat_table() %>% data.frame() %>%  arrange(DISEASE.TRAIT, ref) %>% filter(!grepl(x = ref, pattern = 'NA')) %>% select(-REPORTED.GENE.S., 'Category' = list, 'Disease Trait' = DISEASE.TRAIT, 'Reference' = ref) %>% mutate(Reference = sapply(Reference, function(x){paste0("\\citet{",substr(x, 2, nchar(x)),"}")})) %>% select(3,1,2)%>% distinct() %>% arrange(Category, `Disease Trait`, Reference)  #%>% filter(Category != "Kidney Disease")
@@ -206,12 +240,13 @@ kable(m %>% select(-Category), escape = FALSE, linesep = "", format = 'latex',ca
 #
 ```
 
+### GWAS catalog disease gene lists
 
 ```{r gwasgenes, message = FALSE}
 # genelists
 load('~/data/gwas_catalog/diseaseGR-12-3-2018.RData')
 genelists <- data.frame(pheno = c(rep("obesity", length(obesity_GR$SYMBOL)), rep("urate", length( gc_urate_gout_GR$SYMBOL)), rep('t2d', length(t2d_GR$SYMBOL)), rep("kd", length(kd_GR$SYMBOL)), rep("metsyn", length(metsyn_GR$SYMBOL))),  genename = c(obesity_GR$SYMBOL, gc_urate_gout_GR$SYMBOL, t2d_GR$SYMBOL, kd_GR$SYMBOL, metsyn_GR$SYMBOL), stringsAsFactors = FALSE) %>% distinct() %>%  mutate(present = 1) %>% spread(pheno, present, 0)
-genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE, longtable = TRUE, linesep="") %>% kable_styling(latex_options = 'repeat_header', font_size = 8)
+genelists %>% select(genename, urate, obesity, t2d, kd, metsyn) %>% mutate_if(is.numeric, funs(case_when(. == 1 ~ "Yes", . == 0 ~ ""))) %>% kable(., col.names = c("Gene name", "Urate and gout","Obesity","T2D","Kidney disease", "Metabolic syndrome"), caption = '(\\#tab:gwasgenes) Disease associated genes by category from the GWAS catalog. For references see Table \\ref{tab:gwascatref}.' , escape = FALSE, booktabs = TRUE, longtable = TRUE, linesep="") %>% kable_styling(latex_options = 'repeat_header', font_size = 8)
 ```
 
 
@@ -231,30 +266,33 @@ global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filt
 
 ```
 
+\FloatBarrier
 
-```{r gsTdTable, eval = TRUE, echo = FALSE}
+### Site-frequency spectrum based selection and neutrality statistics summary tables
+```{r gsTdTable, eval = TRUE, echo = FALSE, results='hold'}
 gs_td_table <- create_sel_summary_table("Tajima.D")
 gs_td_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsTdTable) \\gls{td} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
-```{r, eval = TRUE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE, results = 'hold'}
 gs_fwh_table <-create_sel_summary_table("Fay.Wu.H")
 
 gs_fwh_table %>%  mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>%  select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFwhTable) \\gls{fwh} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
-```{r, eval = TRUE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE, results = 'hold'}
 gs_flf_table <- create_sel_summary_table("Fu.Li.F")
 
 gs_flf_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsFlfTable) \\gls{flf} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
-```{r, eval = TRUE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE, results = 'hold'}
 gs_ze_table <- create_sel_summary_table("Zeng.E")
 
 gs_ze_table %>% mutate_at(vars('mean','sd','min','lower_1','upper_99','median','max'), funs(sprintf("%.3f",. ))) %>% select(-super_pop) %>%  knitr::kable(., format = 'latex', booktabs = TRUE, col.names = c("Population","Mean","Std. Dev","Min","Lower 1%","Median","Upper 99%", "Max"), caption = "(\\#tab:gsZeTable) \\gls{ze} summary statistics by population", align = c('l', rep('r', 8))) %>% kableExtra::group_rows("AFR", 1, 7) %>% kableExtra::group_rows("AMR", 8, 11) %>% kableExtra::group_rows("EAS", 12, 16) %>% kableExtra::group_rows("EUR", 17, 22) %>% kableExtra::group_rows("POL", 23, 26) %>% kableExtra::group_rows("SAS", 27,31)
 ```
 
+\FloatBarrier
 
 ### Polynesian windows for clustering of the extremes
 
@@ -268,39 +306,104 @@ names(eigen)[2:11] <- paste0("PC",1:10)
 ```
 
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-td-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdNegGenes) Genes intersecting the windows of the 1st percentile \\gls{td} in Polynesians') %>% footnote("Appendices/04-td-pol-firstper-genes.csv", threeparttable = TRUE)
 ```
 
-```{r, message = FALSE}
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 1st percentile \gls{td} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-td-pol-firstper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polTdNegGenes}
+\end{table}
+
+
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-td-pol-ninetyninthper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polTdPosGenes) Genes intersecting the windows of the 99th percentile \\gls{td} in Polynesians') %>% footnote('Appendices/04-td-pol-ninetyninthper-genes.csv', threeparttable = TRUE)
 ```
 
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 99th percentile \gls{td} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-td-pol-ninetyninthper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polTdPosGenes}
+\end{table}
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-fwh-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhNegGenes) Genes intersecting the windows of the 1st percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r, message = FALSE}
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 1st percentile \gls{fwh} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-fwh-pol-firstper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polFwhNegGenes}
+\end{table}
+
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-fwh-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFwhPosGenes) Genes intersecting the windows of the 99th percentile \\gls{fwh} in Polynesians') %>% footnote('Appendices/04-fwh-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r, message = FALSE}
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 99th percentile \gls{fwh} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-fwh-pol-ninetyninethper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polFwhPosGenes}
+\end{table}
+
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-flf-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfNegGenes) Genes intersecting the windows of the 1st percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r, message = FALSE}
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 1st percentile \gls{flf} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-flf-pol-firstper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polFlfNegGenes}
+\end{table}
+
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-flf-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polFlfPosGenes) Genes intersecting the windows of the 99th percentile \\gls{flf} in Polynesians') %>% footnote('Appendices/04-flf-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
 
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 99th percentile \gls{flf} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-flf-pol-ninetyninethper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polFlfPosGenes}
+\end{table}
 
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-ze-pol-firstper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZeNegGenes) Genes intersecting the windows of the 1st percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-firstper-genes.csv', threeparttable = TRUE)
 ```
 
-```{r, message = FALSE}
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 1st percentile \gls{ze} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-ze-pol-firstper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polZeNegGenes}
+\end{table}
+
+```{r, message = FALSE, eval = FALSE}
 read_csv('Appendices/04-ze-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(format = 'latex', caption = '(\\#tab:polZePosGenes) Genes intersecting the windows of the 99th percentile \\gls{ze} in Polynesians') %>% footnote('Appendices/04-ze-pol-ninetyninethper-genes.csv', threeparttable = TRUE)
 ```
+
+\begin{table}[ht]
+\caption{Genes intersecting the windows of the 99th percentile \gls{ze} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-ze-pol-ninetyninethper-genes.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:polZePosGenes}
+\end{table}
+
+\FloatBarrier
 
 ### Clustered regions from significant markers for \gls{ihs} and \gls{nsl}
 
@@ -309,9 +412,17 @@ clus_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-15-12-2
 clus_nsl <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/nsl_clus_regions-15-12-2017.RDS')
 ```
 
-```{r}
+```{r, eval = FALSE}
 full_join(clus_ihs, clus_nsl, by = c('pop','chrom','ClusterID'), suffix = c(" iHS", " nSL")) %>% dplyr::rename(Population = pop) %T>% {write_csv(., path = 'Appendices/04-ihs-nsl-significant-marker-clusters.csv', col_names = TRUE)} %>% head(0) %>% kable(., caption = '(\\#tab:hapclustab) Positions of regions created by clustering significant markers for iHS or nSL by population') %>% footnote("Appendices/04-ihs-nsl-significant-marker-clusters.csv", threeparttable = TRUE)
 ```
+
+\begin{table}[ht]
+\caption{Positions of regions created by clustering significant markers for \gls{ihs} or \gls{nsl} by population. Table can be found in the electronic supplement as file Appendices/04-ihs-nsl-significant-marker-clusters.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:hapclustab}
+\end{table}
 
 \FloatBarrier
 
@@ -332,118 +443,277 @@ names(kd) <- c('mat_d','prop')
 
 #### Gout
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Tajima.D"
-gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5))) %T>%{write_csv(., path = "Appendices/04-gout_td_gene_clus.csv", col_names = TRUE)} %>% head()  %>% kable(., longtable =  TRUE, caption = "(\\#tab:gouttdgeneclus) Tajima's D for windows at gout associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_td_gene_clus.csv", threeparttable = TRUE) %>%  landscape()
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5))) %T>%{write_csv(., path = "Appendices/04-gout-td-gene-clus.csv", col_names = TRUE)} %>% head()  %>% kable(., longtable =  TRUE, caption = "(\\#tab:gouttdgeneclus) Tajima's D for windows at gout associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_td_gene_clus.csv", threeparttable = TRUE) %>%  landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{td} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-td-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:gouttdgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fay.Wu.H"
-gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))%T>%{write_csv(., path = "Appendices/04-gout_fwh_gene_clus.csv", col_names = TRUE)} %>% head()  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutfwhgeneclus) Fay and Wu's H for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_fwh_gene_clus.csv", threeparttable = TRUE) %>%landscape()
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))%T>%{write_csv(., path = "Appendices/04-gout-fwh-gene-clus.csv", col_names = TRUE)} %>% head()  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutfwhgeneclus) Fay and Wu's H for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_fwh_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{fwh} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-fwh-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:goutfwhgeneclus}
+\end{table}
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fu.Li.F"
-gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5))) %T>%{write_csv(., path = "Appendices/04-gout_flf_gene_clus.csv", col_names = TRUE)} %>% head() %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutflfgeneclus) Fu and Li's F for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_flf_gene_clus.csv", threeparttable = TRUE) %>%landscape()
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5))) %T>%{write_csv(., path = "Appendices/04-gout-flf-gene-clus.csv", col_names = TRUE)} %>% head() %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutflfgeneclus) Fu and Li's F for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_flf_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{flf} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-flf-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:goutflfgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Zeng.E"
-gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))%T>%{write_csv(., path = "Appendices/04-gout_ze_gene_clus.csv", col_names = TRUE)} %>% head()  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutzegeneclus) Zeng's E for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_ze_gene_clus.csv", threeparttable = TRUE) %>%landscape()
+gout$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., gout$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% gc_urate_gout_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))%T>%{write_csv(., path = "Appendices/04-gout-ze-gene_clus.csv", col_names = TRUE)} %>% head()  %>% kable(., longtable =  TRUE, caption = "(\\#tab:goutzegeneclus) Zeng's E for windows at gout associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-gout_ze_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
+\begin{table}[ht]
+\caption{\gls{ze} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-ze-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:goutzegeneclus}
+\end{table}
 
+\FloatBarrier
 
 #### Obesity
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Tajima.D"
-obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-obesity_td_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:obesitytdgeneclus) Tajima's D for windows at obesity associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-obesity_td_gene_clus.csv", threeparttable = TRUE) %>%landscape()
+obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-obesity-td-gene-clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:obesitytdgeneclus) Tajima's D for windows at obesity associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-obesity_td_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{td} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-td-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:obesitytdgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fay.Wu.H"
 obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-obesity_fwh_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:obesityfwhgeneclus) Fay and Wu's H for windows at obesity associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-obesity_fwh_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{fwh} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-fwh-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:obesityfwhgeneclus}
+\end{table}
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fu.Li.F"
 obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-obesity_flf_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:obesityflfgeneclus) Fu and Li's F for windows at obesity associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-obesity_flf_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{flf} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-flf-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:obesityflfgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval=FALSE}
 s <- "Zeng.E"
 obesity$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., obesity$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% obesity_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-obesity_ze_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:obesityzegeneclus) Zeng's E for windows at obesity associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-obesity_ze_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{ze} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-ze-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:obesityzegeneclus}
+\end{table}
+
+\FloatBarrier
+
 #### Type 2 diabetes
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Tajima.D"
 t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-t2d_td_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dtdgeneclus) Tajima's D for windows at t2d associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>%  kableExtra::footnote("Appendices/04-t2d_td_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{td} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-td-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:t2dtdgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fay.Wu.H"
 t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-t2d_fwh_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dfwhgeneclus) Fay and Wu's H for windows at t2d associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-t2d_fwh_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{fwh} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-fwh-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:t2dfwhgeneclus}
+\end{table}
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fu.Li.F"
 t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-t2d_flf_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dflfgeneclus) Fu and Li's F for windows at t2d associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-t2d_flf_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{flf} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-flf-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:t2dflfgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval =FALSE}
 s <- "Zeng.E"
 t2d$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., t2d$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% t2d_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-t2d_ze_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:t2dzegeneclus) Zeng's E for windows at t2d associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-t2d_ze_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{ze} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-ze-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:t2dzegeneclus}
+\end{table}
 
+\FloatBarrier
 
 #### Kidney disease
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Tajima.D"
 kd$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., kd$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% kd_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-kd_td_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:kdtdgeneclus) Tajima's D for windows at kd associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-kd_td_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{td} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-td-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:kdtdgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fay.Wu.H"
 kd$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., kd$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% kd_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-kd_fwh_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:kdfwhgeneclus) Fay and Wu's H for windows at kd associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-kd_fwh_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{fwh} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-fwh-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:kdfwhgeneclus}
+\end{table}
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fu.Li.F"
 kd$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., kd$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% kd_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-kd_flf_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:kdflfgeneclus) Fu and Li's F for windows at kd associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-kd_flf_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{flf} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-flf-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:kdflfgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval=FALSE}
 s <- "Zeng.E"
 kd$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., kd$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% kd_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-kd_ze_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:kdzegeneclus) Zeng's E for windows at kd associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-kd_ze_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{ze} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-ze-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:kdzegeneclus}
+\end{table}
+
+\FloatBarrier
+
 #### Metabolic syndrome
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Tajima.D"
 metsyn$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., metsyn$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% metsyn_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-metsyn_td_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:metsyntdgeneclus) Tajima's D for windows at metsyn associated loci", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-metsyn_td_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{td} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-td-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:metsyntdgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fay.Wu.H"
 metsyn$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., metsyn$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% metsyn_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-metsyn_fwh_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:metsynfwhgeneclus) Fay and Wu's H for windows at metsyn associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-metsyn_fwh_gene_clus.csv", threeparttable = TRUE) %>%landscape()
 ```
 
+\begin{table}[ht]
+\caption{\gls{fwh} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-fwh-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:metsynfwhgeneclus}
+\end{table}
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Fu.Li.F"
 metsyn$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., metsyn$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% metsyn_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-metsyn_flf_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:metsynflfgeneclus) Fu and Li's F for windows at metsyn associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-metsyn_flf_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+\begin{table}[ht]
+\caption{\gls{flf} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-flf-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:metsynflfgeneclus}
+\end{table}
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
 s <- "Zeng.E"
 metsyn$mat_d[[s]] %>%  mutate(chrom = paste0('chr', chrom)) %>% gather(pop, st, -contains("chrom")) %>% left_join(., metsyn$mat_d[[s]] %>% select(contains("chrom")) %>% mutate(chrom = paste0('chr', chrom)) %>% GRanges() %>% txdb_gene_annotate() , by = c('chrom' = "seqnames", "chrom_start" = 'start', "chrom_end" = "end")) %>% mutate(superpop = str_sub(pop, 1,3))%>% filter(SYMBOL %in% metsyn_GR$SYMBOL) %>% mutate(chr = str_sub(chrom, 4) %>% as.numeric()) %>% select(-width, -strand, -TXSTRAND, -superpop) %>% spread(pop, st) %>% arrange(chr, chrom_start) %>% select(-chr) %>% set_names(., c("Chrom","Start","End", "Gene name", names(.)[-1:-4] %>% str_sub(., 5)))  %T>%{write_csv(., path = "Appendices/04-metsyn_ze_gene_clus.csv", col_names = TRUE)} %>% head()%>% kable(., longtable =  TRUE, caption = "(\\#tab:metsynzegeneclus) Zeng's E for windows at metsyn associated loci.", digits = 3, booktabs = TRUE)  %>% column_spec(., 5:35, width = '2em') %>% column_spec(., 1, width = '3.5em') %>% column_spec(., 2:4, width = '3.5em')%>% add_header_above(., header = c(rep("", 4), "AFR" = 7, "AMR" = 4, "EAS" = 5, "EUR" = 6, "POL" = 4, "SAS" = 5)) %>% kable_styling(font_size = 5,latex_options = 'repeat_header') %>% kableExtra::footnote("Appendices/04-metsyn_ze_gene_clus.csv", threeparttable = TRUE) %>% landscape()
 ```
+
+\begin{table}[ht]
+\caption{\gls{ze} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-ze-gene-clus.csv}
+\centering
+  \begin{tabular}{l l}
+  \end{tabular}
+  \label{tab:metsynzegeneclus}
+\end{table}
