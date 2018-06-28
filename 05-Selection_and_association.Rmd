@@ -402,7 +402,7 @@ nom_snps$winnard <- winnard_asb %>% filter(P < 1e-5) %>% pull(SNP)
 nom_snps$ult <- ult_asb %>% filter(P < 1e-5) %>% pull(SNP)
 ```
 
-#### UK Biobank gout defintions \gls{gwas}
+#### UK Biobank gout defintions GWAS
 
 The total number of genome-wide significant \glspl{snp} was `r nom_snps$hosp %>% length()` for the hospital definition, `r nom_snps$self %>% length()` for the self-reported gout definition, `r nom_snps$ult %>% length()` for the \gls{ult} use definition, `r nom_snps$winnard %>% length()` for the Winnard definition, and `r nom_snps$selfult %>% length()` for the self-reported gout or \gls{ult} use definition. There was considerable overlap between the definitions in the \glspl{snp} that met the nominal significance threshold of P < 1x10^-5^ (Figure \@ref(fig:ukOverlap)). There were five main regions of the genome that had peaks of association with gout. These were at _GCKR_ on chromosome 2, _SLC2A9_ and _ABCG2_ on chromosome 4, the _SLC17A1-SLC17A3_ region on chromosome 6, and the _SLC22A11-SLC22A12_ region on chromosome 11 (Figure \@ref(fig:manhatSelfUltAgeSexBmi)). Only the peaks at _SLC2A9_ and _ABCG2_ reached genome-wide significance under the hospital definition.
 
