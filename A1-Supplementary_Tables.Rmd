@@ -24,7 +24,7 @@ names(markers) <- c("chrom","chrom_start","marker","ref","alt")
 
 ### Hider Regions
 
-This table contains the regions from @Hider2013 there were used in section \@ref(priorPubs).
+This table contains the regions from @Hider2013 that were used in section \@ref(priorPubs).
 
 ```{r}
 hider_regions_found <- readRDS('data/03-hider-regions-found.RDS')
@@ -407,7 +407,7 @@ read_csv('Appendices/04-ze-pol-ninetyninethper-genes.csv', n_max = 0) %>% kable(
 
 \FloatBarrier
 
-### Clustered regions from significant markers for \gls{ihs} and \gls{nsl}
+### Clustered regions from significant markers for iHS and nSL
 
 ```{r}
 clus_ihs <- readRDS('~/data/NZ_coreExome_1kgp/haplotype/ihs_clus_regions-15-12-2017.RDS')

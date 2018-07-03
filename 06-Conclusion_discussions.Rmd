@@ -159,6 +159,7 @@ Overall, it was shown that there was evidence suggesting positive selection in P
 
 Identification of additional gout-associated loci in \gls{gwas} was limited when selection statistics were incorporated, but the number of statistics used was not exhaustive so expansion of the statistics used, particularly cross-populational statistics, may yield different results. It is also shown that the use of self-reported gout or \gls{ult} usage to define gout-cases in a case-control genetic association study gave the best performance, in the absence of the gold-standard gout diagnosis, or \gls{acr} criteria.
 
+This thesis has provided identification and characterisation of regions of the genome that displayed "signatures of selection" in Polynesian populations, that was previously unavailable. It has also provided insight into the role of selection with respect to urate and metabolic disease. 
 
 <!-- - identified regions of the genome showing signs of selection in Polynesian populations, of which this study was the first to perform a genome-wide scan for selection using multiple statistics -->
 <!-- - loci associated with gout and metabolic disease show evidence of possible selection in Polynesian populations -->

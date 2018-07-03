@@ -638,13 +638,13 @@ polyGout %>% filter(TEST == "ADD",  P < 1e-5)
 ```
 
 
-### Comparison of haplotypic selection with gout \gls{gwas} 
+### Comparison of haplotypic selection with gout GWAS 
 
 In order to determine if additional loci (which didn't meet the significance threshold in \gls{gwas}), had extra information from the selection tests that could prioritise the \gls{gwas} results, the gout \gls{gwas} and selection results were combined. The "European Ancestry" combination, combined the \gls{gwas} performed in the UK Biobank using the self-reported gout or \gls{ult} usage with the haplotypic selection results for the \gls{gbr} population. The "Polynesian Ancestry" combination, combined the Polynesian gout \gls{gwas} with the haplotypic selection results for the Polynesian populations of \gls{cim}, \gls{nzm}, \gls{sam}, and \gls{ton}. All of the analyses were restricted to the markers of the CoreExome \gls{snp} array. A new threshold for the combinations was used that required an |\gls{ihs}|  > 2 or |\gls{nsl}| > 2 and a \gls{gwas} P < 2 x 10^-4^. the \gls{ihs} and \gls{nsl} threshold was selected because |\gls{ihs}| or |\gls{nsl}| > 2 is equivalent to P < 0.05, since the statistics are very similar to a Z-score. A "probability score" for the combined statistics was calculated using Score~combined~ = P~GWAS~ x P~selection~, where P~selection~ was given by 1 - P(|Z|), and Z was the \gls{ihs} or \gls{nsl} value. With the Polynesian populations, the maximum |value| was used. The combined threshold was set as Score~combined~ < 5 x 10^-8^, to mirror the \gls{gwas} significance threshold.
 
 
 
-#### UK Biobank GWAS and haplotypic selection in \gls{gbr}
+#### UK Biobank GWAS and haplotypic selection in GBR
 
 ```{r loadSelection}
 # ihs and nsl sig markers

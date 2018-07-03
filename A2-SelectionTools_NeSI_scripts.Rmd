@@ -1,4 +1,4 @@
-# Appendix B
+# Appendix B - Additional scripts
 
 This appendix contains the main scripts that were used to generate results.
 
