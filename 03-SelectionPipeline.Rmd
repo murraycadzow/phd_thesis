@@ -9,6 +9,7 @@ knitr::opts_chunk$set(cache.path = "03_cache/")
 
 library(phdFunctions)
 #devtools::install_github('murraycadzow/UpSetR')
+#devtools::install_github('mkanai/ggman')
 library(UpSetR)
 library(Homo.sapiens)
 library(ggbio)
