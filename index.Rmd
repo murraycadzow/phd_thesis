@@ -1,7 +1,7 @@
 ---
 title: 'Selection and Metabolic Disease in the Pacific'
-author: "Murray Cadzow"
-date: "`r Sys.Date()`"
+#author: "Murray Cadzow"
+#date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
 # bookdown::gitbook: default
