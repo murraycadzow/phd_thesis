@@ -26,3 +26,4 @@ Thesis.log
 Thesis.Rmd
 
 _bookdown_files/
+packrat/lib*/
