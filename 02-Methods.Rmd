@@ -100,7 +100,7 @@ The ancestral allele was used as annotated in the 1000 Genomes Phase 3 \gls{vcf}
 
 SelectionTools v1.1 [@Cadzow2014] was used to generate the haplotypic selection statistics of \gls{ihs}, \gls{nsl}, and \gls{xpehh}. The combined population phased \gls{vcf} file was split into individual populations. Within each population, markers were filtered for a \gls{maf} of > 0.01 and a \gls{hwe} exact test of P > 10^-6^ [@Wigginton2005]. Markers were converted into "ancestral" or "derived" by comparing alleles to the \textit{homo sapiens} ancestral fasta (see Table \@ref(tab:refDatasets)) with alleles that matched the ancestor set to 0, and non-missing, non-matching alleles set to 1.
 
-\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014]. Markers with an \gls{ihs}, \gls{nsl} or \gls{xpehh} value > |2.6| met the threshold for significance, which was equivalent to approximately 1% of the most extreme values.
+\gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins of 0.05 was done using _norm_ as part of selscan v1.1.0b [@Szpiech2014]. Markers with an |\gls{ihs}|, |\gls{nsl}| or |\gls{xpehh}| value > 2.6 met the threshold for significance, which was equivalent to approximately 1% of the most extreme values.
 
 Significant markers were also clustered into genomic regions using the DBSCAN package v1.1.1 [@dbscanref] in R, where nearby \glspl{snp} were assigned the same group identifier. The search radius used was 200 kb and the minimum number of points for a cluster was one. Cluster regions were created by taking both the minimum and maximum position for each group identifier, population, and chromosome.
 
