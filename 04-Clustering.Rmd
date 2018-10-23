@@ -193,7 +193,7 @@ eigen %>% filter(super_pop == 'POL') %>% ggplot(., aes(x = PC6, y = PC2, shape =
 
 
 
-Admixture analysis is a method that can be used to infer the number of ancestral populations that contribute to current populations by modelling the probability of the observed genotypes using proportions of ancestral populations and the population allele frequencies [@Alexander2009]. Proportions of theoretical ancestral populations for each population were calculated, using all of the populations to establish the number of ancestral populations (K), that resulted in the smallest cross-validation error. Five-fold cross-validation was used to calculate this error for K from 1 to 15. The K value with the lowest cross-validation error was K = 11, with an error of 0.3855 (Table \@ref(tab:admixCV)).  
+Admixture analysis is a method that can be used to infer the number of ancestral populations that contribute to current populations by modelling the probability of the observed genotypes using proportions of ancestral populations and the population allele frequencies [@Alexander2009]. Proportions of theoretical ancestral populations for each population were calculated, using all of the populations to establish the number of ancestral populations (K), that resulted in the smallest cross-validation error. Five-fold cross-validation was used to calculate this error for K from 1 to 15. The K value with the lowest cross-validation error was K = 11, with an error of 0.3855 (Table \@ref(tab:admixCV)). Admixture analysis was performed to identify the likely presence of admixture in populations, not for quantification purposes, for cultural sensitivity reasons.
 
 
 
@@ -211,7 +211,7 @@ ref_fam <- left_join(ref_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','PO
 ```
 
 
-(ref:admix) Proportions of ancestral populations as inferred from ADMIXTURE, using K = 11. Ancestral population (AP) represents a particular theoretical ancestral population. Q is the ancestral proportion.
+(ref:admix) Proportions of ancestral populations as inferred from ADMIXTURE, using K = 11. Ancestral population (AP) represents a particular theoretical ancestral population. Q is the ancestral proportion. Individuals in the sample populations are represented on the x axis.
 
 ```{r admix, echo = FALSE, fig.height = 8, fig.width = 6, fig.cap = '(ref:admix)', warning=FALSE}
 # barplot of the reference proportions
