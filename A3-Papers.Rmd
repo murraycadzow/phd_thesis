@@ -1,0 +1,32 @@
+# Appendix C - Papers published during the course of this thesis
+
+## Papers relating to this thesis
+
+**Cadzow, M.**, Merriman, T.R., Dalbeth (2017) N. Performance of gout definitions for genetic epidemiological studies: Analysis of UK Biobank. _Arthritis Research and Therapy_. **19**: 181
+
+
+**Cadzow, M.**, Merriman, T.R., Boocock, J., Dalbeth, N., Stamp, L.K., Black, M.A., Visscher, P.M., Wilcox, P.L. (2016) Lack of direct evidence for natural selection at the candidate thrifty gene locus, _PPARGC1A_. _BMC Medical Genetics_. **17**, 80 
+
+
+
+## Other papers
+
+Lacey, C.J., Doudney, K., Bridgman, P.G., George, P.M., Mulder, R.T., Zarifeh, J.J., Kimber, B., **Cadzow, M.J.**, Black, M.A., Merriman, T.R., Lehnert, K., Bickley, V.M., Pearson, J.F., Cameron, V.A., Kennedy, M.A. (2018) Copy number variants implicate cardiac function and development pathways in earthquake-induced stress cardiomyopathy. _Scientific Reports_. **8**, 7548 
+
+Tanner, C., Boocock, J., Stahl, E.A., Dobbyn, A., Mandal, A.K., **Cadzow, M.**, Phipps-Green, A.J., Topless, R.K., Hindmarsh, J.H., Stamp, L.K., Dalbeth, N., Choi, H.K., Mount, D.B., Merriman, T.R. (2017) Population-Specific Resequencing Associates the ATP-Binding Cassette Subfamily C Member 4 Gene With Gout in New Zealand Māori and Pacific Men. _Arthritis and Rheumatology_. **69**, 1461-1469. 
+
+Peters, B., Aidley, J., **Cadzow, M.**, Twell, D., Brownfield, L. (2017) Identification of Cis-regulatory modules that function in the male germline of flowering plants. _Methods in Molecular Biology_. **1669**, 275-293. 
+
+Flynn, T.J., **Cadzow, M.**, Dalbeth, N., Jones, P.B., Stamp, L.K., Hindmarsh, J.H., Todd, A.S., Walker, R.J., Topless, R., Merriman, T.R. (2015) Positive association of tomato consumption with serum urate: Support for tomato consumption as an anecdotal trigger of gout flares. _BMC Musculoskeletal Disorders_, **16**, 196 
+
+Dalbeth, N., Topless, R., Flynn, T., **Cadzow, M.**, Bolland, M.J., Merriman, T.R. (2015) Mendelian randomization analysis to examine for a causal effect of urate on bone mineral density. _Journal of Bone and Mineral Research_. **30**, 985-991
+
+Topless, R.K., Flynn, T.J., **Cadzow, M.**, Stamp, L.K., Dalbeth, N., Black, M.A., Merriman, T.R. (2015) Association of _SLC2A9_ genotype with phenotypic variability of serum urate in pre-menopausal women. _Frontiers in Genetics_. **6**, 313
+
+
+
+
+
+
+
+
