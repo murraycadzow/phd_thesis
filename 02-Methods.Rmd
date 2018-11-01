@@ -374,7 +374,7 @@ The \glsdesc{1kgp} was an international consortium that was established in 2007 
 
 ```{r populations, results = 'asis', echo = FALSE}
 
-read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%  knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations used in the selection analysis (n = 3004).') %>% kableExtra::group_rows("African Super Population (AFR) n = 661", 1,7) %>% kableExtra::group_rows("Admixed American Super Population (AMR) n = 347", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS) n = 504", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR) n = 603", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)* n = 400", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS) n = 489", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study. All others are from the 1000 Genomes Project.", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
+read.csv('data/02-populations.csv', stringsAsFactors = FALSE) %>% left_join(., panel %>% group_by(pop) %>% tally(), by = 'pop') %>% filter(!pop %in% c("EPN","OMN","AXI","WPN","NAD") & superPop != "") %>% arrange(superPop, pop) %>% mutate(pop = if_else(pop %in% c("NZM","NZC","CIM","SAM","TON"), paste0(pop,'*'), pop))%>% select("Population" = pop, "Description" = description, n, "Genotype\nPlatform" = genotypePlatform) %>%  knitr::kable(format = 'latex', booktabs = TRUE, caption = '(\\#tab:populations) Description of Populations used in the selection analysis (n = 3004).', caption.short = "Description of Populations used in the selection analysis") %>% kableExtra::group_rows("African Super Population (AFR) n = 661", 1,7) %>% kableExtra::group_rows("Admixed American Super Population (AMR) n = 347", 8, 11) %>% kableExtra::group_rows("East Asian Super Population (EAS) n = 504", 12, 16) %>% kableExtra::group_rows("European Super Population (EUR) n = 603", 17, 22) %>% kableExtra::group_rows("Polynesian Super Population (POL)* n = 400", 23, 26) %>% kableExtra::group_rows("South Asian Super Population (SAS) n = 489", 27, 31) %>% kableExtra::add_footnote("NZC, NZM, TON, SAM, and CIM are from the 'Genetics of Aotearoa' study. All others are from the 1000 Genomes Project.", notation = "symbol") %>% kableExtra::kable_styling(font_size = 8)
 ```
 
 
@@ -684,7 +684,7 @@ The UK Biobank is a collection of 500,000 individuals, mostly of European ancest
 
 Table \@ref(tab:refDatasets) provides the name of the dataset, the date it was accessed, and the URL from which the dataset was downloaded. These datasets were incorporated into many of the analysis steps.
 
-Table: (\#tab:refDatasets) _Reference Datasets_
+Table: (\#tab:refDatasets) Reference Datasets
 
 | Name | Date | URL |
 |:-------------------------------|--------------------------|--------------------------------------------------------------|
