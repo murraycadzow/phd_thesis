@@ -960,7 +960,7 @@ There was no signal of selection for the previously reported 'thrifty genes' of 
 
 (ref:crebrf) Schematic of the _CREBRF_ locus with flanking regions, at chr5:172,600,000-173,000,000. Positions of the markers included on the CoreExome \gls{snp} array are indicated by vertical lines (top). Positions for the significant \gls{ihs} and \gls{nsl} markers are shown for \gls{nzm}, \gls{sam}, and \gls{ton}. There were no significant markers for \gls{cim}. Exons for genes are indicated by rectangles, and direction of transcription indicated by arrow heads (bottom). 
 
-```{r crebrf, fig.cap= '(ref:crebrf)', eval = TRUE, message =FALSE, warning = FALSE, fig.height=7}
+```{r crebrf, fig.cap= '(ref:crebrf)', eval = TRUE, message =FALSE, warning = FALSE, fig.height=7, fig.scap = "Schematic of \\textit{CREBRF} locus with flanking regions.", out.extra=""}
 
 wh <- subsetByOverlaps(genesymbol, GRanges(seqnames = 'chr5', IRanges(start = 172e6, end = 173e6)))
 wh <- range(wh, ignore.strand = TRUE)
@@ -995,7 +995,7 @@ A complete list of all of the genes that had windows in the 1^st^ percentile and
 
 (ref:superUpset) Upset plot showing the intersections of genes that had both intra-population haplotypic and frequency spectrum-evidence at the individual population level and were then pooled into their super population group. The left histogram shows the total number of genes with both haplotypic and frequency spectrum-based evidence for each super population. The top histogram is the number of genes that were in common between the super populations. The dots indicate the particular set of super populations for the intersection and are ordered by number of intersecting sets.
 
-```{r superUpset, fig.cap = '(ref:superUpset)', eval = TRUE, fig.scap = "Upset plot of intrapopulation haplotypic and frequency spectrum-based evidence pooled by super population.", out.extra = ""}
+```{r superUpset, fig.cap = '(ref:superUpset)', eval = TRUE, fig.scap = "Upset plot of intra-population haplotypic and frequency spectrum-based evidence pooled by super population.", out.extra=""}
 
 p <- panel %>% mutate(pop2 = paste0(super_pop,'_',pop)) %>% select(pop,pop2) %>% filter(!pop %in% c('WPN','EPN','POL','NAD')) %>% distinct()
 pop_genes <- lapply(p$pop, extract_sig)
@@ -1041,7 +1041,7 @@ kegg_sig %>%
   distinct() %>% spread(stat, stat2, "") %>% unite(col = "Overlap", c("td", "flf","ihs", "nsl")) %>% spread(pop, Overlap, "") %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_+$', replacement = "" ))) %>% mutate_at(c("CIM", "NZM","SAM","TON"), funs(stringr::str_replace(.,pattern = '_', replacement = ", " ))) %>% 
   mutate(term2 = sapply(Term, function(x){strsplit(x, "_")[[1]][1]})) %>% select(-Term) %>% 
   select( term2, everything()) %>% 
-  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.', longtable = FALSE, linesep = "", escape = FALSE) %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(., latex_options = 'scale_down', font_size = 10) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway. P values are adjusted for multiple-testing.", general_title = "", threeparttable = TRUE) %>% kableExtra::landscape()
+  kable(., col.names = c("Pathway Term","CIM","NZM","SAM", "TON"), format = 'latex', booktabs = TRUE, caption = '(\\#tab:keggPath) Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.', longtable = FALSE, linesep = "", escape = FALSE, caption.short = "Significant pathway terms from Enrichr KEGG 2016 pathway enrichment analysis in Polynesian populations.") %>% add_header_above(., c("", "Population" = 4)) %>% kable_styling(., latex_options = 'scale_down', font_size = 10) %>% footnote(general = "Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway. P values are adjusted for multiple-testing.", general_title = "", threeparttable = TRUE) %>% kableExtra::landscape()
 ```
 
 
@@ -1239,7 +1239,7 @@ The significant \gls{ihs} and \gls{nsl} values after conversion to a P-value are
 
 (ref:cimHapMan) Manhattan plot for significant markers in \gls{cim} for both \gls{ihs} and \gls{nsl}.
 
-```{r cimHapMan, out.extra='angle=90', fig.cap = '(ref:cimHapMan)', out.height = "40%", message= FALSE, warning = FALSE, fig.align='center'}
+```{r cimHapMan, out.extra='angle=90', fig.cap = '(ref:cimHapMan)', out.height = "40%", message= FALSE, warning = FALSE, fig.align='center', fig.scap = "Manhattan plot for significant markers in \\acrlong{cim} for both \\acrshort{ihs} and \\acrshort{nsl}."}
 ggsave(filename = 'images/03_selectionpipeline/cimHapMan.png',width = 10, plot = bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'CIM') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(.,significance = 0) + facet_grid(statid~.) )
 
 knitr::include_graphics('images/03_selectionpipeline/cimHapMan.png')
@@ -1538,7 +1538,7 @@ The significant markers from \gls{ihs} and \gls{nsl} were converted to P-values 
 
 (ref:nzmHapMan) Manhattan plot for significant markers in \gls{nzm} for both \gls{ihs} and \gls{nsl}.
 
-```{r nzmHapMan, out.extra='angle=90', fig.cap = '(ref:nzmHapMan)', out.height = "40%", message=FALSE, warning=FALSE, fig.align='center'}
+```{r nzmHapMan, out.extra='angle=90', fig.cap = '(ref:nzmHapMan)', out.height = "40%", message=FALSE, warning=FALSE, fig.align='center', fig.scap = "Manhattan plot for significant markers in \\acrlong{nzm} for both \\acrshort{ihs} and \\acrshort{nsl}."}
 ggsave(filename = 'images/03_selectionpipeline/nzmHapMan.png',width = 10, plot = bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'NZM') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(., significance = 0) + facet_grid(statid~.)       )
 knitr::include_graphics('images/03_selectionpipeline/nzmHapMan.png')
 ```
@@ -1751,7 +1751,7 @@ There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM', genen
 
 (ref:samHapMan) Manhattan plot for significant markers in \gls{sam} for both \gls{ihs} and \gls{nsl}.
 
-```{r samHapMan, out.extra='angle=90', fig.cap = '(ref:samHapMan)', fig.align='center', out.height = "40%", message = FALSE, warning = FALSE}
+```{r samHapMan, out.extra='angle=90', fig.cap = '(ref:samHapMan)', fig.align='center', out.height = "40%", message = FALSE, warning = FALSE, fig.scap = "Manhattan plot for significant markers in \\acrlong{sam} for both \\acrshort{ihs} and \\acrshort{nsl}."}
 ggsave(filename = 'images/03_selectionpipeline/samHapMan.png',width = 10, plot = bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'SAM') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(.,significance = 0) + facet_grid(statid~.)
 )
 knitr::include_graphics('images/03_selectionpipeline/samHapMan.png')
@@ -1949,7 +1949,7 @@ There were `r bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'TON', genen
 
 (ref:tonHapMan) Manhattan plot for significant markers in \gls{ton} for both \gls{ihs} and \gls{nsl}.
 
-```{r tonHapMan, out.extra='angle=90', fig.cap = '(ref:tonHapMan)', out.height = "40%", message=FALSE, warning = FALSE, fig.align='center'}
+```{r tonHapMan, out.extra='angle=90', fig.cap = '(ref:tonHapMan)', out.height = "40%", message=FALSE, warning = FALSE, fig.align='center',fig.scap = "Manhattan plot for significant markers in \\acrlong{ton} for both \\acrshort{ihs} and \\acrshort{nsl}."}
 ggsave(filename  = 'images/03_selectionpipeline/tonHapMan.png',width = 10, plot = bind_rows(sig_ihs_val, sig_nsl_val) %>% filter(pop == 'TON') %>% mutate(P = 1- pnorm(abs(statvalue)), statid = case_when(statid == 20 ~ 'nSL', statid== 26 ~ 'iHS')) %>% left_join(markers, by = c('chrom', 'chrom_start')) %>% rename(CHR = chrom, BP = chrom_start, SNP = marker)%>% ggman::ggmanhattan(., significance = 0) + facet_grid(statid~.))
 knitr::include_graphics('images/03_selectionpipeline/tonHapMan.png')
 ```
@@ -2155,18 +2155,18 @@ bind_rows(
   summarise(urate = sum(urate), obesity = sum(obesity), t2d = sum(t2d), kd = sum(kd), metsyn = sum(metsyn)) %>% 
   mutate(type = 'combined')
 ) %>% 
-  kable(., col.names = c('Population','Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = '(\\#tab:polDiseaseGenesTab) Number of Genes with evidence of possible positive selection in Polynesians', booktabs = TRUE)
+  kable(., col.names = c('Population','Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome','Type'), caption = '(\\#tab:polDiseaseGenesTab) Number of genes with evidence of possible positive selection in Polynesians', booktabs = TRUE)
 ```
 
 ```{r superDiseaseGenesTab, warning=FALSE, eval = FALSE}
 superDiseaseGeneTab2 %>% 
-  kable(., col.names = c('Population',"Super Pop",'Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome'), caption = '(\\#tab:superDiseaseGenesTab) Number of Genes with evidence of possible positive selection in Super populations from intra-population tests from urate and co-morbidities \\gls{gwas} associated loci.', format ='latex', booktab = TRUE) %>% footnote(c("Each category is reported as the number of genes that were significant in the format 'SFS; Haplotypic; Combined'.", "Combined is the number of genes that had both SFS and haplotypic evidence."))
+  kable(., col.names = c('Population',"Super Pop",'Urate / Gout','Obesity','T2D','Kidney Disease','Metabolic Syndrome'), caption = '(\\#tab:superDiseaseGenesTab) Number of genes with evidence of possible positive selection in super populations from intra-population tests from \\gls{gwas} associated loci for urate and co-morbidities.', format ='latex', booktab = TRUE, caption.short = "Number of genes with evidence of possible positive selection from intra-population tests from GWAS associated loci for urate and co-morbidities." ) %>% footnote(c("Each category is reported as the number of genes that were significant in the format 'SFS; Haplotypic; Combined'.", "Combined is the number of genes that had both SFS and haplotypic evidence."))
 ```
 
 ```{r}
 superDiseaseGeneTab3 %>% kable(., col.names = c("Population","Super Pop.", rep(c("SFS","Hap.","Com."), 5)) , 
                                format = 'latex', booktabs = TRUE, linesep = '',
-                               caption = '(\\#tab:superDiseaseGenesTab) Number of genes with evidence of possible positive selection in super populations from intra-population tests from urate and co-morbidities \\gls{gwas} associated loci.') %>% kableExtra::row_spec(., 0, angle = 90) %>% add_header_above(., c("", "", 'Urate / Gout'=3,'Obesity'=3,'T2D'=3,'Kidney Disease'=3,'Metabolic Syndrome'=3)) %>% footnote(.,"Hap = haplotypic. Com = combined. Combined is the number of genes that had both SFS and haplotypic evidence.", general_title = "", threeparttable = TRUE) %>% kable_styling(latex_options = 'hold_position')
+                               caption = '(\\#tab:superDiseaseGenesTab) Number of genes with evidence of possible positive selection in super populations from intra-population tests from urate and co-morbidities \\gls{gwas} associated loci.', caption.short = "Number of genes with evidence of possible positive selection in super populations from intra-population tests from urate and co-morbidities \\acrshort{gwas} associated loci.") %>% kableExtra::row_spec(., 0, angle = 90) %>% add_header_above(., c("", "", 'Urate / Gout'=3,'Obesity'=3,'T2D'=3,'Kidney Disease'=3,'Metabolic Syndrome'=3)) %>% footnote(.,"Hap = haplotypic. Com = combined. Combined is the number of genes that had both SFS and haplotypic evidence.", general_title = "", threeparttable = TRUE) %>% kable_styling(latex_options = 'hold_position')
 ```
 
 \FloatBarrier
@@ -3041,7 +3041,7 @@ rs2329371	0.723	0.531	0.51	0.744	1.0	0.707	0.698
 rs1451375	0.492	0.319	0.611	0.497	0.707	1.0	0.988
 rs1966839	0.49	0.316	0.607	0.495	0.698	0.988	1.0", header = TRUE)
 
-ddc_eas_r2 %>% dplyr::rename(`Rs number` = RS_number) %>% kable(format = 'latex', caption = '(\\#tab:ddcLd) Linkage disequilibrium in EAS populations (R\\textsuperscript{2}) between markers in \\textit{DDC}.', escape = FALSE, booktabs = TRUE) %>% kableExtra::row_spec(0, angle = 90) %>% footnote(general_title = "", general = "LD was calculated in the EAS population of the 1000 Genomes Project using LDlink \\\\citep{Machiela2015}, due to not all markers being present on the CoreExome SNP array.", threeparttable = TRUE, escape=  FALSE)
+ddc_eas_r2 %>% dplyr::rename(`Rs number` = RS_number) %>% kable(format = 'latex', caption = '(\\#tab:ddcLd) Linkage disequilibrium in EAS populations (R\\textsuperscript{2}) between markers in \\textit{DDC}.', escape = FALSE, booktabs = TRUE, caption.short = "Linkage disequilibrium in EAS populations between markers in \\textit{DDC}.") %>% kableExtra::row_spec(0, angle = 90) %>% footnote(general_title = "", general = "LD was calculated in the EAS population of the 1000 Genomes Project using LDlink \\\\citep{Machiela2015}, due to not all markers being present on the CoreExome SNP array.", threeparttable = TRUE, escape=  FALSE)
 ```
 
 (ref:ldDDCnzm) Linkage disequilibrium of \gls{ihs} significant SNPs 
