@@ -2,7 +2,7 @@
 
 ## Papers relating to this thesis
 
-**Cadzow, M.**, Merriman, T.R., Dalbeth (2017) N. Performance of gout definitions for genetic epidemiological studies: Analysis of UK Biobank. _Arthritis Research and Therapy_. **19**: 181
+**Cadzow, M.**, Merriman, T.R., Dalbeth (2017) N. Performance of gout definitions for genetic epidemiological studies: Analysis of UK Biobank. _Arthritis Research and Therapy_. **19**, 181
 
 
 **Cadzow, M.**, Merriman, T.R., Boocock, J., Dalbeth, N., Stamp, L.K., Black, M.A., Visscher, P.M., Wilcox, P.L. (2016) Lack of direct evidence for natural selection at the candidate thrifty gene locus, _PPARGC1A_. _BMC Medical Genetics_. **17**, 80 
