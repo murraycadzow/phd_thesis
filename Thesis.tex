@@ -25,6 +25,7 @@
 \usepackage[unicode=true]{hyperref}
 \hypersetup{
             pdftitle={Selection and Metabolic Disease in the Pacific},
+            pdfauthor={Murray Cadzow},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -131,6 +132,14 @@
 \linespread{1.3} \normalsize
 
 %% end of otago thesis setup
+\usepackage[toc]{appendix} % package for making appendices
+
+% Change the default cref name for appendix:
+\usepackage{cleveref}
+\crefname{appcha}{Appendix}{Appendices}
+\crefname{appsec}{Appendix}{Appendices}
+
+
 \usepackage{rotating}
 \usepackage{lscape}
 \newcommand{\blandscape}{\begin{landscape}}
@@ -175,6 +184,7 @@
 %\printglossary[type=\acronymtype]
 
 \title{Selection and Metabolic Disease in the Pacific}
+\author{Murray Cadzow}
 \date{}
 
 \begin{document}
@@ -247,14 +257,14 @@ resistance combined with at least two of the following: impaired glucose
 regulation or diabetes, insulin resistance, raised arterial pressure,
 raised plasma triglycerides or low high-density lipoproteins to
 cholesterol levels, central obesity, and microalbuminuria
-\citep{Alberti1998}. \Gls{hu} can also be considered a component but is
-not required for the condition to be recognised. \gls{hu} is defined as
-a serum urate \(\geq\) 0.42 mmol/L in males and \(\geq\) 0.36 mmol/L in
-females \citep{Choi2007b}. There has been a slight revision and
-refinement in the criteria for a diagnosis of metabolic syndrome
-\citep{Alberti2009}. The requirement for diabetes mellitus and or
-insulin resistance is no longer used, instead a requirement of having 3
-of the 5 co-morbidities is used.
+\citep{Alberti1998}. Hyperuricaemia can also be considered a component
+but is not required for the condition to be recognised. hyperuricaemia
+is defined as a serum urate \(\geq\) 0.42 mmol/L in males and \(\geq\)
+0.36 mmol/L in females \citep{Choi2007b}. There has been a slight
+revision and refinement in the criteria for a diagnosis of metabolic
+syndrome \citep{Alberti2009}. The requirement for diabetes mellitus and
+or insulin resistance is no longer used, instead a requirement of having
+3 of the 5 co-morbidities is used.
 
 Obesity is defined as a \gls{bmi} of \textgreater{}30
 kg/m\textsuperscript{2} and is a contributing risk factor for many other
@@ -291,7 +301,7 @@ compared to 4\% in both European and Asian males
 \citep{Winnard2012, Winnard2013}. While New Zealand M\tex{\={a}}ori and
 Pacific people have an increased prevalence of hyperuricaemia, they also
 have a genetic predisposition to elevated urate and risk of gout
-\citep{Hollis-Moffatt2009, Hollis-Moffatt2011, Phipps-Green2010}. The
+\citep{Hollis-Moffatt2009, Phipps-Green2010, Hollis-Moffatt2011}. The
 prevalence of metabolic syndrome in US gout patients is
 \textasciitilde{}60\%, or nearly 3 fold higher than US adults without
 gout \citep{Choi2007b}.
@@ -410,16 +420,17 @@ sites model, where \(\pi\) is the average pair-wise nucleotide
 differences per site \citep{Tajima1996a}. The infinite sites model
 assumes only one mutation occurs per site.
 
-Natural selection seems to be the more popular model to the neutral
-hypothesis, however the methodology for detecting selection utilises the
-neutral hypothesis for many of the methods mentioned later (section
-\ref{selMethods}). These methods use a model for neutrality, and if the
-statistic reaches a level that is considered to be beyond that of the
-neutral model, the model is rejected. Typically, the neutral hypothesis
-is a composite hypothesis using assumptions for which it would be
-difficult to find a human population that fulfils them, such as: ``the
-population is in equilibrium at constant size with no population
-subdivision or gene flow from other populations'' \citep{Nielsen2005a}.
+The neutral model allows for natural selection, but proposes that the
+majority of the genome is selectively neutral \citep{kimura1979neutral}.
+The methodology for detecting selection utilises the neutral hypothesis
+for many of the methods mentioned later (section \ref{selMethods}).
+These methods use a model for neutrality, and if the statistic reaches a
+level that is considered to be beyond that of the neutral model, the
+model is rejected. Typically, the neutral hypothesis is a composite
+hypothesis using assumptions for which it would be difficult to find a
+human population that fulfils them, such as: ``the population is in
+equilibrium at constant size with no population subdivision or gene flow
+from other populations'' \citep{Nielsen2005a}.
 
 \subsection{Selection}\label{selection}
 
@@ -463,7 +474,7 @@ as, hard, soft, and partial or incomplete. A hard sweep, also known as a
 classical sweep, is when a beneficial allele rapidly rises in frequency
 and through hitch-hiking the neutral variation is simultaneously reduced
 at linked sites, as shown in Figure \ref{fig:sweepDiagram}
-\citep{Hermisson2005, Hermisson2017, Nielsen2005, Smith1974}.
+\citep{Smith1974, Hermisson2005, Nielsen2005, Hermisson2017}.
 
 
 
@@ -477,7 +488,7 @@ at linked sites, as shown in Figure \ref{fig:sweepDiagram}
 
 }
 
-\caption{Representation of alleles before and after a hard
+\caption[Diagram of hard selection sweep.]{Representation of alleles before and after a hard
 sweep. Each rectangle represents a haplotype within a population. A new
 mutation is shown in red and neutral alleles are shown in black. After a
 hard sweep the new mutation becomes fixed in the population, along with
@@ -614,15 +625,19 @@ K\textsubscript{a}/K\textsubscript{s} ratio (or
 d\textsubscript{N}/d\textsubscript{S} ratio as it is often referred to),
 and is used to infer functional impact from selection, since synonymous
 mutations are thought of as silent mutations with a neutral effect on
-the protein \citep{Hughes1988}. Comparing the baseline rate of mutation
-(synonymous) to the non-synonymous rate gives an understanding of the
-tolerance of amino acid alternatives in the protein, with an excess of
-non-synonymous mutations indicating the novel protein structures are
-being favoured and the protein is being positively selected for. A
-K\textsubscript{a}/K\textsubscript{s} ratio greater than 1 is indicative
-of positive selection, while a value less than 1 is indicative of
-negative selection against deleterious mutations and for keeping the
-protein conserved.
+the protein \citep{Hughes1988}. K\textsubscript{a} is the number of
+non-synonymous differences between sequences normalised by the total
+number of non-synonymous sites in the sequence. K\textsubscript{s} is
+likewise, but for synonymous differences normalised by the total number
+of synonymous sites in the sequence. Comparing the baseline rate of
+mutation (synonymous) to the non-synonymous rate gives an understanding
+of the tolerance of amino acid alternatives in the protein, with an
+excess of non-synonymous mutations indicating the novel protein
+structures are being favoured and the protein is being positively
+selected for. A K\textsubscript{a}/K\textsubscript{s} ratio greater than
+1 is indicative of positive selection, while a value less than 1 is
+indicative of negative selection against deleterious mutations and for
+keeping the protein conserved.
 
 \subsubsection{HKA}\label{hka}
 
@@ -630,11 +645,12 @@ The HKA test \citep{Hudson1987} compares between and within populations
 the polymorphism and divergence of two or more loci, and uses this to
 establish if a locus has been under selection, since variation within,
 and diversity between, species under neutrality should be based only on
-the mutation rate. The assumption that mutation rates at neutral loci is
-constant over time is important, as if it changes, it will affect the
-difference between the polymorphism and divergence. In practice the HKA
-test is powered for recent selection events, however, in practice it is
-difficult to find a putatively neutral locus \citep{Zhai2009}.
+the mutation rate. The assumption that mutation rates at neutral loci
+are constant over time is important, because if the rate changes, it
+will affect the difference between the polymorphism and divergence. In
+practice the HKA test is powered for recent selection events, however,
+in practice it is difficult to find a putatively neutral locus
+\citep{Zhai2009}.
 
 \subsection{Haplotypic methods}\label{haplotypic-methods}
 
@@ -645,13 +661,13 @@ The haplotypes that had unusually long haplotype homozygosity and a high
 frequency in the population indicated that the polymorphism had risen in
 prominence faster than it would be expected under the neutral model and
 therefore under selection. The main concept is that a beneficial
-mutation would not solely be selected for, but the surrounding region
-would initially be selected and therefore have a conservation effect. As
-time and generations progressed, this haplotype would decay due to
-recombination, and this haplotype decay can be used to assist in the
-ageing of the selection event. In order to use haplotypic methods, there
-is a requirement to establish the alleles that were inherited from the
-maternal side and those that were inherited from the paternal side
+mutation would not solely be selected for, with the surrounding region
+initially ``hitch-hiking'' and therefore it would have a conserving
+effect. As time and generations progressed, this haplotype would decay
+due to recombination, and this haplotype decay can be used to assist in
+the ageing of the selection event. In order to use haplotypic methods,
+there is a requirement to establish the alleles that were inherited from
+the maternal side and those that were inherited from the paternal side
 constituting the two haplotypes (phasing).
 
 \subsubsection{Integrated haplotype homozygosity
@@ -670,13 +686,13 @@ unstandardised \gls{ihs} is calculated in equation \eqref{eq:ihs}, which
 is the \texttt{selscan} version \citep{Szpiech2014}. Standardisation of
 \gls{ihs} is shown in equation \eqref{eq:stdihs}, where the expectations
 and standard deviation of equation \eqref{eq:ihs} are estimated from the
-empirical distribution of SNPs whose derived allele frequency p matches
-the frequency at the core \gls{snp} \citep{voight2006map}. Large
-positive values indicate long haplotypes carrying the derived allele,
-whereas negative values indicate haplotypes carrying the ancestral
-allele. The calculation in \citet{voight2006map} has
-\gls{ihh}\textsubscript{A} and \gls{ihh}\textsubscript{D} switched. The
-\citet{Szpiech2014} \gls{ihs} calculation is used in this thesis
+empirical distribution of SNPs where the \gls{daf} (see section
+\ref{dafsection}) p matches the frequency at the core \gls{snp}
+\citep{voight2006map}. Large positive values indicate long haplotypes
+carrying the derived allele, whereas negative values indicate haplotypes
+carrying the ancestral allele. The calculation in \citet{voight2006map}
+has \gls{ihh}\textsubscript{A} and \gls{ihh}\textsubscript{D} switched.
+The \citet{Szpiech2014} \gls{ihs} calculation is used in this thesis
 (equations \eqref{eq:ihs} and \eqref{eq:stdihs}). \Gls{ihs} identifies
 variants under selection driven to intermediate frequencies.
 
@@ -820,12 +836,17 @@ inbreeding coefficient for inbreeding as a whole in a population
 (equation \eqref{eq:fst}), F\textsubscript{IT} is the inbreeding
 coefficient for the individual in the total population and
 F\textsubscript{IS} is the inbreeding coefficient for inbreeding of the
-individual in the subpopulation. These fixation indices provide ways of
+individual in the subpopulation. Both F\textsubscript{IT} and
+F\textsubscript{IS} compare the observed heterozygosity of the
+individual with the expected heterozygosity in either the total
+population (F\textsubscript{IT}), or the subpopulation
+(F\textsubscript{IS}). These fixation indices provide ways of
 summarising population structure. Selection will act to drive an allele
 to fixation, whereas immigration usually reduces the frequency. When the
 selective advantage is strong, selection will be the dominant force on
-the locus, however, when the selective advantage is weak the allele will
-reduce in frequency and disappear. Cockerham
+the locus, however, when the selective advantage approaches zero, the
+allele will begin to act neutrally and disappear with a probability of
+one minus its frequency \citep{kimura_genetic_1968}. Cockerham
 \citetext{\citeyear{Cockerham1969}; \citeyear{Cockerham1973}} equated
 \(\theta\) (population genetic differentiation) with
 F\textsubscript{ST}, extending F\textsubscript{ST} from calculating
@@ -851,7 +872,7 @@ F_{ST} = \frac{F_{IT}{-}F_{IS}}{1{-}F_{IS}}
 
 F\textsubscript{ST} has been used in multiple studies as evidence for
 natural selection
-\citep{Akey2012, myles2007identification, pickrell2009signals}.
+\citep{myles2007identification, pickrell2009signals, Akey2012}.
 \citet{Akey2012} used F\textsubscript{ST} at individual loci and
 compared this to the distributions for the genome, chromosome and gene
 levels. The use of the empirical distribution to compare to
@@ -887,7 +908,7 @@ selection by conditional coalescent tree tend to be similar. The
 selection statistic (S) is based on comparing the lineage lengths of the
 two groups. Under neutrality S approaches \(\theta\), with significant
 departures from \(\theta\) being considered evidence of positive
-selection. When natural selection has a strong hitchhiking effect on a
+selection. When natural selection has a strong hitch-hiking effect on a
 selectively favoured allele, selection by conditional coalescent tree
 (and \gls{ihs}) is more powerful than \gls{td}, Fay and Wu's \emph{H},
 and measuring change in derived allele frequency (see \ref{dafsection}).
@@ -905,14 +926,16 @@ perform as well as \gls{fwh} \citep{Wang2014}.
 Similar to F\textsubscript{ST}, \gls{ddaf} looks at population
 differentiation. The derived allele is determined through the use of an
 ancestral out-group such as chimpanzees when used in human populations.
-\gls{ddaf} measures the absolute difference in the derived allele
-frequency between two populations \citep{Grossman2010} and has greater
-power to detect sweeps, both partial and complete, and outperforms
-\gls{xpehh} for partial sweeps \citep{Colonna2014}. \gls{ddaf} is part
-of the composite of multiple sites statistic \citep{Grossman2010} but
-has also been used as a standalone metric in humans
-\citep{Colonna2014, Gudbjartsson2015} and in other species such as
-cattle \citep{Randhawa2014} to measure differentiation.
+\Gls{daf} itself is calculated by determining the ancestral and derived
+state for an allele and calculating the allele frequency with regard to
+the derived state. \gls{ddaf} measures the absolute difference in the
+derived allele frequency between two populations \citep{Grossman2010}
+and has greater power to detect sweeps, both partial and complete, and
+outperforms \gls{xpehh} for partial sweeps \citep{Colonna2014}.
+\gls{ddaf} is part of the composite of multiple sites statistic
+\citep{Grossman2010} but has also been used as a standalone metric in
+humans \citep{Colonna2014, Gudbjartsson2015} and in other species such
+as cattle \citep{Randhawa2014} to measure differentiation.
 
 \subsection{Composite methods}\label{composite-methods}
 
@@ -1042,7 +1065,7 @@ The grouping of similar genetic populations may be an option to increase
 power with low sample sizes \citep{pickrell2009signals}). For
 F\textsubscript{ST}, power to detect selection should be sufficient if
 sample size is \textgreater{} 1/F\textsubscript{ST}
-\citep{Bhatia2013a, Bhatia2011}
+\citep{Bhatia2011, Bhatia2013a}
 
 Power of a statistic also needs to be considered for the type of
 selective sweep that may have occurred, such is the case with \gls{nsl},
@@ -1055,6 +1078,22 @@ bottlenecks, frequency spectrum tests (such as \gls{fwh}/ \gls{td}) have
 the best power for detecting moderately ancestral severe bottlenecks
 \citep{Depaulis2003}, whereas \gls{ze} and \gls{flf} have the most power
 during population expansion \citep{Zeng2006, Ramirez-Soriano2008}.
+Assessment of power to detect selection has previously been done through
+simulation or the use of well established loci as positive controls
+\citep{voight2006map, Zhai2009, Cadzow2016}. When simulating, it
+important to generate scenarios that include different demographic
+events as well as selection events. Simulated models are generally done
+in one of three ways, as a coalescent model, or a forward-in-time model,
+or by resampling \citep{Yuan2012}. The coalescent model (and most
+commonly used) works backwards-in-time to find the most recent common
+ancestor, and then permutes through models to arrive at the current
+state \citep{kingman_genealogy_1982, Yuan2012}. The forward-in-time
+simulations will take a starting ancestral population and then apply a
+population model, iterating through subsequent generations
+\citep{peng_forward-time_2010, Yuan2012}. Another approach can be to
+take the observed data and shuffle and resample it to generate empirical
+distributions. From each of these methods false positive and false
+negative rates can be calculated.
 
 \subsection{Challenges}\label{challenges}
 
@@ -1127,22 +1166,28 @@ quality \citep{Delaneau2014}.
 
 \section{Improving GWAS}\label{improving-gwas}
 
-\Gls{gwas} are a method to scan genomes, usually \gls{snp} genotype
-data, for association with a phenotype. The strength of \gls{gwas} is
-that prior knowledge of loci is not required and can be used as a tool
-for hypothesis generation. \Gls{gwas}, because of the large number of
-association tests, require large cohorts of samples to achieve
-sufficient power for statistical significance. As the effect size for a
-variant decreases, larger sample sizes are also needed, as power is
-proportional to the square of the effect size
-\citep{Korte2013, Hemani2013}. Limitations in recruiting sufficient
-numbers of participants for \gls{gwas} therefore requires new ways of
-increasing power to detect smaller effects without needing to increase
-sample size, as outlined in this section. The goal of being able to
-prioritise \gls{gwas} results by using additional information, such as
-incorporating \gls{ld} or selection statistics by using a weighting
-system to increase the power of a \gls{gwas}, has been suggested
-\citep{Ayodo2007, Roeder2006}. When \gls{ld} between observed
+\Gls{gwas} is a method to scan genomes, usually \gls{snp} genotype data,
+for association with a phenotype. Association is usually tested between
+a trait and a single \gls{snp} using either linear regression
+(continuous variable) or logistic regression (binomial variable), with
+confounders included where possible as covariates to the models. These
+association tests are repeated for each \gls{snp} across the genome (for
+a comprehensive explanation of \gls{gwas} methods see
+\citet{bush_chapter_2012}). Commonly an additive model is used for the
+\gls{snp}. The strength of \gls{gwas} is that prior knowledge of loci is
+not required and can be used as a tool for hypothesis generation.
+\Gls{gwas}, because of the large number of association tests, require
+large cohorts of samples to achieve sufficient power for statistical
+significance. As the effect size for a variant decreases, larger sample
+sizes are also needed, as power is proportional to the square of the
+effect size \citep{Hemani2013, Korte2013}. Limitations in recruiting
+sufficient numbers of participants for \gls{gwas} therefore requires new
+ways of increasing power to detect smaller effects without needing to
+increase sample size, as outlined in this section. The goal of being
+able to prioritise \gls{gwas} results by using additional information,
+such as incorporating \gls{ld} or selection statistics by using a
+weighting system to increase the power of a \gls{gwas}, has been
+suggested \citep{Roeder2006, Ayodo2007}. When \gls{ld} between observed
 \glspl{snp} and causal variants is high, such as in the case of
 selection, greater power in \gls{gwas} can be achieved by focusing on
 searching for non-additive variance \citep{Hemani2013}.
@@ -1181,8 +1226,9 @@ applied in a \gls{gwas} for malarial resistance variants
 evidence of positive selection because the beneficial allele will rise
 in prevalence and be in high \gls{ld} with other variants (due to
 genetic hitch-hiking) which can act as proxy markers
-\citep{Karlsson2014}. Complex disease traits compared to Mendelian
-disease associated traits have a bias towards larger mouse-human
+\citep{Karlsson2014}. The converse would apply for negative selection.
+Complex disease traits compared to Mendelian disease associated traits
+have a bias towards larger mouse-human
 K\textsubscript{a}/K\textsubscript{s} ratios, by comparing the
 K\textsubscript{a}/K\textsubscript{s} ratios for ortholog genes between
 mouse and human, which suggests that evidence of positive selection
@@ -1222,9 +1268,8 @@ length genes.
 \subsection{Genome-wide selection}\label{genome-wide-selection}
 
 Genome-wide selection in humans has been investigated by
-\citet{sabeti2006positive},
-\citet{pickrell2009signals},\citet{voight2006map}, \citet{Hancock2008},
-the 1000 Genomes Project Consortium
+\citet{sabeti2006positive}, \citet{voight2006map}, \citet{Hancock2008},
+\citet{pickrell2009signals}, the 1000 Genomes Project Consortium
 \citep{1KGP2010, 1KGP2012, 1KGP2015snp}, \citet{Grossman2010},
 \citet{Colonna2014}, and \citet{Mallick2016}. The population datasets
 used involved the HapMap Project \citep{Hapmap2005}, the Human Genome
@@ -1252,8 +1297,8 @@ Metabolic syndrome and gout have associations and interactions with
 genes in metabolic pathways and the immune system \citep{Osborn2012}.
 The categories of genes that have displayed evidence of selection from
 the previously mentioned genome-wide selection scans include: metabolism
-of sugars \citep{tang2007new, voight2006map}, drug metabolism
-\citep{tang2007new}, immune system \citep{Grossman2010, tang2007new},
+of sugars \citep{voight2006map, tang2007new}, drug metabolism
+\citep{tang2007new}, immune system \citep{tang2007new, Grossman2010},
 and climate adaptation \citep{Hancock2008}. Genes that play a role in
 adaptation to climate extremes are likely to play a role in metabolic
 disorders that make up metabolic syndrome \citep{Hancock2008}. In
@@ -1318,7 +1363,7 @@ such as malaria, leading to disease susceptibility in these populations
 
 The genetic influence of urate and gout is found in the under-excretion
 of serum urate. There are 28 loci that have been identified as having a
-role in \gls{hu} and gout, of which, two (\emph{ABCG2} and
+role in hyperuricaemia and gout, of which, two (\emph{ABCG2} and
 \emph{SLC2A9}) are responsible 3.4\% of the variability of urate
 \citep{Kottgen2013}. \emph{SLC2A9} encodes a urate transporter expressed
 on both the apical and baso-lateral membranes in the proximal tubule of
@@ -1327,7 +1372,7 @@ an ATP powered urate transporter and is responsible for urate excretion
 mostly in the gut \citep{Maliepaard2001, Mandal2015}. Twenty-six other
 loci associated with serum urate explain a further 3.6\% of the variance
 \citep{Kottgen2013}. The heritability of serum uric acid ranges from 40
-- 70\% \citep{Nath2007, Yang2005}. This difference in explained
+- 70\% \citep{Yang2005, Nath2007}. This difference in explained
 variability and total heritability leaves a large component yet to be
 explained. This missing heritability could be reduced through
 identifying additional variance attributed to non-additive effects.
@@ -1343,7 +1388,7 @@ in or near nine genes that had been reported as \gls{t2d} associated and
 overlapped with evidence of positive selection in East Asian
 populations. Common variants that have been found in European
 populations associating with obesity do not replicate in the Samoan
-population \citep{Karns2012}, although this is likely due to power. The
+population, although this is likely due to power \citep{Karns2012}. The
 non-replication of European variants in Polynesians and the high
 prevalence of obesity in Polynesian populations suggest there is likely
 to be some population specific variants that are yet to be identified,
@@ -1359,18 +1404,18 @@ the blood, acting to protect not just erythrocytes but also T and B
 lymphocytes and macrophages \citep{Ames1981}. Urate has also been
 hypothesised to have had a survival advantage during the Miocene period,
 when a series of mutations in urate oxidase occurred, leading to
-elevated urate. \Gls{hu} enables blood pressure to be maintained under
-low salt dietary conditions \citep{Watanabe2002}. Serum urate is also a
-potent anti-oxidant which accounts for \textgreater{}50\% of the
+elevated urate. Hyperuricaemia enables blood pressure to be maintained
+under low salt dietary conditions \citep{Watanabe2002}. Serum urate is
+also a potent anti-oxidant which accounts for \textgreater{}50\% of the
 anti-oxidant activity of the blood \citep{Glantzounis2005, Parmar2009}.
 Later in life elevated serum urate is associated with increased
 cognitive function \citep{Euser2009}. Urate crystals activate the NLRP3
 inflammasome which plays an important role in systemic infection and
 sepsis \citep{Opitz2009}. The role of urate in these situations shows
-that while \gls{hu} is now considered as contributing to disease (such
-as gout), in the past it may have influenced longevity and survival,
-therefore increasing reproductive success and being a phenotype that has
-undergone selection.
+that while hyperuricaemia is now considered as contributing to disease
+(such as gout), in the past it may have influenced longevity and
+survival, therefore increasing reproductive success and being a
+phenotype that has undergone selection.
 
 An elevated prevalence of metabolic syndrome co-morbidities and
 hyperuricaemia against a unique genetic background of Polynesian
@@ -1538,10 +1583,10 @@ and non-missing, non-matching alleles set to 1.
 
 \gls{ihs}, \gls{nsl}, and \gls{xpehh} normalisation with frequency bins
 of 0.05 was done using \emph{norm} as part of selscan v1.1.0b
-\citep{Szpiech2014}. Markers with an \gls{ihs}, \gls{nsl} or \gls{xpehh}
-value \textgreater{} \textbar{}2.6\textbar{} met the threshold for
-significance, which was equivalent to approximately 1\% of the most
-extreme values.
+\citep{Szpiech2014}. Markers with an \textbar{}\gls{ihs}\textbar{},
+\textbar{}\gls{nsl}\textbar{} or \textbar{}\gls{xpehh}\textbar{} value
+\textgreater{} 2.6 met the threshold for significance, which was
+equivalent to approximately 1\% of the most extreme values.
 
 Significant markers were also clustered into genomic regions using the
 DBSCAN package v1.1.1 \citep{dbscanref} in R, where nearby \glspl{snp}
@@ -1840,7 +1885,7 @@ Genomes data set used in this thesis was the Phase 3 release\footnote{\url{ftp:/
 
 \begin{table}
 
-\caption{\label{tab:populations}\label{tab:populations} Description of Populations used in the selection analysis (n = 3004).}
+\caption[Description of Populations used in the selection analysis]{\label{tab:populations}\label{tab:populations} Description of Populations used in the selection analysis (n = 3004).}
 \centering
 \fontsize{8}{10}\selectfont
 \begin{tabular}[t]{llrl}
@@ -2284,7 +2329,7 @@ it was accessed, and the URL from which the dataset was downloaded.
 These datasets were incorporated into many of the analysis steps.
 
 \begin{longtable}[]{@{}lll@{}}
-\caption{\label{tab:refDatasets} \emph{Reference Datasets}}\tabularnewline
+\caption{\label{tab:refDatasets} Reference Datasets}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.24\columnwidth}\raggedright\strut
 Name\strut
@@ -2362,7 +2407,7 @@ Project \citep{Mallick2016}.
 
 Over the last decade there has been a steady flow of studies on
 genome-wide selection
-\citep{voight2006map, sabeti2006positive, Coop2009, tang2007new, pickrell2009signals, Grossman2010}.
+\citep{sabeti2006positive, voight2006map, tang2007new, Coop2009, pickrell2009signals, Grossman2010}.
 The main population samples for this have been part of the 1000 Genomes
 Project, which sampled over 2500 individuals for full genome
 (re)sequencing from five `super' population groups \citep{1KGP2015snp}.
@@ -2405,7 +2450,7 @@ an attempt to explain the higher prevalence of metabolic related
 diseases such as \gls{t2d} and obesity \citep{Myles2011, Minster2016}.
 However, there are several refutations of the thrifty genotype for
 Polynesian populations as fitting a particular narrative
-\citep{Cadzow2016, Gosling2014, Gosling2015}. An alternative to the
+\citep{Gosling2014, Gosling2015, Cadzow2016}. An alternative to the
 `thrifty-gene' hypothesis is that the link between metabolic diseases
 and the innate immune system, susceptibility of populations to metabolic
 disease might be due to selective pressure from infectious disease, such
@@ -2432,40 +2477,54 @@ an important part of the malarial response, contributing to cytokine
 secretion and response of dendritic and T-cells
 \citep{GallegoDelgado2014}.
 
-An increased level of urate in the blood is called \gls{hu} and is
-causal of gout. The prevalence of \gls{hu} in Polynesian populations is
-higher than many other populations \citep{Gosling2014}, and co-morbid
-with it are higher prevalences of the co-morbidities of gout, diabetes,
-obesity, dyslipidaemia, kidney disease, and \gls{cvd}
-\citep{Winnard2013}. In New Zealand, gout prevalence is
-\textasciitilde{}3.1\%, however, prevalence in M\tex{\={a}}ori and
-Pacific peoples is 6-8\% with 40\% of individuals with gout also having
-diabetes or \gls{cvd} \citep{Winnard2013}. Gout is an immune response to
-the monosodium urate crystals that are formed from the precipitation of
-urate from the blood, with \gls{hu} being a prerequisite for the
-formation of these crystals \citep{Merriman2011a}.
+An increased level of urate in the blood is called hyperuricaemia and is
+causal of gout \citep{Choi2005a}. The prevalence of hyperuricaemia in
+Polynesian populations is higher than many other populations
+\citep{Gosling2014}, and co-morbid with it are higher prevalences of the
+co-morbidities of gout, diabetes, obesity, dyslipidaemia, kidney
+disease, and \gls{cvd} \citep{Winnard2013}. In New Zealand, gout
+prevalence is \textasciitilde{}3.1\%, however, prevalence in
+M\tex{\={a}}ori and Pacific peoples is 6-8\% with 40\% of individuals
+with gout also having diabetes or \gls{cvd} \citep{Winnard2013}. Gout is
+an immune response to the monosodium urate crystals that are formed from
+the precipitation of urate from the blood, with hyperuricaemia being a
+prerequisite for the formation of these crystals \citep{Merriman2011a}.
 
-\Gls{hu} has two main components: overproduction of urate, and
+Hyperuricaemia has two main components: overproduction of urate, and
 under-excretion. Overproduction is influenced by diet, such as high
 purine or fructose content, or increased cell turnover as observed in
 cancer, or under genetic control. Under-excretion is the main cause of
-\gls{hu}, caused by either increased reabsorption or decreased
+hyperuricaemia, caused by either increased reabsorption or decreased
 secretion. The kidneys are the organ where the majority of secretion and
 excretion of urate is performed, with about 90\% of urate being
 reabsorbed \citep{Kutzing2008}. In the proximal tubule, on the apical
-membrane, the urate transporters of URAT1, OAT4, and SLC2A9 reabsorb
-urate, whereas ABCC4, NPT4, and NPT1 are responsible for secretion
-\citep{Mandal2015}. On the basolateral membrane, OAT1-3, increase
-intracellular uric acid, but SLC2A9 moves uric acid from intracellular
-to extracellular \citep{Mandal2015}. The ATP powered transporter ABCG2
-is responsible for excretion of urate in the gut and there are
-\glspl{snp} that lead to a reduction of function in ABCG2 in all
-populations \citep{Phipps-Green2010, Cleophas2017}. Together the genes
-\emph{SLC2A9} and \emph{ABCG2} account for 3.4\% of the genetic
-variability of urate \citep{Kottgen2013}.
+membrane, the urate transporters of URAT1 (\emph{SLC22A12}), OAT4
+(\emph{SLC22A11}), and GLUT9 (\emph{SLC2A9}) reabsorb urate, whereas
+ABCC4, NPT4 (\emph{SLC17A3}), and NPT1 (\emph{SLC17A1}) are responsible
+for secretion (Figure \ref{fig:urateTransporters}) \citep{Mandal2015}.
+On the basolateral membrane, OAT1-3 (\emph{SLC22A6-8}), increase
+intracellular uric acid, but GLUT9 moves uric acid from intracellular to
+extracellular \citep{Mandal2015}. The ATP powered transporter ABCG2 is
+responsible for excretion of urate in the gut and there are \glspl{snp}
+that lead to a reduction of function in ABCG2 in all populations (Figure
+\ref{fig:urateTransporters}) \citep{Phipps-Green2010, Cleophas2017}.
+Together the genes \emph{SLC2A9} and \emph{ABCG2} account for 3.4\% of
+the genetic variability of urate \citep{Kottgen2013}.
+
+\begin{figure}
+\includegraphics{_bookdown_files/images/03_selectionpipeline/urate_excretion_diagram} \caption[Location of urate transporters of gut and kidney.]{Diagram representing the urate transporters in
+the gut (entrocyte) and kidney (renal proximal tubule cell). Direction
+of urate movement is indicated by arrows. Adapted from
+\citet{Major2018}.}\label{fig:urateTransporters}
+\end{figure}
+
+
+
+
+
 
 From previous studies there is prior evidence of selection at urate
-associated loci \citep{Zhang2013a, Grossman2013, Ramos2017}. In the
+associated loci \citep{Grossman2013, Zhang2013a, Ramos2017}. In the
 review from \citet{Ramos2017} on natural selection in rheumatic disease,
 one of the main loci for gout, \emph{SLC2A9}, in the \gls{yri}
 population was reported as having been selected. The region of
@@ -2474,10 +2533,10 @@ population was reported as having been selected. The region of
 data. \citet{Zhang2013a} had evidence for the urate-associated loci of
 \emph{ATXN2} (rs653178) and \emph{RREB1} (rs675209) having undergone
 selection when using a F\textsubscript{ST}-based method. The
-co-morbidities of \gls{hu} also show signs of selection, with loci
+co-morbidities of hyperuricaemia also show signs of selection, with loci
 associated with \gls{t2d} having been reported as having undergone
 selection
-\citep{pickrell2009signals, voight2006map, Grossman2010, Grossman2013}.
+\citep{voight2006map, pickrell2009signals, Grossman2010, Grossman2013}.
 Most recently a Samoan specific variant in \emph{CREBRF} that is
 protective for \gls{t2d} but causal for obesity has also been identified
 as having evidence of selection in the Samoan population
@@ -2860,15 +2919,13 @@ intergenic non-coding RNA, \emph{CTB-164N12.1}.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/crebrf-1.pdf}
-\caption{\label{fig:crebrf}Schematic of the \emph{CREBRF} locus with flanking regions,
+\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/crebrf-1} \caption[Schematic of \textit{CREBRF} locus with flanking regions.]{Schematic of the \emph{CREBRF} locus with flanking regions,
 at chr5:172,600,000-173,000,000. Positions of the markers included on
 the CoreExome \gls{snp} array are indicated by vertical lines (top).
 Positions for the significant \gls{ihs} and \gls{nsl} markers are shown
 for \gls{nzm}, \gls{sam}, and \gls{ton}. There were no significant
 markers for \gls{cim}. Exons for genes are indicated by rectangles, and
-direction of transcription indicated by arrow heads (bottom).}
+direction of transcription indicated by arrow heads (bottom).}\label{fig:crebrf}
 \end{figure}
 
 \paragraph{Genes with possible selection in Polynesian
@@ -2892,9 +2949,7 @@ complete list of genes that had significant \gls{ihs}, \gls{nsl}, or
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/superUpset-1.pdf}
-\caption{\label{fig:superUpset}Upset plot showing the intersections of genes that had
+\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/superUpset-1} \caption[Upset plot of intra-population haplotypic and frequency spectrum-based evidence pooled by super population.]{Upset plot showing the intersections of genes that had
 both intra-population haplotypic and frequency spectrum-evidence at the
 individual population level and were then pooled into their super
 population group. The left histogram shows the total number of genes
@@ -2902,7 +2957,7 @@ with both haplotypic and frequency spectrum-based evidence for each
 super population. The top histogram is the number of genes that were in
 common between the super populations. The dots indicate the particular
 set of super populations for the intersection and are ordered by number
-of intersecting sets.}
+of intersecting sets.}\label{fig:superUpset}
 \end{figure}
 
 
@@ -2916,9 +2971,7 @@ of intersecting sets.}
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/polyUpset-1.pdf}
-\caption{\label{fig:polyUpset}Upset plot showing the number of genes that have
+\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/polyUpset-1} \caption[Upset plot of number of genes with evidence of possible positive selection in Polynesian populations.]{Upset plot showing the number of genes that have
 evidence from \gls{ihs} or \gls{nsl}, and met the lower threshold from
 any of \gls{td}, \gls{fwh}, \gls{flf}, or \gls{ze}, in the four
 Polynesian populations. The left histogram shows the total number of
@@ -2926,7 +2979,7 @@ genes with both haplotypic and frequency spectrum-based evidence for
 each Polynesian population. The top histogram is the number of genes
 that were in common between the Polynesian populations. The dots
 indicate the particular set of populations for the intersection and are
-ordered by number of intersecting sets.}
+ordered by number of intersecting sets.}\label{fig:polyUpset}
 \end{figure}
 
 There were 10 genes (\emph{ANO1-AS1}, \emph{CCDC180}, \emph{COL6A3},
@@ -2965,9 +3018,9 @@ the Western Polynesian populations (1). The individual population
 results are described in each population's subsection (subsections
 \ref{cimPath}, \ref{nzmPath}, \ref{samPath}, and \ref{tonPath}).
 
-\begin{table}
+\begin{landscape}\begin{table}
 
-\caption{\label{tab:keggPath}\label{tab:keggPath} Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.}
+\caption[Significant pathway terms from Enrichr KEGG 2016 pathway enrichment analysis in Polynesian populations.]{\label{tab:keggPath}\label{tab:keggPath} Pathway terms that were significant after multiple-testing adjustment in Polynesian populations in Enrichr KEGG 2016 pathway enrichment analysis.}
 \centering
 \resizebox{\linewidth}{!}{
 \fontsize{10}{12}\selectfont
@@ -2978,52 +3031,53 @@ results are described in each population's subsection (subsections
 \cmidrule(l{2pt}r{2pt}){2-5}
 Pathway Term & CIM & NZM & SAM & TON\\
 \midrule
-ABC transporters &  &  & iHS (9/44) & iHS (9/44), nSL (6/44)\\
-Adherens junction &  &  &  & nSL (8/74)\\
-Adrenergic signaling in cardiomyocytes & nSL (12/148) & nSL (13/148) &  & \\
-Aldosterone synthesis and secretion &  & nSL (8/81) &  & \\
-Arrhythmogenic right ventricular cardiomyopathy (ARVC) & nSL (9/74) & nSL (9/74) &  & nSL (10/74)\\
-Axon guidance &  &  &  & nSL (13/127)\\
-Bacterial invasion of epithelial cells & \gls{td} (11/78) & \gls{td} (11/78) &  & \\
-Calcium signaling pathway & nSL (12/180) & nSL (14/180) &  & \\
-Cardiac muscle contraction &  & nSL (7/78) &  & \\
-cGMP-PKG signaling pathway & nSL (16/167) & nSL (13/167) &  & \\
-Cholinergic synapse &  & nSL (10/111) &  & \\
-Circadian entrainment &  & nSL (10/95) &  & \\
-Dilated cardiomyopathy & nSL (9/90) & nSL (9/90) &  & nSL (9/90)\\
-ECM-receptor interaction &  &  &  & iHS (11/82), nSL (8/82)\\
-Endocrine and other factor-regulated calcium reabsorption &  & nSL (5/47) &  & \\
-Focal adhesion &  &  &  & nSL (17/202)\\
-Gap junction &  & nSL (9/88) &  & nSL (9/88)\\
-Glutamatergic synapse &  & nSL (13/114) &  & \\
-GnRH signaling pathway &  & nSL (7/91) &  & \\
-Hypertrophic cardiomyopathy (HCM) & nSL (9/83) & nSL (7/83) &  & nSL (8/83)\\
-Inflammatory mediator regulation of TRP channels &  & nSL (10/98) &  & \\
-Insulin secretion &  & nSL (7/85) &  & \\
-Long-term potentiation &  & nSL (6/66) & nSL (9/66) & \\
-Morphine addiction &  & nSL (7/91) &  & \\
-Olfactory transduction &  &  &  & \gls{flf} (31/415)\\
-Oxytocin signaling pathway & nSL (12/158) & nSL (12/158) &  & \\
-Pancreatic secretion &  & nSL (9/96) &  & \\
-Platelet activation & nSL (11/122) & nSL (9/122) &  & \\
-Protein digestion and absorption &  & nSL (9/90) &  & \\
-Rap1 signaling pathway &  & nSL (12/211) &  & \\
-Regulation of actin cytoskeleton &  &  &  & nSL (17/214)\\
-Regulation of lipolysis in adipocytes &  & nSL (6/56) &  & \\
-Renin secretion &  & nSL (7/64) &  & \\
-Retrograde endocannabinoid signaling &  & nSL (9/101) &  & \\
-Salivary secretion &  & nSL (7/89) &  & \\
-Serotonergic synapse &  & nSL (9/112) &  & \\
-Thyroid hormone synthesis &  & nSL (7/71) &  & \\
-Type II diabetes mellitus &  & nSL (5/48) &  & \\
-Vascular smooth muscle contraction & nSL (10/120) & nSL (10/120) &  & \\
+ABC transporters &  &  & iHS (9/44) P = 0.013 & iHS (9/44) P = 0.006, nSL (6/44) P = 0.036\\
+Adherens junction &  &  &  & nSL (8/74) P = 0.033\\
+Adrenergic signaling in cardiomyocytes & nSL (12/148) P = 0.010 & nSL (13/148) P = 0.005 &  & \\
+Aldosterone synthesis and secretion &  & nSL (8/81) P = 0.010 &  & \\
+Arrhythmogenic right ventricular cardiomyopathy (ARVC) & nSL (9/74) P = 0.007 & nSL (9/74) P = 0.005 &  & nSL (10/74) P = 0.004\\
+Axon guidance &  &  &  & nSL (13/127) P = 0.004\\
+Bacterial invasion of epithelial cells & \gls{td} (11/78) P = 0.009 & \gls{td} (11/78) P = 0.021 &  & \\
+Calcium signaling pathway & nSL (12/180) P = 0.032 & nSL (14/180) P = 0.005 &  & \\
+Cardiac muscle contraction &  & nSL (7/78) P = 0.028 &  & \\
+cGMP-PKG signaling pathway & nSL (16/167) P = 5.877 x 10\textsuperscript{-4} & nSL (13/167) P = 0.007 &  & \\
+Cholinergic synapse &  & nSL (10/111) P = 0.007 &  & \\
+Circadian entrainment &  & nSL (10/95) P = 0.005 &  & \\
+Dilated cardiomyopathy & nSL (9/90) P = 0.011 & nSL (9/90) P = 0.007 &  & nSL (9/90) P = 0.033\\
+ECM-receptor interaction &  &  &  & iHS (11/82) P = 0.024, nSL (8/82) P = 0.049\\
+Endocrine and other factor-regulated calcium reabsorption &  & nSL (5/47) P = 0.043 &  & \\
+Focal adhesion &  &  &  & nSL (17/202) P = 0.004\\
+Gap junction &  & nSL (9/88) P = 0.007 &  & nSL (9/88) P = 0.033\\
+Glutamatergic synapse &  & nSL (13/114) P = 8.374 x 10\textsuperscript{-4} &  & \\
+GnRH signaling pathway &  & nSL (7/91) P = 0.045 &  & \\
+Hypertrophic cardiomyopathy (HCM) & nSL (9/83) P = 0.009 & nSL (7/83) P = 0.037 &  & nSL (8/83) P = 0.049\\
+Inflammatory mediator regulation of TRP channels &  & nSL (10/98) P = 0.005 &  & \\
+Insulin secretion &  & nSL (7/85) P = 0.040 &  & \\
+Long-term potentiation &  & nSL (6/66) P = 0.043 & nSL (9/66) P = 0.021 & \\
+Morphine addiction &  & nSL (7/91) P = 0.045 &  & \\
+Olfactory transduction &  &  &  & \gls{flf} (31/415) P = 0.003\\
+Oxytocin signaling pathway & nSL (12/158) P = 0.013 & nSL (12/158) P = 0.009 &  & \\
+Pancreatic secretion &  & nSL (9/96) P = 0.009 &  & \\
+Platelet activation & nSL (11/122) P = 0.009 & nSL (9/122) P = 0.028 &  & \\
+Protein digestion and absorption &  & nSL (9/90) P = 0.007 &  & \\
+Rap1 signaling pathway &  & nSL (12/211) P = 0.043 &  & \\
+Regulation of actin cytoskeleton &  &  &  & nSL (17/214) P = 0.006\\
+Regulation of lipolysis in adipocytes &  & nSL (6/56) P = 0.024 &  & \\
+Renin secretion &  & nSL (7/64) P = 0.011 &  & \\
+Retrograde endocannabinoid signaling &  & nSL (9/101) P = 0.010 &  & \\
+Salivary secretion &  & nSL (7/89) P = 0.043 &  & \\
+Serotonergic synapse &  & nSL (9/112) P = 0.018 &  & \\
+Thyroid hormone synthesis &  & nSL (7/71) P = 0.018 &  & \\
+Type II diabetes mellitus &  & nSL (5/48) P = 0.043 &  & \\
+Vascular smooth muscle contraction & nSL (10/120) P = 0.017 & nSL (10/120) P = 0.010 &  & \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway.
+\item Statistic the pathway enrichment was significant for is provided. Numbers in parentheses are number of genes present and the total number of genes in the pathway. P values are adjusted for multiple-testing.
 \end{tablenotes}
 \end{threeparttable}}
 \end{table}
+\end{landscape}
 
 \paragraph{Regions of haplotypic selection in Polynesian populations -
 genome-wide}\label{regions-of-haplotypic-selection-in-polynesian-populations---genome-wide}
@@ -3106,6 +3160,7 @@ Population & \gls{fwh} & \gls{flf} & \gls{td} & \gls{ze} & \gls{fwh} & \gls{flf}
 
 \caption{\label{tab:nSharedHaplo}\label{tab:nSharedHaplo} Number of significant SNPs that were in common between populations.}
 \centering
+\fontsize{6}{8}\selectfont
 \begin{tabular}[t]{lrrrrrrrr}
 \toprule
 \multicolumn{1}{c}{} & \multicolumn{4}{c}{iHS} & \multicolumn{4}{c}{nSL} \\
@@ -3273,9 +3328,9 @@ In total there were 124 genes that were only significant in \gls{cim}
 for \gls{ihs}, and 102 for \gls{nsl}. There were 57 genes that had at
 least 20 populations with significant markers for \gls{xpehh} in only
 \gls{cim} from the Polynesian populations. \emph{ARL15} was associated
-with obesity and \gls{t2d} \citep{shungin2015genetic, mahajan2014genome}
+with obesity and \gls{t2d} \citep{mahajan2014genome, shungin2015genetic}
 and \emph{RREB1} was associated with \gls{t2d} and urate
-\citep{mahajan2014genome, Kottgen2013}.
+\citep{Kottgen2013, mahajan2014genome}.
 
 
 
@@ -3286,7 +3341,7 @@ and \emph{RREB1} was associated with \gls{t2d} and urate
 
 }
 
-\caption{Manhattan plot for significant markers in \gls{cim} for
+\caption[Manhattan plot for significant markers in \acrlong{cim} for both \acrshort{ihs} and \acrshort{nsl}.]{Manhattan plot for significant markers in \gls{cim} for
 both \gls{ihs} and \gls{nsl}.}\label{fig:cimHapMan}
 \end{figure}
 
@@ -3359,7 +3414,7 @@ the 1\textsuperscript{st} percentile from three or more statistics from
 
 }
 
-\caption{Manhattan plot for significant markers in \gls{nzm} for
+\caption[Manhattan plot for significant markers in \acrlong{nzm} for both \acrshort{ihs} and \acrshort{nsl}.]{Manhattan plot for significant markers in \gls{nzm} for
 both \gls{ihs} and \gls{nsl}.}\label{fig:nzmHapMan}
 \end{figure}
 
@@ -3458,7 +3513,7 @@ but none had been associated with urate or related co-morbidities.
 
 }
 
-\caption{Manhattan plot for significant markers in \gls{sam} for
+\caption[Manhattan plot for significant markers in \acrlong{sam} for both \acrshort{ihs} and \acrshort{nsl}.]{Manhattan plot for significant markers in \gls{sam} for
 both \gls{ihs} and \gls{nsl}.}\label{fig:samHapMan}
 \end{figure}
 
@@ -3561,7 +3616,7 @@ and neutrality statistics. They were \emph{C4orf45}, \emph{SUPT3H},
 
 }
 
-\caption{Manhattan plot for significant markers in \gls{ton} for
+\caption[Manhattan plot for significant markers in \acrlong{ton} for both \acrshort{ihs} and \acrshort{nsl}.]{Manhattan plot for significant markers in \gls{ton} for
 both \gls{ihs} and \gls{nsl}.}\label{fig:tonHapMan}
 \end{figure}
 
@@ -3596,9 +3651,9 @@ with urate and metabolic
 disease}\label{selection-in-polynesian-populations-for-genes-associated-with-urate-and-metabolic-disease}
 
 In order to establish if there was evidence of selection in genes
-associated with urate and diseases with \gls{hu} as a co-morbidity, loci
-that associated with these conditions were extracted from the \gls{gwas}
-catalog (as per section \ref{diseaselist}, see Table
+associated with urate and diseases with hyperuricaemia as a
+co-morbidity, loci that associated with these conditions were extracted
+from the \gls{gwas} catalog (as per section \ref{diseaselist}, see Table
 \ref{tab:gwascatref} for references for each trait) and neutrality and
 selection statistics that intersected these loci were collated. Table
 \ref{tab:superDiseaseGenesTab} shows the breakdown of the number of
@@ -3632,19 +3687,17 @@ for all Polynesian populations for \gls{td}.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/intraSelGenes-1.pdf}
-\caption{\label{fig:intraSelGenes}Genes associated with urate, gout, obesity,
+\includegraphics{_bookdown_files/03-SelectionPipeline_files/figure-latex/intraSelGenes-1} \caption[Genes associated with urate, gout, obesity, type 2 diabetes, kidney disease, and metabolic syndrome with evidence from site-frequency spectrum and haplotypic statistics in Polynesian populations.]{Genes associated with urate, gout, obesity,
 \gls{t2d}, kidney disease, and metabolic syndrome having both
 significance in intra-population \gls{sfs} and haplotypic based methods
 in at least one Polynesian population. Numbers inside boxes indicate the
 number of significant windows (\gls{sfs} methods) or \glspl{snp}
-(haplotypic methods) for the population.}
+(haplotypic methods) for the population.}\label{fig:intraSelGenes}
 \end{figure}
 
 \begin{table}[!h]
 
-\caption{\label{tab:unnamed-chunk-50}\label{tab:superDiseaseGenesTab} Number of genes with evidence of possible positive selection in super populations from intra-population tests from urate and co-morbidities \gls{gwas} associated loci.}
+\caption[Number of genes with evidence of possible positive selection in super populations from intra-population tests from urate and co-morbidities \acrshort{gwas} associated loci.]{\label{tab:unnamed-chunk-50}\label{tab:superDiseaseGenesTab} Number of genes with evidence of possible positive selection in super populations from intra-population tests from urate and co-morbidities \gls{gwas} associated loci.}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{llrrrrrrrrrrrrrrr}
@@ -4553,7 +4606,7 @@ significant in both \gls{chs} and \gls{jpt}. There were no windows from
 the frequency-based statistics that met the significance threshold.
 \emph{ABO} has also been associated with obesity in \gls{gwas}
 \citep{comuzzie2012novel}. The marker rs8176741 had been associated with
-severe malaria \citep{Timmann2012}, however, this marker had a
+severe malaria \citep{timmann2012genome}, however, this marker had a
 significant \gls{ihs} in \gls{fin} but no other populations. The other
 \glspl{snp} that showed significance for \gls{ihs} were not in \gls{ld}
 (\gls{eas} R\textsuperscript{2} = 0.002) with rs55764262, for which
@@ -4564,15 +4617,15 @@ significant for \gls{ihs} in \emph{ABO}.
 Both \gls{sam} and \gls{nzm} had \glspl{snp} that were significant for
 \gls{ihs} in \emph{ATP2B4}, \gls{sam} had rs10494845, and \gls{nzm} had
 rs142206068, both were in favour of the derived allele haplotype. The
-malaria-associated variant was rs10900585 \citep{Timmann2012}. All three
-variants were not in \gls{ld} with each other (\gls{eas}
+malaria-associated variant was rs10900585 \citep{timmann2012genome}. All
+three variants were not in \gls{ld} with each other (\gls{eas}
 R\textsuperscript{2} = 0.00). The \gls{ld} was calculated using the full
 \gls{1kgp} marker list for \gls{eas} because rs10900585 was not on the
 CoreExome \gls{snp} array.
 
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-90}\label{tab:ddcLd} Linkage disequilibrium in EAS populations (R\textsuperscript{2}) between markers in \textit{DDC}.}
+\caption[Linkage disequilibrium in EAS populations between markers in \textit{DDC}.]{\label{tab:unnamed-chunk-90}\label{tab:ddcLd} Linkage disequilibrium in EAS populations (R\textsuperscript{2}) between markers in \textit{DDC}.}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{lrrrrrrr}
@@ -4825,59 +4878,65 @@ the CoreExome data.
 
 The pathway analysis of genes that were in the extremes for the
 different selection and neutrality statistics showed that pathways
-involved with cell signalling were the main results for the Polynesian
-populations, rather than metabolic pathways. The genes that indicated
-possible selection, even for obesity and \gls{t2d}, which are
-traditionally thought of as being the thrifty phenotype, were genes that
-were largely either neurological or involved in the immune system.
-\gls{nzm} did have significant results for two diabetes related
-pathways, ``Type II diabetes mellitus\_Homo sapiens\_hsa04930'' and
-``Insulin secretion\_Homo sapiens\_hsa04911'', however, only up to 10\%
-of the pathways had genes that met the significance thresholds. Of the
-genes that were part of those pathways, up to 50\% were genes that
-encoded subunits of voltage-gated calcium channels. While some
-\gls{t2d}-associated individual loci show some signs of selection, it
-appears as if widespread selection is not the case. \citet{Ayub2014c}
-had a similar finding with respect to \gls{t2d}, where there was no
-support for the thrifty-gene hypothesis, testing across 65
-\gls{t2d}-associated loci.
+involved with cell signalling (and more general in nature) were the main
+results for the Polynesian populations, rather than specific metabolic
+pathways such as the urate pathway. If selection had been acting on the
+pathways involved with urate, gout and related conditions it would have
+been expected to see enrichment in genes involved with metabolic
+pathways. The genes that indicated possible selection, even for obesity
+and \gls{t2d}, which are traditionally thought of as being the thrifty
+phenotype, were genes that were largely either neurological or involved
+in the immune system. \gls{nzm} did have significant results for two
+diabetes related pathways, ``Type II diabetes mellitus\_Homo
+sapiens\_hsa04930'' and ``Insulin secretion\_Homo sapiens\_hsa04911'',
+however, only up to 10\% of the pathways had genes that met the
+significance thresholds. Of the genes that were part of those pathways,
+up to 50\% were genes that encoded subunits of voltage-gated calcium
+channels. While some \gls{t2d}-associated individual loci show some
+signs of selection, it appears as if widespread selection is not the
+case. \citet{Ayub2014c} had a similar finding with respect to \gls{t2d},
+where there was no support for the thrifty-gene hypothesis, testing
+across 65 \gls{t2d}-associated loci.
 
 As discussed in \citet{Gosling2014}, the thrifty-gene hypothesis in the
 context of the Pacific, where starvation during long voyages selected
 for thrifty-genes, does not fit with the anthropological history of
-Polynesian people, where they undertook planned voyages with settled the
-Pacific in a speedy manner. From the analysis results in this chapter,
-the thrifty-gene hypothesis appears to have none-to-minimal support from
-the loci that exhibit signals of possible selection.
+Polynesian people, where they undertook planned voyages which settled
+the Pacific in a speedy manner. From the analysis results in this
+chapter, the thrifty-gene hypothesis appears to have none-to-minimal
+support from the loci that exhibit signals of possible selection.
 
 \subsection{Selection in malaria associated loci in Polynesian
 populations}\label{selection-in-malaria-associated-loci-in-polynesian-populations}
 
 Malaria is endemic in the southwest Pacific, extending out to the east
-as far as Vanuatu, but is absent and always had been absent, further
-west in Polynesia \citep{Clark1993}. There is evidence of genetic
-advantage against malaria of Austronesian speaking populations in Near
-Oceania, through which the Polynesian ancestors would have passed
-through prior to settlement of the Pacific \citep{Clark1993}. In
-Polynesia, where malaria is absent, high frequencies of
-\(\alpha\)-thalassaemia mutations (protective against malaria) have been
-identified in populations not exposed to malaria \citep{Hill1985}. Other
-malaria protective mutations, such as glucose-6-phosphate dehydrogenase
-deficiency and \(\beta\)-thalassaemia, are present in Pacific
-populations in higher frequencies, though generally in island groups
-where malaria remains extant \citep{Cappellini2008, Flint1986}.
+as far as Vanuatu, with evidence of genetic advantage against malaria of
+Austronesian speaking populations in Near Oceania \citep{Clark1993}.
+Malaria is absent, and always has been further west into Polynesia,
+Polynesian ancestors would have passed through Near Oceania prior to
+settlement of the Pacific \citep{Clark1993}. In Polynesia, even though
+malaria is absent, high frequencies of \(\alpha\)-thalassaemia mutations
+(protective against malaria) have been identified in populations not
+exposed to malaria \citep{Hill1985}. Other malaria protective mutations,
+such as glucose-6-phosphate dehydrogenase deficiency and
+\(\beta\)-thalassaemia, are present in Pacific populations in higher
+frequencies, though generally in island groups where malaria remains
+extant \citep{Flint1986, Cappellini2008}.
 
 Response to infectious challenge is a key mechanism that has been
 thought of as a selective pressure. Malarial infection provided a
 possible challenge to which urate may have been subjected to selective
 pressure, and as such provided a viable candidate due to the involvement
-of urate with malarial resistance \citep{GallegoDelgado2014}. Three loci
-that were associated with malaria and identified from the \gls{gwas}
-catalog were investigated for having signals of selection. Two genes
-that had evidence of selection in the Polynesian populations had also
-been identified as being associated with obesity and \gls{t2d}.
-\emph{ABO} and \emph{ATP2B4} did not have strong evidence, and it came
-from only \gls{ihs}.
+of urate with malarial resistance \citep{GallegoDelgado2014}. This
+involves precipitated urate being released from ruptured infected
+erythrocytes, triggering an immune response
+\citep{orengo_uric_2009, GallegoDelgado2014}. Three loci that were
+associated with malaria and identified from the \gls{gwas} catalog were
+investigated for having signals of selection. Two genes that had
+evidence of selection in the Polynesian populations had also been
+identified as being associated with obesity and \gls{t2d}. \emph{ABO}
+and \emph{ATP2B4} did not have strong evidence, and it came from only
+\gls{ihs}.
 
 The blood antigen ABO has a higher susceptibility to malaria in the A,
 B, or AB antigen groups, than O \citep{Zerihun2011}. This has led to the
@@ -5036,18 +5095,36 @@ for malaria in a candidate gene approach.
 
 \subsection{Conclusion}\label{conclusion}
 
-The results of this study show there is indeed evidence indicative of
-selection in urate-associated loci in the Polynesian populations. This
-evidence however is not specific to urate. This is shown by the fact
-that there is little signal of selection appearing at the urate
-transporters themselves, but at the loci that are part of more general
-pathways. The pathways that were enriched by genes that displayed
-signatures of selection in Polynesian populations from the genome-wide
-analysis were dominated by metabolic pathways. Calcium transport and
-signalling was a central theme for the genes that showed evidence of
-possible positive selection in Polynesian populations. The reasons for
-why there would be selection still remain unclear but response to
-pathogenic challenge such as malaria is a potential mechanism.
+The first objective of this chapter was to investigate regions of the
+genome that had evidence of selection in Polynesian populations. The
+main result regarding this objective was that the pathways that were
+enriched by genes that displayed signatures of selection in Polynesian
+populations from the genome-wide analysis were dominated by metabolic
+pathways. Of these pathways, calcium transport and signalling was a
+central theme for the genes that showed evidence of possible positive
+selection in Polynesian populations.
+
+The second objective of the chapter was to investigate regions that had
+a previous association with urate, gout, and associated co-morbidities.
+The results regarding this objective showed there was indeed evidence
+indicative of selection in urate-associated loci in the Polynesian
+populations. The evidence however was not specific to urate. This was
+shown by the fact that there was little signal of selection appearing at
+the urate transporters themselves, but at the loci that were part of
+more general pathways. There was also evidence of selection at other
+loci that were associated with the co-morbidities, but again the signals
+were in genes that were for general cell functions, rather than specific
+for the particular traits. The reasons for why there would be selection
+still remain unclear but response to pathogenic challenge such as
+malaria in the case of urate is a potential mechanism.
+
+The analysis had limiting factors with the main data using markers that
+originated from a \gls{snp} array, and the ascertainment bias this
+introduced to the statistics, especially for those dependent on the
+low-frequency variants. A second limiting factor was the use of
+empirical thresholds which will increase the number false-positives.
+Both of these factors should temper the conclusion of selection or lack
+thereof, at the loci investigated.
 
 \chapter{Clustering of Selection Statistics}\label{clustering}
 
@@ -5141,7 +5218,7 @@ risk of gout and elevated serum urate
 associated with metabolic disorders \citep{Choi2007, Choi2007b}, and
 genes involved with complex diseases such as \gls{t2d}, gout, and other
 metabolic related disorders, have shown evidence for selection
-\citep{Zhang2013a, pickrell2009signals, Hancock2008}.
+\citet{Hancock2008}; \citet{pickrell2009signals}; \citet{Zhang2013a}{]}.
 
 It is hypothesised that elevated serum urate may have undergone positive
 selection in Polynesian populations due to some of the beneficial
@@ -5296,6 +5373,11 @@ clustering.
 
 \subsubsection{PCA analysis}\label{pcaresults}
 
+In order to confirm that individuals from a population were genetically
+similar \gls{pca} was performed. It was expected that there would be
+higher genetic variation between populations, than between individuals
+of a population. It was also used to confirm if the differences between
+populations was likely influenced by difference in genotyping platform.
 The genetic variation captured by \gls{pca} was plotted to visualise the
 relationship of individuals to one another (Figure \ref{fig:allpopPCA}).
 Starting from \gls{pc} 1, each subsequent \gls{pc} captured less of the
@@ -5318,7 +5400,12 @@ the \gls{eas} populations (Figure \ref{fig:allpopPCA} B) and \gls{pc} 4
 separated the \gls{amr} and \gls{sas} populations (Figure
 \ref{fig:allpopPCA} C). The Polynesian populations were split into
 Eastern and Western Polynesian sub-groups with \gls{pc} 6 (Figure
-\ref{fig:polPCA}).
+\ref{fig:polPCA}). This confirmed that the genetic variation was higher
+between populations, than between individuals of a population, and
+indicated how genetically similar or dissimilar populations were to each
+other. Populations that were thought to have a large degree of admixture
+also indicated as such by the spread, and overlap with other better
+defined clusters.
 
 The admixture of the \gls{amr} populations \citep{1KGP2015snp} was
 evident in \gls{pc} 1 with a large spread centred with the \gls{eur}
@@ -5340,7 +5427,7 @@ of variability in the dataset.
 
 }
 
-\caption{A) Principal components 1 and 2 for all populations. B)
+\caption[Principal components 1 to 4 for all populations.]{A) Principal components 1 and 2 for all populations. B)
 Principal components 1 and 3 for all populations. C) Principal
 components 1 and 4 for all populations. Coloured by super population
 grouping.}\label{fig:allpopPCA}
@@ -5380,41 +5467,48 @@ establish the number of ancestral populations (K), that resulted in the
 smallest cross-validation error. Five-fold cross-validation was used to
 calculate this error for K from 1 to 15. The K value with the lowest
 cross-validation error was K = 11, with an error of 0.3855 (Table
-\ref{tab:admixCV}).
+\ref{tab:admixCV}). Admixture analysis was performed to identify the
+likely presence of admixture in populations, not for quantification
+purposes, for cultural sensitivity reasons.
 
-When the ancestral proportions for K = 11 were plotted for each
-individual for each population, there were some clear similarities
-amongst the super populations (Figure \ref{fig:admix}). Within the
-\gls{afr} populations there were three main ancestral populations, which
-correlated with geography, with the East African population of \gls{lwk}
-being most different to the West African populations (\gls{esn},
-\gls{yri}, \gls{gwd}, and \gls{msl}). The populations of \gls{acb} and
-\gls{asw} showed signs of admixture with similarities to the ancestral
-populations in the West African populations, with smaller proportions
-from the ancestral populations of \gls{lwk}, and the European
-populations. The \gls{eas} populations were represented by two ancestral
-populations. \Gls{cdx} was mostly one, and \gls{jpt} mostly the other,
-the remaining \gls{eas} populations were mixtures of the two. A single
-ancestral population represented \gls{sas}, but there were indications
-of admixture with the ancestral populations of the \gls{eur} and
-\gls{eas} populations. In the \gls{eur} populations there was again two
-main ancestral populations, they correlated with North and South Europe.
-One ancestral population was mostly in \gls{fin}, and the other mostly
-in \gls{tsi} and \gls{ibs}. \gls{gbr}, \gls{ceu}, and \gls{nzc} were all
-extremely similar in proportions of the two and ancestral populations.
-The \gls{amr} populations were mostly differing proportions of the
-ancestral population that \gls{tsi} had, and an ancestral population
-that was only in the \gls{amr} populations. There were also small
-proportions of the ancestral populations that made up the West African
-populations. The \gls{pol} populations had two ancestral populations,
-one found in the East Polynesian populations, and the other in the West
-Polynesian populations. All Polynesian populations had indications of
-small amounts of admixture with the ancestral populations of the
-\gls{eur} populations, with the East Polynesian populations having a
-higher amount than the West Polynesian populations. This analysis was
-consistent with the results of the \gls{pca}, and other admixture
-analysis \citep{1KGP2015snp, Hellenthal2014}, but also showed that there
-were sub-groups within the super-populations.
+To understand the similarities in ancestral background and degree of
+admixture present at a population level, the ancestral proportions for K
+= 11 were plotted for each individual for each population revealing
+there were some clear similarities amongst the super populations (Figure
+\ref{fig:admix}). Within the \gls{afr} populations there were three main
+ancestral populations, which correlated with geography, with the East
+African population of \gls{lwk} being most different to the West African
+populations (\gls{esn}, \gls{yri}, \gls{gwd}, and \gls{msl}). The
+populations of \gls{acb} and \gls{asw} showed signs of admixture with
+similarities to the ancestral populations in the West African
+populations, with smaller proportions from the ancestral populations of
+\gls{lwk}, and the European populations. The \gls{eas} populations were
+represented by two ancestral populations. \Gls{cdx} was mostly one, and
+\gls{jpt} mostly the other, the remaining \gls{eas} populations were
+mixtures of the two. A single ancestral population represented
+\gls{sas}, but there were indications of admixture with the ancestral
+populations of the \gls{eur} and \gls{eas} populations. In the \gls{eur}
+populations there was again two main ancestral populations, they
+correlated with North and South Europe. One ancestral population was
+mostly in \gls{fin}, and the other mostly in \gls{tsi} and \gls{ibs}.
+\gls{gbr}, \gls{ceu}, and \gls{nzc} were all extremely similar in
+proportions of the two and ancestral populations. The \gls{amr}
+populations were mostly differing proportions of the ancestral
+population that \gls{tsi} had, and an ancestral population that was only
+in the \gls{amr} populations. There were also small proportions of the
+ancestral populations that made up the West African populations. The
+\gls{pol} populations had two ancestral populations, one found in the
+East Polynesian populations, and the other in the West Polynesian
+populations. All Polynesian populations had indications of small amounts
+of admixture with the ancestral populations of the \gls{eur}
+populations, with the East Polynesian populations having a higher amount
+than the West Polynesian populations. This analysis was consistent with
+the results of the \gls{pca}, and other admixture analysis
+\citep{Hellenthal2014, 1KGP2015snp}, but also showed that there were
+sub-groups within the super-populations. The low level of admixture in
+the Polynesian populations also indicated it confounding role in
+subsequent analyses would be minimal.
+
 
 
 
@@ -5422,33 +5516,37 @@ were sub-groups within the super-populations.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/admix-1.pdf}
-\caption{\label{fig:admix}Proportions of ancestral populations as inferred from
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/admix-1} \caption[Proportions of ancestral populations as inferred from ADMIXTURE]{Proportions of ancestral populations as inferred from
 ADMIXTURE, using K = 11. Ancestral population (AP) represents a
 particular theoretical ancestral population. Q is the ancestral
-proportion.}
+proportion. Individuals in the sample populations are represented on the
+x-axis.}\label{fig:admix}
 \end{figure}
 
 \subsubsection{Whole chromosome
 clustering}\label{whole-chromosome-clustering}
 
-Clustering on the full chromosome results for all chromosomes from
-PopGenome (Figure \ref{fig:multichrplot}) did not group the populations
-of each super population together, with the exception of \gls{fwh},
-which grouped all super populations, although it split the \gls{amr}
-populations into two subgroups. \gls{td} grouped the \gls{eur} and most
-of the \gls{sas} super populations, and had smaller sub-super population
-groupings of two to three populations. \Gls{cim}, \gls{nzm}, and
-\gls{sam} were grouped with two \gls{amr} populations, (\gls{pel} and
-\gls{mxl}), and this group was the least similar to the others. There
-was no clear pattern to the clustering order of \gls{flf}, although it
-did have a few small groups of the same super population of no more than
-three individual populations. The \gls{cim} and \gls{sam} populations
-were grouped together for both statistics. \Gls{ze} clustered the
-\gls{afr} populations together and this cluster was the least similar to
-the other populations. There was also a grouping of the \gls{eas}
-populations which had the Western Polynesian populations as part of it.
+In order to establish at a summary genome level how similar populations
+were by selection and neutrality statistic were, clustering on each
+statistic summarising each chromosome was done. Clustering on the full
+chromosome results for all chromosomes from PopGenome (Figure
+\ref{fig:multichrplot}) did not group the populations of each super
+population together, with the exception of \gls{fwh}, which grouped all
+super populations, although it split the \gls{amr} populations into two
+subgroups. \gls{td} grouped the \gls{eur} and most of the \gls{sas}
+super populations, and had smaller sub-super population groupings of two
+to three populations. \Gls{cim}, \gls{nzm}, and \gls{sam} were grouped
+with two \gls{amr} populations, (\gls{pel} and \gls{mxl}), and this
+group was the least similar to the others. There was no clear pattern to
+the clustering order of \gls{flf}, although it did have a few small
+groups of the same super population of no more than three individual
+populations. The \gls{cim} and \gls{sam} populations were grouped
+together for both statistics. \Gls{ze} clustered the \gls{afr}
+populations together and this cluster was the least similar to the other
+populations. There was also a grouping of the \gls{eas} populations
+which had the Western Polynesian populations as part of it. This
+indicated that at a summary level many of the populations within a super
+population were similar to each other.
 
 
 
@@ -5457,13 +5555,11 @@ populations which had the Western Polynesian populations as part of it.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/multichrplot-1.pdf}
-\caption{\label{fig:multichrplot}Hierarchical clustering of the populations using
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/multichrplot-1} \caption[Hierarchical clustering of the populations using selection test statistics for each entire chromosome.]{Hierarchical clustering of the populations using
 selection test statistics for each entire chromosome. Clustering was
 performed using Euclidean distance for the distance measure and complete
 linkage for the linkage criteria. Selection test statistic is in the
-label for each dendrogram. Coloured by super population.}
+label for each dendrogram. Coloured by super population.}\label{fig:multichrplot}
 \end{figure}
 
 \FloatBarrier
@@ -5492,11 +5588,9 @@ with the migration history.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/wholechrfst-1.pdf}
-\caption{\label{fig:wholechrfst}\emph{F\textsubscript{ST}} Hierarchical clustering on
-chromosomal F\textsubscript{ST} using Euclidean distance and complete
-linkage. Coloured by super population.}
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/wholechrfst-1} \caption[Hierarchical clustering on chromosomal F\textsubscript{ST}]{Hierarchical clustering on chromosomal
+F\textsubscript{ST} using Euclidean distance and complete linkage.
+Coloured by super population.}\label{fig:wholechrfst}
 \end{figure}
 
 \subsection{Hierarchical clustering of distribution
@@ -5508,22 +5602,26 @@ and the genetic regions that had the most extreme scores. For the
 frequency spectrum methods, the 1\textsuperscript{st} and
 99\textsuperscript{th} percentiles of windows (i.e., distribution tails)
 by statistic value were calculated, and a binary matrix of sharing of
-significant windows between populations was used for the clustering. For
-the haplotypic methods, the proportion of regions that overlapped
-between populations was used to create the distance matrix for the
-hierarchical clustering. The groups created by the clustering were then
-assessed for the number of populations from a super population that were
-assigned the same cluster. Having all populations correctly grouped into
-their super population was only completely achieved by clustering using
-the lower tail of \gls{fwh}. If an allowance is made for the two
-\gls{amr} populations to be grouped with the \gls{eur} populations, as
-in the chromosomal F\textsubscript{ST} clustering, then both haplotypic
-methods and six of the clustered tails of the frequency spectrum-based
-methods clustered populations into their respective super populations.
+significant windows between populations was used for the clustering.
+This was done with the premise being that the extremes would represent
+regions that had a similar selective pressure based on geographic
+similarity, or selective pressure that operated on a shared ancestral
+population. For the haplotypic methods, the proportion of regions that
+overlapped between populations was used to create the distance matrix
+for the hierarchical clustering. The groups created by the clustering
+were then assessed for the number of populations from a super population
+that were assigned the same cluster. Having all populations correctly
+grouped into their super population was only completely achieved by
+clustering using the lower tail of \gls{fwh}. If an allowance is made
+for the two \gls{amr} populations to be grouped with the \gls{eur}
+populations, as in the chromosomal F\textsubscript{ST} clustering, then
+both haplotypic methods and six of the clustered tails of the frequency
+spectrum-based methods clustered populations into their respective super
+populations.
 
 \begin{table}
 
-\caption{\label{tab:proportion}\label{tab:proportion} Proportion of populations clustered into their corresponding super population by selection and neutrality statistic. Proportions were calculated independently for each super population based on the cluster group with the maximum number of populations from a particular super population.}
+\caption[Proportion of populations clustered into their corresponding super population by selection and neutrality statistic.]{\label{tab:proportion}\label{tab:proportion} Proportion of populations clustered into their corresponding super population by selection and neutrality statistic. Proportions were calculated independently for each super population based on the cluster group with the maximum number of populations from a particular super population.}
 \centering
 \begin{tabular}[t]{lllllll}
 \toprule
@@ -5575,7 +5673,7 @@ Type & AFR & AMR & EAS & EUR & POL & SAS\\
 
 \begin{table}
 
-\caption{\label{tab:exclusivity}\label{tab:exclusivity} Mean exclusivity of clusters for a given super population by selection and neutrality statistic. Exclusivity of each cluster was calculated by using the proportions of populations from a given super population assigned compared to the total number of individual populations assigned to that cluster}
+\caption[Mean exclusivity of clusters for a given super population by selection and neutrality statistic.]{\label{tab:exclusivity}\label{tab:exclusivity} Mean exclusivity of clusters for a given super population by selection and neutrality statistic. Exclusivity of each cluster was calculated by using the proportions of populations from a given super population assigned compared to the total number of individual populations assigned to that cluster}
 \centering
 \begin{tabular}[t]{lllllll}
 \toprule
@@ -5718,12 +5816,10 @@ SAS & 2.442 & 0.891 & -2.274 & -0.257 & 2.590 & 3.948 & 4.772\\
 \end{table}
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/images/04_clustering/td_densities.png}
-\caption{\label{fig:tdDensity}Plot of the distribution of \gls{td} by population.
+\includegraphics{_bookdown_files/images/04_clustering/td_densities} \caption[Plot of the distribution of \gls{td} by population]{Plot of the distribution of \gls{td} by population.
 Triangles indicate the minimum and maximum values. Dots indicate the
 1\textsuperscript{st} and 99\textsuperscript{th} percentiles for each
-population.}
+population.}\label{fig:tdDensity}
 \end{figure}
 
 
@@ -5732,7 +5828,7 @@ population.}
 
 
 \begin{figure}
-\includegraphics[width=6in]{images/04_clustering/tdTop1000} \caption{Hierarchical clustering of \gls{td} using the upper and
+\includegraphics[width=6in]{images/04_clustering/tdTop1000} \caption[Hierarchical clustering of \gls{td} using the upper and lower 1\% of the distribution.]{Hierarchical clustering of \gls{td} using the upper and
 lower 1\% of the distribution. \textbf{A} and \textbf{B} Dendrograms
 representing the clusters of \gls{td} lower and upper tails
 respectively, using hierarchical clustering with Euclidean distance and
@@ -5879,12 +5975,10 @@ populations have the most windows with the highest excess of
 moderate-to-high frequency derived alleles.
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/images/04_clustering/fwh_densities.png}
-\caption{\label{fig:fwhDensity}Plot of the distribution of \gls{fwh} by population.
+\includegraphics{_bookdown_files/images/04_clustering/fwh_densities} \caption[Plot of the distribution of \gls{fwh} by population.]{Plot of the distribution of \gls{fwh} by population.
 Triangles indicate the minimum and maximum values. Dots indicate the
 1\textsuperscript{st} and 99\textsuperscript{th} percentiles for each
-population.}
+population.}\label{fig:fwhDensity}
 \end{figure}
 
 
@@ -5922,7 +6016,7 @@ SAS & -0.704 & 1.348 & -11.022 & -5.031 & -0.453 & 1.271 & 1.827\\
 
 
 \begin{figure}
-\includegraphics[width=6in]{images/04_clustering/fwhTop1000} \caption{Hierarchical clustering of \gls{fwh} using the upper
+\includegraphics[width=6in]{images/04_clustering/fwhTop1000} \caption[Hierarchical clustering of \gls{fwh} using the upper and lower 1\% of the distribution.]{Hierarchical clustering of \gls{fwh} using the upper
 and lower 1\% of the distribution. \textbf{A} and \textbf{B} Dendrograms
 representing the clusters of \gls{fwh} lower and upper tails
 respectively, using hierarchical clustering with Euclidean distance and
@@ -6046,12 +6140,10 @@ range (9.195). This pattern was similar to what was seen with \gls{td}.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/images/04_clustering/flf_densities.png}
-\caption{\label{fig:flfDensity}Plot of the distribution of \gls{flf} by population.
+\includegraphics{_bookdown_files/images/04_clustering/flf_densities} \caption[Plot of the distribution of \gls{flf} by population.]{Plot of the distribution of \gls{flf} by population.
 Triangles indicate the minimum and maximum values. Dots indicate the
 1\textsuperscript{st} and 99\textsuperscript{th} percentiles for each
-population.}
+population.}\label{fig:flfDensity}
 \end{figure}
 
 \begin{table}
@@ -6084,7 +6176,7 @@ SAS & 2.012 & 0.643 & -4.068 & -0.055 & 2.104 & 3.107 & 3.921\\
 
 
 \begin{figure}
-\includegraphics[width=6in]{images/04_clustering/flfTop1000} \caption{Hierarchical clustering of \gls{flf} using the upper
+\includegraphics[width=6in]{images/04_clustering/flfTop1000} \caption[Hierarchical clustering of \gls{flf} using the upper and lower 1\% of the distribution.]{Hierarchical clustering of \gls{flf} using the upper
 and lower 1\% of the distribution. \textbf{A} and \textbf{B} Dendrograms
 representing the clusters of \gls{flf} lower and upper tails
 respectively, using hierarchical clustering with Euclidean distance and
@@ -6203,12 +6295,10 @@ populations had the second highest mean (2.559), median (2.535),
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/images/04_clustering/ze_densities.png}
-\caption{\label{fig:zeDensity}Plot of the distribution of \gls{ze} by population.
+\includegraphics{_bookdown_files/images/04_clustering/ze_densities} \caption[Plot of the distribution of \gls{ze} by population.]{Plot of the distribution of \gls{ze} by population.
 Triangles indicate the minimum and maximum values. Dots indicate the
 1\textsuperscript{st} and 99\textsuperscript{th} percentiles for each
-population.}
+population.}\label{fig:zeDensity}
 \end{figure}
 
 \begin{table}
@@ -6241,7 +6331,7 @@ SAS & 2.463 & 0.968 & -1.763 & 0.192 & 2.458 & 4.812 & 7.354\\
 
 
 \begin{figure}
-\includegraphics[width=6in]{images/04_clustering/zeTop1000} \caption{Hierarchical clustering of \gls{ze} using the upper and
+\includegraphics[width=6in,]{images/04_clustering/zeTop1000} \caption[Hierarchical clustering of \gls{ze} using the upper and lower 1\% of the distribution.]{Hierarchical clustering of \gls{ze} using the upper and
 lower 1\% of the distribution. \textbf{A} and \textbf{B} Dendrograms
 representing the clusters of \gls{ze} lower and upper tails
 respectively, using hierarchical clustering with Euclidean distance and
@@ -6371,7 +6461,8 @@ there was a commonality between populations in the haplotypic regions
 that had evidence for selection, the hypothesis being that populations
 in similar geographic regions would have had a similar environmental
 exposure, and therefore have similar regions of the genome under
-selective pressure.
+selective pressure. Another possibility was that the selective pressure
+was in a shared ancestral population.
 
 Clustering on the proportion of shared regions (see section
 \ref{haplocluster}) for both \gls{ihs} (Figure \ref{fig:ihsclust}) and
@@ -6424,14 +6515,12 @@ enriched (Benjamini-Hochberg adjusted P = 0.023) with seven of 44 genes
 transporters\_Homo sapiens\_hsa02010''.
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/ihsclust-1.pdf}
-\caption{\label{fig:ihsclust}\gls{ihs} Clustering: A. Dendrogram from hierarchical
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/ihsclust-1} \caption[Hierarchical clustering of \acrshort{ihs}.]{\gls{ihs} Clustering: A. Dendrogram from hierarchical
 clustering based on proportion of significant \gls{ihs} regions shared
 between populations, coloured by super population. B. Heatmap showing
 the proportion of significant \gls{ihs} regions shared. The population
 listed on the axis is used as A in the calculation = (A \(\cap\) B)/ A.
-Axes have been ordered according to the hierarchical clustering.}
+Axes have been ordered according to the hierarchical clustering.}\label{fig:ihsclust}
 \end{figure}
 
 
@@ -6479,14 +6568,12 @@ four of 19 genes (\emph{HPSE2}, \emph{HYAL1}, \emph{HYAL2}, and
 genes were part of but none were significantly enriched.
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/nslclust-1.pdf}
-\caption{\label{fig:nslclust}\gls{nsl} Clustering: A. Dendrogram from hierarchical
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/nslclust-1} \caption[Hierarchical clustering of \acrshort{nsl}.]{\gls{nsl} Clustering: A. Dendrogram from hierarchical
 clustering based on proportion of significant \gls{nsl} regions shared
 between populations, coloured by super population. B. Heatmap showing
 the proportion of significant \gls{nsl} regions shared. The population
 listed on the axis is used as A in the calculation = (A \(\cap\) B)/ A.
-Axes have been ordered according to the hierarchical clustering.}
+Axes have been ordered according to the hierarchical clustering.}\label{fig:nslclust}
 \end{figure}
 
 
@@ -6617,11 +6704,9 @@ more negative in value for all statistics for both \gls{pol} and
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/goutdendros-1.pdf}
-\caption{\label{fig:goutdendros}Dendrograms created from hierarchical clustering
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/goutdendros-1} \caption[Dendrograms created from hierarchical clustering applied to windows from loci associated with urate and gout]{Dendrograms created from hierarchical clustering
 applied to windows from the 62 loci associated with urate and gout.
-Coloured by super population.}
+Coloured by super population.}\label{fig:goutdendros}
 \end{figure}
 
 \subsubsection{Clustering of median-centred window values for
@@ -6655,11 +6740,9 @@ similarity with the \gls{pol} populations in the values of the
 statistics in being overall quite negative.
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/obesitydendros-1.pdf}
-\caption{\label{fig:obesitydendros}Dendrograms created from hierarchical clustering
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/obesitydendros-1} \caption[Dendrograms created from hierarchical clustering applied to windows from obesity-associated loci.]{Dendrograms created from hierarchical clustering
 applied to windows from the 269 loci associated with obesity. Coloured
-by super population.}
+by super population.}\label{fig:obesitydendros}
 \end{figure}
 
 
@@ -6698,11 +6781,9 @@ extreme enough to be in the 1\textsuperscript{st} percentile.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/t2ddendros-1.pdf}
-\caption{\label{fig:t2ddendros}Dendrograms created from hierarchical clustering
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/t2ddendros-1} \caption[Dendrograms created from hierarchical clustering applied to windows from \gls{t2d}-associated loci.]{Dendrograms created from hierarchical clustering
 applied to windows from the 99 loci associated with \gls{t2d}. Coloured
-by super population.}
+by super population.}\label{fig:t2ddendros}
 \end{figure}
 
 \subsubsection{Clustering of median-centred window values for kidney
@@ -6714,11 +6795,9 @@ genes}\label{clustering-of-median-centred-window-values-for-kidney-disease-assoc
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/kidneydendros-1.pdf}
-\caption{\label{fig:kidneydendros}Dendrograms created from hierarchical clustering
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/kidneydendros-1} \caption[Dendrograms created from hierarchical clustering applied to windows from kidney disease-associated loci.]{Dendrograms created from hierarchical clustering
 applied to windows from the 53 loci associated with kidney disease.
-Coloured by super population.}
+Coloured by super population.}\label{fig:kidneydendros}
 \end{figure}
 
 The GWAS catalog had 53 genes associated with kidney disease, this was
@@ -6752,11 +6831,9 @@ genes}\label{clustering-of-median-centred-window-values-for-metabolic-syndrome-a
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/metsyndendros-1.pdf}
-\caption{\label{fig:metsyndendros}Dendrograms created from hierarchical clustering
+\includegraphics{_bookdown_files/04-Clustering_files/figure-latex/metsyndendros-1} \caption[Dendrograms created from hierarchical clustering applied to windows from metabolic syndrome-associated loci.]{Dendrograms created from hierarchical clustering
 applied to windows from the 22 loci associated with metabolic syndrome.
-Coloured by super population.}
+Coloured by super population.}\label{fig:metsyndendros}
 \end{figure}
 
 The GWAS catalog had 22 genes associated with metabolic syndrome, this
@@ -6888,7 +6965,7 @@ drawn windows.
 
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-56}\label{tab:randgenes} Percentage of draws from randomly selected genes for completely clustered super populations.}
+\caption{\label{tab:unnamed-chunk-57}\label{tab:randgenes} Percentage of draws from randomly selected genes for completely clustered super populations.}
 \centering
 \begin{tabular}[t]{lrrrrlrrrrlrrrrlrrrrlrrrr}
 \toprule
@@ -6954,7 +7031,7 @@ global context, as being most similar to the East Asian populations
 differentiation between Eastern and Western Polynesia, was consistent
 with the out of Africa human migration and subsequent Polynesian
 expansion
-\citep{Nielsen2017, Matisoo-Smith2015, Skoglund2016, Hudjashov2018}.
+\citep{Matisoo-Smith2015, Skoglund2016, Nielsen2017, Hudjashov2018}.
 
 \subsubsection{Clustering of aggregate
 statistics}\label{clustering-of-aggregate-statistics}
@@ -7014,7 +7091,7 @@ the extremes from the other populations.
 The extremes of the distributions represent different types of selection
 or demographic events and are different depending on the selection test
 statistic being used
-\citep{Tajima1989, fay2000hitchhiking, Fu1993, Zeng2006}. The upper end
+\citep{Tajima1989, Fu1993, fay2000hitchhiking, Zeng2006}. The upper end
 of the distribution is able to be compared as all of the values that it
 encompassed were positive in value across all populations for all
 statistics and represent the same types of selection or demography.
@@ -7040,7 +7117,7 @@ analysis and the admixture analysis (sections \ref{pcaresults} and
 populations were less homogenous than the other super populations. With
 the exception of the \gls{amr} populations, the clustering of
 populations using windows or haplotypes was consistent with previously
-reported results \citep{1KGP2015snp, pickrell2009signals}. The grouping
+reported results \citep{pickrell2009signals, 1KGP2015snp}. The grouping
 of populations was also seen with random lists of genes. This would
 indicate that the commonalities with populations for a gene are not
 specific to a disease, but instead, a general locus by locus similarity.
@@ -7357,7 +7434,7 @@ studies that are used for genetic analysis. Multi-purpose cohort studies
 are cohorts that are collected in a way that enables the use of the data
 to answer many different research questions; some well known cohorts
 include the \gls{wtccc} cohort, the \gls{aric} study, and the \gls{fhs}
-\citep{Burton2007, Aric1989, Splansky2007}.
+\citep{Aric1989, Burton2007, Splansky2007}.
 
 The use of a consistent case definition is also important for genetic
 analyses using multiple cohorts. If the definition is consistent then it
@@ -7433,8 +7510,7 @@ variants that have a true effect but due to cohort size do not reach
 statistical significance are lost in the `noise' of the \gls{gwas}
 signal. One of the possibilities to be able to identify such variants is
 to use a combination of of selection statistics with \gls{gwas} to
-prioritise \gls{gwas} results \citep[\citet{Field2016a},
-\citet{Casto2011}]{Ayodo2007}.
+prioritise \gls{gwas} results \citep{Ayodo2007, Casto2011, Field2016a}.
 
 \subsection{Objectives}\label{objectives-2}
 
@@ -7464,9 +7540,8 @@ Inclusion criteria were: European ethnicity, aged between 40 and 69
 years, and having genome wide genotypes available. The exclusion
 criteria used were: mismatch between self-reported sex and genetic sex,
 genotype quality control failure, relatedness, or either a primary or
-secondary hospital diagnosis of kidney disease (International
-Classification of Diseases, Tenth Revision (ICD-10), codes I12, I13,
-N00-N05, N07, N11, N14, N17--N19, Q61, N25.0, Z49, Z94.0, Z99.2),
+secondary hospital diagnosis of kidney disease (\gls{icd10}, codes I12,
+I13, N00-N05, N07, N11, N14, N17--N19, Q61, N25.0, Z49, Z94.0, Z99.2),
 participants aged 70 years and over, and those with kidney disease,
 because these are risk factors for secondary gout.
 
@@ -7488,7 +7563,7 @@ this replication cohort was 261132.
 
 Four main classification criteria were used to define gout cases.
 \emph{Hospital defined gout} involved either a primary or secondary
-hospital diagnosis for gout (ICD-10 code M10, including sub-codes).
+hospital diagnosis for gout (\gls{icd10} code M10, including sub-codes).
 \emph{Self-report of gout} was defined as reporting having gout at the
 time of the study interview with a nurse, in response to the question
 ``In the touch screen you selected that you have been told by a doctor
@@ -7496,7 +7571,7 @@ that you have other serious illnesses or disabilities, could you now
 tell me what they are?''\footnote{\url{http://biobank.ctsu.ox.ac.uk/crystal/docs/Interview.pdf}
   accessed 28 May 2018}. \emph{Use of \gls{ult}} used self-report data
 for the use of allopurinol, febuxostat, or sulphinpyrazone, and not
-having a hospital diagnosis of leukaemia or lymphoma (ICD-10 codes
+having a hospital diagnosis of leukaemia or lymphoma (\gls{icd10} codes
 C81-C96). \emph{Winnard defined gout} was based on \citet{Winnard2012}
 and consisted of a hospital diagnosis of gout, or self-report of gout
 specific medication (\gls{ult} or colchicine). The largest number of
@@ -7516,7 +7591,7 @@ combination of all gout definitions were calculated using the
 \subsubsection{Gout association test}\label{gout-association-test}
 
 A \gls{gwas} was performed using logistic regression in Plink1.9b
-\citep{plink2, Chang2015} for each gout classification, with age, sex,
+\citep{Chang2015, plink2} for each gout classification, with age, sex,
 and \gls{bmi} as co-variates. The association results for each
 \gls{gwas} were then compared with the 30 \glspl{snp} reported in Table
 1 of \citet{Kottgen2013} that had previously been associated with urate
@@ -7536,8 +7611,8 @@ prevalence of gout of 2\% (section \ref{gctaHeritability}). The
 liability scale operates on a liability threshold model whereby an
 unseen continuous trait has a threshold above which one is a case
 \citep{Lee2011, Zuk2012}. Heritability estimates were compared using the
-formula h\textsubscript{1} - h\textsubscript{2} and the SE calculated
-using formula \eqref{eq:h2se}.
+formula h\textsubscript{1} - h\textsubscript{2} and the \gls{se}
+calculated using formula \eqref{eq:h2se}.
 
 \begin{equation} 
  SE = \sqrt{SE_1^2 + SE_2^2}
@@ -7561,19 +7636,19 @@ and combining of cohorts were performed by Dr Tanya Major, Merriman Lab.
 components outputted and used as covariates to adjust for population
 substructure in the \gls{gwas}.
 
-The \gls{gwas} was performed for gout using individuals with Polynesian
-ancestry. Gout affection was determined by the \gls{acr} criteria
-\citep{Wallace1977a}, or a doctor diagnosis, or if enrolled in a gout
-drug trial. All participants were older than 18, and provided informed
-written consent. Exclusion criteria included unknown gout affection
-status, non-Polynesian self-reported ancestry, or a mismatch between
+The \gls{gwas} for gout using individuals with Polynesian ancestry was
+conducted by Dr Tanya Major (Merriman Lab) using Plink v1.9b32. Gout
+affection was determined by the \gls{acr} criteria \citep{Wallace1977a},
+or a doctor diagnosis, or if enrolled in a gout drug trial. All
+participants were older than 18, and provided informed written consent.
+Exclusion criteria included unknown gout affection status,
+non-Polynesian self-reported ancestry, or a mismatch between
 self-reported ancestry and \gls{pca} clustering. The \gls{gwas} was
 adjusted for age, sex, and the first ten \glspl{pc} calculated from
 2,858 ancestry informative markers (as identified by Illumina and used
 in \citet{Guo2014}). Markers were removed if the minor allele frequency
 was less than 0.01, or had a \gls{hwe} chi-squared exact test P
-\textless{} 1x10\textsuperscript{-6}. The \gls{gwas} was conducted by Dr
-Tanya Major (Merriman Lab) using Plink v1.9b32.
+\textless{} 1x10\textsuperscript{-6}.
 
 \section{Results}\label{results-2}
 
@@ -7665,16 +7740,14 @@ Mean BMI (SD) & 30.82 (4.89) & 27.28 (4.7) & 30.64 (4.97) & 27.13 (4.61)\\
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/ukbbupsetplot-1.pdf}
-\caption{\label{fig:ukbbupsetplot}An ``upset plot'' showing the number of samples
-(left) and intersections (upper) for the different classification
-criteria.}
+\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/ukbbupsetplot-1} \caption[Upset plot of number of samples and intersections for different gout classification criteria.]{An ``upset plot'' showing the number of samples
+(left) and intersections (upper) for the different gout classification
+criteria.}\label{fig:ukbbupsetplot}
 \end{figure}
 
 \begin{landscape}\begin{table}
 
-\caption{\label{tab:unnamed-chunk-7}\label{tab:ukbbprev} Number, prevalence (95\% CI) of participants defined as gout cases}
+\caption[Number and prevalence of gout by gout definition.]{\label{tab:unnamed-chunk-7}\label{tab:ukbbprev} Number, prevalence (95\% CI) of participants defined as gout cases}
 \centering
 \begin{tabular}[t]{l>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{3.5cm}}
 \toprule
@@ -7695,8 +7768,8 @@ associated
 loci}{Replication of @Kottgen2013 urate associated loci}}\label{replication-of-kottgen2013-urate-associated-loci}
 
 Analysis of the 30 reported urate-associated \glspl{snp} from
-\citet{Kottgen2013} revealed similar odds ratios for all gout
-definitions (Figures \ref{fig:kotplot} and \ref{fig:kotplot2}, Table
+\citet{Kottgen2013} revealed similar \glspl{or} for all gout definitions
+(Figures \ref{fig:kotplot} and \ref{fig:kotplot2}, Table
 \ref{tab:ukbbkot}). Experiment-wide significance was defined as P
 \textless{} 0.0017, and genome-wide significance as P \textless{}
 5x10\textsuperscript{-8} \citep{Fadista2016}. There were differing
@@ -7719,14 +7792,14 @@ for the self-reported gout definition, 11 for \gls{ult} use definition,
 diagnosis definition.
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/kotplot-1.pdf}
-\caption{\label{fig:kotplot}Plot showing ORs (95\% CI) for the two largest effect
-\glspl{snp} reported in \citet{Kottgen2013} based on gout definitions,
-rs2231142 and rs12498742. Original Kottgen reported ORs are shown as red
-circles. The reported Kottgen OR was inverted to maintain consistency of
-reported effect allele (A1) for rs12498742.}
+\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/kotplot-1} \caption[Odds ratios for rs2231142 and rs12498742 based on gout definitions.]{Plot showing odds ratios (95\% \acrshort{ci}) for the two
+largest effect \glspl{snp} reported in \citet{Kottgen2013} based on gout
+definitions, rs2231142 and rs12498742. Original Kottgen reported odd
+ratio are shown as red circles. The reported Kottgen odds ratio was
+inverted to maintain consistency of reported effect allele (A1) for
+rs12498742.}\label{fig:kotplot}
 \end{figure}
+
 
 
 
@@ -7743,15 +7816,13 @@ reported effect allele (A1) for rs12498742.}
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/kotplot2-1.pdf}
-\caption{\label{fig:kotplot2}Plot showing ORs (95\% CI) for the 28 \glspl{snp}
-reported in \citet{Kottgen2013} based on gout definitions. Original
-Kottgen reported ORs are shown as red circles. The reported Kottgen OR
-was inverted to maintain consistency of reported effect allele (A1) for
-the following markers: rs2307394, rs2079742, rs7224610, rs7188445,
-rs1178977, rs6770152, rs7193778, rs164009, rs653178, rs2078267 and
-rs478607.}
+\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/kotplot2-1} \caption[Odds ratios for the 28 SNPs reported in \citet{Kottgen2013} based on gout definitions.]{Plot showing odds ratios (95\% \acrshort{ci}) for the 28
+\glspl{snp} reported in \citet{Kottgen2013} based on gout definitions.
+Original Kottgen reported odds ratios are shown as red circles. The
+reported Kottgen odds ratio was inverted to maintain consistency of
+reported effect allele (A1) for the following markers: rs2307394,
+rs2079742, rs7224610, rs7188445, rs1178977, rs6770152, rs7193778,
+rs164009, rs653178, rs2078267 and rs478607.}\label{fig:kotplot2}
 \end{figure}
 
 \subsubsection{Heritability explained}\label{heritability-explained}
@@ -7762,15 +7833,16 @@ gout, heritability estimates were calculated for each gout
 classification. To do this, 10,000 controls were randomly selected and
 were used with each different gout criteria, and heritability estimates
 for each chromosome were calculated using GCTA 1.26.0
-\citep{Yang2011part}. The heritability estimates were 0.289 (SE 0.034)
-for the self-report of gout or ULT use definition, 0.283 (SE 0.036) for
-the self-report of gout definition, 0.282 (SE 0.040) for the Winnard
-definition, 0.308 (SE 0.044) for the ULT use definition and 0.236 (SE
-0.160) for the hospital diagnosis definition. There were no
-statistically significant differences between the heritability estimates
-for any of the different classifications. The heritability estimates for
-gout were similar to the estimates of genetic variance of serum urate
-previously reported \citep{Kottgen2013}.
+\citep{Yang2011part}. The heritability estimates were 0.289
+(\acrshort{se} 0.034) for the self-report of gout or \gls{ult} use
+definition, 0.283 (\acrshort{se} 0.036) for the self-report of gout
+definition, 0.282 (\acrshort{se} 0.040) for the Winnard definition,
+0.308 (\acrshort{se} 0.044) for the \gls{ult} use definition and 0.236
+(\acrshort{se} 0.160) for the hospital diagnosis definition. There were
+no statistically significant differences between the heritability
+estimates for any of the different classifications. The heritability
+estimates for gout were similar to the estimates of genetic variance of
+serum urate previously reported \citep{Kottgen2013}.
 
 \begin{landscape}\begin{table}[!h]
 
@@ -7865,13 +7937,11 @@ associated with gout, whereas \citet{Kottgen2013} Table 1 was for urate.
 
 
 \begin{figure}
-\centering
-\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/ukOverlap-1.pdf}
-\caption{\label{fig:ukOverlap}Overlap of markers that reached nominal genome-wide
+\includegraphics{_bookdown_files/05-Selection_and_association_files/figure-latex/ukOverlap-1} \caption[Overlap of markers that reached nominal genome-wide significance between the different gout classifications.]{Overlap of markers that reached nominal genome-wide
 significance between the different gout classifications. The upper
 histogram indicates the size of the intersection and the left histogram
 indicates the total number of nominally significant \glspl{snp} by gout
-definition.}
+definition.}\label{fig:ukOverlap}
 \end{figure}
 
 \begin{table}
@@ -7932,7 +8002,7 @@ Chromosome & Definition & Gene name & Marker & A1 & A2 & OR [95\% CI], P\\
 
 }
 
-\caption{Manhattan plot for association with gout,
+\caption[Manhattan plot for association with gout, adjusted for age, sex and \acrshort{bmi} using the self-reported gout or \acrshort{ult} usage gout definition.]{Manhattan plot for association with gout,
 adjusted for age, sex and \gls{bmi} using the self-reported gout or
 \gls{ult} usage gout definition. The dotted line indicates the
 genome-wide significance threshold level of 5x10\textsuperscript{-8}.
@@ -7949,13 +8019,14 @@ and \emph{NRXN2-SLC22A12} (chr11).}\label{fig:manhatSelfUltAgeSexBmi}
 \subsubsection{Polynesian GWAS}\label{polynesian-gwas}
 
 The \gls{gwas} for gout in the Polynesian populations of New Zealand had
-a total of 2402 individuals, with a mean age of 48.6 (SD 14.9), was
-60.5\% male, and had a mean \gls{bmi} of 35.0 (SD 8.35). A break down by
-gout affection is shown in Table \ref{tab:polyGwasclinc}. There were
-only two markers that met the threshold for genome-wide significance,
-rs2725215 (risk allele = T, OR = 1.939, 95\% CI = 1.567-2.40, P = 1.162
-x 10\textsuperscript{-9}), located in \emph{PKD2}, and rs2231142 (risk
-allele = T, OR = 2.306, 95\% CI =1.891-2.81, P = 1.570 x
+a total of 2402 individuals, with a mean age of 48.6 (\acrshort{sd}
+14.9), was 60.5\% male, and had a mean \gls{bmi} of 35.0 (\acrshort{sd}
+8.35). A break down by gout affection is shown in Table
+\ref{tab:polyGwasclinc}. There were only two markers that met the
+threshold for genome-wide significance, rs2725215 (risk allele = T,
+\acrshort{or} = 1.939, 95\% CI = 1.567-2.40, P = 1.162 x
+10\textsuperscript{-9}), located in \emph{PKD2}, and rs2231142 (risk
+allele = T, \acrshort{or} = 2.306, 95\% CI =1.891-2.81, P = 1.570 x
 10\textsuperscript{-16}), located in \emph{ABCG2}. The \gls{ld}
 r\textsuperscript{2} between these two markers was 0.58 (\gls{pol}). Two
 other markers reached the nominal significance threshold, rs2728108
@@ -7976,7 +8047,7 @@ rs3775948 being genome-wide significant (P = 9 x
 
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-16}\label{tab:polyGwasclinc} Clinical details for participants of the Polynesian gout GWAS}
+\caption{\label{tab:unnamed-chunk-16}\label{tab:polyGwasclinc} Clinical details for participants of the Polynesian gout GWAS.}
 \centering
 \begin{tabular}[t]{lcclcclcc}
 \toprule
@@ -8004,7 +8075,7 @@ Sex (\% Male) & 43.9 & 81.4\\
 
 }
 
-\caption{Manhattan plot for gout GWAS, adjusted for age and sex,
+\caption[Manhattan plot for gout GWAS, adjusted for age and sex, in Polynesian ancestry individuals.]{Manhattan plot for gout GWAS, adjusted for age and sex,
 in Polynesian ancestry individuals showing -log\textsubscript{10}(P) for
 the association test by genomic position. The solid line indicates the
 genome-wide significance threshold of P = 5 x10\textsuperscript{-8}, the
@@ -8180,7 +8251,7 @@ Biobank replication cohort.
 
 }
 
-\caption{Locus zoom plot of Polynesian gout \gls{gwas} results
+\caption[Locus zoom plot of Polynesian gout \acrshort{gwas} results for the region covering \textit{IBSP}, \textit{PKD2}, and \textit{ABCG2}]{Locus zoom plot of Polynesian gout \gls{gwas} results
 for the region chr4:88,600,000-89,200,000, covering \emph{IBSP},
 \emph{PKD2}, and \emph{ABCG2}. Points indicate SNP association with gout
 by genomic position in the Polynesian gout GWAS. Linkage disequilibrium
@@ -8308,7 +8379,7 @@ The main peak of association in the Manhattan plots (Figures
 Polynesians was \emph{ABCG2}, this was consistent with previous
 \gls{gwas} analyses for gout, compared to \gls{gwas} for serum urate
 which has the strongest association with \emph{SLC2A9}
-\citep{Kottgen2013, Okada2012, nakayama2017gwas}. Combining the
+\citep{Okada2012, Kottgen2013, nakayama2017gwas}. Combining the
 haplotypic selection results for \gls{ihs} and \gls{nsl} from the
 \gls{gbr} population with the UK Biobank gout \gls{gwas} showed
 additional evidence at \emph{SLC22A12}, \emph{PTPN11}, \emph{SLC17A3},
@@ -8604,7 +8675,7 @@ genetic selection, and to identify and characterise selection through a
 range of selection statistics, in multiple Polynesian populations. The
 population sample sizes are also some of the largest for Polynesia
 compared to other studies
-\citep{Kimura2008, Friedlaender2008, Skoglund2016, Hudjashov2018}. From
+\citep{Friedlaender2008, Kimura2008, Skoglund2016, Hudjashov2018}. From
 these genome-wide selection scans, there was evidence of metabolic
 pathways being enriched for genes displaying signals of selection. But
 importantly, the genes that were associated with urate and gout that
@@ -8731,7 +8802,7 @@ benefited from population simulations using models that may best explain
 the population history \citep{Yuan2012}. Extensions to simulation
 techniques could include training machine learning algorithms or deep
 learning on simulated data and applying the model predictions to real
-data \citep{Pybus2015, Schrider2018, Sheehan2016}
+data \citep{Pybus2015, Sheehan2016, Schrider2018}
 
 \section{Future directions}\label{future-directions}
 
@@ -8796,6 +8867,25 @@ of the genome that displayed ``signatures of selection'' in Polynesian
 populations, that was previously unavailable. It has also provided
 insight into the role of selection with respect to urate and metabolic
 disease.
+
+\bibliography{references-nourl.bib,diseaseGR-12-3-2018-nourl.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start your Appendix with this:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% For appendices:
+\begin{appendices}
+	\crefalias{chapter}{appcha}
+	\crefalias{section}{appsec}
+	\renewcommand{\thesection}{\Alph{chapter}\arabic{section}}
+	\renewcommand{\thetable}{S\arabic{table}}
+	\renewcommand{\thefigure}{S\arabic{figure}}
+	\setcounter{figure}{0}
+	\setcounter{table}{0}
+
+	% Content of Appendix... e.g.:
+
 
 \chapter{Appendix A - Supplemental
 tables}\label{appendix-a---supplemental-tables}
@@ -9435,7 +9525,7 @@ frequency based
 statistics}\label{genes-in-1st-percentile-for-polynesian-populations-for-frequency-based-statistics}
 
 \begin{table}[!htb]
-\caption{All genes that had a window in the 1st percentile and value < 0 from a Polynesian population. Table can be found in the electronic supplement as file Appendices/03-intrasfsPol.csv}
+\caption[All genes that had a window in the 1st percentile and value < 0 from a Polynesian population]{All genes that had a window in the 1st percentile and value < 0 from a Polynesian population. Table can be found in the electronic supplement as file Appendices/03-intrasfsPol.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -9448,7 +9538,7 @@ statistics}\label{genes-in-1st-percentile-for-polynesian-populations-for-frequen
 populations}\label{significant-ihs-and-nsl-markers-in-polynesian-populations}
 
 \begin{table}[!htb]
-\caption{Significant markers for \gls{ihs} and \gls{nsl} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/03-ihsnsl-genes.csv}
+\caption[Significant markers for \acrshort{ihs} and \acrshort{nsl} in Polynesian populations]{Significant markers for \acrshort{ihs} and \acrshort{nsl} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/03-ihsnsl-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -9461,7 +9551,7 @@ populations}\label{significant-ihs-and-nsl-markers-in-polynesian-populations}
 populations}\label{significant-xp-ehh-markers-in-polynesian-populations}
 
 \begin{table}[!htb]
-\caption{Genes that had a significant XP-EHH value in Polynesian populations. Table can be found in the electronic supplement as file Appendices/03-xpehh-Pol.csv}
+\caption[Genes that had a significant XP-EHH value in Polynesian populations.]{Genes that had a significant XP-EHH value in Polynesian populations. Table can be found in the electronic supplement as file Appendices/03-xpehh-Pol.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -10046,11 +10136,11 @@ error}\label{admixture-cross-validation-error}
 
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-9}\label{tab:admixCV} Admixture cross-validation (CV) error for different values of K.}
+\caption{\label{tab:unnamed-chunk-9}\label{tab:admixCV} Admixture cross-validation error for different values of K.}
 \centering
 \begin{tabular}[t]{rl}
 \toprule
-K & CV Error\\
+K & Cross-validation Error\\
 \midrule
 1 & 0.4409\\
 2 & 0.4155\\
@@ -10081,7 +10171,7 @@ table}\label{gwas-catalog-studies-and-references-table}
 \begingroup\fontsize{8}{10}\selectfont
 
 \begin{longtabu} to \linewidth {>{\raggedright}X>{\raggedright}X}
-\caption{\label{tab:unnamed-chunk-11}\label{tab:gwascatref} GWAS catalog studies used. Disease trait as specified in GWAS catalog}\\
+\caption[GWAS catalog studies used.]{\label{tab:unnamed-chunk-11}\label{tab:gwascatref} GWAS catalog studies used. Disease trait as specified in GWAS catalog}\\
 \toprule
 Disease Trait & Reference\\
 \midrule
@@ -10383,7 +10473,7 @@ lists}\label{gwas-catalog-disease-gene-lists}
 \begingroup\fontsize{8}{10}\selectfont
 
 \begin{longtable}[t]{llllll}
-\caption{\label{tab:gwasgenes}\label{tab:gwasgenes} Disease associated genes by category from the GWAS catalog. For references see Table \ref{tab:gwascatref}.}\\
+\caption[Disease associated genes by category from the GWAS catalog.]{\label{tab:gwasgenes}\label{tab:gwasgenes} Disease associated genes by category from the GWAS catalog. For references see Table \ref{tab:gwascatref}.}\\
 \toprule
 Gene name & Urate and gout & Obesity & T2D & Kidney disease & Metabolic syndrome\\
 \midrule
@@ -11098,7 +11188,7 @@ Population & Mean & Std. Dev & Min & Lower 1\% & Median & Upper 99\% & Max\\
 extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 1st percentile \gls{td} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-td-pol-firstper-genes.csv}
+\caption[Genes intersecting the windows of the 1st percentile \gls{td} in Polynesian populations.]{Genes intersecting the windows of the 1st percentile \gls{td} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-td-pol-firstper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11106,7 +11196,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 99th percentile \gls{td} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-td-pol-ninetyninthper-genes.csv}
+\caption[Genes intersecting the windows of the 99th percentile \gls{td} in Polynesian populations.]{Genes intersecting the windows of the 99th percentile \gls{td} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-td-pol-ninetyninthper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11114,7 +11204,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 1st percentile \gls{fwh} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-fwh-pol-firstper-genes.csv}
+\caption[Genes intersecting the windows of the 1st percentile \gls{fwh} in Polynesian populations.]{Genes intersecting the windows of the 1st percentile \gls{fwh} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-fwh-pol-firstper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11122,7 +11212,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 99th percentile \gls{fwh} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-fwh-pol-ninetyninethper-genes.csv}
+\caption[Genes intersecting the windows of the 99th percentile \gls{fwh} in Polynesian populations.]{Genes intersecting the windows of the 99th percentile \gls{fwh} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-fwh-pol-ninetyninethper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11130,7 +11220,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 1st percentile \gls{flf} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-flf-pol-firstper-genes.csv}
+\caption[Genes intersecting the windows of the 1st percentile \gls{flf} in Polynesian populations.]{Genes intersecting the windows of the 1st percentile \gls{flf} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-flf-pol-firstper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11138,7 +11228,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 99th percentile \gls{flf} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-flf-pol-ninetyninethper-genes.csv}
+\caption[Genes intersecting the windows of the 99th percentile \gls{flf} in Polynesian populations.]{Genes intersecting the windows of the 99th percentile \gls{flf} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-flf-pol-ninetyninethper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11146,7 +11236,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 1st percentile \gls{ze} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-ze-pol-firstper-genes.csv}
+\caption[Genes intersecting the windows of the 1st percentile \gls{ze} in Polynesian populations.]{Genes intersecting the windows of the 1st percentile \gls{ze} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-ze-pol-firstper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11154,7 +11244,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{Genes intersecting the windows of the 99th percentile \gls{ze} in Polynesians. Table can be found in the electronic supplement as file Appendices/04-ze-pol-ninetyninethper-genes.csv}
+\caption[Genes intersecting the windows of the 99th percentile \gls{ze} in Polynesian populations.]{Genes intersecting the windows of the 99th percentile \gls{ze} in Polynesian populations. Table can be found in the electronic supplement as file Appendices/04-ze-pol-ninetyninethper-genes.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11167,7 +11257,7 @@ extremes}\label{polynesian-windows-for-clustering-of-the-extremes}
 nSL}\label{clustered-regions-from-significant-markers-for-ihs-and-nsl}
 
 \begin{table}[!htb]
-\caption{Positions of regions created by clustering significant markers for \gls{ihs} or \gls{nsl} by population. Table can be found in the electronic supplement as file Appendices/04-ihs-nsl-significant-marker-clusters.csv}
+\caption[Positions of regions created by clustering significant markers for \acrshort{ihs} or \acrshort{nsl} by population.]{Positions of regions created by clustering significant markers for \gls{ihs} or \gls{nsl} by population. Table can be found in the electronic supplement as file Appendices/04-ihs-nsl-significant-marker-clusters.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11179,10 +11269,10 @@ nSL}\label{clustered-regions-from-significant-markers-for-ihs-and-nsl}
 \subsection{Clustered median centered metabolic disease
 genes}\label{clustered-median-centered-metabolic-disease-genes}
 
-\subsubsection{Gout}\label{gout}
+\subsubsection{Urate and Gout}\label{urate-and-gout}
 
 \begin{table}[!htb]
-\caption{\gls{td} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-td-gene-clus.csv}
+\caption[\gls{td} for windows at gout-associated loci.]{\gls{td} for windows at gout-associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-td-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11190,7 +11280,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{fwh} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-fwh-gene-clus.csv}
+\caption[\gls{fwh} for windows at urate and gout-associated loci.]{\gls{fwh} for windows at urate and gout-associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-fwh-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11198,7 +11288,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{flf} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-flf-gene-clus.csv}
+\caption[\gls{flf} for windows at urate and gout-associated loci.]{\gls{flf} for windows at urate and gout-associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-flf-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11206,7 +11296,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{ze} for windows at gout associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-ze-gene-clus.csv}
+\caption[\gls{ze} for windows at urate and gout-associated loci.]{\gls{ze} for windows at urate and gout-associated loci. Table can be found in the electronic supplement as file Appendices/04-gout-ze-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11218,7 +11308,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \subsubsection{Obesity}\label{obesity}
 
 \begin{table}[!htb]
-\caption{\gls{td} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-td-gene-clus.csv}
+\caption[\gls{td} for windows at obesity-associated loci.]{\gls{td} for windows at obesity-associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-td-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11226,7 +11316,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{fwh} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-fwh-gene-clus.csv}
+\caption[\gls{fwh} for windows at obesity-associated loci.]{\gls{fwh} for windows at obesity-associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-fwh-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11234,7 +11324,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{flf} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-flf-gene-clus.csv}
+\caption[\gls{flf} for windows at obesity-associated loci.]{\gls{flf} for windows at obesity-associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-flf-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11242,7 +11332,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{ze} for windows at obesity associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-ze-gene-clus.csv}
+\caption[\gls{ze} for windows at obesity-associated loci.]{\gls{ze} for windows at obesity-associated loci. Table can be found in the electronic supplement as file Appendices/04-obesity-ze-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11254,7 +11344,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \subsubsection{Type 2 diabetes}\label{type-2-diabetes}
 
 \begin{table}[!htb]
-\caption{\gls{td} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-td-gene-clus.csv}
+\caption[\gls{td} for windows at \gls{t2d}-associated loci.]{\gls{td} for windows at \gls{t2d}-associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-td-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11262,7 +11352,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{fwh} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-fwh-gene-clus.csv}
+\caption[\gls{fwh} for windows at \gls{t2d}-associated loci.]{\gls{fwh} for windows at \gls{t2d}-associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-fwh-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11270,7 +11360,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{flf} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-flf-gene-clus.csv}
+\caption[\gls{flf} for windows at \gls{t2d}-associated loci.]{\gls{flf} for windows at \gls{t2d}-associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-flf-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11278,7 +11368,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{ze} for windows at \gls{t2d} associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-ze-gene-clus.csv}
+\caption[\gls{ze} for windows at \gls{t2d}-associated loci.]{\gls{ze} for windows at \gls{t2d}-associated loci. Table can be found in the electronic supplement as file Appendices/04-t2d-ze-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11290,7 +11380,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \subsubsection{Kidney disease}\label{kidney-disease}
 
 \begin{table}[!htb]
-\caption{\gls{td} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-td-gene-clus.csv}
+\caption[\gls{td} for windows at kidney disease-associated loci.]{\gls{td} for windows at kidney disease-associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-td-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11298,7 +11388,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{fwh} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-fwh-gene-clus.csv}
+\caption[\gls{fwh} for windows at kidney disease-associated loci.]{\gls{fwh} for windows at kidney disease-associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-fwh-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11306,7 +11396,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{flf} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-flf-gene-clus.csv}
+\caption[\gls{flf} for windows at kidney disease-associated loci.]{\gls{flf} for windows at kidney disease-associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-flf-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11314,7 +11404,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{ze} for windows at kidney disease associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-ze-gene-clus.csv}
+\caption[\gls{ze} for windows at kidney disease-associated loci.]{\gls{ze} for windows at kidney disease-associated loci. Table can be found in the electronic supplement as file Appendices/04-kd-ze-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11326,7 +11416,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \subsubsection{Metabolic syndrome}\label{metabolic-syndrome-1}
 
 \begin{table}[!htb]
-\caption{\gls{td} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-td-gene-clus.csv}
+\caption[\gls{td} for windows at metabolic syndrome-associated loci.]{\gls{td} for windows at metabolic syndrome-associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-td-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11334,7 +11424,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{fwh} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-fwh-gene-clus.csv}
+\caption[\gls{fwh} for windows at metabolic syndrome-associated loci.]{\gls{fwh} for windows at metabolic syndrome-associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-fwh-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11342,7 +11432,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{flf} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-flf-gene-clus.csv}
+\caption[\gls{flf} for windows at metabolic syndrome-associated loci.]{\gls{flf} for windows at metabolic syndrome-associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-flf-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -11350,7 +11440,7 @@ genes}\label{clustered-median-centered-metabolic-disease-genes}
 \end{table}
 
 \begin{table}[!htb]
-\caption{\gls{ze} for windows at metabolic syndrome associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-ze-gene-clus.csv}
+\caption[\gls{ze} for windows at metabolic syndrome-associated loci.]{\gls{ze} for windows at metabolic syndrome-associated loci. Table can be found in the electronic supplement as file Appendices/04-metsyn-ze-gene-clus.csv}
 \centering
   \begin{tabular}{l l}
   \end{tabular}
@@ -12064,6 +12154,58 @@ into a tidy directory structure, and also to normalise the \gls{ihs}m
 \end{Highlighting}
 \end{Shaded}
 
-\bibliography{references-nourl.bib,diseaseGR-12-3-2018-nourl.bib}
+\chapter{Appendix C - Papers published during the course of this
+thesis}\label{appendix-c---papers-published-during-the-course-of-this-thesis}
+
+\section{Papers relating to this
+thesis}\label{papers-relating-to-this-thesis}
+
+\textbf{Cadzow, M.}, Merriman, T.R., Dalbeth (2017) N. Performance of
+gout definitions for genetic epidemiological studies: Analysis of UK
+Biobank. \emph{Arthritis Research and Therapy}. \textbf{19}, 181
+
+\textbf{Cadzow, M.}, Merriman, T.R., Boocock, J., Dalbeth, N., Stamp,
+L.K., Black, M.A., Visscher, P.M., Wilcox, P.L. (2016) Lack of direct
+evidence for natural selection at the candidate thrifty gene locus,
+\emph{PPARGC1A}. \emph{BMC Medical Genetics}. \textbf{17}, 80
+
+\section{Other papers}\label{other-papers}
+
+Lacey, C.J., Doudney, K., Bridgman, P.G., George, P.M., Mulder, R.T.,
+Zarifeh, J.J., Kimber, B., \textbf{Cadzow, M.J.}, Black, M.A., Merriman,
+T.R., Lehnert, K., Bickley, V.M., Pearson, J.F., Cameron, V.A., Kennedy,
+M.A. (2018) Copy number variants implicate cardiac function and
+development pathways in earthquake-induced stress cardiomyopathy.
+\emph{Scientific Reports}. \textbf{8}, 7548
+
+Tanner, C., Boocock, J., Stahl, E.A., Dobbyn, A., Mandal, A.K.,
+\textbf{Cadzow, M.}, Phipps-Green, A.J., Topless, R.K., Hindmarsh, J.H.,
+Stamp, L.K., Dalbeth, N., Choi, H.K., Mount, D.B., Merriman, T.R. (2017)
+Population-Specific Resequencing Associates the ATP-Binding Cassette
+Subfamily C Member 4 Gene With Gout in New Zealand Māori and Pacific
+Men. \emph{Arthritis and Rheumatology}. \textbf{69}, 1461-1469.
+
+Peters, B., Aidley, J., \textbf{Cadzow, M.}, Twell, D., Brownfield, L.
+(2017) Identification of Cis-regulatory modules that function in the
+male germline of flowering plants. \emph{Methods in Molecular Biology}.
+\textbf{1669}, 275-293.
+
+Flynn, T.J., \textbf{Cadzow, M.}, Dalbeth, N., Jones, P.B., Stamp, L.K.,
+Hindmarsh, J.H., Todd, A.S., Walker, R.J., Topless, R., Merriman, T.R.
+(2015) Positive association of tomato consumption with serum urate:
+Support for tomato consumption as an anecdotal trigger of gout flares.
+\emph{BMC Musculoskeletal Disorders}, \textbf{16}, 196
+
+Dalbeth, N., Topless, R., Flynn, T., \textbf{Cadzow, M.}, Bolland, M.J.,
+Merriman, T.R. (2015) Mendelian randomization analysis to examine for a
+causal effect of urate on bone mineral density. \emph{Journal of Bone
+and Mineral Research}. \textbf{30}, 985-991
+
+Topless, R.K., Flynn, T.J., \textbf{Cadzow, M.}, Stamp, L.K., Dalbeth,
+N., Black, M.A., Merriman, T.R. (2015) Association of \emph{SLC2A9}
+genotype with phenotypic variability of serum urate in pre-menopausal
+women. \emph{Frontiers in Genetics}. \textbf{6}, 313
+
+\end{appendices}
 
 \end{document}

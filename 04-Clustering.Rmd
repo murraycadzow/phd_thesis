@@ -77,7 +77,7 @@ include paragraph about maori and pacific health in general in new zealand - don
 
 New Zealand M\tex{\={a}}ori and Pacific Islanders in New Zealand over the past decade have been exhibiting a decrease in overall health [@MinistryofHealth2016]. Fruit and vegetable intake, and physical activity has also been reported as decreasing. All the while there has been an increase in obesity, which has an adjusted rate ratio of 1.7 for  M\tex{\={a}}ori versus non-M\tex{\={a}}ori, and 2.4 for Pacific versus non-Pacific [@MinistryofHealth2016]. The rate of increase in \gls{bmi} for Pacific Islanders was five times that of the rest of the world, and fasting plasma glucose was three to four times higher over the 1980-2008 period [@Hawley2015]. The health disparities are captured in the New Zealand statistics where M\tex{\={a}}ori have a mortality rate of 1.8 that of non-M\tex{\={a}}ori, with the rates of obesity and diabetes of particular note, with the M\tex{\={a}}ori standardised rate of 40.6 per 100,000, five times higher than non-M\tex{\={a}}ori at 8.1 per 100,000 [@MinistryofHealth2012].
 
-New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013] and there are genetic variants in Polynesian populations associated with increased risk of gout and elevated serum urate [@Phipps-Green2010; @Phipps-Green2016]. Serum urate has been associated with metabolic disorders [@Choi2007;@Choi2007b], and genes involved with complex diseases such as \gls{t2d}, gout, and other metabolic related disorders, have shown evidence for selection [@Zhang2013a; @pickrell2009signals;@Hancock2008]. 
+New Zealand Polynesians have inherent elevated serum urate levels and higher prevalence of gout [@Winnard2012; @Winnard2013] and there are genetic variants in Polynesian populations associated with increased risk of gout and elevated serum urate [@Phipps-Green2010; @Phipps-Green2016]. Serum urate has been associated with metabolic disorders [@Choi2007;@Choi2007b], and genes involved with complex diseases such as \gls{t2d}, gout, and other metabolic related disorders, have shown evidence for selection @Hancock2008; @pickrell2009signals; @Zhang2013a]. 
 
 It is hypothesised that elevated serum urate may have undergone positive selection in Polynesian populations due to some of the beneficial properties [@Gosling2014], such as its role as a powerful anti-oxidant [@Ames1981], or as an adjuvant for the innate immune system [@Opitz2009]. Serum urate has also been suggested to have a protective neurological effect against dementia, and provides improved cognitive function with age [@Euser2009]. Characterisation of selection within Polynesian populations has been largely limited to population differentiation due to population sample sizes [@Kimura2008; @Mallick2016].
 
@@ -196,7 +196,7 @@ Admixture analysis is a method that can be used to infer the number of ancestral
 
 
 
-To understand the similarities in ancestral background and degree of admixture present at a population level, the ancestral proportions for K = 11 were plotted for each individual for each population revealing there were some clear similarities amongst the super populations (Figure \@ref(fig:admix)). Within the \gls{afr} populations there were three main ancestral populations, which correlated with geography, with the East African population of \gls{lwk} being most different to the West African populations (\gls{esn}, \gls{yri}, \gls{gwd}, and \gls{msl}). The populations of \gls{acb} and \gls{asw} showed signs of admixture with similarities to the ancestral populations in the West African populations, with smaller proportions from the ancestral populations of \gls{lwk}, and the European populations. The \gls{eas} populations were represented by two ancestral populations. \Gls{cdx} was mostly one, and \gls{jpt} mostly the other, the remaining \gls{eas} populations were mixtures of the two. A single ancestral population represented \gls{sas}, but there were indications of admixture with the ancestral populations of the \gls{eur} and \gls{eas} populations. In the \gls{eur} populations there was again two main ancestral populations, they correlated with North and South Europe. One ancestral population was mostly in \gls{fin}, and the other mostly in \gls{tsi} and \gls{ibs}. \gls{gbr}, \gls{ceu}, and \gls{nzc} were all extremely similar in proportions of the two and ancestral populations. The \gls{amr} populations were mostly differing proportions of the ancestral population that \gls{tsi} had, and an ancestral population that was only in the \gls{amr} populations. There were also small proportions of the ancestral populations that made up the West African populations. The \gls{pol} populations had two ancestral populations, one found in the East Polynesian populations, and the other in the West Polynesian populations. All Polynesian populations had indications of small amounts of admixture with the ancestral populations of the \gls{eur} populations, with the East Polynesian populations having a higher amount than the West Polynesian populations. This analysis was consistent with the results of the \gls{pca}, and other admixture analysis [@1KGP2015snp; @Hellenthal2014], but also showed that there were sub-groups within the super-populations. The low level of admixture in the Polynesian populations also indicated it confounding role in subsequent analyses would be minimal.
+To understand the similarities in ancestral background and degree of admixture present at a population level, the ancestral proportions for K = 11 were plotted for each individual for each population revealing there were some clear similarities amongst the super populations (Figure \@ref(fig:admix)). Within the \gls{afr} populations there were three main ancestral populations, which correlated with geography, with the East African population of \gls{lwk} being most different to the West African populations (\gls{esn}, \gls{yri}, \gls{gwd}, and \gls{msl}). The populations of \gls{acb} and \gls{asw} showed signs of admixture with similarities to the ancestral populations in the West African populations, with smaller proportions from the ancestral populations of \gls{lwk}, and the European populations. The \gls{eas} populations were represented by two ancestral populations. \Gls{cdx} was mostly one, and \gls{jpt} mostly the other, the remaining \gls{eas} populations were mixtures of the two. A single ancestral population represented \gls{sas}, but there were indications of admixture with the ancestral populations of the \gls{eur} and \gls{eas} populations. In the \gls{eur} populations there was again two main ancestral populations, they correlated with North and South Europe. One ancestral population was mostly in \gls{fin}, and the other mostly in \gls{tsi} and \gls{ibs}. \gls{gbr}, \gls{ceu}, and \gls{nzc} were all extremely similar in proportions of the two and ancestral populations. The \gls{amr} populations were mostly differing proportions of the ancestral population that \gls{tsi} had, and an ancestral population that was only in the \gls{amr} populations. There were also small proportions of the ancestral populations that made up the West African populations. The \gls{pol} populations had two ancestral populations, one found in the East Polynesian populations, and the other in the West Polynesian populations. All Polynesian populations had indications of small amounts of admixture with the ancestral populations of the \gls{eur} populations, with the East Polynesian populations having a higher amount than the West Polynesian populations. This analysis was consistent with the results of the \gls{pca}, and other admixture analysis [@Hellenthal2014; @1KGP2015snp], but also showed that there were sub-groups within the super-populations. The low level of admixture in the Polynesian populations also indicated it confounding role in subsequent analyses would be minimal.
 
 
 
@@ -212,7 +212,7 @@ ref_fam <- left_join(ref_fam, panel %>% filter(!pop %in% c('NAD','EPN','WPN','PO
 
 (ref:admix) Proportions of ancestral populations as inferred from ADMIXTURE, using K = 11. Ancestral population (AP) represents a particular theoretical ancestral population. Q is the ancestral proportion. Individuals in the sample populations are represented on the x-axis.
 
-```{r admix, echo = FALSE, fig.height = 8, fig.width = 6, fig.cap = '(ref:admix)', warning=FALSE}
+```{r admix, echo = FALSE, fig.height = 8, fig.width = 6, fig.cap = '(ref:admix)', warning=FALSE, fig.scap = "Proportions of ancestral populations as inferred from ADMIXTURE", out.extra=""}
 # barplot of the reference proportions
 cols <- c('#a50026','#d73027','#f46d43','#fdae61','#fee090','#ffffbf','#e0f3f8','#abd9e9','#74add1','#4575b4','#313695')
 names(cols) <- paste0("AP", 1:11)
@@ -272,7 +272,7 @@ global_super_summary <- readRDS('~/data/NZ_coreExome_1kgp/100kbWindow_intra/filt
 (ref:multichrplot) Hierarchical clustering of the populations using selection test statistics for each entire chromosome. Clustering was performed using Euclidean distance for the distance measure and complete linkage for the linkage criteria. Selection test statistic is in the label for each dendrogram. Coloured by super population.
 
 
-```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=6}
+```{r multichrplot, fig.cap='(ref:multichrplot)', echo = FALSE, fig.height=6, fig.scap = "Hierarchical clustering of the populations using selection test statistics for each entire chromosome.", out.extra = ""}
 multiplot(gene_dendros(gene_data = mat_d_list[['td_chr']]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = mat_d_list[['fwh_chr']]) + ggtitle("Fay and Wu's H"),
           #gene_dendros(gene_data = mat_d_list[['fld_chr']]) + ggtitle("Fu and Li's D"),
@@ -298,9 +298,9 @@ fst_means <- fst_mat %>% filter(pop2 %in% c('CIM','NZM','SAM','TON')) %>% left_j
 
 Hierarchical clustering performed on the pair-wise F~ST~ for the whole chromosomes between each individual population grouped all of the super populations, except \gls{amr} into their correct groups (Figure \@ref(fig:wholechrfst)). The \gls{afr} populations were most similar to each other but least similar to the rest of the populations. The Polynesian populations were grouped together and were sub grouped into East and West Polynesian. The largest differentiation was between \gls{cim} and \gls{esn} (mean F~ST~ = 0.203), whereas the smallest differentiation was between \gls{ceu} and \gls{nzc} (mean F~ST~ = 3.42x10^-4^). The mean F~ST~ for \gls{pol} and \gls{afr} was `r fst_means %>% filter(sup2 == "POL", sup1 == "AFR") %>% select(mean) %>% sprintf('%.3f',.)`; \gls{pol} and \gls{amr} was `r fst_means %>% filter(sup2 == "POL", sup1 == "AMR") %>% select(mean) %>% sprintf('%.3f',.)`; \gls{pol} and \gls{eas} was `r fst_means %>% filter(sup2 == "POL", sup1 == "EAS") %>% select(mean) %>% sprintf('%.3f',.)`; \gls{pol} and \gls{eur} was `r fst_means %>% filter(sup2 == "POL", sup1 == "EUR") %>% select(mean) %>% sprintf('%.3f',.)`; \gls{pol} and \gls{sas} was `r fst_means %>% filter(sup2 == "POL", sup1 == "SAS") %>% select(mean) %>% sprintf('%.3f',.)`. This shows that the \gls{pol} populations were least differentiated from \gls{eas} populations and most from the \gls{afr} populations, which is consistent with the migration history.  
 
-(ref:wholechrfst) _F~ST~_ Hierarchical clustering on chromosomal F~ST~ using Euclidean distance and complete linkage. Coloured by super population.
+(ref:wholechrfst) Hierarchical clustering on chromosomal F~ST~ using Euclidean distance and complete linkage. Coloured by super population.
 
-```{r wholechrfst, fig.cap="(ref:wholechrfst)"}
+```{r wholechrfst, fig.cap="(ref:wholechrfst)", fig.scap = "Hierarchical clustering on chromosomal F\\textsubscript{ST}", out.extra=""}
 create_fst_dendro() #+ ggtitle(expression("Whole Chromosome F"["ST"]))
 #ggsave(last_plot(), file = 'images/04_clustering/fst_dendro.png')
 ```
@@ -368,7 +368,7 @@ bind_rows(list(
   select(stat, Type, everything()) %>% 
   data.frame %>% 
   arrange(stat) %>% select(-stat) %>% 
-  data.frame %>% knitr::kable(., caption = "(\\#tab:proportion) Proportion of populations clustered into their corresponding super population by selection and neutrality statistic. Proportions were calculated independently for each super population based on the cluster group with the maximum number of populations from a particular super population.", booktabs = TRUE, escape = FALSE) %>% group_rows("Fu and Li's F", 1, 8) %>% 
+  data.frame %>% knitr::kable(., caption = "(\\#tab:proportion) Proportion of populations clustered into their corresponding super population by selection and neutrality statistic. Proportions were calculated independently for each super population based on the cluster group with the maximum number of populations from a particular super population.", booktabs = TRUE, escape = FALSE, caption.short = "Proportion of populations clustered into their corresponding super population by selection and neutrality statistic.") %>% group_rows("Fu and Li's F", 1, 8) %>% 
   group_rows("Fay and Wu's H", 9, 16) %>% 
   group_rows("Tajima's D", 17, 24) %>%
   group_rows( "Zeng's E",25, 32)
@@ -397,7 +397,7 @@ bind_rows(list(
   mutate_if(., is.numeric, funs(sprintf("%.2f",.))) %>% 
   arrange(stat) %>% 
   data.frame %>% select(-stat) %>% 
-  knitr::kable(., caption = "(\\#tab:exclusivity) Mean exclusivity of clusters for a given super population by selection and neutrality statistic. Exclusivity of each cluster was calculated by using the proportions of populations from a given super population assigned compared to the total number of individual populations assigned to that cluster", booktabs = TRUE, escape = FALSE) %>% 
+  knitr::kable(., caption = "(\\#tab:exclusivity) Mean exclusivity of clusters for a given super population by selection and neutrality statistic. Exclusivity of each cluster was calculated by using the proportions of populations from a given super population assigned compared to the total number of individual populations assigned to that cluster", booktabs = TRUE, escape = FALSE, caption.short = "Mean exclusivity of clusters for a given super population by selection and neutrality statistic.") %>% 
   group_rows("Fu and Li's F", 1, 8) %>% 
   group_rows("Fay and Wu's H", 9, 16) %>% 
   group_rows("Tajima's D", 17, 24) %>%
@@ -420,7 +420,7 @@ colnames(tab) <- c("Statistic Name","Tail", "Super Population", "Min","Mean","Ma
 
 ```{r totalwindowTable, results = 'asis', echo = FALSE, eval = FALSE}
 # actual table for the number of windows 
-create_windowSummaryTable() %>% mutate(Tail = ifelse(sapply(stat, function(x){strsplit(x, '_')[[1]][2]}) == 'neg', "Lower", "Upper" ), `Statistic Name` = paste0('\\gls{',sapply(stat, function(x){strsplit(x, '_')[[1]][1]}),"}") )%>% mutate(sd = round_dp(sd, 1), mean = round_dp(mean, 1)) %>% select(`Statistic Name`, Tail, `Total Windows`= total_windows, Min = min, Median = median, Max = max, Mean = mean, `Std. Dev` = sd) %>% knitr::kable(., caption = '(\\#tab:totalwindowTable) Number of windows in the 1\\^{st} and 99\\^{th} percentiles of the distribution and the number of populations that shared a given window from the distribution tail. ', booktabs =TRUE, escape = FALSE, align = c("llrrrrrr")  )
+create_windowSummaryTable() %>% mutate(Tail = ifelse(sapply(stat, function(x){strsplit(x, '_')[[1]][2]}) == 'neg', "Lower", "Upper" ), `Statistic Name` = paste0('\\gls{',sapply(stat, function(x){strsplit(x, '_')[[1]][1]}),"}") )%>% mutate(sd = round_dp(sd, 1), mean = round_dp(mean, 1)) %>% select(`Statistic Name`, Tail, `Total Windows`= total_windows, Min = min, Median = median, Max = max, Mean = mean, `Std. Dev` = sd) %>% knitr::kable(., caption = '(\\#tab:totalwindowTable) Number of windows in the 1\\^{st} and 99\\^{th} percentiles of the distribution and the number of populations that shared a given window from the distribution tail.', booktabs =TRUE, escape = FALSE, align = c("llrrrrrr"))
 ```
 
 ```{r, eval = FALSE}
@@ -432,7 +432,7 @@ stat_markerLoc("td") %>% full_join(., stat_markerLoc("fwh"),by = 'Effect', suffi
   full_join(., stat_markerLoc("flf"),by = 'Effect') %>% 
   full_join(., stat_markerLoc("ze"),by = 'Effect', suffix =  c("_flf","_ze")) %>% 
   mutate_if(is.numeric, funs(replace_na(., replace = 0))) %>% 
-  kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the 1\\^{st} or 99\\{th} percentiles for Polynesian populations for the intrapopulation frequency spectrum selection and neutrality statistics.', col.names = c("Effect", rep(c("1\\^{st} percentile", "99\\^{th} percentile" ), 4)), format = 'latex', booktabs = TRUE, escape = FALSE) %>% add_header_above(c("","Tajima's D" =2, "Fay and Wu's H" = 2, "Fu and Lu's F" = 2, "Zeng's E" = 2)) %>% kable_styling(latex_options = "scale_down") %>% landscape()
+  kable( caption = '(\\#tab:perMarkerLoc) Number of markers by variant annotation type that were in the 1\\^{st} or 99\\{th} percentiles for Polynesian populations for the intra-population frequency spectrum selection and neutrality statistics.', col.names = c("Effect", rep(c("1\\^{st} percentile", "99\\^{th} percentile" ), 4)), format = 'latex', booktabs = TRUE, escape = FALSE) %>% add_header_above(c("","Tajima's D" =2, "Fay and Wu's H" = 2, "Fu and Lu's F" = 2, "Zeng's E" = 2)) %>% kable_styling(latex_options = "scale_down") %>% landscape()
 ```
 
 
@@ -463,13 +463,13 @@ global_super_summary %>%filter(stat == "Tajima.D") %>% select(-stat) %>% kable(.
 ```
 
 
-```{r tdDensity, fig.cap = '(ref:tdDensity)', echo = FALSE}
+```{r tdDensity, fig.cap = '(ref:tdDensity)', echo = FALSE, fig.scap = "Plot of the distribution of \\gls{td} by population", out.extra=""}
 knitr::include_graphics("images/04_clustering/td_densities.png")
 ```
 
 (ref:tdDensity) Plot of the distribution of \gls{td} by population. Triangles indicate the minimum and maximum values. Dots indicate the 1^st^ and 99^th^ percentiles for each population.
 
-```{r tdTop1000, fig.cap='(ref:tdTop1000)', echo = FALSE, out.width = "6in"}
+```{r tdTop1000, fig.cap='(ref:tdTop1000)', echo = FALSE, out.width = "6in", fig.scap = "Hierarchical clustering of \\gls{td} using the upper and lower 1\\% of the distribution."}
 #ggsave(plot = four_plot("td","Tajima's D"), filename = 'images/04_clustering/tdTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/tdTop1000.png')
 ```
@@ -620,7 +620,7 @@ Specifically focusing on the `r NROW(genelists)` genes that were associated with
 
 Comparing genome-wide \gls{fwh} revealed that the \gls{pol} super population had the lowest mean (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['mean']] %>% three_dp()`), 1^st^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['lower_1']] %>% three_dp()`), median (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['median']] %>% three_dp()`), 99^th^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['upper_99']] %>% three_dp()`), and maximum values (`r fwh_super_pop_means %>% filter(super_pop == 'POL') %>% .[['max']] %>% three_dp()`) (Figure \@ref(fig:fwhDensity) and Table \@ref(tab:superGlobalSummaryFWH)). Within the \gls{pol} group, the minimum \gls{fwh} value for a Polynesian population was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(min(min) == min) %>% .[["pop"]]`, whereas the maximum value was from `r gs_fwh_table %>% filter(super_pop == "POL") %>% filter(max(max) == max) %>% .[["pop"]]`. \gls{eas} was the second lowest for mean (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['mean']] %>% three_dp()`), 1^st^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['lower_1']] %>% three_dp()`), median (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['median']] %>% three_dp()`), and 99^th^ percentile (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['upper_99']] %>% three_dp()`), but had the largest maximum (`r fwh_super_pop_means %>% filter(super_pop == 'EAS') %>% .[['max']] %>% three_dp()`). The \gls{eur} super population had both the smallest minimum and largest range (`r fwh_super_pop_means %>% filter(super_pop == 'EUR') %>% .[['range']] %>% three_dp()`). The \gls{afr} super population were the only group to have a positive mean (`r fwh_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['mean']] %>% three_dp()`), they also had the smallest range and variation (SD `r fwh_super_pop_means %>% filter(super_pop == 'AFR') %>% .[['sd']] %>% three_dp()`). This indicates that the \gls{afr} populations have a deficit of moderate-to-high frequency derived alleles, whereas the \gls{pol} and \gls{eas} populations have the most windows with the highest excess of moderate-to-high frequency derived alleles.
 
-```{r fwhDensity, fig.cap = '(ref:fwhDensity)', echo = FALSE}
+```{r fwhDensity, fig.cap = '(ref:fwhDensity)', echo = FALSE, fig.scap = "Plot of the distribution of \\gls{fwh} by population.", out.extra=""}
 knitr::include_graphics("images/04_clustering/fwh_densities.png")
 ```
 
@@ -632,7 +632,7 @@ global_super_summary %>%filter(stat == "Fay.Wu.H") %>% select(-stat) %>% kable(.
 
 (ref:fwhTop1000) Hierarchical clustering of \gls{fwh} using the upper and lower 1% of the distribution. **A** and **B** Dendrograms representing the clusters of \gls{fwh} lower and upper tails respectively, using hierarchical clustering with Euclidean distance and complete linkage, and coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectively. A blue line represents presence of a window, white represents the absence of a window in the 1% of the distribution for a population.
 
-```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', out.width = "6in"}
+```{r fwhTop1000, fig.cap='(ref:fwhTop1000)', out.width = "6in", fig.scap="Hierarchical clustering of \\gls{fwh} using the upper and lower 1\\% of the distribution."}
 #ggsave(four_plot("fwh","Fay and Wu's H"), filename = 'images/04_clustering/fwhTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/fwhTop1000.png')
 ```
@@ -748,7 +748,7 @@ The distributions of \gls{flf} were all centred above zero, with the lowest mean
 
 (ref:flfDensity) Plot of the distribution of \gls{flf} by population. Triangles indicate the minimum and maximum values. Dots indicate the 1^st^ and 99^th^ percentiles for each population.
 
-```{r flfDensity, fig.cap = '(ref:flfDensity)',echo = FALSE}
+```{r flfDensity, fig.cap = '(ref:flfDensity)',echo = FALSE, fig.scap = "Plot of the distribution of \\gls{flf} by population.", out.extra=""}
 knitr::include_graphics("images/04_clustering/flf_densities.png")
 ```
 
@@ -758,7 +758,7 @@ global_super_summary %>%filter(stat == "Fu.Li.F") %>% select(-stat) %>% kable(.,
 
 (ref:flfTop1000) Hierarchical clustering of \gls{flf} using the upper and lower 1% of the distribution. **A** and **B** Dendrograms representing the clusters of \gls{flf} lower and upper tails respectively, using hierarchical clustering with Euclidean distance and complete linkage, and coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectively. A blue line represents presence of a window, white represents the absence of a window in the 1% of the distribution for a population.
 
-```{r flfTop1000, fig.cap = '(ref:flfTop1000)', out.width = "6in"}
+```{r flfTop1000, fig.cap = '(ref:flfTop1000)', out.width = "6in", fig.scap = "Hierarchical clustering of \\gls{flf} using the upper and lower 1\\% of the distribution."}
 #ggsave(four_plot("flf","Fu and Li's F"), filename = 'images/04_clustering/flfTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/flfTop1000.png')
 ```
@@ -865,7 +865,7 @@ Similar to \gls{td}, all of the distributions for \gls{ze} appear to have been s
 
 (ref:zeDensity) Plot of the distribution of \gls{ze} by population. Triangles indicate the minimum and maximum values. Dots indicate the 1^st^ and 99^th^ percentiles for each population.
 
-```{r zeDensity, fig.cap = '(ref:zeDensity)',echo = FALSE}
+```{r zeDensity, fig.cap = '(ref:zeDensity)',echo = FALSE, fig.scap = "Plot of the distribution of \\gls{ze} by population.", out.extra=""}
 knitr::include_graphics("images/04_clustering/ze_densities.png")
 ```
 
@@ -875,7 +875,7 @@ global_super_summary %>%filter(stat == "Zeng.E") %>% select(-stat) %>% kable(., 
 
 (ref:zeTop1000) Hierarchical clustering of \gls{ze} using the upper and lower 1% of the distribution. **A** and **B** Dendrograms representing the clusters of \gls{ze} lower and upper tails respectively, using hierarchical clustering with Euclidean distance and complete linkage, and coloured by super population. **C** and **D** Plots representing the windows present in each population from the lower and upper tails respectively. A blue line represents presence of a window, white represents the absence of a window in the 1% of the distribution for a population.
 
-```{r zeTop1000, fig.cap = '(ref:zeTop1000)', out.width = "6in"}
+```{r zeTop1000, fig.cap = '(ref:zeTop1000)', out.width = "6in", fig.scap = "Hierarchical clustering of \\gls{ze} using the upper and lower 1\\% of the distribution.", out.extra=""}
 #ggsave(four_plot("ze","Zeng's E"), filename = 'images/04_clustering/zeTop1000.png', device = 'png', height = 7, width = 7)
 knitr::include_graphics('images/04_clustering/zeTop1000.png')
 ```
@@ -1065,7 +1065,7 @@ GenomicRanges::intersect(gr_ihs[gr_ihs$pop == "POL_SAM"], gr_ihs[gr_ihs$pop == "
 
 
 
-```{r ihsclust, fig.cap='(ref:ihsclust)', echo = FALSE, fig.asp = 1, warning = FALSE}
+```{r ihsclust, fig.cap='(ref:ihsclust)', echo = FALSE, fig.asp = 1, warning = FALSE, fig.scap = "Hierarchical clustering of \\acrshort{ihs}.", out.extra=""}
 ihs_dendro_plot()
 #ggsave(last_plot(), file = 'images/04_clustering/ihs_dendros.png')
 ```
@@ -1141,7 +1141,7 @@ GenomicRanges::intersect(gr_nsl[gr_nsl$pop == "POL_NZM"], gr_nsl[gr_nsl$pop == "
 GenomicRanges::intersect(gr_nsl[gr_nsl$pop == "POL_SAM"], gr_nsl[gr_nsl$pop == "POL_TON"], ignore.strand = TRUE ) %>% data.frame() %>% mutate(seqnames = paste0('chr',seqnames)) %>% GenomicRanges::GRanges() %>% txdb_gene_annotate()%>% filter(!is.na(SYMBOL)) %>% pull(SYMBOL) %>% unique() %>% cat(sep = '\n')
 ```
 
-```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE, fig.asp= 1, warning=FALSE }
+```{r nslclust, fig.cap='(ref:nslclust)', echo = FALSE, fig.asp= 1, warning=FALSE , fig.scap = "Hierarchical clustering of \\acrshort{nsl}.", out.extra=""}
 nsl_dendro_plot()
 #ggsave(last_plot(), file = 'images/04_clustering/nsl_dendros.png')
 ```
@@ -1662,10 +1662,14 @@ cutree(a$hc_d, 6)
 IRanges::subsetByOverlaps((pol_fst_99 %>% mutate(chrom = paste0('chr',chrom)) %>% GenomicRanges::GRanges()), urate_goutGR) %>% data.frame() %>% left_join(., pol_fst_99genes) %>% group_by(pop, SYMBOL) %>% tally()%>% spread(SYMBOL, n, "")
 ```
 
+```{r, echo = FALSE}
+n_gout_genes <- length(unique(gc_urate_gout_GR$SYMBOL))
+```
 
-(ref:goutdendros) Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(gc_urate_gout_GR$SYMBOL))` loci associated with urate and gout. Coloured by super population.
 
-```{r goutdendros, fig.cap='(ref:goutdendros)', fig.height=7, message=FALSE}
+(ref:goutdendros) Dendrograms created from hierarchical clustering applied to windows from the `r n_gout_genes` loci associated with urate and gout. Coloured by super population.
+
+```{r goutdendros, fig.cap='(ref:goutdendros)', fig.height=7, message=FALSE, fig.scap="Dendrograms created from hierarchical clustering applied to windows from loci associated with urate and gout", out.extra = ""}
 multiplot(gene_dendros(gene_data = gout$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = gout$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           #gene_dendros(gene_data = gout$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -1725,7 +1729,7 @@ flf did ok
 -->
 ```
   
-```{r obesitydendros, fig.cap='(ref:obesitydendros)', fig.height=7, message = FALSE}
+```{r obesitydendros, fig.cap='(ref:obesitydendros)', fig.height=7, message = FALSE, fig.scap = "Dendrograms created from hierarchical clustering applied to windows from obesity-associated loci.", out.extra = ""}
 multiplot(gene_dendros(gene_data = obesity$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = obesity$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           #gene_dendros(gene_data = obesity$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -1792,7 +1796,7 @@ fld not bad for all except POL
 
 (ref:t2ddendros) Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(t2d_GR$SYMBOL))` loci associated with \gls{t2d}. Coloured by super population.
 
-```{r t2ddendros, fig.cap='(ref:t2ddendros)', fig.height=7, message = FALSE}
+```{r t2ddendros, fig.cap='(ref:t2ddendros)', fig.height=7, message = FALSE, fig.scap = "Dendrograms created from hierarchical clustering applied to windows from \\gls{t2d}-associated loci." , out.extra=""}
 multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = t2d$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           #gene_dendros(gene_data = t2d$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -1812,7 +1816,7 @@ multiplot(gene_dendros(gene_data = t2d$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima
 
 (ref:kidneydendros) Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(kd_GR$SYMBOL))` loci associated with kidney disease. Coloured by super population.
 
-```{r kidneydendros, fig.cap='(ref:kidneydendros)', fig.height=7, message = FALSE}
+```{r kidneydendros, fig.cap='(ref:kidneydendros)', fig.height=7, message = FALSE, fig.scap = "Dendrograms created from hierarchical clustering applied to windows from kidney disease-associated loci.", out.extra = ""}
 multiplot(gene_dendros(gene_data = kd$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = kd$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           #gene_dendros(gene_data = kd$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -1874,7 +1878,7 @@ has all stats
 
 (ref:metsyndendros) Dendrograms created from hierarchical clustering applied to windows from the `r length(unique(metsyn_GR$SYMBOL))` loci associated with metabolic syndrome. Coloured by super population.
 
-```{r metsyndendros, fig.cap='(ref:metsyndendros)', fig.height=7, message = FALSE}
+```{r metsyndendros, fig.cap='(ref:metsyndendros)', fig.height=7, message = FALSE, fig.scap="Dendrograms created from hierarchical clustering applied to windows from metabolic syndrome-associated loci.", out.extra=""}
 multiplot(gene_dendros(gene_data = metsyn$mat_d$Tajima.D[,-1:-3]) + ggtitle("Tajima's D"),
           gene_dendros(gene_data = metsyn$mat_d$Fay.Wu.H[,-1:-3]) + ggtitle("Fay and Wu's H"),
           #gene_dendros(gene_data = metsyn$mat_d$Fu.Li.D[,-1:-3]) + ggtitle("Fu and Li's D"),
@@ -2246,7 +2250,7 @@ poly_complete %>% full_join(., perc_complete %>% select(allcomplete = n, everyth
 
 Other studies have previously shown the relationships between Polynesian and other Pacific populations, most often with mitochondrial DNA and Y chromosome markers [@Kayser2010; @Duggan2014a; @Hudjashov2017; @Hudjashov2018]. Autosomes have also been used to explore Polynesian origins and relationships between Pacific populations, though generally with rather small sample sizes (Largest Polynesian population size: 24 @Kimura2008; 9 @Hudjashov2017; 30 @Hudjashov2018). This study is the first to compare four Polynesian populations, two of East, and two of West Polynesian ancestry, and of similar sample sizes to those of the \glsdesc{1kgp}. The analysis is important because it adds new evidence of the genetic relationship between the Polynesian populations and other populations. This is important, as (in addition to purely academic reasons) understanding the ancestry of populations helps to inform and reduce the stigma of genetic diseases [@Sankar2006], and to inform about the etiology of modern metabolic disease.
 
-In Chapter 3 (section \@ref(selectionDissussion)), it was noted that the populations had population specific-distributions for the frequency spectrum-based selection and neutrality statistics. The tails of the distributions contain the most extreme values and are therefore most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first test used the entire chromosome and created a summary statistic that was used to create clusters. It was successful in re-assembling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used within the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other [@1KGP2015snp]. The population groupings were also the same as in the \gls{pca} that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). Both the F~ST~ results and PCA (for the subject selection) confirmed the genetic relatedness and differentiation of the Polynesian populations in a global context, as being most similar to the East Asian populations [@Kayser2008a]. It also confirmed that within Polynesia, the differentiation between Eastern and Western Polynesia, was consistent with the out of Africa human migration and subsequent Polynesian expansion [@Nielsen2017; @Matisoo-Smith2015; @Skoglund2016; @Hudjashov2018]. 
+In Chapter 3 (section \@ref(selectionDissussion)), it was noted that the populations had population specific-distributions for the frequency spectrum-based selection and neutrality statistics. The tails of the distributions contain the most extreme values and are therefore most likely to be the loci that have undergone selection - specifically the negative tail is of interest for positive selection. It was thought that perhaps the tails could be used to group the individual populations using an unsupervised method - in this case, hierarchical clustering - and reassemble the super populations. The first test used the entire chromosome and created a summary statistic that was used to create clusters. It was successful in re-assembling the super populations using F~ST~ which is a measure of population differentiation, and had previously been used within the \gls{1kgp} dataset to establish how differentiated the \gls{1kgp} samples were from each other [@1KGP2015snp]. The population groupings were also the same as in the \gls{pca} that was used to select the individuals for the selection analysis (Figure \@ref(fig:allpopPCA)). Both the F~ST~ results and PCA (for the subject selection) confirmed the genetic relatedness and differentiation of the Polynesian populations in a global context, as being most similar to the East Asian populations [@Kayser2008a]. It also confirmed that within Polynesia, the differentiation between Eastern and Western Polynesia, was consistent with the out of Africa human migration and subsequent Polynesian expansion [@Matisoo-Smith2015; @Skoglund2016; @Nielsen2017; @Hudjashov2018]. 
 
 #### Clustering of aggregate statistics 
 
@@ -2258,13 +2262,13 @@ Compared to the entire chromosome summaries, using windows from the extremes of 
 
 Allele sharing between populations is moderate for common \glspl{snp}, and more so for continental groups, but is minimal for rarer frequencies, due to population divergence [@Gravel2011]. This helps to explain both of the patterns observed with \gls{sfs} based statistics for both the extremes and gene clustering. With the extremes, many of the super populations had windows that were not in the extremes of the other populations, these formed the 'blocks' in the heatmap, showing that there were regions of the genome that differed in extremity between super populations. This was most evident with the \gls{afr} populations, which had the majority of windows for each statistic not in common with the extremes from the other populations.
 
-The extremes of the distributions represent different types of selection or demographic events and are different depending on the selection test statistic being used [@Tajima1989; @fay2000hitchhiking; @Fu1993; @Zeng2006]. The upper end of the distribution is able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics and represent the same types of selection or demography.
+The extremes of the distributions represent different types of selection or demographic events and are different depending on the selection test statistic being used [@Tajima1989;@Fu1993;@fay2000hitchhiking; @Zeng2006]. The upper end of the distribution is able to be compared as all of the values that it encompassed were positive in value across all populations for all statistics and represent the same types of selection or demography.
 
 The clustering of the most extreme windows represents, other than a similarity in allele frequencies between populations, a pattern that is consistent with the out of Africa model of human migration [@Mallick2016; @Pagani2016]. And represents the influence of selection, drift, population expansions, migrations, bottlenecks, introgression, and admixture following the population divergences over history.
 
 #### Clustering on genic regions
 
-Clustering from gene lists for the frequency spectrum-based selection and neutrality statistics consistently grouped the individual populations into their super populations, although there was inconsistency for the \gls{amr} populations. This inconsistency could be the influence of admixture in the \gls{amr} populations, between the PCA analysis and the admixture analysis (sections \@ref(pcaresults) and \@ref(admixtureresults)), it was clear that the four \gls{amr} populations were less homogenous than the other super populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with previously reported results [@1KGP2015snp; @pickrell2009signals]. The grouping of populations was also seen with random lists of genes. This would indicate that the commonalities with populations for a gene are not specific to a disease, but instead, a general locus by locus similarity.
+Clustering from gene lists for the frequency spectrum-based selection and neutrality statistics consistently grouped the individual populations into their super populations, although there was inconsistency for the \gls{amr} populations. This inconsistency could be the influence of admixture in the \gls{amr} populations, between the PCA analysis and the admixture analysis (sections \@ref(pcaresults) and \@ref(admixtureresults)), it was clear that the four \gls{amr} populations were less homogenous than the other super populations. With the exception of the \gls{amr} populations, the clustering of populations using windows or haplotypes was consistent with previously reported results [@pickrell2009signals; @1KGP2015snp]. The grouping of populations was also seen with random lists of genes. This would indicate that the commonalities with populations for a gene are not specific to a disease, but instead, a general locus by locus similarity.
 
 <!-- > talk about how selection on genes vs non gene regions - random windows are much more likely to be intergenic 
 this is not necessarily the case, due to the way things were annotated

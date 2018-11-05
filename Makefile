@@ -5,7 +5,7 @@ render_book : compile_book pdf_book
 preview_pdf: pdf
 
 compile_book : $(FILES)
-	Rscript make_book.R	
+	Rscript --vanilla make_book.R	
 
 pdf_book : compile_book
 	mv _book/Thesis.pdf _book/Thesis_bookdown.pdf
