@@ -1,0 +1,430 @@
+%%
+%% This is the package ``otagothesis''.  Read the file
+%% otagothesis.README for information regarding options and usage.
+%%
+
+\ifx\ProvidesPackage\undefined
+  \def\ProvidesPackage#1[#2 #3 #4]{%
+    \wlog{LaTeX Package `#1' #3 <#2> #4}}
+\fi
+\ProvidesPackage{otagothesis}
+       [1998/02/03 v0.99 Otago's A4 based page layout]
+\ifx\documentclass\undefined
+\else
+  \DeclareOption{widemargins}{\WideMargins}
+  \DeclareOption{phd}{\PhD}
+  \DeclareOption{msc}{\MSc}
+  \DeclareOption{ma}{\MA}
+  \DeclareOption{mcom}{\MCom}
+  \DeclareOption{interimsci}{\IS}
+  \DeclareOption{interimarts}{\IA}
+  \DeclareOption{interimcom}{\IC}
+  \DeclareOption{dipsci}{\DS}
+  \DeclareOption{diparts}{\DA}
+  \DeclareOption{dipcom}{\DC}
+  \DeclareOption{bschons}{\BScHons}
+  \DeclareOption{bahons}{\BAHons}
+  \DeclareOption{bcomhons}{\BComHons}
+  \DeclareOption{notables}{\NoTables}
+  \DeclareOption{nofigures}{\NoFigures}
+  \DeclareOption{nolibrary}{\NoLibrary}
+  \DeclareOption{nogls}{\NoGls}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                      option processing stuff                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\PhD{%
+%%PhD is the default: do nothing
+}
+
+\def\MSc{%
+  \renewcommand{\thesistype}{Master of }
+  \renewcommand{\faculty}{Science}
+}
+
+\def\MA{%
+  \renewcommand{\thesistype}{Master of }
+  \renewcommand{\faculty}{Arts}
+}
+
+\def\MCom{%
+  \renewcommand{\thesistype}{Master of }
+  \renewcommand{\faculty}{Commerce}
+}
+
+\def\IS{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the degree of}
+  \renewcommand{\thesistype}{Master of }
+  \renewcommand{\faculty}{Science}
+}
+
+\def\IA{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the degree of}
+  \renewcommand{\thesistype}{Master of }
+  \renewcommand{\faculty}{Arts}
+}
+
+\def\IC{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the degree of}
+  \renewcommand{\thesistype}{Master of }
+  \renewcommand{\faculty}{Commerce}
+}
+
+\def\DS{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the}
+  \renewcommand{\thesistype}{Postgraduate Diploma in }
+  \renewcommand{\faculty}{Science}
+}
+
+\def\DA{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the}
+  \renewcommand{\thesistype}{Postgraduate Diploma in }
+  \renewcommand{\faculty}{Arts}
+}
+
+\def\DC{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the}
+  \renewcommand{\thesistype}{Postgraduate Diploma in }
+  \renewcommand{\faculty}{Commerce}
+}
+
+\def\BScHons{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the degree of}
+  \renewcommand{\thesistype}{Bachelor of }
+  \renewcommand{\faculty}{Science, with Honours}
+}
+
+\def\BAHons{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the degree of}
+  \renewcommand{\thesistype}{Bachelor of }
+  \renewcommand{\faculty}{Arts, with Honours}
+}
+
+\def\BComHons{%
+  \renewcommand{\fulfilment}{submitted in partial fulfilment of the degree of}
+  \renewcommand{\thesistype}{Bachelor of }
+  \renewcommand{\faculty}{Commerce, with Honours}
+}
+
+\def\NoTables{%
+  \newif\if@notables \@notablestrue
+}
+
+\def\NoFigures{%
+  \newif\if@nofigures \@nofigurestrue
+}
+
+\def\NoLibrary{%
+  \newif\if@nolibrary \@nolibrarytrue
+}
+
+%% Define widemargins option for margin notes
+\def\WideMargins{%
+  \newdimen\ExtraWidth
+  \ifcase \@ptsize
+    \ExtraWidth = 0.5in
+    \@widemargins
+  \or
+    \ExtraWidth = 0.5in
+    \@widemargins
+  \or
+    \ExtraWidth = 0.7in
+    \@widemargins
+  \fi\let\WideMargins\relax\let\@widemargins\relax}
+{\def\do{\noexpand\do\noexpand}
+ \xdef\@preamblecmds{\@preamblecmds \do\WideMargins}
+}
+\def\@widemargins{%
+    \global\advance\textwidth by -\ExtraWidth
+    \global\advance\marginparwidth by \ExtraWidth
+    \if@twoside
+      \tw@sidedwidemargins
+    \else
+      \@nesidedwidemargins
+    \fi}
+\def\tw@sidedwidemargins{%
+    \if@reversemargin
+      \@tempdima=\evensidemargin
+      \advance\@tempdima by -\oddsidemargin
+      \advance\oddsidemargin by \ExtraWidth
+      \advance\oddsidemargin by \@tempdima
+      \advance\evensidemargin by -\@tempdima
+    \else
+      \advance\evensidemargin by \ExtraWidth
+    \fi}
+\def\@nesidedwidemargins{%
+    \if@reversemargin
+      \advance\oddsidemargin by \ExtraWidth
+      \advance\evensidemargin by \ExtraWidth
+    \fi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%           Stuff to be done before option processing               %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% Default to PhD
+%%
+\newcommand{\fulfilment}{a thesis submitted for the degree of}
+\newcommand{\thesistype}{Doctor of }
+\newcommand{\faculty}{Philosophy}
+
+%% default to having a list of tables or figures
+\newif\if@notables \@notablesfalse
+\newif\if@nofigures \@nofiguresfalse
+
+%% default to having a glossary and acronymn list
+\newif\if@nogls \@noglsfalse
+
+%% default to having the library decleration form
+\newif\if@nolibrary \@nolibraryfalse
+
+%% We always use a4 paper
+\paperheight 297mm
+\paperwidth  210mm
+
+%% Shift default TeX reference point to top LH corner
+\hoffset -1in
+\voffset -1in
+
+%% Set top margin to 1.5cm
+\topmargin  15.0mm
+
+%% If we use running headers, restrict them to one line of text. 
+\headheight 12pt
+
+%% Use no more than a double line between header and body.
+\headsep    25pt
+
+%% Now set height of text body according to point-size
+\ifcase \@ptsize
+    \textheight 53\baselineskip
+\or
+    \textheight 48\baselineskip
+\or
+    \textheight 45\baselineskip
+\fi
+\advance\textheight by \topskip
+
+%% we must always have 30mm binding margin
+\textwidth      155.0mm
+\marginparwidth 0.0mm
+\if@twoside
+  \oddsidemargin  30.0mm
+  \evensidemargin 25.0mm
+\else
+  \oddsidemargin  30.0mm
+  \evensidemargin 30.0mm
+\fi
+
+%% some stuff for the splash page
+\def\dob#1{\gdef\@dob{#1}}
+\def\@dob{\@latex@error{No \noexpand\dob (date-of-birth) given}\@ehc}
+
+\def\address#1{\gdef\@address{#1}}
+\def\@address{\@latex@error{No \noexpand\address given}\@ehc}
+
+\def\department#1{\gdef\@department{#1}}
+\def\@department{\@latex@error{No \noexpand\department given}\@ehc}
+
+\def\fullname#1{\gdef\@fullname{#1}}
+\def\@fullname{\@latex@error{No \noexpand\fullname given}\@ehc}
+
+%% Now that we've done all the hard stuff, run the Options code.
+\ifx\documentclass\undefined
+\else
+  \ProcessOptions
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%           Stuff to be done after option processing                %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% We need to specify the titlepage exactly
+%%
+\renewcommand{\maketitle}{%
+\begin{titlepage}
+\begin{center}
+\vspace*{35mm}
+\parbox{100mm}{
+\center
+\linespread{1.5}\LARGE \@title \par
+\vspace{10mm}
+\large \@author \par
+}
+\vfill
+
+
+\includegraphics[width=0.33\linewidth]{images/OUNZ_logo.png}
+
+\vfill
+\vfill
+\linespread{1.5}\normalsize
+\fulfilment \large \par
+\thesistype \faculty \par
+\normalsize at the University of Otago, Dunedin, \par
+New Zealand. \par
+\bigskip
+\@date
+\end{center}
+\end{titlepage}
+%\cleardoublepage
+}
+
+%%
+%% We need a really simple ``Abstract'' environment
+%%
+\renewenvironment{abstract}{%
+  \vspace*{45mm} \begin{center} {\bf \abstractname}
+  \end{center} \begin{quote} \linespread{1.3} \normalsize \par}
+  {\end{quote} \linespread{1}}
+
+%%
+%% And a nice simple ``Acknowledgements'' environment
+%%
+\newcommand{\ackname}{Acknowledgements}
+\newenvironment{acknowledgements}{%
+  \vspace*{45mm} \begin{center} {\bf \ackname}
+  \end{center} \begin{quote} \linespread{1.3} \normalsize}
+  {\end{quote} \linespread{1}}
+
+%%
+%% We want ``References'', not ``Bibliography''
+%%
+\renewcommand{\bibname}{References}
+
+%%
+%% We need to redefine thebibliography so as to include
+%% it in the contentspage. Otherwise it is exactly as in report.cls
+%%
+\def\bibliography#1{%
+  \if@filesw
+    \immediate\write\@auxout{\string\bibdata{#1}}%
+  \fi
+  \addcontentsline{toc}{chapter}{\numberline{}\bibname}%
+  \@input@{\jobname.bbl}%
+}%
+
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{#1: #2}%
+  \ifdim \wd\@tempboxa > 0.8\hsize
+    \leftskip = 0.1\hsize
+    \rightskip = 0.1\hsize
+    #1: #2\par
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+
+%%
+%% \frontstuff is here to put in the titlepage, list of figures, etc.
+%%
+\newcommand{\frontstuff}{%
+\if@nolibrary
+%% do nothing
+\else
+%{\parindent 0pt
+%\pagestyle{empty}
+%\begin{center} {\bf Library Declaration Form} \\
+%\IfFileExists{logo.pdf}{%
+%\includegraphics[height=2cm]{logo.pdf} \\
+%}{}
+%University of Otago Library
+%\end{center}
+%\vfill
+%\begin{tabbing}
+%\noindent Author's full name and year of birth: \= \kill\\
+%\noindent Author's full name and year of birth: \@fullname,\\
+%\hspace*{1cm} (for cataloguing purposes)\>\@dob\\
+%\end{tabbing}
+%\vfill
+%Title of thesis: \@title \\
+%\vfill
+%Degree: \thesistype \faculty \\
+%\vfill
+%Department: \@department \\
+%\vfill
+%Permanent Address: \@address \\
+%\vfill
+%I agree that this thesis may be consulted for research and study purposes
+%and that reasonable quotation may be made from it, provided that proper
+%acknowledgement of its use is made.\\
+%\vfill
+%I consent to this thesis being copied in part or in whole for
+%\begin{list}{\roman{enumi})}{\usecounter{enumi}}
+%\item a library
+%\item an individual
+%\end{list}
+%at the discretion of the University of Otago.\\
+%\vfill
+%\hspace*{5cm}Signature:\\
+%\vfill
+%\hspace*{5cm}Date:
+%\cleardoublepage
+%}
+\fi
+\pagenumbering{roman}
+\pagestyle{plain}
+%\maketitle
+\if@twoside
+  \setcounter{page}{1}%{3}
+\else
+  \setcounter{page}{1}
+\fi
+\IfFileExists{abstract.tex}{%
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+}{}
+%\cleardoublepage
+\newpage
+\newpage
+\IfFileExists{acknowledgements.tex}{%
+\begin{acknowledgements}
+\input{acknowledgements}
+\end{acknowledgements}
+}{}
+\phantomsection
+\tableofcontents
+\if@notables
+%% do nothing
+\else
+   \newpage
+   \phantomsection
+   \addcontentsline{toc}{section}{\listtablename}
+%  \addcontentsline{toc}{section}{List of Tables}
+  \listoftables
+\fi
+\if@nofigures
+%% do nothing
+\else
+   \newpage
+   \phantomsection
+   \addcontentsline{toc}{section}{\listfigurename}  
+%  \addcontentsline{toc}{section}{List of Figures}
+  \listoffigures
+\fi
+\if@nogls
+%% do nothing
+\else
+  % add glossary and acronymns
+%  \addcontentsline{toc}{section}{Glossary}
+%  \printglossary[style=super]
+  \newpage
+  \phantomsection
+  \addcontentsline{toc}{section}{Acronyms}
+  \setlength{\glsdescwidth}{0.7\linewidth}
+  \printglossary[type=\acronymtype,style=super]
+\fi
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+}
+
+%%
+%% End of file `otagothesis.sty'.
